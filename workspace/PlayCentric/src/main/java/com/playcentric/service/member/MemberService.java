@@ -3,6 +3,9 @@ package com.playcentric.service.member;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +65,11 @@ public class MemberService {
 		newMember.setStatus((short)0);
 		newMember.setPoints(0);
 		return memberRepository.save(newMember);
+	}
+
+	public Page<Member> findByPage(Integer pageNum){
+		PageRequest pageable = PageRequest.of(pageNum-1, 3, Sort.Direction.DESC, "memId");
+		return memberRepository.findByStatus((short)0,pageable);
 	}
 	
 	public boolean checkAccountExist(String account) {

@@ -1,6 +1,7 @@
 package com.playcentric.controller.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.playcentric.model.member.Member;
+import com.playcentric.model.member.MemberDto;
 import com.playcentric.service.member.MemberService;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -61,10 +63,10 @@ public class MemberController {
 	public String loginPost(@RequestParam String account,@RequestParam String password, Model model, RedirectAttributes redirectAttributes) {
 		Member loginMember = memberService.checkLogin(account, password);
 		if (loginMember==null) {
-			redirectAttributes.addFlashAttribute("errorMsg", "登入失敗");
-			return "redirect:login";
+			model.addAttribute("errorMsg", "登入失敗");
+			return "member/loginPage";
 		}
-		model.addAttribute("loginMember", loginMember);
+		model.addAttribute("loginMember", new MemberDto(loginMember));
 		redirectAttributes.addFlashAttribute("okMsg", "登入成功");
 		return "redirect:home";
 	}
@@ -76,9 +78,15 @@ public class MemberController {
 		return "redirect:home";
 	}
 	
+	@GetMapping("/memManage")
+	public String managePage(Model model) {
+		Page<Member> memPage = memberService.findByPage(1);
+		model.addAttribute("memPage", memPage);
+		return "member/managePage";
+	}
 	
 	private boolean hasInfo(Member member) {
-		return member.getAccount()!=null && 
+		return member.getAccount()!=null &&
 				member.getEmail()!=null &&
 				member.getPassword()!=null &&
 				member.getNickname()!=null &&

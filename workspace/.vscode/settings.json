@@ -1,3 +1,4 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "spring.dashboard.openUrl": "{protocol}://{hostname}:8080/PlayCentric"
 }
