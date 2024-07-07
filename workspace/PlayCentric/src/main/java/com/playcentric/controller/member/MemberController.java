@@ -15,7 +15,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.playcentric.model.member.Member;
-import com.playcentric.model.member.MemberDto;
+import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.member.MemberService;
 
 
@@ -68,7 +68,7 @@ public class MemberController {
 			return "member/loginPage";
 		}
 		loginMember = memberService.memberLogin(loginMember);
-		model.addAttribute("loginMember", new MemberDto(loginMember));
+		model.addAttribute("loginMember", new LoginMemDto(loginMember));
 		redirectAttributes.addFlashAttribute("okMsg", "登入成功");
 		return "redirect:home";
 	}
@@ -88,7 +88,13 @@ public class MemberController {
 	@PostMapping("/getMemPage")
 	@ResponseBody
 	public Page<Member> showMemberByPage(@RequestParam("page") Integer page) {
-		return memberService.findByPage(page);
+		Page<Member> memPage = memberService.findByPage(page);
+		for (Member member : memPage) {
+			member.setPhotoUrl(member.getPhoto()!=null? "http://localhost:8080/PlayCentric/imagesLib/image"+member.getPhoto():
+			member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
+			"http://localhost:8080/PlayCentric/imagesLib/image144");
+		}
+		return memPage;
 	}
 	
 	

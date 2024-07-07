@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playcentric.config.GoogleOAuth2Config;
 import com.playcentric.model.member.GoogleLogin;
 import com.playcentric.model.member.Member;
-import com.playcentric.model.member.MemberDto;
+import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.member.MemberService;
 
 @Controller
@@ -90,7 +90,7 @@ public class GoogleOAuth2Controller {
 			String userEmail = userInfo.get("email").asText();
 			String googleId = userInfo.get("id").asText();
 
-			MemberDto loginMember = (MemberDto) model.getAttribute("loginMember");
+			LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
 			boolean hasGoogle = memberService.checkGoogleExist(googleId);
 			boolean hasEmail = memberService.checkEmailExist(userEmail);
 			// 檢查是否已經有此帳號
@@ -126,7 +126,7 @@ public class GoogleOAuth2Controller {
 					member = memberService.addGoogleMem(memGoogle);
 				}
 			}
-			loginMember = new MemberDto(memberService.memberLogin(member));
+			loginMember = new LoginMemDto(memberService.memberLogin(member));
 			model.addAttribute("loginMember", loginMember);
 			redirectAttributes.addFlashAttribute("okMsg", member.getAccount() + "登入成功!");
 			return "redirect:/member/home";

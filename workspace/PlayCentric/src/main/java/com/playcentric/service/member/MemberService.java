@@ -69,7 +69,7 @@ public class MemberService {
 	}
 
 	public Page<Member> findByPage(Integer pageNum){
-		PageRequest pageable = PageRequest.of(pageNum-1, 3, Sort.Direction.ASC, "memId");
+		PageRequest pageable = PageRequest.of(pageNum-1, 8, Sort.Direction.ASC, "memId");
 		return memberRepository.findByStatus((short)0,pageable);
 	}
 	
