@@ -91,13 +91,14 @@ public class GoogleOAuth2Controller {
 			String googleId = userInfo.get("id").asText();
 
 			MemberDto loginMember = (MemberDto) model.getAttribute("loginMember");
-			boolean hasGoogle = memberService.checkGoogleExist(userEmail);
+			boolean hasGoogle = memberService.checkGoogleExist(googleId);
 			boolean hasEmail = memberService.checkEmailExist(userEmail);
 			// 檢查是否已經有此帳號
 			Member member = null;
-			if (hasGoogle) {
+			if (hasGoogle) {  //利用google帳號登入
+				System.err.println("利用google登入");
 				member = memberService.findByGoogleId(googleId);
-			} else {
+			} else {		//利用google帳號註冊
 				GoogleLogin memGoogle = new GoogleLogin();
 				String googlePhoto = userInfo.get("picture").asText();
 				String googleName = userInfo.get("name").asText();
@@ -107,21 +108,26 @@ public class GoogleOAuth2Controller {
 				memGoogle.setPhoto(googlePhoto);
 				if (loginMember != null) {
 					if (hasEmail) {
+						System.err.println("此信箱已被註冊!");
 						redirectAttributes.addFlashAttribute("errorMsg", "此信箱已被註冊!");
 						// 此處要改成使用者綁定頁面
 						return "redirect:/member/home";
 					}
 					member = memberService.memAddGoogle(loginMember.getMemId(), memGoogle);
+					System.err.println("Google綁定成功!");
 					redirectAttributes.addFlashAttribute("okMsg", "Google綁定成功!");
 					// 此處要改成使用者綁定頁面
 					return "redirect:/member/home";
 				} else if (hasEmail) {
+					System.err.println("利用google登入已註冊帳號");
 					member = memberService.memAddGoogle(memGoogle);
 				} else {
+					System.err.println("註冊新google帳號");
 					member = memberService.addGoogleMem(memGoogle);
 				}
 			}
-			model.addAttribute("loginMember", new MemberDto(member));
+			loginMember = new MemberDto(memberService.memberLogin(member));
+			model.addAttribute("loginMember", loginMember);
 			redirectAttributes.addFlashAttribute("okMsg", member.getAccount() + "登入成功!");
 			return "redirect:/member/home";
 

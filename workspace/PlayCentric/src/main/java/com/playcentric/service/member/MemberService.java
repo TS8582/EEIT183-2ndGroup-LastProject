@@ -1,5 +1,6 @@
 package com.playcentric.service.member;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +91,7 @@ public class MemberService {
 			return member;
 		}
 		String encodedPassword = member.getPassword();
-		return passwordEncoder.matches(password, encodedPassword)? member:null;
+		return passwordEncoder.matches(password, encodedPassword)? memberRepository.save(member):null;
 	}
 
 	public Member findByEmail(String email){
@@ -98,6 +99,13 @@ public class MemberService {
 	}
 
 	public Member findByGoogleId(String googleId){
+		System.err.println("沒有更新登入時間");
 		return memberRepository.findByGoogeId(googleId);
+	}
+
+	public Member memberLogin(Member member){
+		member.setLastLogin(new Date());
+		System.err.println("更新登入時間");
+		return memberRepository.save(member);
 	}
 }

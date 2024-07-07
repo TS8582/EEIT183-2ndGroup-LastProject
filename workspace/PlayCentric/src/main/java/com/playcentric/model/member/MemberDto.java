@@ -37,7 +37,9 @@ public class MemberDto {
         this.memId = member.getMemId();
         this.memName = member.getMemName();
         this.nickname = member.getNickname();
-        this.photo = member.getPhoto()!=null? "":member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():"";;
+        this.photo = member.getPhoto()!=null? "http://localhost:8080/PlayCentric/imageLib/image"+member.getPhoto():
+                member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
+                "http://localhost:8080/PlayCentric/imageLib/image3";;
         this.points = member.getPoints();
         this.role = member.getRole();
     }

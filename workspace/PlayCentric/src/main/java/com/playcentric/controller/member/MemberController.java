@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -16,8 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.playcentric.model.member.Member;
 import com.playcentric.model.member.MemberDto;
 import com.playcentric.service.member.MemberService;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -68,6 +67,7 @@ public class MemberController {
 			model.addAttribute("errorMsg", "登入失敗");
 			return "member/loginPage";
 		}
+		loginMember = memberService.memberLogin(loginMember);
 		model.addAttribute("loginMember", new MemberDto(loginMember));
 		redirectAttributes.addFlashAttribute("okMsg", "登入成功");
 		return "redirect:home";
