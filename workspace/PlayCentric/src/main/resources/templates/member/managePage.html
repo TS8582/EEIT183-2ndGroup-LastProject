@@ -2,80 +2,199 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.js}"></script>
-    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-    <script th:src="@{/js/axios.min.js}"></script>
-    <script th:src="@{/js/member/managePage.js}"></script>
-    <style>
-        .collapse {
-            visibility: visible !important;
-        }
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <script th:src="@{/js/bootstrap.bundle.js}"></script>
+  <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+  <script th:src="@{/js/axios.min.js}"></script>
+  <script th:src="@{/js/member/managePage.js}"></script>
+  <style>
+    .collapse {
+      visibility: visible !important;
+    }
 
-        .page-item {
-            cursor: pointer;
+    .page-item {
+      cursor: pointer;
 
-            &.active {
-                cursor: default;
-            }
-        }
-    </style>
-    <title>會員管理</title>
+      &.active {
+        cursor: default;
+      }
+    }
+  </style>
+  <title>會員管理</title>
 </head>
 
 <body>
 
-    <div th:replace="~{layout/nav}"></div>
+  <div th:replace="~{layout/nav}"></div>
 
-    <div class="container my-4">
-        <div class="d-flex">
-            <div class="h1">會員管理</div>
-            <div class="btn btn-primary ms-auto m-3">＋</div>
-        </div>
-        <div class="accordion" id="output">
-        </div>
-        <div id="pageBtn">
-            <div class="d-flex justify-content-center align-items-end mt-4">
-                <ul class="pagination">
-                </ul>
-            </div>
-        </div>
+  <div class="container my-4">
+    <div class="d-flex">
+      <div class="h1">會員管理</div>
+      <input type="text" id="search" class="ms-auto" placeholder="搜尋">
+      <div id="regist-act" class="btn btn-primary ms-2 mb-3">＋</div>
     </div>
+    <div class="accordion" id="output">
+    </div>
+    <div id="pageBtn">
+      <div class="d-flex justify-content-center align-items-end mt-4">
+        <ul class="pagination">
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="memInfo" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h4 class="modal-title">建立新成員</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="modalForm" class="regist">
+          <div class="modal-body">
+            <div class="input-group mb-1">
+              <label for="nickname" class="input-group-text">暱稱*</label>
+              <input type="text" class="form-control" id="nickname" name="nickname" required>
+            </div>
+            <div class="input-group mb-1">
+              <label for="account" class="input-group-text">帳號*</label>
+              <input type="text" class="form-control" id="account" name="account" required>
+            </div>
+            <div class="input-group mb-1">
+              <label for="password" class="input-group-text">輸入密碼*</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="input-group mb-1">
+              <label for="password-confirm" class="input-group-text">確認密碼*</label>
+              <input type="password" class="form-control" id="password-confirm" required>
+            </div>
+            <div class="input-group mb-1">
+              <label for="email" class="input-group-text">Email*</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <hr class="my-2">
+            <div class="input-group mb-1">
+              <label for="memName" class="input-group-text">姓名</label>
+              <input type="text" class="form-control" id="memName" name="memName">
+            </div>
+            <div class="input-group mb-1">
+              <label for="gender" class="input-group-text">姓別</label>
+              <input type="text" class="form-control" id="gender" name="gender">
+            </div>
+            <div class="input-group mb-1">
+              <label for="birthday" class="input-group-text">生日</label>
+              <input type="date" class="form-control" id="birthday" name="birthday">
+            </div>
+            <div class="input-group mb-1">
+              <label for="phone" class="input-group-text">手機號碼</label>
+              <input type="tel" maxlength="10" class="form-control" id="phone" name="phone">
+            </div>
+            <div class="input-group mb-1">
+              <label for="address" class="input-group-text">住址</label>
+              <textarea class="form-control" id="address" name="address"></textarea>
+            </div>
+            <div class="input-group mb-1">
+              <label for="photoFile" class="input-group-text">照片</label>
+              <input type="file" class="form-control" id="photoFile" name="photoFile">
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="role">
+              <label class="form-check-label" for="role">
+                建立為管理員
+              </label>
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary">確定</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
 
-    <script>
-        $(function () {
-            const insertUrl = "http://localhost:8080/PlayCentric/member/getMemPage"
-            let params = { page: 1 }
+  <script>
+    $(function () {
+      const showMemUrl = "http://localhost:8080/PlayCentric/member/getMemPage"
+      const searchMemUrl = "http://localhost:8080/PlayCentric/member/searchMemPage"
+      const memInfoModal = new bootstrap.Modal('#memInfo');
+      let params = {
+        page: 1,
+        keyword:''
+      }
 
-            runAxios();
+      runAxios();
 
-            $('#pageBtn').on('click', '.page-item', function () {
-                if (params.page != $(this).text()) {
-                    params.page = $(this).text();
-                    runAxios();
-                }
-            })
+      $('#pageBtn').on('click', '.page-item', function () {
+        if (params.page != $(this).text()) {
+          params.page = $(this).text();
+          runAxios();
+        }
+      })
 
-            function runAxios() {
-                axios({
-                    method: 'post',
-                    url: insertUrl,
-                    params
-                })
-                    .then(res => {
-                        console.log(res);
-                        htmlMaker(res.data);
-                    })
-                    .catch(err => console.log(err))
-            }
+      $('#search').change(function(){
+        params.keyword = $(this).val()
+        searchMember();
+      })
 
-            function htmlMaker(data) {
-                $('#output').text('')
+      $('#regist-act').click(function () {
+        memInfoModal.show();
+      })
 
-                data.content.forEach((element) => {
-                    const dataHtml = `<div class="accordion-item">
+      $('#modalForm').submit(function (e) {
+
+        e.preventDefault()
+
+        const formdataObject = new FormData(document.getElementById('modalForm'));
+        if ($('#role').prop('checked')) {
+          formdataObject.append('role',1)
+        }
+        
+        axios.post("http://localhost:8080/PlayCentric/member/test-regist",formdataObject)
+        .then(res=>{
+          console.log(res);
+          alert(res.data);
+          runAxios();
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+      })
+
+
+      function searchMember() {
+        axios({
+          method: 'get',
+          url: searchMemUrl,
+          params
+        })
+          .then(res => {
+            console.log(res);
+            htmlMaker(res.data);
+          })
+          .catch(err => console.log(err))
+      }
+
+      function runAxios() {
+        axios({
+          method: 'post',
+          url: showMemUrl,
+          params
+        })
+          .then(res => {
+            console.log(res);
+            htmlMaker(res.data);
+          })
+          .catch(err => console.log(err))
+      }
+
+      function htmlMaker(data) {
+        $('#output').text('')
+
+        data.content.forEach((element) => {
+          const dataHtml = `<div class="accordion-item">
                         <h2 class="accordion-header">
                         <button class="accordion-button collapsed" role="${element.role}" type="button" data-bs-toggle="collapse"
                         data-bs-target="#flush-collapse${element.memId}" aria-controls="flush-collapse${element.memId}">
@@ -87,15 +206,15 @@
                         <div class="accordion-body">
                         <div class="row">
                             <div class="mb-3 col-2">暱稱: ${element.nickname}</div>
-                            <div class="mb-3 col-2">姓名: ${element.memName}</div>
-                            <div class="mb-3 col-2">性別: ${element.gender===2?'女':element.gender===1?'男':'未選擇'}</div>
+                            <div class="mb-3 col-2">姓名: ${element.memName!=null&&element.memName!=''? element.memName:'未輸入'}</div>
+                            <div class="mb-3 col-2">性別: ${element.gender === 2 ? '女' : element.gender === 1 ? '男' : '未選擇'}</div>
                             <div class="mb-3 col-5">email: ${element.email}</div>
-                            <div class="mb-3 col-3">生日: ${element.birthday? element.birthday : '未輸入'}</div>
-                            <div class="mb-3 col-3">電話: ${element.phone? element.phone : '未輸入'}</div>
-                            <div class="mb-3 col-6">地址: ${element.address? element.address : '未輸入'}</div>
-                            <div class="mb-3 col-3">google: ${element.googeId? '已綁定' : '未綁定'}</div>
-                            <div class="mb-3 col-3">facebook: ${element.facebookId? '已綁定' : '未綁定'}</div>
-                            <div class="mb-3 col-3">twitter: ${element.twitterId? '已綁定' : '未綁定'}</div>
+                            <div class="mb-3 col-3">生日: ${element.birthday ? element.birthday : '未輸入'}</div>
+                            <div class="mb-3 col-3">電話: ${element.phone!=null&&element.phone!='          ' ? element.phone : '未輸入'}</div>
+                            <div class="mb-3 col-6">地址: ${element.address ? element.address : '未輸入'}</div>
+                            <div class="mb-3 col-3">google: ${element.googeId ? '已綁定' : '未綁定'}</div>
+                            <div class="mb-3 col-3">facebook: ${element.facebookId ? '已綁定' : '未綁定'}</div>
+                            <div class="mb-3 col-3">twitter: ${element.twitterId ? '已綁定' : '未綁定'}</div>
                             <div class="mb-3 col-4">註冊日期: ${element.registDate}</div>
                             <div class="mb-3 col-5">最後登入時間: ${element.lastLogin}</div>
                             <br>
@@ -103,29 +222,29 @@
                         </div>
                         </div>
                         </div>`
-                    $('#output').append(dataHtml);
-                    $('[role=1]').addClass('bg-warning-subtle');
-                });
+          $('#output').append(dataHtml);
+          $('[role=1]').addClass('bg-warning-subtle');
+        });
 
-                $('#pageBtn').hide();
-                if (data.totalPages > 1) {
-                    $('#pageBtn').show();
-                    // $('#pageBtn').append(`<div class="d-flex justify-content-center align-items-end mt-4">
-                    //     <ul class="pagination">
-                    //     </ul>
-                    //     </div>`)
-                    $('.pagination').text('')
-                    for (let index = 1; index <= data.totalPages; index++) {
-                        if (index != params.page) {
-                            $('.pagination').append(`<li class="page-item"><a class="page-link">${index}</a></li>`)
-                            continue;
-                        }
-                        $('.pagination').append(`<li class="page-item active"><a class="page-link">${index}</a></li>`)
-                    }
-                }
+        $('#pageBtn').hide();
+        if (data.totalPages > 1) {
+          $('#pageBtn').show();
+          // $('#pageBtn').append(`<div class="d-flex justify-content-center align-items-end mt-4">
+          //     <ul class="pagination">
+          //     </ul>
+          //     </div>`)
+          $('.pagination').text('')
+          for (let index = 1; index <= data.totalPages; index++) {
+            if (index != params.page) {
+              $('.pagination').append(`<li class="page-item"><a class="page-link">${index}</a></li>`)
+              continue;
             }
-        })
-    </script>
+            $('.pagination').append(`<li class="page-item active"><a class="page-link">${index}</a></li>`)
+          }
+        }
+      }
+    })
+  </script>
 </body>
 
 </html>

@@ -1,5 +1,7 @@
 package com.playcentric.controller.member;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -12,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.playcentric.model.member.Member;
+import com.playcentric.model.ImageLib;
 import com.playcentric.model.member.LoginMemDto;
+import com.playcentric.model.member.Member;
+import com.playcentric.service.ImageLibService;
 import com.playcentric.service.member.MemberService;
 
 
@@ -28,6 +33,9 @@ public class MemberController {
 
 	@Autowired
 	private MemberService memberService;
+
+	@Autowired
+	private ImageLibService imageLibService;
 	
 	@GetMapping("/home")
 	public String home() {
@@ -40,6 +48,34 @@ public class MemberController {
 		return "member/registMember";
 	}
 	
+	@PostMapping("/test-regist")
+	@ResponseBody
+	public String registMemberTest(@ModelAttribute Member member,@RequestParam("photoFile") MultipartFile photoFile) throws IOException {
+		System.err.println(member);
+		try {
+			if (!hasInfo(member)) {
+				return "請填妥資料!";
+			}
+			if (memberService.checkAccountExist(member.getAccount())) {
+				return "帳號已存在";
+			}
+			if (memberService.checkEmailExist(member.getEmail())) {
+				return "Email已註冊";
+			}
+			if (!photoFile.isEmpty()) {
+				ImageLib imageLib = new ImageLib();
+				imageLib.setImageFile(photoFile.getBytes());
+				Integer imageId = imageLibService.saveImage(imageLib).getImageId();
+				member.setPhoto(imageId);
+			}
+			memberService.addMember(member);
+			return "測試註冊成功!";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "測試註冊失敗!";
+	}
+
 	@PostMapping("/regist")
 	@ResponseBody
 	public String registMember(@ModelAttribute Member member) {
@@ -83,6 +119,18 @@ public class MemberController {
 	@GetMapping("/memManage")
 	public String managePage(Model model) {
 		return "member/managePage";
+	}
+
+	@GetMapping("/searchMemPage")
+	@ResponseBody
+	public Page<Member> searchMemberByPage(@RequestParam("page") Integer page,@RequestParam("keyword") String keyword) {
+		Page<Member> memPage = memberService.findByKeyword(keyword, page);
+		for (Member member : memPage) {
+			member.setPhotoUrl(member.getPhoto()!=null? "http://localhost:8080/PlayCentric/imagesLib/image"+member.getPhoto():
+			member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
+			"http://localhost:8080/PlayCentric/imagesLib/image144");
+		}
+		return memPage;
 	}
 
 	@PostMapping("/getMemPage")

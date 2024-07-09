@@ -62,14 +62,21 @@ public class MemberService {
 			newMember.setPassword(encodedPwd);
 		}
 		newMember.setTotalSpent(0);
-		newMember.setRole((short)0);
+		if (newMember.getRole()==null) {
+			newMember.setRole((short)0);
+		}
 		newMember.setStatus((short)0);
 		newMember.setPoints(0);
 		return memberRepository.save(newMember);
 	}
 
+	public Page<Member> findByKeyword(String keyword,Integer pageNum){
+		PageRequest pageable = PageRequest.of(pageNum-1, 6, Sort.Direction.ASC, "memId");
+		return memberRepository.findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining((short)0,keyword,keyword,keyword,keyword,pageable);
+	}
+
 	public Page<Member> findByPage(Integer pageNum){
-		PageRequest pageable = PageRequest.of(pageNum-1, 8, Sort.Direction.ASC, "memId");
+		PageRequest pageable = PageRequest.of(pageNum-1, 6, Sort.Direction.ASC, "memId");
 		return memberRepository.findByStatus((short)0,pageable);
 	}
 	
