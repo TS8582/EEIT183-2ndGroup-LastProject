@@ -70,6 +70,19 @@ public class MemberService {
 		return memberRepository.save(newMember);
 	}
 
+	public boolean deleteMemById(Integer memId){
+		Optional<Member> optional = memberRepository.findById(memId);
+		if (optional.isPresent()) {
+			Member member = optional.get();
+			if (member.getStatus()==0) {
+				member.setStatus((short)1);
+				memberRepository.save(member);
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public Page<Member> findByKeyword(String keyword,Integer pageNum){
 		PageRequest pageable = PageRequest.of(pageNum-1, 6, Sort.Direction.ASC, "memId");
 		return memberRepository.findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining((short)0,keyword,keyword,keyword,keyword,pageable);
@@ -99,6 +112,11 @@ public class MemberService {
 		}
 		String encodedPassword = member.getPassword();
 		return passwordEncoder.matches(password, encodedPassword)? memberRepository.save(member):null;
+	}
+
+	public Member findById(Integer memId){
+		Optional<Member> optional = memberRepository.findById(memId);
+		return optional.isPresent()? optional.get():null;
 	}
 
 	public Member findByEmail(String email){

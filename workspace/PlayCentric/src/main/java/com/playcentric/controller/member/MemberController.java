@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,7 +49,7 @@ public class MemberController {
 		return "member/registMember";
 	}
 	
-	@PostMapping("/test-regist")
+	@PostMapping("/regist")
 	@ResponseBody
 	public String registMemberTest(@ModelAttribute Member member,@RequestParam("photoFile") MultipartFile photoFile) throws IOException {
 		System.err.println(member);
@@ -69,26 +70,11 @@ public class MemberController {
 				member.setPhoto(imageId);
 			}
 			memberService.addMember(member);
-			return "測試註冊成功!";
+			return "註冊成功!";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "測試註冊失敗!";
-	}
-
-	@PostMapping("/regist")
-	@ResponseBody
-	public String registMember(@ModelAttribute Member member) {
-		try {
-			if (hasInfo(member)) {
-				memberService.addMember(member);
-				return "註冊成功!";
-			}
-			return "請填妥資料";
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "註冊失敗";
+		return "註冊失敗!";
 	}
 
 	@GetMapping("/login")
@@ -133,16 +119,20 @@ public class MemberController {
 		return memPage;
 	}
 
-	@PostMapping("/getMemPage")
+	@GetMapping("/getMember")
 	@ResponseBody
-	public Page<Member> showMemberByPage(@RequestParam("page") Integer page) {
-		Page<Member> memPage = memberService.findByPage(page);
-		for (Member member : memPage) {
-			member.setPhotoUrl(member.getPhoto()!=null? "http://localhost:8080/PlayCentric/imagesLib/image"+member.getPhoto():
-			member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
-			"http://localhost:8080/PlayCentric/imagesLib/image144");
-		}
-		return memPage;
+	public Member showMemberByPage(@RequestParam("memId") Integer memId) {
+		Member member = memberService.findById(memId);
+		member.setPhotoUrl(member.getPhoto()!=null? "http://localhost:8080/PlayCentric/imagesLib/image"+member.getPhoto():
+		member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
+		"http://localhost:8080/PlayCentric/imagesLib/image144");
+		return member;
+	}
+
+	@DeleteMapping("/deleteMem")
+	public String deleteMem(@RequestParam("memId") Integer memId){
+		memberService.deleteMemById(memId);
+		return "redirect:memManage";
 	}
 	
 	

@@ -20,6 +20,10 @@
         cursor: default;
       }
     }
+
+    .bg-manager-blue{
+      background-color: #d0dbff !important;
+    }
   </style>
   <title>會員管理</title>
 </head>
@@ -117,25 +121,33 @@
 
   <script>
     $(function () {
-      const showMemUrl = "http://localhost:8080/PlayCentric/member/getMemPage"
+      const registUrl = "http://localhost:8080/PlayCentric/member/regist";
+      const findMemUrl = "http://localhost:8080/PlayCentric/member/getMember"
       const searchMemUrl = "http://localhost:8080/PlayCentric/member/searchMemPage"
+      const deleteMemUrl = "http://localhost:8080/PlayCentric/member/deleteMem"
       const memInfoModal = new bootstrap.Modal('#memInfo');
       let params = {
         page: 1,
-        keyword:''
+        keyword: ''
       }
 
-      runAxios();
+      searchMember();
 
       $('#pageBtn').on('click', '.page-item', function () {
         if (params.page != $(this).text()) {
           params.page = $(this).text();
-          runAxios();
+          searchMember();
         }
       })
 
-      $('#search').change(function(){
-        params.keyword = $(this).val()
+      $('#output').on('click','#edit-btn',function(){
+        const memId = $(this).parent().parent().attr('memId');
+        showMemInfo(memId);
+      })
+
+      $('#search').change(function () {
+        params.page = 1;
+        params.keyword = $(this).val();
         searchMember();
       })
 
@@ -149,18 +161,20 @@
 
         const formdataObject = new FormData(document.getElementById('modalForm'));
         if ($('#role').prop('checked')) {
-          formdataObject.append('role',1)
+          formdataObject.append('role', 1)
         }
-        
-        axios.post("http://localhost:8080/PlayCentric/member/test-regist",formdataObject)
-        .then(res=>{
-          console.log(res);
-          alert(res.data);
-          runAxios();
-        })
-        .catch(err=>{
-          console.log(err);
-        })
+
+        axios.post(registUrl, formdataObject)
+          .then(res => {
+            console.log(res);
+            alert(res.data);
+            searchMember();
+          })
+          .catch(err => {
+            console.log(err);
+          })
+
+        $('#memInfo').Modal('hide');
       })
 
 
@@ -170,24 +184,28 @@
           url: searchMemUrl,
           params
         })
-          .then(res => {
-            console.log(res);
-            htmlMaker(res.data);
-          })
-          .catch(err => console.log(err))
+        .then(res => {
+          console.log(res);
+          htmlMaker(res.data);
+        })
+        .catch(err => console.log(err))
       }
 
-      function runAxios() {
+      function showMemInfo(memId) {
         axios({
-          method: 'post',
-          url: showMemUrl,
-          params
+          method: 'get',
+          url: findMemUrl,
+          params:{ memId }
         })
-          .then(res => {
-            console.log(res);
-            htmlMaker(res.data);
-          })
-          .catch(err => console.log(err))
+        .then(res => {
+          console.log(res);
+          updateModal(res.data);
+        })
+        .catch(err => console.log(err))
+      }
+
+      function updateModal(data){
+
       }
 
       function htmlMaker(data) {
@@ -203,27 +221,34 @@
                         </button>
                         </h2>
                         <div id="flush-collapse${element.memId}" class="accordion-collapse collapse" data-bs-parent="#output">
-                        <div class="accordion-body">
-                        <div class="row">
+                        <div class="accordion-body d-flex flex-column">
+                        <div class="row w-100">
                             <div class="mb-3 col-2">暱稱: ${element.nickname}</div>
-                            <div class="mb-3 col-2">姓名: ${element.memName!=null&&element.memName!=''? element.memName:'未輸入'}</div>
+                            <div class="mb-3 col-2">姓名: ${element.memName != null && element.memName != '' ? element.memName : '未輸入'}</div>
                             <div class="mb-3 col-2">性別: ${element.gender === 2 ? '女' : element.gender === 1 ? '男' : '未選擇'}</div>
                             <div class="mb-3 col-5">email: ${element.email}</div>
                             <div class="mb-3 col-3">生日: ${element.birthday ? element.birthday : '未輸入'}</div>
-                            <div class="mb-3 col-3">電話: ${element.phone!=null&&element.phone!='          ' ? element.phone : '未輸入'}</div>
+                            <div class="mb-3 col-3">電話: ${element.phone != null && element.phone != '          ' ? element.phone : '未輸入'}</div>
                             <div class="mb-3 col-6">地址: ${element.address ? element.address : '未輸入'}</div>
                             <div class="mb-3 col-3">google: ${element.googeId ? '已綁定' : '未綁定'}</div>
                             <div class="mb-3 col-3">facebook: ${element.facebookId ? '已綁定' : '未綁定'}</div>
                             <div class="mb-3 col-3">twitter: ${element.twitterId ? '已綁定' : '未綁定'}</div>
                             <div class="mb-3 col-4">註冊日期: ${element.registDate}</div>
                             <div class="mb-3 col-5">最後登入時間: ${element.lastLogin}</div>
-                            <br>
+                        </div>
+                        <div class="edit-btn ms-auto d-flex">
+                            <div class="btn btn-outline-warning me-2" memId="${element.memId}" id="edit-btn">修改</div>
+                            <form action="${deleteMemUrl}" method="post">
+                              <input type="hidden" name="_method" value="DELETE">
+                              <input type="hidden" name="memId" value="${element.memId}">
+                              <input type="submit" class="btn btn-danger" onclick="return confirm('確定刪除嗎?')" value="刪除">
+                            </form>
                         </div>
                         </div>
                         </div>
                         </div>`
           $('#output').append(dataHtml);
-          $('[role=1]').addClass('bg-warning-subtle');
+          $('[role=1]').addClass('bg-manager-blue');
         });
 
         $('#pageBtn').hide();

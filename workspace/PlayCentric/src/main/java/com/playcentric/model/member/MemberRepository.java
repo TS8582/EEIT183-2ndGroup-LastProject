@@ -25,4 +25,6 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	// Page<Member> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
 	Page<Member> findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining(Short status, String account, String nickname, String memName, String email, Pageable pageable);
+
+	
 }
