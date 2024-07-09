@@ -26,41 +26,35 @@ public class EventSignupController {
     @Autowired
     private EventSignupService eventSignupService;
 
-    // 創建活動報名
     @PostMapping("/create")
     public ResponseEntity<EventSignupDTO> createEventSignup(@RequestBody EventSignupDTO eventSignupDTO) {
-        EventSignup eventSignup = eventSignupService.createEventSignup(eventSignupDTO);
-        return new ResponseEntity<>(new EventSignupDTO(eventSignup), HttpStatus.CREATED);
+        EventSignupDTO createdEventSignup = eventSignupService.createEventSignup(eventSignupDTO);
+        return new ResponseEntity<>(createdEventSignup, HttpStatus.CREATED);
     }
 
-    // 根據ID查找活動報名
     @GetMapping("/{signupId}")
     public ResponseEntity<EventSignupDTO> getEventSignup(@PathVariable Integer signupId) {
         EventSignupDTO eventSignupDTO = eventSignupService.getEventSignupDTO(signupId);
-        return eventSignupDTO != null ? ResponseEntity.ok(eventSignupDTO) : ResponseEntity.notFound().build();
+        return eventSignupDTO != null ? new ResponseEntity<>(eventSignupDTO, HttpStatus.OK)
+                                      : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // 查找所有活動報名
     @GetMapping("/all")
     public ResponseEntity<List<EventSignupDTO>> getAllEventSignups() {
-        List<EventSignupDTO> eventSignupDTOList = eventSignupService.getAllEventSignups()
-                .stream()
-                .map(EventSignupDTO::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(eventSignupDTOList);
+        List<EventSignupDTO> eventSignupDTOS = eventSignupService.getAllEventSignups();
+        return new ResponseEntity<>(eventSignupDTOS, HttpStatus.OK);
     }
 
-    // 更新活動報名
     @PutMapping("/update")
     public ResponseEntity<EventSignupDTO> updateEventSignup(@RequestBody EventSignupDTO eventSignupDTO) {
-        EventSignup updatedEventSignup = eventSignupService.updateEventSignup(eventSignupDTO);
-        return new ResponseEntity<>(new EventSignupDTO(updatedEventSignup), HttpStatus.OK);
+        EventSignupDTO updatedEventSignup = eventSignupService.updateEventSignup(eventSignupDTO);
+        return updatedEventSignup != null ? new ResponseEntity<>(updatedEventSignup, HttpStatus.OK)
+                                          : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // 刪除活動報名
     @DeleteMapping("/delete/{signupId}")
     public ResponseEntity<Void> deleteEventSignup(@PathVariable Integer signupId) {
         eventSignupService.deleteEventSignup(signupId);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

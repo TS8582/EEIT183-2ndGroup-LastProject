@@ -21,7 +21,6 @@ public class EventSignupDTO {
     public EventSignupDTO() {
     }
 
-    // 參數化構造函數
     public EventSignupDTO(EventSignup eventSignup) {
         this.signupId = eventSignup.getSignupId();
         this.memId = eventSignup.getMember().getMemId();

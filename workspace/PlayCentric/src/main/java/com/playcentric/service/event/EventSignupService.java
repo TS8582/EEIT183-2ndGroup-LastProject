@@ -1,15 +1,18 @@
 package com.playcentric.service.event;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.playcentric.model.event.Event;
+import com.playcentric.model.event.EventRepository;
 import com.playcentric.model.event.EventSignup;
 import com.playcentric.model.event.EventSignupDTO;
 import com.playcentric.model.event.EventSignupRepository;
 import com.playcentric.model.member.Member;
+import com.playcentric.model.member.MemberRepository;
 
 @Service
 public class EventSignupService {
@@ -17,38 +20,55 @@ public class EventSignupService {
     @Autowired
     private EventSignupRepository eventSignupRepository;
 
-    // 創建活動報名
-    public EventSignup createEventSignup(EventSignupDTO eventSignupDTO) {
+    @Autowired
+    private EventRepository eventRepository;
+    
+    @Autowired
+    private MemberRepository memberRepository;
+    
+    public EventSignupDTO createEventSignup(EventSignupDTO eventSignupDTO) {
         EventSignup eventSignup = new EventSignup();
-        eventSignup.setMember(new Member()); // 假設有適當的構造函數
-        eventSignup.setEvent(new Event()); // 假設有適當的構造函數
+        
+        // Load Event object based on eventId
+        Event event = eventRepository.findById(eventSignupDTO.getEventId())
+                                      .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+        
+        // Load Member object based on memId
+        Member member = memberRepository.findById(eventSignupDTO.getMemId())
+                                        .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        
+        eventSignup.setEvent(event);
+        eventSignup.setMember(member);
+        
         eventSignup.setSignupTime(eventSignupDTO.getSignupTime());
-        eventSignup.setWork(eventSignupDTO.getWork());
-        eventSignup.setWorkType(eventSignupDTO.getWorkType());
-        eventSignup.setWorkTitle(eventSignupDTO.getWorkTitle());
-        eventSignup.setWorkDescription(eventSignupDTO.getWorkDescription());
-        eventSignup.setWorkUploadTime(eventSignupDTO.getWorkUploadTime());
         eventSignup.setVoteCount(eventSignupDTO.getVoteCount());
-        return eventSignupRepository.save(eventSignup);
+        eventSignup.setWork(eventSignupDTO.getWork());
+        eventSignup.setWorkDescription(eventSignupDTO.getWorkDescription());
+        eventSignup.setWorkTitle(eventSignupDTO.getWorkTitle());
+        eventSignup.setWorkType(eventSignupDTO.getWorkType());
+        eventSignup.setWorkUploadTime(eventSignupDTO.getWorkUploadTime());
+        
+        eventSignupRepository.save(eventSignup);
+        
+        return eventSignupDTO;
     }
 
-    // 根據ID查找活動報名
     public EventSignupDTO getEventSignupDTO(Integer signupId) {
         EventSignup eventSignup = eventSignupRepository.findById(signupId).orElse(null);
         return eventSignup != null ? new EventSignupDTO(eventSignup) : null;
     }
 
-    // 查找所有活動報名
-    public List<EventSignup> getAllEventSignups() {
-        return eventSignupRepository.findAll();
+    public List<EventSignupDTO> getAllEventSignups() {
+        return eventSignupRepository.findAll().stream()
+                .map(EventSignupDTO::new)
+                .collect(Collectors.toList());
     }
 
-    // 更新活動報名
-    public EventSignup updateEventSignup(EventSignupDTO eventSignupDTO) {
+    public EventSignupDTO updateEventSignup(EventSignupDTO eventSignupDTO) {
         EventSignup eventSignup = eventSignupRepository.findById(eventSignupDTO.getSignupId()).orElse(null);
         if (eventSignup != null) {
-            eventSignup.setMember(new Member()); // 假設有適當的構造函數
-            eventSignup.setEvent(new Event()); // 假設有適當的構造函數
+            eventSignup.setMember(eventSignup.getMember());
+            eventSignup.setEvent(eventSignup.getEvent());
             eventSignup.setSignupTime(eventSignupDTO.getSignupTime());
             eventSignup.setWork(eventSignupDTO.getWork());
             eventSignup.setWorkType(eventSignupDTO.getWorkType());
@@ -56,12 +76,12 @@ public class EventSignupService {
             eventSignup.setWorkDescription(eventSignupDTO.getWorkDescription());
             eventSignup.setWorkUploadTime(eventSignupDTO.getWorkUploadTime());
             eventSignup.setVoteCount(eventSignupDTO.getVoteCount());
-            return eventSignupRepository.save(eventSignup);
+            EventSignup updatedEventSignup = eventSignupRepository.save(eventSignup);
+            return new EventSignupDTO(updatedEventSignup);
         }
         return null;
     }
 
-    // 刪除活動報名
     public void deleteEventSignup(Integer signupId) {
         eventSignupRepository.deleteById(signupId);
     }
