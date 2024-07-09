@@ -1,38 +1,29 @@
 package com.playcentric.model.event;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @Entity
+@Data
 @Table(name = "eventReward")
 public class EventReward {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int rewardId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer rewardId;
 
-	@ManyToOne
-	@JoinColumn(name = "eventId", nullable = false)
-	private Event event;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "eventId")
+    private Event event;
 
-	private String rewardName;
-
-	private String rewardDescription;
-
-	@ManyToOne
-	@JoinColumn(name = "rewardType", nullable = false)
-	private EventRewardType eventRewardType;
-
-	private int rewardQuantity;
-
+    private String rewardName;
+    private String rewardDescription;
+    private Integer rewardType;
+    private Integer rewardQuantity;
 }

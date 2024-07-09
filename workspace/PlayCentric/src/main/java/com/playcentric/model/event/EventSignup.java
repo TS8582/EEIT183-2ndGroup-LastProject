@@ -1,52 +1,40 @@
 package com.playcentric.model.event;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import com.playcentric.model.member.Member;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @Entity
+@Data
 @Table(name = "eventSignup")
 public class EventSignup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int signupId;
+    private Integer signupId;
 
-    @ManyToOne
-    @JoinColumn(name = "memberId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memId")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eventId")
     private Event event;
 
     private LocalDateTime signupTime;
-
-    private int workType;
-
+    private Integer work;
+    private Integer workType;
     private String workTitle;
-
     private String workDescription;
-
-    private Date workUploadTime;
-
-    @Lob
-    private byte[] work;
-
-    private int voteCount;
+    private LocalDateTime workUploadTime;
+    private Integer voteCount;
 }

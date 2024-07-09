@@ -1,170 +1,189 @@
 <!DOCTYPE html>
-<html lang="zh-TW" xmlms:th="http://www.thymeleaf.org/>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>活動管理</title>
+    <title>活動管理系統</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+        .event-form, .event-list {
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h1>活動管理</h1>
+    <div class="container">
+        <h1>活動管理系統</h1>
 
-    <!-- 創建活動表單 -->
-    <h2>創建新活動</h2>
-    <form id="createForm">
-        <label for="eventName">活動名稱:</label><br>
-        <input type="text" id="eventName" name="eventName"><br>
-        
-        <label for="eventDescription">活動描述:</label><br>
-        <textarea id="eventDescription" name="eventDescription"></textarea><br>
-        
-        <label for="eventType">活動類型:</label><br>
-        <select id="eventType" name="eventType">
-            <option value="圖片">圖片</option>
-            <option value="四格漫畫">四格漫畫</option>
-            <!-- 其他活動類型選項 -->
-        </select><br>
-        
-        <label for="eventStartTime">活動開始時間:</label><br>
-        <input type="datetime-local" id="eventStartTime" name="eventStartTime"><br>
-        
-        <label for="eventEndTime">活動結束時間:</label><br>
-        <input type="datetime-local" id="eventEndTime" name="eventEndTime"><br>
-        
-        <label for="eventSignupDeadline">報名截止時間:</label><br>
-        <input type="datetime-local" id="eventSignupDeadline" name="eventSignupDeadline"><br><br>
-        
-        <button type="submit">提交</button>
-    </form>
+        <div class="event-form">
+            <h2>創建/更新活動</h2>
+            <form id="eventForm">
+                <input type="hidden" id="eventId">
+                <label for="eventName">活動名稱</label>
+                <input type="text" id="eventName" required>
+                
+                <label for="eventDescription">活動描述</label>
+                <textarea id="eventDescription" required></textarea>
+                
+                <label for="eventType">活動類型</label>
+                <select id="eventType">
+                    <option value="1">圖片二次創作</option>
+                    <option value="2">四格漫畫</option>
+                </select>
+                
+                <label for="eventStartTime">開始時間</label>
+                <input type="date" id="eventStartTime" required>
+                
+                <label for="eventEndTime">結束時間</label>
+                <input type="date" id="eventEndTime" required>
+                
+                <label for="eventSignupDeadLine">報名截止時間</label>
+                <input type="date" id="eventSignupDeadLine" required>
+                
+                <button type="submit">保存活動</button>
+            </form>
+        </div>
 
-    <hr>
+        <div class="event-list">
+            <h2>活動列表</h2>
+            <table id="eventTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>名稱</th>
+                        <th>描述</th>
+                        <th>類型</th>
+                        <th>開始時間</th>
+                        <th>結束時間</th>
+                        <th>報名截止時間</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <!-- 查詢活動表單 -->
-    <h2>查詢活動</h2>
-    <form id="queryForm">
-        <label for="eventId">根據活動ID查詢:</label><br>
-        <input type="text" id="eventId" name="eventId"><br>
-        <button type="button" onclick="getEventById()">查詢</button><br><br>
-
-        <label for="eventNameQuery">根據活動名稱模糊查詢:</label><br>
-        <input type="text" id="eventNameQuery" name="eventNameQuery"><br>
-        <button type="button" onclick="getEventsByName()">查詢</button><br><br>
-
-        <label for="eventTypeQuery">根據活動類型查詢:</label><br>
-        <input type="text" id="eventTypeQuery" name="eventTypeQuery"><br>
-        <button type="button" onclick="getEventsByType()">查詢</button><br><br>
-
-        <label for="eventYear">根據年份查詢:</label><br>
-        <input type="text" id="eventYear" name="eventYear" placeholder="輸入年份"><br>
-        <label for="eventMonth">根據月份查詢:</label><br>
-        <input type="text" id="eventMonth" name="eventMonth" placeholder="輸入月份"><br>
-        <button type="button" onclick="getEventsByYearAndMonth()">查詢</button><br><br>
-    </form>
-
-    <hr>
-
-    <!-- 更新活動表單 -->
-    <h2>更新活動</h2>
-    <form id="updateForm">
-        <label for="updateEventId">活動ID:</label><br>
-        <input type="text" id="updateEventId" name="updateEventId"><br>
-        
-        <!-- 其他更新欄位，例如 eventName, eventDescription, eventType, eventStartTime, eventEndTime, eventSignupDeadline -->
-        
-        <button type="button" onclick="getEventToUpdate()">查詢</button><br><br>
-        <button type="button" onclick="updateEvent()">更新</button>
-    </form>
-
-    <hr>
-
-    <!-- 刪除活動表單 -->
-    <h2>刪除活動</h2>
-    <form id="deleteForm">
-        <label for="deleteEventId">活動ID:</label><br>
-        <input type="text" id="deleteEventId" name="deleteEventId"><br>
-        <button type="button" onclick="deleteEvent()">刪除</button>
-    </form>
-
-    <!-- JavaScript 部分 -->
     <script>
-        // 創建活動的表單提交
-        document.getElementById("createForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            var form = new FormData(this);
-            fetch('/events/event/create', {
-                method: 'POST',
-                body: form
-            }).then(function(response) {
-                if (!response.ok) {
-                    throw new Error('創建活動失敗');
+        document.addEventListener('DOMContentLoaded', function() {
+            const eventForm = document.getElementById('eventForm');
+            const eventTableBody = document.getElementById('eventTable').querySelector('tbody');
+
+            // 讀取活動列表
+            function loadEvents() {
+                fetch('/PlayCentric/api/events/list')
+                    .then(response => response.json())
+                    .then(events => {
+                        eventTableBody.innerHTML = '';
+                        events.forEach(event => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${event.eventId}</td>
+                                <td>${event.eventName}</td>
+                                <td>${event.eventDescription}</td>
+                                <td>${event.eventType === 1 ? '圖片二次創作' : '四格漫畫'}</td>
+                                <td>${new Date(event.eventStartTime).toLocaleString()}</td>
+                                <td>${new Date(event.eventEndTime).toLocaleString()}</td>
+                                <td>${new Date(event.eventSignupDeadLine).toLocaleString()}</td>
+                                <td>
+                                    <button onclick="editEvent(${event.eventId})">編輯</button>
+                                    <button onclick="deleteEvent(${event.eventId})">刪除</button>
+                                </td>
+                            `;
+                            eventTableBody.appendChild(row);
+                        });
+                    });
+            }
+
+            // 創建或更新活動
+            eventForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(eventForm);
+                const eventId = formData.get('eventId');
+                const data = {
+                    eventName: formData.get('eventName'),
+                    eventDescription: formData.get('eventDescription'),
+                    eventType: formData.get('eventType'),
+                    eventStartTime: new Date(formData.get('eventStartTime')).toISOString(),
+                    eventEndTime: new Date(formData.get('eventEndTime')).toISOString(),
+                    eventSignupDeadLine: new Date(formData.get('eventSignupDeadLine')).toISOString()
+                };
+
+                let url = '/PlayCentric/api/events/create';
+                let method = 'POST';
+                if (eventId) {
+                    url = `/PlayCentric/api/events/update/${eventId}`;
+                    method = 'PUT';
                 }
-                return response.json();
-            }).then(function(data) {
-                alert('活動創建成功');
-                // 清空表單
-                document.getElementById("createForm").reset();
-            }).catch(function(error) {
-                alert(error.message);
+
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(() => {
+                    eventForm.reset();
+                    loadEvents();
+                });
             });
+
+            // 編輯活動
+            window.editEvent = function(eventId) {
+                fetch(`/PlayCentric/api/events/get/${eventId}`)
+                    .then(response => response.json())
+                    .then(event => {
+                        document.getElementById('eventId').value = event.eventId;
+                        document.getElementById('eventName').value = event.eventName;
+                        document.getElementById('eventDescription').value = event.eventDescription;
+                        document.getElementById('eventType').value = event.eventType;
+                        document.getElementById('eventStartTime').value = event.eventStartTime.split('T')[0];
+                        document.getElementById('eventEndTime').value = event.eventEndTime.split('T')[0];
+                        document.getElementById('eventSignupDeadLine').value = event.eventSignupDeadLine.split('T')[0];
+                    });
+            };
+
+            // 刪除活動
+            window.deleteEvent = function(eventId) {
+                fetch(`/PlayCentric/api/events/delete/${eventId}`, {
+                    method: 'DELETE'
+                })
+                .then(() => {
+                    loadEvents();
+                });
+            };
+
+            // 初始化讀取活動列表
+            loadEvents();
         });
-
-        // 根據活動ID查詢活動
-        function getEventById() {
-            var eventId = document.getElementById("eventId").value;
-            fetch('/events/event/' + eventId)
-            .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('查詢活動失敗');
-                }
-                return response.json();
-            }).then(function(data) {
-                // 將查詢結果顯示在HTML中，例如填入到表單的對應欄位中
-                document.getElementById("eventNameQuery").value = data.eventName;
-                document.getElementById("eventTypeQuery").value = data.eventType;
-                // 其他字段的填充類似處理
-            }).catch(function(error) {
-                alert(error.message);
-            });
-        }
-
-        // 其他查詢功能的JavaScript函數類似實現
-
-        // 更新活動的表單提交
-        function updateEvent() {
-            var eventId = document.getElementById("updateEventId").value;
-            var form = new FormData(document.getElementById("updateForm"));
-            fetch('/events/event/update/' + eventId, {
-                method: 'PUT',
-                body: form
-            }).then(function(response) {
-                if (!response.ok) {
-                    throw new Error('更新活動失敗');
-                }
-                return response.json();
-            }).then(function(data) {
-                alert('活動更新成功');
-                // 清空表單
-                document.getElementById("updateForm").reset();
-            }).catch(function(error) {
-                alert(error.message);
-            });
-        }
-
-        // 刪除活動的表單提交
-        function deleteEvent() {
-            var eventId = document.getElementById("deleteEventId").value;
-            fetch('/events/event/delete/' + eventId, {
-                method: 'DELETE'
-            }).then(function(response) {
-                if (!response.ok) {
-                    throw new Error('刪除活動失敗');
-                }
-                alert('活動刪除成功');
-                // 清空表單
-                document.getElementById("deleteForm").reset();
-            }).catch(function(error) {
-                alert(error.message);
-            });
-        }
     </script>
 </body>
 </html>
