@@ -9,74 +9,27 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
-<body>
+<body class="h-screen flex flex-col w-screen">
 
+	<div class="flex flex-1">
 
-	<div class="container">
-		<h1>活動管理</h1>
-		<div class="row mb-3">
-			<div class="col">
-				<button class="btn btn-primary mr-2" onclick="openCreateEventForm()">新增活動</button>
+		<div th:replace="~{/layout/aside}"></div>
+		<div class="w-full flex justify-center">
+			<div>
+				<h1>活動管理</h1>
+				<div class="row mb-3">
+					<div class="col">
+						<button class="btn btn-primary mr-2" onclick="openCreateEventForm()">新增活動</button>
 
-				<!-- <button class="btn btn-secondary mr-2" onclick="openSearchEventForm()">查詢活動</button> -->
-			</div>
-			<div class="col">
-				<form class="form-inline float-right">
-					<input class="form-control mr-2" type="search" placeholder="輸入活動名稱" aria-label="Search"
-						id="searchEventInput">
-					<button class="btn btn-outline-success" type="button" onclick="searchEvents()">查詢</button>
-				</form>
-			</div>
-		</div>
-		<table class="table">
-			<thead>
-				<tr>
-					<th>活動名稱</th>
-					<th>活動描述</th>
-					<th>開始時間</th>
-					<th>結束時間</th>
-					<th>報名截止時間</th>
-					<th>操作</th>
-				</tr>
-			</thead>
-			<tbody id="eventList">
-				<!-- 活動列表將由JavaScript動態填充 -->
-				<th:block th:each=" event : ${allEvents}">
-					<tr>
-						<td>[[${event.eventName}]]</td>
-						<td>[[${event.eventDescription}]]</td>
-						<td><span th:text="${event} ?  ${#dates.format(event.eventStartTime, 'yyyy年MM月dd日')}"></span>
-						</td>
-						<td><span
-								th:text="${event} ?  ${#dates.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
-						</td>
-						<td><span
-								th:text="${event} ?  ${#dates.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
-						</td>
-						<td class="d-flex">
-							<button class="btn btn-info btn-sm edit-btn me-2" th:eventId="${event.eventId}">編輯</button>
-							<form method="post" th:action="@{/events/delete}">
-								<input name="eventId" th:value="${event.eventId}" type="hidden" />
-								<input type="submit" value="刪除" onclick="return confirm('確定刪除嗎??')"
-									class="btn btn-outline-danger btn-sm">
-							</form>
-						</td>
-					</tr>
-				</th:block>
-			</tbody>
-		</table>
-	</div>
-
-	<!-- 模態框（用於創建、編輯和查詢活動） -->
-	<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel"
-		aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="eventModalLabel">活動詳情</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
+						<!-- <button class="btn btn-secondary mr-2" onclick="openSearchEventForm()">查詢活動</button> -->
+					</div>
+					<div class="col">
+						<form class="form-inline float-right">
+							<input class="form-control mr-2" type="search" placeholder="輸入活動名稱" aria-label="Search"
+								id="searchEventInput">
+							<button class="btn btn-outline-success" type="button" onclick="searchEvents()">查詢</button>
+						</form>
+					</div>
 				</div>
 				<!-- 表單用於創建、編輯和查詢活動 -->
 				<form id="eventForm" method="post" th:action="@{/events/addPost}">
@@ -108,21 +61,72 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
 						<button type="submit" class="btn btn-primary" id="saveEventBtn">保存</button>
-<!--						<button type="button" class="btn btn-danger" id="deleteEventBtn">刪除</button>-->
+						<!--						<button type="button" class="btn btn-danger" id="deleteEventBtn">刪除</button>-->
 					</div>
 				</form>
 			</div>
+
+			<!-- 模態框（用於創建、編輯和查詢活動） -->
+			<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="eventModalLabel">活動詳情</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<!-- 表單用於創建、編輯和查詢活動 -->
+						<form id="eventForm" method="post" th:action="@{/events/addPost}">
+							<div class="modal-body">
+								<div class="form-group">
+									<label for="eventName">活動名稱</label> <input type="text" class="form-control"
+										id="eventName" name="eventName" required>
+								</div>
+								<div class="form-group">
+									<label for="eventDescription">活動描述</label>
+									<textarea class="form-control" id="eventDescription" name="eventDescription"
+										rows="3"></textarea>
+								</div>
+								<div class="form-group">
+									<label for="eventStartTime">開始時間</label> <input type="datetime-local"
+										class="form-control datetime" id="eventStartTime" name="eventStartTime"
+										required>
+								</div>
+								<div class="form-group">
+									<label for="eventEndTime">結束時間</label> <input type="datetime-local"
+										class="form-control datetime" id="eventEndTime" name="eventEndTime" required>
+								</div>
+								<div class="form-group">
+									<label for="eventSignupDeadLine">報名截止時間</label> <input type="datetime-local"
+										class="form-control datetime" id="eventSignupDeadLine"
+										name="eventSignupDeadLine" required>
+								</div>
+								<input type="hidden" id="eventId" name="eventId">
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+								<button type="submit" class="btn btn-primary" id="saveEventBtn">保存</button>
+								<button type="button" class="btn btn-danger" id="deleteEventBtn">刪除</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
 		</div>
+
+		<!-- jQuery 和 Bootstrap JavaScript -->
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		<!-- <script th:src="@{/js/event/eventManagement.js}"></script> -->
+		<script th:src="@{/js/axios.min.js}"></script>
+
+		<div id="errMsg" th:if="${errMsg}">[[${errMsg}]]</div>
 	</div>
 
-	<!-- jQuery 和 Bootstrap JavaScript -->
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<!-- <script th:src="@{/js/event/eventManagement.js}"></script> -->
-	<script th:src="@{/js/axios.min.js}"></script>
-
-	<div id="errMsg" th:if="${errMsg}">[[${errMsg}]]</div>
 	<script>
 		const findEventUrl = "http://localhost:8080/PlayCentric/events/get/";
 		const createEventUrl = "http://localhost:8080/PlayCentric/events/createPost";
@@ -187,7 +191,7 @@
 			$('#eventId').val('');
 			$('#deleteEventBtn').hide();  // 隱藏刪除按鈕
 		};
-		
+
 		// 模糊查詢活動功能
 		function searchEvents() {
 			const searchValue = document.getElementById("searchEventInput").value.toLowerCase();
