@@ -9,44 +9,46 @@
     <link rel="stylesheet" th:href="@{/css/output.css}">
 
     <style>
+        
+
         .content {
-            display: none;
+            display: none!important;
         }
 
         .content.active {
-            display: block;
+            display: block!important;
         }
 
         .theme.active {
-            font-weight: bold;
+            font-weight: bold!important;
         }
 
         .list-group-item {
-            cursor: pointer;
+            cursor: pointer!important;
         }
 
         .backBtn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 0.8em;
-            background-color: lightgray;
-            border: none;
+            position: absolute!important;
+            top: 5px!important;
+            right: 5px!important;
+            font-size: 0.8em!important;
+            background-color: lightgray!important;
+            border: none!important;
         }
 
         .backBtn:hover {
-            font-weight: bold;
+            font-weight: bold!important;
         }
 
         .list-group-item {
-            border: none;
-            cursor: pointer;
-            background-color: transparent;
+            border: none!important;
+            cursor: pointer!important;
+            background-color: transparent!important;
         }
 
         .theme.active {
-            color: #000000;
-            font-weight: bold;
+            color: #000000!important;
+            font-weight: bold!important;
             background-color: transparent !important;
         }
     </style>
@@ -65,11 +67,8 @@
             <div class="col-md-3">
                 <ul class="list-group">
                     <li class="list-group-item theme active" data-content="content1">基本資料</li>
-                    <li class="list-group-item theme" data-content="content2">
-                        伴遊者照片</li>
+                    <li class="list-group-item theme" data-content="content2">伴遊者照片</li>
                     <li class="list-group-item theme" data-content="content3" id="backBtn">回前頁</li>
-
-
                 </ul>
             </div>
             <div class="col-md-9">
@@ -92,14 +91,12 @@
                         </div>
                         <div class="form-group">
                             <label for="birthday">生日</label>
-                            <input type="date" class="form-control" id="birthday" name="birthday"
-                                th:value="${members.birthday}" required>
+                            <input type="date" class="form-control" id="birthday" name="birthday" th:value="${members.birthday}" required>
                             <small id="ageDisplay" class="form-text text-muted"></small>
                         </div>
                         <div class="form-group">
                             <label for="pfdescription">自我介紹</label>
-                            <textarea class="form-control" id="pfdescription" name="pfdescription" rows="5"
-                                required></textarea>
+                            <textarea class="form-control" id="pfdescription" name="pfdescription" rows="5" required></textarea>
                         </div>
                         <div class="form-group" style="display: none;">
                             <label for="pfStatus">狀態</label>
@@ -119,23 +116,15 @@
 
                     <div id="photo_output" class="mt-3"></div>
                     <form id="secondStepForm" enctype="multipart/form-data">
-
-                        <!-- <input name="playFellowId" id="uploadPlayFellowIdInput"
-                            th:value="${playFellowId}"> -->
-                        <input type="hidden" name="playFellowId" id="uploadPlayFellowIdInput"
-                            th:value="${playFellowId}">
-
+                        <input type="hidden" name="playFellowId" id="uploadPlayFellowIdInput" th:value="${playFellowId}">
                         <div class="form-group" id="addBtn2" style="display: none;">
-
                             <input type="file" class="form-control-file" id="file" name="file" multiple required>
                         </div>
                         <div id="message" class="mt-3"></div>
 
                         <button type="button" class="btn btn-success" id="editBtn">新增照片</button>
                         <button type="submit" class="btn btn-success" id="addBtn" style="display: none;">上傳</button>
-
                     </form>
-
                 </div>
             </div>
         </div>
@@ -145,11 +134,10 @@
     <script th:src="@{/js/layout/nav.js}"></script>
 
     <script>
-        // 照片: 按了按鈕才有確認送出按鈕
         const editBtn = document.getElementById('editBtn');
         const addBtn = document.getElementById('addBtn');
         const confirmBtn = document.getElementById('confirmBtn');
-        const addBtn2 = document.getElementById('addBtn2')
+        const addBtn2 = document.getElementById('addBtn2');
         let editMode = false;
 
         editBtn.addEventListener('click', function () {
@@ -162,12 +150,11 @@
             removeButtons.forEach(button => button.style.display = 'inline-block');
         });
 
-        // 照片上傳
         document.getElementById('secondStepForm').addEventListener('submit', function (event) {
             event.preventDefault();
             const playFellowId = document.getElementById('uploadPlayFellowIdInput').value;
-            console.log(playFellowId)
-            const formData = new FormData(this); // 使用表單ID來創建FormData
+            console.log(playFellowId);
+            const formData = new FormData(this);
             axios.post('/PlayCentric/playFellow/Images/add', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -179,7 +166,7 @@
             })
                 .then(function (response) {
                     document.getElementById('message').innerText = '上傳成功: ' + response.data;
-                    getImagesByPlayFellowId(playFellowId); // 上傳成功後 要再印一次 呼叫getImagesByPlayFellowId
+                    getImagesByPlayFellowId(playFellowId);
                 })
                 .catch(function (error) {
                     console.error('上傳失敗:', error);
@@ -187,7 +174,6 @@
                 });
         });
 
-        // 用id找照片
         function getImagesByPlayFellowId(playFellowId) {
             axios.get(`/PlayCentric/playFellow/Images/${playFellowId}`)
                 .then(res => {
@@ -200,17 +186,14 @@
                 });
         }
 
-        // 印出照片到photo_output
         function htmlMaker(imageUrls) {
             const photoOutput = document.getElementById('photo_output');
             let imageUrlString = '';
 
             for (let i = 0; i < imageUrls.length; i++) {
-                // 照片印出邏輯 + 裡面有標記imageId的button
                 imageUrlString += `
                 <div id="imageContainer${imageUrls[i].id}" style="display: inline-block; position: relative; margin: 10px;">
                     <img alt="伴遊者圖片" width="200px" src="${imageUrls[i].url}" />
-                    
                 </div>
             `;
             }
@@ -222,13 +205,12 @@
         const url = "http://localhost:8080/PlayCentric/playFellow/cms";
         backBtn.addEventListener('click', function () {
             window.location.href = url;
-        })
+        });
 
         function submitFirstStep(event) {
             const form = document.getElementById('firstStepForm');
             const formData = new FormData(form);
 
-            // 檢查暱稱空值
             const pfnickname = formData.get('pfnickname');
             let valid = true;
 
@@ -239,12 +221,10 @@
                 document.getElementById('nicknameError').textContent = '';
             }
 
-            // 若暱稱檢查未通過，停止後續檢查
             if (!valid) {
                 return;
             }
 
-            // 檢查其他空值
             const gender = formData.get('gender');
             const birthday = formData.get('birthday');
             const pfdescription = formData.get('pfdescription');
@@ -270,19 +250,16 @@
 
             axios.post('/PlayCentric/playFellow/add', formData)
                 .then(response => {
-
                     console.log('成功創了伴遊者');
-                    console.log('playFellowId:', response.data.playFellowId); // 顯示playFellowId
+                    console.log('playFellowId:', response.data.playFellowId);
                     document.getElementById('firstStepForm').style.display = 'none';
                     document.getElementById('secondStepForm').style.display = 'block';
-                    document.getElementById('uploadPlayFellowIdInput').value = response.data.playFellowId; // 儲存新的 playFellowId
+                    document.getElementById('uploadPlayFellowIdInput').value = response.data.playFellowId;
                 })
                 .catch(error => {
                     console.error('Error submitting first step:', error);
                 });
         }
-
-
 
         document.addEventListener('DOMContentLoaded', function () {
             const themes = document.querySelectorAll('.theme');
@@ -318,7 +295,6 @@
             }
         });
 
-        // 監聽pfnickname輸入變化事件
         const pfnicknameInput = document.getElementById('pfnickname');
         pfnicknameInput.addEventListener('blur', function () {
             const pfnickname = this.value;
@@ -347,13 +323,10 @@
                 });
         });
 
-        // 顯示第一步表單，隱藏第二步表單
         function showFirstStep() {
             document.getElementById('firstStepForm').style.display = 'block';
             document.getElementById('secondStepForm').style.display = 'none';
         }
     </script>
-
 </body>
-
 </html>
