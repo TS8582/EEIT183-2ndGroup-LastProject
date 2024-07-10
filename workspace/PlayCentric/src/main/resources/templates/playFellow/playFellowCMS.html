@@ -3,6 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
+	<div th:replace="~{layout/nav.html}"></div>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>伴遊管理介面</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -56,114 +57,119 @@
 
 </head>
 
-<body class="d-flex flex-column min-vh-100">
-	<!-- 	<div th:replace="~{layout/nav.html}"></div> -->
-	<div th:replace="~{/playFellow/sideBar}"></div>
+<body class="h-screen flex flex-col w-screen">
+	<!-- <div th:replace="~{/playFellow/sideBar}"></div> -->
+	<div class="flex flex-1">
 
-	<main class="w-100 p-3">
-		<ul class="nav nav-tabs" id="myTab" role="tablist">
-			<li class="nav-item" role="presentation">
-				<button class="nav-link text-secondary" id="home-tab" data-bs-toggle="tab"
-					data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
-					aria-selected="true">伴遊者列表</button>
-			</li>
-		</ul>
-		<div class="tab-content" id="myTabContent">
-			<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="home-tab-pane" role="tabpanel"
-				aria-labelledby="home-tab" tabindex="0">
-				<!-- 這裡放TABLE內容  PlayFellowMember-->
-				<br>
+		<div th:replace="~{/layout/aside}"></div>
+		<main class="w-100 p-3">
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link text-secondary" id="home-tab" data-bs-toggle="tab"
+						data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+						aria-selected="true">伴遊者列表</button>
+				</li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="home-tab-pane"
+					role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+					<!-- 這裡放TABLE內容  PlayFellowMember-->
+					<br>
 
-				<div class="container">
-					<div class="table-container">
-						<table id="playFellowTable" class="table table-striped table-bordered table-hover">
-							<thead class="thead-light small">
-								<tr>
-									<th>編號</th>
-									<th>伴遊暱稱</th>
-									<th>自我描述</th>
-									<th>會員編號</th>
-									<th>性別</th>
-									<th>生日</th>
-									<th>創建時間</th>
-									<th>狀態</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="pfmember : ${PlayFellowMember}" class="small">
-									<td th:text="${pfmember.playFellowId}"></td>
-									<td th:text="${pfmember.pfnickname}"></td>
-									<td><span
-											th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...' : pfmember.pfdescription}"></span>
-									</td>
-									<td th:text="${pfmember.member.memId}"></td>
-									<td><span th:if="${pfmember.member.gender == 1}">男生</span>
-										<span th:if="${pfmember.member.gender == 2}">女生</span>
-									</td>
-									<td th:text="${pfmember.member.birthday}"></td>
-									<td th:text="${pfmember.pfcreatedTime}"></td>
-									<td th:text="${pfmember.pfstatus == 1 ? '待審核' : 
-													(pfmember.pfstatus == 2 ? '審核不成功' : 
-													(pfmember.pfstatus == 3 ? '開啟' : '關閉'))}" th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : 
-														(pfmember.pfstatus == 2 ? 'status-failed' : 
-														(pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}">
-									</td>
-									<td><a
-											th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}">
-											<i class="fas fa-file-invoice" style="color: rgba(162, 241, 4, 0.704);"></i>
-										</a> <i class="fas fa-trash-alt delete-icon"
-											th:attr="data-playfellow-id=${pfmember.playFellowId}"></i></td>
-								</tr>
-							</tbody>
-						</table>
+					<div class="container">
+						<div class="table-container">
+							<table id="playFellowTable" class="table table-striped table-bordered table-hover">
+								<thead class="thead-light small">
+									<tr>
+										<th>編號</th>
+										<th>伴遊暱稱</th>
+										<th>自我描述</th>
+										<th>會員編號</th>
+										<th>性別</th>
+										<th>生日</th>
+										<th>創建時間</th>
+										<th>狀態</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="pfmember : ${PlayFellowMember}" class="small">
+										<td th:text="${pfmember.playFellowId}"></td>
+										<td th:text="${pfmember.pfnickname}"></td>
+										<td><span
+												th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...' : pfmember.pfdescription}"></span>
+										</td>
+										<td th:text="${pfmember.member.memId}"></td>
+										<td><span th:if="${pfmember.member.gender == 1}">男生</span>
+											<span th:if="${pfmember.member.gender == 2}">女生</span>
+										</td>
+										<td th:text="${pfmember.member.birthday}"></td>
+										<td th:text="${pfmember.pfcreatedTime}"></td>
+										<td th:text="${pfmember.pfstatus == 1 ? '待審核' : 
+															(pfmember.pfstatus == 2 ? '審核不成功' : 
+															(pfmember.pfstatus == 3 ? '開啟' : '關閉'))}" th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : 
+																(pfmember.pfstatus == 2 ? 'status-failed' : 
+																(pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}">
+										</td>
+										<td><a
+												th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}">
+												<i class="fas fa-file-invoice"
+													style="color: rgba(162, 241, 4, 0.704);"></i>
+											</a> <i class="fas fa-trash-alt delete-icon"
+												th:attr="data-playfellow-id=${pfmember.playFellowId}"></i></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="profile-tab-pane"
+					role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+					<br> <br>
+					<div class="container">
+						<div class="table-container">
+							<table id="orderTable" class="table table-striped table-bordered table-hover">
+								<thead class="thead-light small">
+									<tr>
+										<th>訂單編號</th>
+										<th>伴遊暱稱</th>
+										<th>下訂會員</th>
+										<th>交易序號</th>
+										<th>購買數量</th>
+										<th>購買金額</th>
+										<th>下訂時間</th>
+										<th>狀態</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!-- 訂單資料 -->
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="profile-tab-pane" role="tabpanel"
-				aria-labelledby="profile-tab" tabindex="0">
-				<br> <br>
-				<div class="container">
-					<div class="table-container">
-						<table id="orderTable" class="table table-striped table-bordered table-hover">
-							<thead class="thead-light small">
-								<tr>
-									<th>訂單編號</th>
-									<th>伴遊暱稱</th>
-									<th>下訂會員</th>
-									<th>交易序號</th>
-									<th>購買數量</th>
-									<th>購買金額</th>
-									<th>下訂時間</th>
-									<th>狀態</th>
-								</tr>
-							</thead>
-							<tbody>
-								<!-- 訂單資料 -->
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
 
-		<!-- 刪除跳窗 -->
-		<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">確定要刪除這筆資料嗎？</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-						<button type="button" class="btn btn-danger" id="confirmDelete">刪除</button>
+			<!-- 刪除跳窗 -->
+			<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">確定要刪除這筆資料嗎？</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+							<button type="button" class="btn btn-danger" id="confirmDelete">刪除</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</main>
+		</main>
+
+	</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>

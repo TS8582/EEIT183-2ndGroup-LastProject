@@ -22,7 +22,7 @@ switch (window.location.pathname) {
     case '/PlayCentric/prop/propSellOrder':
         prop.classList.add('left-selected');
         break;
-    case '//PlayCentric/playFellow/cms':
+    case '/PlayCentric/playFellow/cms':
         const playf = document.querySelector('.playf');
         playf.classList.add('left-selected');
         break;
