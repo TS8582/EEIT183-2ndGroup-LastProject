@@ -5,25 +5,25 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.playcentric.model.event.EventVoteDTO;
 import com.playcentric.service.event.EventVoteService;
 
-@RestController
+@Controller
 @RequestMapping("/eventVotes")
 public class EventVoteController {
     @Autowired
     private EventVoteService eventVoteService;
 
     @PostMapping("/create")
+    @ResponseBody
     public ResponseEntity<EventVoteDTO> createEventVote(@RequestBody EventVoteDTO eventVoteDTO) {
         EventVoteDTO createdEventVote = eventVoteService.createEventVote(eventVoteDTO);
         if (createdEventVote != null) {
@@ -34,6 +34,7 @@ public class EventVoteController {
     }
 
     @GetMapping("/get/{id}")
+    @ResponseBody
     public ResponseEntity<EventVoteDTO> getEventVoteById(@PathVariable Integer id) {
         EventVoteDTO eventVoteDTO = eventVoteService.getEventVoteById(id);
         if (eventVoteDTO != null) {
@@ -44,12 +45,14 @@ public class EventVoteController {
     }
 
     @GetMapping("/find")
+    @ResponseBody
     public ResponseEntity<List<EventVoteDTO>> getAllEventVotes() {
         List<EventVoteDTO> eventVoteDTOs = eventVoteService.getAllEventVotes();
         return new ResponseEntity<>(eventVoteDTOs, HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
+    @ResponseBody
     public ResponseEntity<EventVoteDTO> updateEventVote(@PathVariable Integer id, @RequestBody EventVoteDTO eventVoteDTO) {
         EventVoteDTO updatedEventVote = eventVoteService.updateEventVote(id, eventVoteDTO);
         if (updatedEventVote != null) {
@@ -59,7 +62,8 @@ public class EventVoteController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
+    @ResponseBody
     public ResponseEntity<Void> deleteEventVote(@PathVariable Integer id) {
         boolean deleted = eventVoteService.deleteEventVote(id);
         if (deleted) {
