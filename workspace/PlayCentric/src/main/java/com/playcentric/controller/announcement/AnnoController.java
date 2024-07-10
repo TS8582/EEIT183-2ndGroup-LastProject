@@ -28,7 +28,7 @@ public class AnnoController {
 	private AnnouncementService aService;
 	
 	//獲取新增公告資料
-	@GetMapping("/anno/getInsertAnnoInfo")
+	@GetMapping("/anno/getInsertAnno")
 	public String getInsertInfo(Model model) {
 		List<AnnouncementType> allType = aService.findAllType();
 		model.addAttribute("allAnnoType",allType);
@@ -49,10 +49,10 @@ public class AnnoController {
 		
 		List<AnnouncementType> allType = aService.findAllType();
 		model.addAttribute("allAnnoType",allType);
-		return "redirect:/";
+		return "redirect:/back/anno";
 	}
 	
-	//顯示所有公告
+	//顯示所有公告-首頁
 	@GetMapping("/")
 	public String showAllAnno(Model model) {
 		List<AnnouncementType> allType = aService.findAllType();
@@ -94,14 +94,24 @@ public class AnnoController {
 		anno.setLastEditAt(new Date(System.currentTimeMillis()));
 		anno.setAnnouncementType(annoType);
 		aService.updateById(annoId, anno);
-		return "redirect:/";
+		return "redirect:/back/anno";
 	}
 	
 	//刪除公告
 	@GetMapping("/anno/deleteAnno")
 	public String deleteAnno(@RequestParam Integer annoId) {
 		aService.delete(annoId);
-		return "redirect:/";
+		return "redirect:/back/anno";
+	}
+	
+	//公告後台
+	@GetMapping("/back/anno")
+	public String backAnno(Model model) {
+		List<AnnouncementType> allType = aService.findAllType();
+		model.addAttribute("allType",allType);
+		List<Announcement> allAnno = aService.findAll();
+		model.addAttribute("allAnno",allAnno);
+		return "announcement/back-anno";
 	}
 	
 	

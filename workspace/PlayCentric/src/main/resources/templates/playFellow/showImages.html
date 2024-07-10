@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <title>查看圖片</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>查看圖片</h1>
+        <form id="viewForm">
+            <div class="form-group">
+                <label for="playFellowId">伴遊者編號</label>
+                <input type="number" class="form-control" id="playFellowId" name="playFellowId" required>
+            </div>
+            <button type="submit" class="btn btn-primary">查看</button>
+        </form>
+        <div id="photo_output" class="mt-3"></div>
+    </div>
+
+    <script>
+        document.getElementById('viewForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            let playFellowId = document.getElementById('playFellowId').value;
+            getImagesByPlayFellowId(playFellowId);
+        });
+
+        function getImagesByPlayFellowId(playFellowId) {
+            axios.get(`/PlayCentric/playFellow/Images/${playFellowId}`)
+                .then(res => {
+                    console.log(res);
+                    htmlMaker(res.data);
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('photo_output').innerText = '獲取圖片失敗';
+                });
+        }
+
+        function htmlMaker(imageUrls) {
+            const photoOutput = document.getElementById('photo_output');
+            let imageUrlString = '';
+
+            // 用 <img /> 印出照片
+            for (let i = 0; i < imageUrls.length; i++) {
+                imageUrlString += `<img alt="圖片" width="300px" src="${imageUrls[i]}" />`;
+            }
+
+            photoOutput.innerHTML = imageUrlString;
+        }
+    </script>
+</body>
+
+</html>

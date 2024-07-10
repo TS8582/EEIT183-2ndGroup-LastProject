@@ -1,6 +1,6 @@
 package com.playcentric.model.game.primary;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -41,10 +41,12 @@ public class Game {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy年MM月dd日")
 	@DateTimeFormat(pattern = "yyyy年MM月dd日")
 	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime releaseAt;
+	private Timestamp releaseAt = new Timestamp(System.currentTimeMillis());
 	private String developer;
 	private String publisher;
 	private String gameFilePath;
+	private Integer totalReviews;
+	private Integer totalScore;
 	private Boolean isShow = true;
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinTable(name = "gameTypes",

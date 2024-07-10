@@ -1,12 +1,14 @@
 package com.playcentric.model.game.primary;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -36,14 +38,15 @@ public class GameDiscountSet {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer gameDiscountId;
 	private String gameDiscountName;
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy/MM/dd HH:mm:ss")
-	@DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime startAt;
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy/MM/dd HH:mm:ss")
-	@DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+	private Timestamp startAt;
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime endAt;
+	private Timestamp endAt;
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "gameDiscountSet")
 	private List<GameDiscount> gameDiscounts;
 }

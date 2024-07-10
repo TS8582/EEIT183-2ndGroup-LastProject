@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,7 +34,7 @@ public class Forum {
 	private int forumId;
 
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne( fetch = FetchType.LAZY )
 	@JoinColumn(name = "gameId")
 	private Game game;
 
@@ -46,11 +47,38 @@ public class Forum {
 	private List<Texts> texts = new ArrayList<>();
 
 	private String textsIntro;
-
+	
+	@Transient
+	private String gameName;
+//	private ForumGameDto gameIfo;
+	
+//	public Forum() {
+//		Game game = getGame();
+//		gameIfo.setGameId(game.getGameId());
+//		gameIfo.setGameName(game.getGameName());
+//		List<ImageLib> imageLibs = game.getImageLibs();
+//		byte[] gameImg = imageLibs.get(0).getImageFile();
+//		gameIfo.setGameImg(gameImg);
+//	}
+	
 	public Forum(List<Texts> texts, String textsIntro) {
-		super();
+		this();
 		this.texts = texts;
 		this.textsIntro = textsIntro;
+	}
+	
+	public String getTitle() {
+		if (!texts.isEmpty()) {
+			return texts.get(0).getTitle();
+		}
+		return null;
+	}
+
+	public int getFirstTextId() {
+		if (!texts.isEmpty()) {
+			return texts.get(0).getTextsId();
+		}
+		return -1;
 	}
 
 }

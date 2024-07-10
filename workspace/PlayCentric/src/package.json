@@ -19,7 +19,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:css": "postcss ./main/resources/static/css/my-tailwind.css -o ./main/resources/static/css/output.css",
-    "watch:css": "nodemon -e html,css -x \"npm run build:css\""
+    "css": "nodemon -e html,css -x \"npm run build:css\""
   },
   "keywords": [],
   "author": "",

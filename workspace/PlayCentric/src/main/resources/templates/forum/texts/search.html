@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+  <meta charset="UTF-8">
+  <title>文章搜尋結果</title>
+</head>
+
+<body>
+  <div th:replace="~{forum/layout/navbar}"></div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <h1>搜尋結果</h1>
+
+        <th:block th:each="oneMsg : ${page.content}">
+          <div class="card mb-3">
+            <div class="card-body">
+              <p class="card-title">
+                <a th:href="@{/texts/view(id=${oneMsg.textsId})}" th:text="${oneMsg.title}"></a>
+              </p>
+              <p class="card-text" th:text="${oneMsg.textsIntro}">遊戲介紹</p>
+
+              <div class="edit-btn" style="display:flex">
+                <a th:href="@{/texts/edit(id=${oneMsg.textsId})}" class="btn btn-outline-success btn-sm">編輯</a>
+                <form method="post" th:action="@{/texts/delete}">
+                  <input name="id" th:value="${oneMsg.textsId}" type="hidden" />
+                  <input name="_method" value="DELETE" type="hidden" />
+                  <input type="submit" value="刪除" onclick="return confirm('確定刪除嗎?')" class="btn btn-outline-danger btn-sm">
+                </form>
+              </div>
+              <br>
+            </div>
+          </div>
+          <br>
+        </th:block>
+
+        <div th:text=" '總共有 ' + ${page.totalElements} + ' 筆'  "></div>
+
+        <ul class="pagination" th:if="${page.totalPages != 0}">
+          <!-- 上一頁 -->
+          <th:block th:switch="${page.number != 0}">
+            <li th:case="${true}" class="page-item">
+              <a class="page-link" th:href="@{/texts/search(keyword=${keyword}, page=${page.number - 1})}">上一頁</a>
+            </li>
+            <li th:case="${false}" class="page-item disabled">
+              <a class="page-link">上一頁</a>
+            </li>
+          </th:block>
+
+          <!-- 頁碼 -->
+          <th:block th:each="pageNumber : ${#numbers.sequence(1, page.totalPages)}">
+            <th:block th:switch="${page.number + 1 == pageNumber}">
+              <li th:case="${false}" class="page-item">
+                <a class="page-link" th:href="@{/texts/search(keyword=${keyword}, page=${pageNumber - 1})}" th:text="${pageNumber}"></a>
+              </li>
+              <li th:case="${true}" class="page-item active">
+                <span class="page-link" th:text="${pageNumber}"></span>
+              </li>
+            </th:block>
+          </th:block>
+
+          <!-- 下一頁 -->
+          <th:block th:switch="${page.number + 1 == page.totalPages}">
+            <li th:case="${false}" class="page-item">
+              <a class="page-link" th:href="@{/texts/search(keyword=${keyword}, page=${page.number + 1})}">下一頁</a>
+            </li>
+            <li th:case="${true}" class="page-item disable">
+              <a class="page-link">下一頁</a>
+            </li>
+          </th:block>
+        </ul>
+
+        <a href="/texts" class="btn btn-outline-primary">返回首頁</a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
