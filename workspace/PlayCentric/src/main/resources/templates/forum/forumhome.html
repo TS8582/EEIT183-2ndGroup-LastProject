@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <title>PlayCentric論壇</title>
-   <script src="https://kit.fontawesome.com/a498fa36dc.js" crossorigin="anonymous"></script>
-    <style>
-        .i1 {
-            display: flex;
-            justify-content: end;
-            margin-left: 1250px;
-        }
-    </style>
+  <script src="https://kit.fontawesome.com/a498fa36dc.js" crossorigin="anonymous"></script>
+  <style>
+    .i1 {
+      display: flex;
+      justify-content: end;
+      margin-left: 1250px;
+    }
+  </style>
 </head>
 
 <body>
@@ -20,36 +20,37 @@
     <div class="row justify-content-center">
       <div class="col-6">
         <h1>討論串列表</h1>
-        
-        <form th:action="@{/forum/search}" method="get" class="mt-3">
-    <div class="input-group">
-        <input type="text" name="keyword" class="form-control" placeholder="搜尋討論串">
-        <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="submit">
-                <i class="fas fa-search"></i> <!-- 使用 Font Awesome 5 的正確圖標 -->
-            </button>
-        </div>
-    </div>
-</form>
-<br>
 
-         <th:block th:each="oneMsg : ${page.content}">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a th:href="@{/texts/view(textsId=${oneMsg.forumId})}" th:text="${oneMsg.title}"></a>
-                    </h5>
-                    <p class="card-text" th:text="${oneMsg.textsIntro}"></p>
-                    <div class="edit-btn">
-                        <a th:href="@{/forum/edit(forumId=${oneMsg.forumId})}" class="btn btn-outline-success btn-sm">編輯</a>
-                        <form method="post" th:action="@{/forum/delete}">
-                            <input type="hidden" name="forumId" th:value="${oneMsg.forumId}" />
-                            <input type="hidden" name="_method" value="DELETE" />
-                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('確定刪除嗎??')">刪除</button>
-                        </form>
-                    </div>
-                </div>
+        <form th:action="@{/forum/search}" method="get" class="mt-3">
+          <div class="input-group">
+            <input type="text" name="keyword" class="form-control" placeholder="搜尋討論串">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="submit">
+                <i class="fas fa-search"></i> <!-- 使用 Font Awesome 5 的正確圖標 -->
+              </button>
             </div>
+          </div>
+        </form>
+        <br>
+
+        <th:block th:each="forum : ${page.content}">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">
+                <a th:href="@{/texts/view(textsId=${forum.textsId})}" th:text="${forum.title}"></a>
+              </h5>
+              <p class="card-text" th:text="${forum.textsIntro}"></p>
+              <div class="edit-btn">
+                <a th:href="@{/forum/edit(forumId=${forum.forumId})}" class="btn btn-outline-success btn-sm">編輯</a>
+                <form method="post" th:action="@{/forum/delete}">
+                  <input type="hidden" name="forumId" th:value="${forum.forumId}" />
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button type="submit" class="btn btn-outline-danger btn-sm"
+                    onclick="return confirm('確定刪除嗎??')">刪除</button>
+                </form>
+              </div>
+            </div>
+          </div>
         </th:block>
 
         <div th:text=" '總共有 ' + ${page.totalElements} + ' 筆'  "></div>
