@@ -1,6 +1,6 @@
 package com.playcentric.model.game.primary;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,7 +32,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "game")
 public class Game {
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer gameId;
@@ -42,10 +41,12 @@ public class Game {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy年MM月dd日")
 	@DateTimeFormat(pattern = "yyyy年MM月dd日")
 	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime releaseAt;
+	private Timestamp releaseAt = new Timestamp(System.currentTimeMillis());
 	private String developer;
 	private String publisher;
 	private String gameFilePath;
+	private Integer totalReviews;
+	private Integer totalScore;
 	private Boolean isShow = true;
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinTable(name = "gameTypes",
@@ -59,7 +60,6 @@ public class Game {
 	private List<ImageLib> imageLibs;
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "game")
 	private List<GameDiscount> gameDiscounts;
-	
 	@Transient
-	private boolean isFirstRelease = true;
+	private Boolean isFirstRelease = true;
 }

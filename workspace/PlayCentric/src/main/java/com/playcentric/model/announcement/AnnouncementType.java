@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,10 +30,12 @@ import lombok.Setter;
 public class AnnouncementType {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int annoTypeId;
+	private Integer annoTypeId;
 	private String annoTypeName;
 	
-	@OneToMany(mappedBy = "announcementType")
+	@JsonIgnore
+	@OneToMany(mappedBy = "announcementType", 
+	cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Announcement> announcements;
 	
 }

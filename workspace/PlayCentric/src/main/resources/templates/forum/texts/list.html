@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PlayCentric文章</title>
+    <script src="https://kit.fontawesome.com/a498fa36dc.js" crossorigin="anonymous"></script>
+    <style>
+        .i1 {
+            display: flex;
+            justify-content: flex-end;
+            width: 300px;
+            margin-left: 1000px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <div th:replace="~{/layout/nav}"></div>
+
+    <!-- <form th:action="@{/texts/search}" method="get" class="mt-3  i1">
+        <div class="input-group">
+            <input type="text" name="keyword" class="form-control" placeholder="搜尋文章">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </form> -->
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <h1>所有文章</h1>
+
+
+
+                <table id="textsTable" class="display">
+                    <thead>
+                        <tr>
+                            <th>討論區編號</th>
+                            <th>會員編號</th>
+                            <th>標題</th>
+                            <th>內容</th>
+                            <th>操作</th>
+                            <th>發表時間</th>
+                            <th>更新時間</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="oneMsg : ${textsList}">
+                            <td th:text="${oneMsg.forumId}"></td>
+                            <td th:text="${oneMsg.memId}"></td>
+                            <td th:text="${oneMsg.title}"></td>
+                            <td th:text="${oneMsg.textsContent}"></td>
+                            <td>
+                                <a th:href="@{/texts/edit(textsId=${oneMsg.textsId})}"
+                                    class="btn btn-outline-success btn-sm">編輯</a>
+                                <form method="post" th:action="@{/texts/delete}" style="display:inline;">
+                                    <input name="textsId" th:value="${oneMsg.textsId}" type="hidden" />
+                                    <input type="submit" value="刪除" onclick="return confirm('確定刪除嗎?')"
+                                        class="btn btn-outline-danger btn-sm">
+                                </form>
+                            </td>
+                            <td th:text="${oneMsg.doneTime}"></td>
+                            <td th:text="${oneMsg.updatedTime}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div th:if="${not #lists.isEmpty(texts)}">
+                    <!-- 在這裡訪問 texts.size() 或者遍歷 texts -->
+                    <p>共有 <span th:text="${texts.size()}"></span> 篇文章</p>
+                    <ul>
+                        <li th:each="text : ${texts}">
+                            <span th:text="${text.title}"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div th:else>
+                    <p>目前沒有文章可顯示</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#textsTable').DataTable();
+        });
+    </script>
+</body>
+
+</html>

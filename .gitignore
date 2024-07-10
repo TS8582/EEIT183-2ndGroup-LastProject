@@ -43,4 +43,5 @@ replay_pid*
 .history
 .ionide
 
-googleOauth2.properties
+### OAuth2 ###
+googleOAuth2.properties
