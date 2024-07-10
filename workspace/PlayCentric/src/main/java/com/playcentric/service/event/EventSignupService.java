@@ -29,17 +29,14 @@ public class EventSignupService {
     public EventSignupDTO createEventSignup(EventSignupDTO eventSignupDTO) {
         EventSignup eventSignup = new EventSignup();
         
-        // Load Event object based on eventId
         Event event = eventRepository.findById(eventSignupDTO.getEventId())
                                       .orElseThrow(() -> new IllegalArgumentException("Event not found"));
         
-        // Load Member object based on memId
         Member member = memberRepository.findById(eventSignupDTO.getMemId())
                                         .orElseThrow(() -> new IllegalArgumentException("Member not found"));
         
         eventSignup.setEvent(event);
         eventSignup.setMember(member);
-        
         eventSignup.setSignupTime(eventSignupDTO.getSignupTime());
         eventSignup.setVoteCount(eventSignupDTO.getVoteCount());
         eventSignup.setWork(eventSignupDTO.getWork());
