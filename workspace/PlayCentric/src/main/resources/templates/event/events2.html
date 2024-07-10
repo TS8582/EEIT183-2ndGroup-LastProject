@@ -108,7 +108,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
 						<button type="submit" class="btn btn-primary" id="saveEventBtn">保存</button>
-<!--						<button type="button" class="btn btn-danger" id="deleteEventBtn">刪除</button>-->
+						<button type="button" class="btn btn-danger" id="deleteEventBtn">刪除</button>
 					</div>
 				</form>
 			</div>
@@ -187,22 +187,6 @@
 			$('#eventId').val('');
 			$('#deleteEventBtn').hide();  // 隱藏刪除按鈕
 		};
-		
-		// 模糊查詢活動功能
-		function searchEvents() {
-			const searchValue = document.getElementById("searchEventInput").value.toLowerCase();
-			const eventList = document.getElementById("eventList");
-			const rows = eventList.getElementsByTagName("tr");
-
-			for (let i = 0; i < rows.length; i++) {
-				let eventName = rows[i].getElementsByTagName("td")[0].textContent.toLowerCase();
-				if (eventName.includes(searchValue)) {
-					rows[i].style.display = "";
-				} else {
-					rows[i].style.display = "none";
-				}
-			}
-		}
 	</script>
 </body>
 
