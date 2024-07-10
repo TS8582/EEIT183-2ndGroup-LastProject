@@ -1,5 +1,7 @@
 package com.playcentric.model.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +22,7 @@ public class EventReward {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eventId")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Event event;
 
     private String rewardName;

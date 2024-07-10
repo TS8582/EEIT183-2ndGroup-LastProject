@@ -1,12 +1,18 @@
 package com.playcentric.model.event;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
 
 @Entity
@@ -20,7 +26,19 @@ public class Event {
     private String eventName;
     private String eventDescription;
     private Integer eventType;
-    private LocalDateTime eventStartTime;
-    private LocalDateTime eventEndTime;
-    private LocalDateTime eventSignupDeadLine;
+    
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") // 若要在 thymeleaf 強制使用本格式，需雙層大括號
+	@Temporal(TemporalType.TIMESTAMP)
+    private Date eventStartTime;
+    
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") // 若要在 thymeleaf 強制使用本格式，需雙層大括號
+	@Temporal(TemporalType.TIMESTAMP)
+    private Date eventEndTime;
+    
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") // 若要在 thymeleaf 強制使用本格式，需雙層大括號
+	@Temporal(TemporalType.TIMESTAMP)
+    private Date eventSignupDeadLine;
 }

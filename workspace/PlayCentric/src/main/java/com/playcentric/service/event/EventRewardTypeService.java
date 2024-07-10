@@ -32,4 +32,17 @@ public class EventRewardTypeService {
     public void deleteEventRewardType(Integer rewardTypeId) {
         eventRewardTypeRepository.deleteById(rewardTypeId);
     }
+    
+    // 更新活動獎勵類型
+    public EventRewardType updateEventRewardType(EventRewardType eventRewardType) {
+        // 檢查是否存在該獎勵類型
+        EventRewardType existingType = eventRewardTypeRepository.findById(eventRewardType.getRewardTypeId()).orElse(null);
+        if (existingType == null) {
+            return null; // 如果不存在，返回 null 或者進行錯誤處理
+        }
+        // 更新獎勵類型的屬性
+        existingType.setRewardTypeName(eventRewardType.getRewardTypeName());
+        // 儲存並返回更新後的獎勵類型
+        return eventRewardTypeRepository.save(existingType);
+    }
 }
