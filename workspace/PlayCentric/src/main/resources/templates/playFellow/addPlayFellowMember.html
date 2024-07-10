@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>加入伴遊</title>
-    <link rel="stylesheet" th:href="@{/css/output.css}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
 
     <style>
         .content {
@@ -52,13 +52,11 @@
     </style>
 </head>
 
-<body class="d-flex">
+<body>
     <div th:replace="~{layout/nav.html}"></div>
-
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="mt-5">加入我們</h5>
-            <button class="backBtn" id="backBtn">回前頁</button>
             <span style="font-size: 0.8em;">會員編號: <span class="badge badge-secondary" style="font-size: 0.8em;"
                     th:text="${members.memId}"></span></span>
         </div>
@@ -69,6 +67,9 @@
                     <li class="list-group-item theme active" data-content="content1">基本資料</li>
                     <li class="list-group-item theme" data-content="content2">
                         伴遊者照片</li>
+                    <li class="list-group-item theme" data-content="content3" id="backBtn">回前頁</li>
+
+
                 </ul>
             </div>
             <div class="col-md-9">
@@ -108,7 +109,7 @@
                             <label for="pfCreatedTime">創建時間</label>
                             <input type="date" class="form-control" id="pfCreatedTime" name="pfcreatedTime" required>
                         </div>
-                        <button type="submit" class="btn btn-primary" onclick="submitFirstStep()">確認</button>
+                        <button type="submit" class="btn btn-primary" onclick="submitFirstStep()">送出</button>
                     </form>
                 </div>
 
@@ -134,13 +135,14 @@
                         <button type="submit" class="btn btn-success" id="addBtn" style="display: none;">上傳</button>
 
                     </form>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <script th:src="@{/js/layout/nav.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script th:src="@{/js/layout/nav.js}"></script>
 
     <script>
         // 照片: 按了按鈕才有確認送出按鈕

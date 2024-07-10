@@ -45,6 +45,11 @@ public class PlayFellowMemberController {
 		return "playFellow/showImages";
 	}
 	
+	@GetMapping("/playFellow/sideBar")
+	public String sideBar() {
+		return "playFellow/sideBar";
+	}
+	
 	
 	@GetMapping("/playFellow/cms")
 	public String getMethodName(Model model) {

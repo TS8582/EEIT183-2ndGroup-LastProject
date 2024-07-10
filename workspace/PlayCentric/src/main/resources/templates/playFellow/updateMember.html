@@ -180,22 +180,23 @@
 
 
 
+                    <div class="card-body">
+                        <form id="uploadForm" enctype="multipart/form-data">
+                            <input type="hidden" name="playFellowId" id="uploadPlayFellowIdInput"
+                                th:value="${playFellowId}">
 
-                    <form id="uploadForm" enctype="multipart/form-data">
-                        <input type="hidden" name="playFellowId" id="uploadPlayFellowIdInput"
-                            th:value="${playFellowId}">
+                            <div class="form-group" id="addBtn2" style="display: none;">
+                                <label for="file">新增圖片</label> <input type="file" class="form-control-file" id="file"
+                                    name="file" multiple required>
+                            </div>
+                            <div id="message" class="mt-3"></div>
 
-                        <div class="form-group" id="addBtn2" style="display: none;">
-                            <label for="file">新增圖片</label> <input type="file" class="form-control-file" id="file"
-                                name="file" multiple required>
-                        </div>
-                        <div id="message" class="mt-3"></div>
+                            <button type="button" class="btn btn-success" id="editBtn">新增照片</button>
+                            <button type="submit" class="btn btn-success" id="addBtn" style="display: none;">上傳</button>
+                            <button type="button" class="btn btn-primary" id="backCmsBtn">回前頁</button>
+                        </form>
 
-                        <button type="button" class="btn btn-success" id="editBtn">新增照片</button>
-                        <button type="submit" class="btn btn-success" id="addBtn" style="display: none;">上傳</button>
-                        <button type="button" class="btn btn-primary" id="backCmsBtn">回前頁</button>
-                    </form>
-
+                    </div>
                 </div>
 
 

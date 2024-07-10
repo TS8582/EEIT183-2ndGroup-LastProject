@@ -109,10 +109,13 @@
 </head>
 
 <body>
+	<div th:replace="~{layout/nav.html}"></div>
+
+<!-- 	<div th:replace="~{/playFellow/sideBar}"></div> -->
 	<main>
+
 		<div class="container mt-5">
-			<h3 class="mt-5">審核伴遊資格</h3>
-			<button class="backBtn" id="backBtn">回前頁</button>
+        <h2 class="title">審核伴遊資格</h2>
 			<div th:each="pfmember : ${PlayFellowMembers}" class="row-wrapper" id="row-wrapper">
 				<div class="creation-time" th:text="${pfmember.pfcreatedTime}"></div>
 				<div class="field">
