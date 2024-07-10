@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <title>新增文章</title>
+</head>
+
+<body>
+    <div th:replace="~{/forum/layout/navbar}"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <h1 class="mt-5">新增文章</h1>
+                <form th:action="@{/texts/add}" method="post">
+                    <div class="form-group">
+                        <label for="forumId">討論區編號</label>
+                        <input type="text" class="form-control" id="forumId" name="forumId" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="memId">會員編號</label>
+                        <input type="text" class="form-control" id="memId" name="memId" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title">標題</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="textsContent">內容</label>
+                        <textarea class="form-control" id="textsContent" name="textsContent" rows="10"
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">送出</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
