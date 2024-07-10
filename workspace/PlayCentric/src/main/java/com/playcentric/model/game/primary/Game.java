@@ -41,7 +41,7 @@ public class Game {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy年MM月dd日")
 	@DateTimeFormat(pattern = "yyyy年MM月dd日")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Timestamp releaseAt;
+	private Timestamp releaseAt = new Timestamp(System.currentTimeMillis());
 	private String developer;
 	private String publisher;
 	private String gameFilePath;
