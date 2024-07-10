@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+  <meta charset="UTF-8">
+  <title>PlayCentric論壇</title>
+</head>
+
+<body>
+  <div th:replace="~{forum/layout/navbar}"></div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <h1>查詢結果</h1>
+
+        <th:block th:each=" oneMsg : ${forums}">
+          <div class="card mb-3">
+            <div class="card-body">
+              <!-- <h5 class="card-title" th:text="${oneMsg.game.gameName}">Game Name</h5>
+              <div th:if="${oneMsg.game != null}">
+                <p th:text="${oneMsg.game.gameName}"></p>
+              </div>
+              <img th:src="@{/image/download(imageId=${oneMsg.game.imageLibs[0].imageId})}" class="img-fluid"
+                alt="Game Image" /> -->
+
+              <p class="card-title" th:text="${oneMsg.gameName}"></p>
+              <p class="card-text" th:text="${oneMsg.textsIntro}">遊戲介紹</p>
+
+              <div class="edit-btn" style="display:flex">
+                <a th:href="@{/forum/edit(forumId=${oneMsg.forumId})}" class="btn btn-outline-success btn-sm">編輯</a>
+                <!-- <a th:href="@{/forum/delete(id=${oneMsg.id})}" class="btn btn-outline-danger btn-sm"
+                  onclick="return confirm('確定刪除嗎??')">刪除</a> -->
+
+                <form method="post" th:action="@{/forum/delete}">
+                  <input name="forumId" th:value="${oneMsg.forumId}" type="hidden" />
+                  <input name="_method" value="DELETE" type="hidden" />
+                  <input type="submit" value="刪除" onclick="return confirm('確定刪除嗎??')" class="btn btn-outline-danger btn-sm">
+                </form>
+              </div>
+              <br>
+            </div>
+          </div>
+          <br>
+        </th:block>
+
+        <div th:text="'總共有 ' + ${forums.size()} + ' 筆'"></div>
+        <br>
+         <a th:href="@{/forum/page}" class="btn btn-outline-primary btn-sm">返回討論串列表</a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

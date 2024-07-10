@@ -45,6 +45,8 @@ public class Game {
 	private String developer;
 	private String publisher;
 	private String gameFilePath;
+	private Integer totalReviews;
+	private Integer totalScore;
 	private Boolean isShow = true;
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinTable(name = "gameTypes",

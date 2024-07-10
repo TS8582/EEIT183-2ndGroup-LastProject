@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" th:href="@{/css/tabulator.min.css}">
+    <script th:src="@{/js/tabulator.min.js}"></script>
+    <title>PlayCentric-後台管理-公告</title>
+</head>
+
+<body class="h-screen flex flex-col w-screen">
+    <!-- 頂部導航欄 -->
+    <div class="" th:replace="~{/layout/nav}"></div>
+
+    <div class="flex flex-1">
+        <!-- 側邊欄 -->
+        <aside class="w-64 bg-slate-300 text-black flex flex-col rounded-md">
+            <div class="p-4">
+                <h1 class="text-2xl font-semibold">管理選單</h1>
+            </div>
+            <nav class="flex-1 left-nav">
+                <ul>
+                    <li class="leftmenuitem px-4">
+                        <a href="#" class="block py-2.5 px-4 rounded ">會員管理</a>
+                    </li>
+                    <li class="leftmenuitem px-4">
+                        <a th:href="@{/back/anno}" class="block py-2.5 px-4 rounded ">公告管理</a>
+                    </li>
+                    <li class="leftmenuitem px-4 left-selected">
+                        <a th:href="@{/back/game}" class="block py-2.5 px-4 rounded ">遊戲管理</a>
+                    </li>
+                    <li class="leftmenuitem px-4">
+                        <a href="#" class="block py-2.5 px-4 rounded ">遊戲道具管理</a>
+                    </li>
+                    <li class="leftmenuitem px-4">
+                        <a href="#" class="block py-2.5 px-4 rounded ">伴遊管理</a>
+                    </li>
+                    <li class="leftmenuitem px-4">
+                        <a href="#" class="block py-2.5 px-4 rounded ">活動管理</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 主要內容區域 -->
+        <main class="w-full h-auto">
+            <div class="w-full h-auto flex flex-col justify-center px-8">
+                <input class="mb-4 p-2 border border-gray-300 rounded-md" type="text" id="search" placeholder="搜尋...">
+                <div class="w-full" id="table">
+                    <table class="w-full border-collapse shadow">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-2/12 border">遊戲名稱</th>
+                                <th class="text-center w-1/12 border">價格</th>
+                                <th class="text-center w-3/12 border">發布時間</th>
+                                <th class="text-center w-1/12 border">開發者</th>
+                                <th class="text-center w-1/12 border">發行商</th>
+                                <th class="text-center w-1/12 border">評價</th>
+                                <th class="text-center w-3/12 border">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <th:block th:each="game:${allGame}">
+                                <tr>
+                                    <td class="border p-3 gameName">
+                                        <a href="#" th:text="${game.gameName}" class="text-center"></a>
+                                    </td>
+                                    <td th:text="${game.price}" class="text-center border p-3 price"></td>
+                                    <td th:text="${game.releaseAt}" class="text-center border p-3 releaseAt"></td>
+                                    <td th:text="${game.developer}" class="text-center border p-3 developer"></td>
+                                    <td th:text="${game.publisher}" class="text-center border p-3 publisher"></td>
+                                    <td th:if="${game.totalReviews != 0}"
+                                        th:text="${game.totalScore / game.totalReviews}"
+                                        class="text-center border p-3 score"></td>
+                                    <td th:if="${game.totalReviews == 0}" class="text-center border p-3 score">0</td>
+                                    <td class="text-center border p-3">
+                                        <a href="#" class="btn btn-sky rounded-md me-2 block md:inline">修改</a>
+                                        <a th:if="${!game.isShow}" href="#"
+                                            class="btn btn-green rounded-md me-2 block md:inline">上架</a>
+                                        <a th:if="${game.isShow}" href="#"
+                                            class="btn btn-danger rounded-md me-2 block md:inline">下架</a>
+                                    </td>
+                                </tr>
+                            </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="plus-btn">
+        <a th:href="@{/game/getInsertGame}" class="text-4xl text-black">+</a>
+    </div>
+
+    <script>
+        let allData = document.querySelectorAll('tbody tr');
+        const search = document.querySelector('#search');
+
+        allData.forEach(elm => {
+            elm.addEventListener('mouseenter', () => {
+                elm.classList.add('bg-gray-300');
+            })
+            elm.addEventListener('mouseleave', () => {
+                elm.classList.remove('bg-gray-300');
+            })
+        });
+
+        search.addEventListener('keyup', () => {
+            allData.forEach(data => {
+                if (!data.innerText.includes(search.value)) {
+                    data.classList.add('hidden');
+                }
+                else {
+                    data.classList.remove('hidden');
+                }
+            });
+        })
+    </script>
+
+</body>
+
+</html>

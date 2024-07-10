@@ -9,12 +9,13 @@
 </head>
 
 <body>
-    <nav class="bg-primary-tw shadow-md rounded-md rounded-b-none">
+    <nav class="mb-2 bg-black top-nav">
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <div class="flex items-center">
+                <!-- Logo及名稱 -->
+                <div class="flex items-center relative z-20">
                     <div class="shrink-0 flex items-center">
-                        <a class="flex items-center" href="#">
+                        <a class="flex items-center" th:href="@{/}">
                             <img th:src="@{/images/MyLogo.png}" alt="logo" class="h-14 w-auto sm:h-16">
 
                             <span class="text-white ml-1 text-4xl">PlayCentric</span>
@@ -23,26 +24,26 @@
                 </div>
 
                 <!-- menu -->
-                <div class="text-white flex items-center font-semibold">
+                <div class="text-white flex items-center font-semibold relative z-50">
                     <div class="hidden md:flex md:ml-6 md:space-x-4 select-none cursor-pointer">
                         <div>
-                            <a href="#">管理介面</a>
+                            <a th:href="@{/back/anno}">管理介面</a>
                         </div>
                         <div class="relative tag">
                             會員
                             <div class="dropmenu hidden">
                                 <ul>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                 </ul>
                             </div>
@@ -52,16 +53,16 @@
                             <div class="dropmenu hidden">
                                 <ul>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                 </ul>
                             </div>
@@ -71,16 +72,16 @@
                             <div class="dropmenu hidden">
                                 <ul>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a th:href="@{/forum/page}">首頁</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                 </ul>
                             </div>
@@ -90,16 +91,16 @@
                             <div class="dropmenu hidden">
                                 <ul>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                 </ul>
                             </div>
@@ -109,16 +110,16 @@
                             <div class="dropmenu hidden">
                                 <ul>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                 </ul>
                             </div>
@@ -128,16 +129,16 @@
                             <div class="dropmenu hidden">
                                 <ul>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                     <li class="menu-item">
-                                        我的選項
+                                        <a href="#">我的選項</a>
                                     </li>
                                 </ul>
                             </div>
@@ -145,8 +146,7 @@
 
                     </div>
                     <div class="md:hidden flex items-center">
-                        <button id="mobile-menu-button"
-                            class="text-white hover:text-opacity-80 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-900">
+                        <button id="mobile-menu-button" class="text-white hover:text-opacity-80">
                             <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 6h16M4 12h16M4 18h16"></path>
@@ -158,26 +158,26 @@
         </div>
 
         <!-- Mobile menu -->
-        <div id="mobile-menu" class="text-white md:hidden hidden text-center select-none">
+        <div id="mobile-menu" class="text-white bg-black md:hidden hidden text-center select-none relative z-50">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:pl-1">
                 <div>
-                    <a href="#">管理介面</a>
+                    <a th:href="@{/back/anno}">管理介面</a>
                 </div>
                 <div class="tag-m">
                     會員
                     <div class="dropmenu-m hidden">
                         <ul>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                         </ul>
                     </div>
@@ -188,35 +188,35 @@
                     <div class="dropmenu-m hidden">
                         <ul>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="tag-m">
                     討論區
-                    <div class="dropmenu-m hidden">
+                    <div class="dropmenu-m hidden" th:href="@{/messages/page}">
                         <ul>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                         </ul>
                     </div>
@@ -226,16 +226,16 @@
                     <div class="dropmenu-m hidden">
                         <ul>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                         </ul>
                     </div>
@@ -245,16 +245,16 @@
                     <div class="dropmenu-m hidden">
                         <ul>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                         </ul>
                     </div>
@@ -264,16 +264,16 @@
                     <div class="dropmenu-m hidden">
                         <ul>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                             <li class="menu-item">
-                                我的選項
+                                <a href="#">我的選項</a>
                             </li>
                         </ul>
                     </div>
@@ -283,7 +283,7 @@
         </div>
     </nav>
 
-    <script th:src="@{/js/nav.js}"></script>
+    <script th:src="@{/js/layout/nav.js}"></script>
 </body>
 
 </html>

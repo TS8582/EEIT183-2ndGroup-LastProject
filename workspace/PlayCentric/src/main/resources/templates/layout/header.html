@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-TW" xmlms:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <title>nav</title>
+</head>
+
+<body>
+    <header class="h-2/3 bg-black relative justify-center">
+        <!-- 上方文字 -->
+        <div class="h-full w-full absolute flex justify-center items-start top-24 z-10">
+            <span class="text-white text-3xl">Enjoy your play !</span>
+        </div>
+        <!-- 中間圖片 -->
+        <div class="h-full w-full absolute flex justify-center items-center z-10">
+            <img class="size-1/2 md:size-auto" th:src="@{images/controller3.png}" alt="">
+        </div>
+        <!-- 下方文字/按鈕 -->
+        <div class="h-full w-full absolute flex justify-center items-end bottom-20 z-10">
+            <span class="btn btn-sky rounded-3xl">Play
+                Now!!!</span>
+        </div>
+        <div th:replace="~{layout/nav}"></div>
+    </header>
+
+    <script th:src="@{/js/nav.js}"></script>
+</body>
+
+</html>

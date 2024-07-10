@@ -1,4 +1,5 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
-    "spring.dashboard.openUrl": "{protocol}://{hostname}:8080/PlayCentric"
+    "spring.dashboard.openUrl": "{protocol}://{hostname}:8080/PlayCentric",
+    "java.compile.nullAnalysis.mode": "automatic"
 }
