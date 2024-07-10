@@ -68,7 +68,8 @@
                                         <a href="#" th:text="${game.gameName}" class="text-center"></a>
                                     </td>
                                     <td th:text="${game.price}" class="text-center border p-3 price"></td>
-                                    <td th:text="${game.releaseAt}" class="text-center border p-3 releaseAt"></td>
+                                    <td th:text="${#dates.format(game.releaseAt,'yyyy-MM-dd HH:mm:ss')}"
+                                        class="text-center border p-3 releaseAt"></td>
                                     <td th:text="${game.developer}" class="text-center border p-3 developer"></td>
                                     <td th:text="${game.publisher}" class="text-center border p-3 publisher"></td>
                                     <td th:if="${game.totalReviews != 0}"
