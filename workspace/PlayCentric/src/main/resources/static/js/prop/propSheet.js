@@ -83,6 +83,8 @@ function loadGames() {
     .then(function (res) {
       const games = res.data;
       const selectGame = $("#SelectGame");
+      console.log("Games data:", games); // 打印数据内容
+
       selectGame.empty();
       games.forEach(function (game) {
         const option = $("<option></option>")

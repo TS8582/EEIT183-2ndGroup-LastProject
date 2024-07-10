@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  const userId = "";
   // 初始化 DataTable
   let myTable = $("#propSellOrderTable").DataTable({
     language: {
@@ -12,7 +13,7 @@ $(document).ready(function () {
     let SelectGame = document.querySelector("#SelectGame");
     let selectedOption = SelectGame.options[SelectGame.selectedIndex];
     const selectedGameId = selectedOption.value;
-    console.log(selectedGameId);
+    // console.log(selectedGameId);
 
     axios({
       method: "get",
@@ -39,17 +40,15 @@ $(document).ready(function () {
 function htmlMaker(data, table) {
   table.clear(); // 清空 DataTable 的現有內容
 
-  data.forEach((item) => {
-    console.log(item); // 打印每个数据项以进行调试
-
+  data.forEach((item, userId) => {
     // 判斷委託單狀態
     let orderStatusText;
     switch (item.orderStatus) {
       case 0:
-        orderStatusText = "販賣中";
+        orderStatusText = "販售中";
         break;
       case 1:
-        orderStatusText = "已售出";
+        orderStatusText = "已售完";
         break;
       case 2:
         orderStatusText = "已下架";
@@ -79,6 +78,7 @@ function htmlMaker(data, table) {
             item.expiryTime,
             item.sellerMemId,
             orderStatusText,
+            // 購買按鈕
           ])
           .draw(false); // 将数据行添加到 DataTable 中
 

@@ -3,6 +3,7 @@ package com.playcentric.controller.prop;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.game.primary.Game;
+import com.playcentric.model.prop.GameSimpleDto;
 import com.playcentric.model.prop.Props;
 import com.playcentric.model.prop.type.PropType;
 import com.playcentric.service.game.GameService;
@@ -47,8 +49,11 @@ public class PropController {
     // 找尋所有遊戲返回至選單
     @GetMapping("/prop/findAllGame")
     @ResponseBody
-    public List<Game> findAllGame() {
-        return gameService.findAll();
+    public List<GameSimpleDto> findAllGame() {
+        List<Game> games = gameService.findAll();
+        return games.stream()
+                .map(game -> new GameSimpleDto(game.getGameId(), game.getGameName()))
+                .collect(Collectors.toList());
     }
 
     // 根據遊戲ID找尋所有道具

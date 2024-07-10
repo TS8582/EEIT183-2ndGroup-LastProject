@@ -2,6 +2,8 @@ package com.playcentric.model.game.primary;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,7 @@ public class GameTypeLib {
 	
 	private String gameTypeName;
 	
+	@JsonIgnore
 	@ManyToMany(mappedBy = "gameTypeLibs")
 	private List<Game> games;
 	

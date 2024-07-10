@@ -14,29 +14,32 @@
         <div class="flex justify-center my-5 border-2 p-20 rounded-md">
             <form th:action="@{/anno/insertAnno}" method="post">
                 <div class="space-y-4">
+
                     <div class="flex overflow-hidden items-center">
                         <label for="title" class="text-lg me-2">標題：</label> <input required type="text" name="title"
-                            id="title"
-                            class="w-96 px-4 py-2 border border-gray-300 focus:outline-2 focus:outline-cyan-200 rounded-lg"
-                            placeholder="請輸入標題">
+                            id="title" class="text-input" placeholder="請輸入標題">
                     </div>
+
                     <div class="flex overflow-hidden items-center">
                         <label for="content" class="text-lg me-2">內容：</label>
                         <textarea required name="content" id="content"
                             class="size-96 px-4 py-2 border border-gray-300 focus:outline-2 focus:outline-cyan-200 resize-none rounded-lg"
                             placeholder="請輸入內容"></textarea>
                     </div>
+
                     <div class="flex overflow-hidden items-center">
                         <label for="typeId" class="text-lg me-2">分類：</label>
-                        <select class="w-96 focus:outline-2 focus:outline-cyan-200" name="typeId" id="">
+                        <select class="w-96 border-2 focus:outline-2 focus:outline-cyan-200" name="typeId" id="">
                             <th:block th:each="annoType:${allAnnoType}">
                                 <option th:value="${annoType.annoTypeId}">[[${annoType.annoTypeName}]]</option>
                             </th:block>
                         </select>
                     </div>
+
                     <div class="flex overflow-hidden items-center justify-center">
                         <button class="ms-8 btn btn-sky rounded-md" type="submit">新增</button>
                     </div>
+
                 </div>
             </form>
         </div>

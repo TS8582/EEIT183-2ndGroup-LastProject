@@ -1,45 +1,91 @@
 <!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>遊戲道具交易後台</title>
-  </head>
-  <body>
-    <header class="container">
-      <h1>遊戲道具交易後台</h1>
-      <div id="gameList">
-        <form id="propSellOrderForm">
-          <label for="SelectGame">遊戲選單:</label>
-          <select id="SelectGame"></select>
-          <button id="selGameSub">送出</button>
-        </form>
-        <br />
-        <div th:replace="~{prop/propNavbar}"></div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" th:href="@{/css/output.css}">
+  <title>遊戲道具交易後台拍賣場總覽</title>
+</head>
+
+<body class="h-screen flex flex-col w-screen">
+  <div th:replace="~{prop/propNavbar}"></div>
+  <div class="flex flex-1 w-full h-auto">
+    <aside class="w-64 bg-slate-300 text-black flex flex-col rounded-md">
+      <div class="p-4">
+        <h1 class="text-2xl font-semibold">管理選單</h1>
       </div>
-    </header>
-    <!-- 表格 -->
-    <main class="container">
-      <table id="propSellOrderTable" class="display">
-        <thead>
-          <tr>
-            <th>委託單編號</th>
-            <th>名稱</th>
-            <th>圖片</th>
-            <th>數量</th>
-            <th>金額</th>
-            <th>委託時間</th>
-            <th>到期時間</th>
-            <th>賣家編號</th>
-            <th>委託單狀態</th>
-          </tr>
-        </thead>
+      <nav class="flex-1 left-nav">
+        <ul>
+          <li class="leftmenuitem px-4">
+            <a href="#" class="block py-2.5 px-4 rounded ">會員管理</a>
+          </li>
+          <li class="leftmenuitem px-4 left-selected">
+            <a href="#" class="block py-2.5 px-4 rounded ">公告管理</a>
+          </li>
+          <li class="leftmenuitem px-4">
+            <a th:href="@{/back/game}" class="block py-2.5 px-4 rounded ">遊戲管理</a>
+          </li>
+          <li class="leftmenuitem px-4">
+            <a th:href="@{/prop/propSheet}" class="block py-2.5 px-4 rounded ">遊戲道具管理</a>
+          </li>
+          <li class="leftmenuitem px-4">
+            <a href="#" class="block py-2.5 px-4 rounded ">伴遊管理</a>
+          </li>
+          <li class="leftmenuitem px-4">
+            <a href="#" class="block py-2.5 px-4 rounded ">活動管理</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="w-full p-5 h-auto">
+      <table class="table table-bordered navbar-table">
         <tbody>
-          <!-- 這裡的行會動態生成 -->
+          <tr>
+            <td><a th:href="@{/prop/propSheet}">道具總覽</a></td>
+            <td><a th:href="@{/prop/propSellOrder}">拍賣場</a></td>
+            <td><a th:href="@{/prop/propTradeRecord}">成交紀錄</a></td>
+          </tr>
         </tbody>
       </table>
-    </main>
-    <script th:src="@{/js/prop/propSheet.js}"></script>
-    <script th:src="@{/js/prop/propSellOrder.js}"></script>
-  </body>
+      <header class="">
+        <h1>遊戲道具交易後台</h1>
+        <div id="gameList">
+          <form id="propSellOrderForm">
+            <label for="SelectGame">遊戲選單:</label>
+            <select id="SelectGame"></select>
+            <button id="selGameSub">送出</button>
+          </form>
+          <br />
+        </div>
+      </header>
+      <!-- 表格 -->
+      <main class="">
+        <table id="propSellOrderTable" class="display">
+          <thead>
+            <tr>
+              <th>委託單編號</th>
+              <th>名稱</th>
+              <th>圖片</th>
+              <th>數量</th>
+              <th>金額</th>
+              <th>委託時間</th>
+              <th>到期時間</th>
+              <th>賣家編號</th>
+              <th>委託單狀態</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 這裡的行會動態生成 -->
+          </tbody>
+        </table>
+      </main>
+
+    </div>
+
+  </div>
+  <script th:src="@{/js/prop/propSheet.js}"></script>
+  <script th:src="@{/js/prop/propSellOrder.js}"></script>
+</body>
+
 </html>

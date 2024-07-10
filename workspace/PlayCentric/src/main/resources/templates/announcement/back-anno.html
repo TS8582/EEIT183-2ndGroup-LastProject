@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant-TW" xmlms:th="http://www.thymeleaf.org/">
 
 <head>
     <meta charset="UTF-8">
@@ -29,10 +29,10 @@
                         <a href="#" class="block py-2.5 px-4 rounded ">公告管理</a>
                     </li>
                     <li class="leftmenuitem px-4">
-                        <a href="#" class="block py-2.5 px-4 rounded ">遊戲管理</a>
+                        <a th:href="@{/back/game}" class="block py-2.5 px-4 rounded ">遊戲管理</a>
                     </li>
                     <li class="leftmenuitem px-4">
-                        <a href="#" class="block py-2.5 px-4 rounded ">遊戲道具管理</a>
+                        <a th:href="@{/prop/propSheet}" class="block py-2.5 px-4 rounded ">遊戲道具管理</a>
                     </li>
                     <li class="leftmenuitem px-4">
                         <a href="#" class="block py-2.5 px-4 rounded ">伴遊管理</a>
@@ -48,11 +48,21 @@
         <main class="w-full h-auto">
             <div class="w-full h-auto flex flex-col justify-center px-8">
                 <input class="mb-4 p-2 border border-gray-300 rounded-md" type="text" id="search" placeholder="搜尋...">
+                <div class="flex justify-end pb-2">
+                    <select class="w-1/5 border-2" id="type">
+                        <option value="0">所有</option>
+                        <th:block th:each="type: ${allType}">
+                            <option th:value="${type.annoTypeId}" th:text="${type.annoTypeName}"></option>
+                        </th:block>
+                    </select>
+                </div>
+
                 <div class="w-full" id="table">
                     <table class="w-full border-collapse shadow">
                         <thead>
                             <tr>
-                                <th class="text-center w-1/4 border">標題</th>
+                                <th class="text-center w-1/12 border">標題</th>
+                                <th class="text-center w-2/12 border">分類</th>
                                 <th class="text-center w-1/6 border">創建日期</th>
                                 <th class="text-center w-2/6 border">最後編輯時間</th>
                                 <th class="text-center w-1/4 border">操作</th>
@@ -62,9 +72,11 @@
                             <th:block th:each="anno:${allAnno}">
                                 <tr>
                                     <td class="border p-3 title">
-                                        <a th:href="@{/anno/showOneAnno(annoId=${anno.annoId})}"
-                                            th:text="[ + ${anno.announcementType.annoTypeName} + ] + ${anno.title}"
+                                        <a th:href="@{/anno/showOneAnno(annoId=${anno.annoId})}" th:text="${anno.title}"
                                             class="text-center"></a>
+                                    </td>
+                                    <td th:text="${anno.announcementType.annoTypeName}"
+                                        class="border p-3 title text-center">
                                     </td>
                                     <td th:text="${anno.createAt}" class="text-center border p-3 createAt"></td>
                                     <td th:text="${#dates.format(anno.lastEditAt,'yyyy-MM-dd HH:mm:ss')}"
@@ -87,31 +99,8 @@
     <div class="fixed w-16 h-16 p-2 bg-sky-200 bottom-20 right-10 rounded-full flex justify-center items-center">
         <a th:href="@{/anno/getInsertAnno}" class="text-4xl text-black">+</a>
     </div>
-
-    <script>
-        let allData = document.querySelectorAll('tbody tr');
-        const search = document.querySelector('#search');
-
-        allData.forEach(elm => {
-            elm.addEventListener('mouseenter', () => {
-                elm.classList.add('bg-gray-300');
-            })
-            elm.addEventListener('mouseleave', () => {
-                elm.classList.remove('bg-gray-300');
-            })
-        });
-
-        search.addEventListener('keyup', () => {
-            allData.forEach(data => {
-                if (!data.innerText.includes(search.value)) {
-                    data.classList.add('hidden');
-                }
-                else {
-                    data.classList.remove('hidden');
-                }
-            });
-        })
-    </script>
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script th:src="@{/js/announcement/back-anno.js}"></script>
 
 </body>
 

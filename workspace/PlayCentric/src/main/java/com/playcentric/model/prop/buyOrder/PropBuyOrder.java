@@ -1,5 +1,6 @@
-package com.playcentric.model.prop;
+package com.playcentric.model.prop.buyOrder;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import com.playcentric.model.game.transaction.Payment;
 import com.playcentric.model.member.Member;
@@ -35,11 +36,13 @@ public class PropBuyOrder {
     @MapsId("buyerMemId")
     @JoinColumn(name = "buyerMemId", referencedColumnName = "memId", insertable = false, updatable = false)
     private Member member;
-
     private int quantity;
-    private Date orderTime;
+    private LocalDateTime orderTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paymentId", referencedColumnName = "paymentId", insertable = false, updatable = false)
     private Payment payment;
+    
+    private int price;
+
 }

@@ -30,6 +30,10 @@ a {
     @apply text-white py-2 px-3 cursor-pointer bg-sky-500
 }
 
+.btn-green {
+    @apply text-white py-2 px-3 cursor-pointer bg-lime-600
+}
+
 .btn-danger {
     @apply text-white py-2 px-3 cursor-pointer bg-red-700
 }
@@ -61,4 +65,24 @@ a {
 
 .menu-item:hover {
     @apply bg-gray-500 border-sky-600;
+}
+
+.plus-btn {
+    @apply fixed w-16 h-16 p-2 bg-sky-200 bottom-20 right-10 rounded-full flex justify-center items-center
+}
+
+.text-input {
+    @apply w-96 px-4 py-2 border border-gray-300 rounded-lg
+}
+
+.text-input:focus {
+    @apply outline-cyan-200 outline-2
+}
+
+.one-img {
+    @apply col-span-1 w-full h-48 bg-slate-400 rounded-md relative
+}
+
+.img-choose {
+    @apply col-span-1 w-full h-48 bg-slate-400 rounded-md
 }
