@@ -73,6 +73,8 @@ public class GameController {
 		for (GameDiscount gameDiscount : gameDiscounts) {
 			discountIds.add(gameDiscount.getGameDiscountId());
 		}
+		model.addAttribute("discountIds",discountIds);
+		System.out.println("我在這裡" + discountIds.toString());
 		return "game/update-game";
 	}
 	//遊戲上下架
