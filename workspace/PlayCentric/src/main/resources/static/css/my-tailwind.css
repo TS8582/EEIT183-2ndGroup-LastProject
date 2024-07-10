@@ -39,7 +39,7 @@ a {
 }
 
 .btn:hover {
-    @apply bg-opacity-50
+    @apply bg-opacity-60
 }
 
 .noscrollbar {
