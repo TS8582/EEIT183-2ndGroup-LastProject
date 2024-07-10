@@ -91,6 +91,7 @@ function imgHtmlMaker(data) {
                 closer.addEventListener('click', e => {
                     if (imgcount == 6) {
                         newImgChooser();
+                        chooserAct();
                     }
                     imgcount = imgcount - 1;
                     const index = filelist.indexOf(file);
@@ -118,6 +119,7 @@ function newImgChooser() {
 }
 // 重置選擇圖片事件
 function chooserAct() {
+    imgChooser = document.querySelector('.img-choose');
     imgChooser.addEventListener('click', e => {
         photos.click();
     })
