@@ -19,7 +19,7 @@
                         <h2 class="text-4xl">公告</h2>
                         <article class="my-3 p-3 rounded-md border-2 shadow-lg">
                             <div class="text-right">
-                                <select class="type" name="type">
+                                <select class="type border-2" name="type">
                                     <option value="0">全部</option>
                                     <th:block th:each="type:${allAnnoType}">
                                         <option th:value="${type.annoTypeId}">[[${type.annoTypeName}]]</option>
@@ -49,8 +49,8 @@
             </div>
         </div>
 
-        <script th:src="@{js/axios.min.js}"></script>
-        <script th:src="@{js/announcement/index-anno.js}"></script>
+        <script th:src="@{/js/axios.min.js}"></script>
+        <script th:src="@{/js/announcement/index-anno.js}"></script>
 
 </body>
 

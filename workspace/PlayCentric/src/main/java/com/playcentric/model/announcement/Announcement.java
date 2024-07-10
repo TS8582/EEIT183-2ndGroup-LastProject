@@ -36,12 +36,12 @@ public class Announcement implements Serializable{
 	private String content;
 	@Column(insertable = false,updatable = false)
 	private Integer annoTypeId;
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy年MM月dd日")
-	@DateTimeFormat(pattern = "yyyy年MM月dd日")
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date createAt = new Date(System.currentTimeMillis());
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy年MM月dd日 HH:mm:ss")
-	@DateTimeFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastEditAt = new Date(System.currentTimeMillis());
 	@ManyToOne
