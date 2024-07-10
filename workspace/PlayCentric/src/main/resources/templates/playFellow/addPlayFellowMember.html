@@ -2,337 +2,380 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>加入伴遊</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" th:href="@{/css/output.css}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>加入伴遊</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/css/output.css}">
 
-     <style>
-        .content {
-            display: none!important;
-        }
+<style>
+.content {
+	display: none !important;
+}
 
-        .content.active {
-            display: block!important;
-        }
+.content.active {
+	display: block !important;
+}
 
-        .theme.active {
-            font-weight: bold!important;
-        }
+.theme.active {
+	font-weight: bold !important;
+}
 
-        .list-group-item {
-            cursor: pointer!important;
-        }
+.list-group-item {
+	cursor: pointer !important;
+}
 
-        .list-group-item:hover {
-            background-color: #f0f0f0!important;
-        }
+/*         .list-group-item:hover { */
+/*             background-color: #f0f0f0!important; */
+/*         } */
+.backBtn {
+	position: absolute !important;
+	top: 5px !important;
+	right: 5px !important;
+	font-size: 0.8em !important;
+	background-color: lightgray !important;
+	border: none !important;
+}
 
-        .backBtn {
-            position: absolute!important;
-            top: 5px!important;
-            right: 5px!important;
-            font-size: 0.8em!important;
-            background-color: lightgray!important;
-            border: none!important;
-        }
+.backBtn:hover {
+	font-weight: bold !important;
+}
 
-        .backBtn:hover {
-            font-weight: bold!important;
-        }
+.list-group-item {
+	border: none !important;
+	cursor: pointer !important;
+	/*             background-color: transparent!important; */
+}
 
-        .list-group-item {
-            border: none!important;
-            cursor: pointer!important;
-/*             background-color: transparent!important; */
-        }
+.theme.active {
+	color: #000000 !important;
+	font-weight: bold !important;
+	background-color: transparent !important;
+}
 
-        .theme.active {
-            color: #000000!important;
-            font-weight: bold!important;
-            background-color: transparent !important;
-        }
+.code-container {
+	background-color: #f8f9fa !important;
+	border: 1px solid #dee2e6 !important;
+	padding: 1em !important;
+	margin: 1em 0 !important;
+	overflow-x: auto !important;
+}
 
-        .code-container {
-            background-color: #f8f9fa!important;
-            border: 1px solid #dee2e6!important;
-            padding: 1em!important;
-            margin: 1em 0!important;
-            overflow-x: auto!important;
-        }
+.code-container pre {
+	margin: 0 !important;
+}
 
-        .code-container pre {
-            margin: 0!important;
-        }
-    </style>
+.green-text {
+	color: green !important;
+}
+</style>
 </head>
 
 <body>
-    <div th:replace="~{layout/nav.html}"></div>
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <p class="h5">加入我們</p>
-            <span style="font-size: 0.8em;">會員編號: <span class="badge badge-secondary" style="font-size: 0.8em;"
-                    th:text="${members.memId}"></span></span>
-        </div>
+	<div th:replace="~{layout/nav.html}"></div>
+	<div class="container">
+		<div class="d-flex justify-content-between align-items-center">
+			<p class="h3">加入我們</p>
+			<span style="font-size: 0.8em;">會員編號: <span
+				class="badge badge-secondary" style="font-size: 0.8em;"
+				th:text="${members.memId}"></span></span>
+		</div>
 
-        <div class="row mt-3">
-            <div class="col-md-3">
-                <ul class="list-group">
-                    <li class="list-group-item theme active" data-content="content1">基本資料</li>
-                    <li class="list-group-item theme" data-content="content2">伴遊者照片</li>
-                    <li class="list-group-item theme" data-content="content3" id="backBtn">回前頁</li>
-                </ul>
-            </div>
-            <div class="col-md-9">
-                <div id="content1" class="content active">
-                    <form id="firstStepForm" th:action="@{/playFellow/add}" method="post">
-                        <div>
-                            <input type="hidden" th:value="${members.memId}" id="memId" name="memId" />
-                        </div>
-                        <div class="form-group">
-                            <label for="nickname">伴遊暱稱</label>
-                            <input type="text" class="form-control" id="pfnickname" name="pfnickname" required>
-                            <small class="text-danger" id="nicknameError"></small>
-                        </div>
-                        <div class="form-group">
-                            <label for="gender">性別</label>
-                            <select class="form-control" id="gender" name="gender" required>
-                                <option value="1" th:text="'男生'" th:selected="${members.gender == 1}"></option>
-                                <option value="2" th:text="'女生'" th:selected="${members.gender == 2}"></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="birthday">生日</label>
-                            <input type="date" class="form-control" id="birthday" name="birthday" th:value="${members.birthday}" required>
-                            <small id="ageDisplay" class="form-text text-muted"></small>
-                        </div>
-                        <div class="form-group">
-                            <label for="pfdescription">自我介紹</label>
-                            <textarea class="form-control" id="pfdescription" name="pfdescription" rows="5" required></textarea>
-                        </div>
-                        <div class="form-group" style="display: none;">
-                            <label for="pfStatus">狀態</label>
-                            <input type="number" class="form-control" id="pfstatus" name="pfstatus" value="1" readonly>
-                        </div>
-                        <div class="form-group" style="display: none;">
-                            <label for="pfCreatedTime">創建時間</label>
-                            <input type="date" class="form-control" id="pfCreatedTime" name="pfcreatedTime" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary" onclick="submitFirstStep(event)">確定送出</button>
-                    </form>
-                </div>
+		<div class="row mt-3">
+			<div class="col-md-3">
+				<ul class="list-group">
+					<li class="list-group-item theme active" data-content="content1">基本資料</li>
+					<li class="list-group-item theme" data-content="content2">伴遊者照片</li>
+					<li class="list-group-item theme" data-content="content3"><a
+						href="http://localhost:8080/PlayCentric/playFellow/cms" id="backBtn">回前頁</a></li>
+				</ul>
+			</div>
+			<div class="col-md-9">
+				<div id="content1" class="content active">
+					<form id="firstStepForm" th:action="@{/playFellow/add}"
+						method="post">
+						<div>
+							<input type="hidden" th:value="${members.memId}" id="memId"
+								name="memId" />
+						</div>
+						<div class="form-group">
+							<label for="nickname">伴遊暱稱</label> <input type="text"
+								class="form-control" id="pfnickname" name="pfnickname" required>
+							<small class="text-danger" id="nicknameError"></small>
+						</div>
+						<div class="form-group">
+							<label for="gender">性別</label> <select class="form-control"
+								id="gender" name="gender" required>
+								<option value="1" th:text="'男生'"
+									th:selected="${members.gender == 1}"></option>
+								<option value="2" th:text="'女生'"
+									th:selected="${members.gender == 2}"></option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="birthday">生日</label> <input type="date"
+								class="form-control" id="birthday" name="birthday"
+								th:value="${members.birthday}" required> <small
+								id="ageDisplay" class="form-text text-muted"></small>
+						</div>
+						<div class="form-group">
+							<label for="pfdescription">自我介紹</label>
+							<textarea class="form-control" id="pfdescription"
+								name="pfdescription" rows="5" required></textarea>
+						</div>
+						<div class="form-group" style="display: none;">
+							<label for="pfStatus">狀態</label> <input type="number"
+								class="form-control" id="pfstatus" name="pfstatus" value="1"
+								readonly>
+						</div>
+						<div class="form-group" style="display: none;">
+							<label for="pfCreatedTime">創建時間</label> <input type="date"
+								class="form-control" id="pfCreatedTime" name="pfcreatedTime"
+								required>
+						</div>
+						<button type="submit" class="btn btn-primary"
+							onclick="submitFirstStep(event)">確定送出</button>
+					</form>
+				</div>
 
-                <div id="content2" class="content">
-                    <h5 class="font-weight-bold">請新增您的生活照，照片請勿裸露以免審核不成功</h5>
+				<div id="content2" class="content">
+					<h5 class="font-weight-bold">請新增您的生活照，照片請勿裸露以免審核不成功</h5>
 
-                    <div id="photo_output" class="mt-3"></div>
-                    <form id="secondStepForm" enctype="multipart/form-data">
-                        <input type="hidden" name="playFellowId" id="uploadPlayFellowIdInput" th:value="${playFellowId}">
-                        <div class="form-group" id="addBtn2" style="display: none;">
-                            <input type="file" class="form-control-file" id="file" name="file" multiple required>
-                        </div>
-                        <div id="message" class="mt-3"></div>
+					<div id="photo_output" class="mt-3"></div>
+					<form id="secondStepForm" enctype="multipart/form-data">
+						<input type="hidden" name="playFellowId"
+							id="uploadPlayFellowIdInput" th:value="${playFellowId}">
+						<div class="form-group" id="addBtn2" style="display: none;">
+							<input type="file" class="form-control-file" id="file"
+								name="file" multiple required>
+						</div>
+						<div id="message" class="mt-3"></div>
 
-                        <button type="button" class="btn btn-success" id="editBtn">新增照片</button>
-                        <button type="submit" class="btn btn-success" id="addBtn" style="display: none;">上傳</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+						<button type="button" class="btn btn-success" id="editBtn">新增照片</button>
+						<button type="submit" class="btn btn-success" id="addBtn"
+							style="display: none;">上傳</button>
+						<button type="submit" class="btn btn-info" id="backtoCms">確定提交</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script th:src="@{/js/layout/nav.js}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script th:src="@{/js/layout/nav.js}"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const themes = document.querySelectorAll('.theme');
-            const contents = document.querySelectorAll('.content');
-            const backBtn = document.getElementById('backBtn');
+	<script>
+    document.addEventListener('DOMContentLoaded', function () {
+//         const themes = document.querySelectorAll('.theme');
+//         const contents = document.querySelectorAll('.content');
+         const backBtn = document.getElementById('backBtn');
 
-            themes.forEach(theme => {
-                theme.addEventListener('click', function () {
-                    themes.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
+//         themes.forEach(theme => {
+//             theme.addEventListener('click', function () {
+//                 // 檢查點擊的元素是否有 'active' 類名
+//                 if (!this.classList.contains('active')) {
+//                     themes.forEach(t => t.classList.remove('active'));
+//                     this.classList.add('active');
 
-                    contents.forEach(content => content.classList.remove('active'));
-                    document.getElementById(this.getAttribute('data-content')).classList.add('active');
-                });
-            });
+//                     contents.forEach(content => content.classList.remove('active'));
+//                     document.getElementById(this.getAttribute('data-content')).classList.add('active');
+//                 }
+//             });
+//         });
 
-            const birthdayInput = document.getElementById('birthday');
-            const ageDisplay = document.getElementById('ageDisplay');
+        const birthdayInput = document.getElementById('birthday');
+        const ageDisplay = document.getElementById('ageDisplay');
 
-            birthdayInput.addEventListener('change', function () {
-                const birthDate = new Date(this.value);
-                const age = calculateAge(birthDate);
-                ageDisplay.textContent = '年齡: ' + age;
-            });
-
-            function calculateAge(birthDate) {
-                const today = new Date();
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const monthDiff = today.getMonth() - birthDate.getMonth();
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-                return age;
-            }
-
-            const pfnicknameInput = document.getElementById('pfnickname');
-            pfnicknameInput.addEventListener('blur', function () {
-                const pfnickname = this.value;
-                if (!pfnickname) {
-                    document.getElementById('nicknameError').textContent = '請填寫伴遊暱稱';
-                    return;
-                } else {
-                    document.getElementById('nicknameError').textContent = '';
-                }
-
-                axios.get(`/PlayCentric/playFellow/checkNickname?pfnickname=${encodeURIComponent(pfnickname)}`)
-                    .then(response => {
-                        const result = response.data;
-                        if (result === '伴遊暱稱重複') {
-                            document.getElementById('nicknameError').textContent = '暱稱已存在，請選擇其他暱稱！';
-                        } else if (result === '伴遊暱稱沒重複') {
-                            document.getElementById('nicknameError').textContent = '伴遊暱稱可使用';
-                        } else {
-                            document.getElementById('nicknameError').textContent = '未知錯誤，請稍後再試！';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error checking nickname:', error);
-                        document.getElementById('nicknameError').textContent = '伴遊暱稱檢查錯誤，請稍後再試！';
-                    });
-            });
-
-            document.getElementById('secondStepForm').addEventListener('submit', function (event) {
-                event.preventDefault();
-                const playFellowId = document.getElementById('uploadPlayFellowIdInput').value;
-                const formData = new FormData(this);
-                axios.post('/PlayCentric/playFellow/Images/add', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    onUploadProgress: function (progressEvent) {
-                        let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                        document.getElementById('message').innerText = `上傳進度：${percentCompleted}%`;
-                    }
-                })
-                .then(function (response) {
-                    document.getElementById('message').innerText = '上傳狀態: ' + response.data;
-                    getImagesByPlayFellowId(playFellowId);
-                })
-                .catch(function (error) {
-                    console.error('上傳狀態:', error);
-                    document.getElementById('message').innerText = '上傳失敗: ' + (error.response?.data || error.message);
-                });
-            });
-
-            function getImagesByPlayFellowId(playFellowId) {
-                axios.get(`/PlayCentric/playFellow/Images/${playFellowId}`)
-                    .then(res => {
-                        htmlMaker(res.data);
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        document.getElementById('photo_output').innerText = '獲取圖片失敗';
-                    });
-            }
-
-            function htmlMaker(imageUrls) {
-                const photoOutput = document.getElementById('photo_output');
-                let imageUrlString = '';
-
-                for (let i = 0; i < imageUrls.length; i++) {
-                    imageUrlString += `
-                    <div id="imageContainer${imageUrls[i].id}" style="display: inline-block; position: relative; margin: 10px;">
-                        <img alt="伴遊者圖片" width="200px" src="${imageUrls[i].url}" />
-                    </div>
-                `;
-                }
-
-                photoOutput.innerHTML = imageUrlString;
-            }
-
-            backBtn.addEventListener('click', function () {
-                window.location.href = '/PlayCentric/playFellow/cms';
-            });
-
-            const editBtn = document.getElementById('editBtn');
-            const addBtn = document.getElementById('addBtn');
-            const addBtn2 = document.getElementById('addBtn2');
-            let editMode = false;
-
-            editBtn.addEventListener('click', function () {
-                editMode = true;
-                editBtn.style.display = 'none';
-                addBtn.style.display = 'inline-block';
-                addBtn2.style.display = 'inline-block';
-                const removeButtons = document.querySelectorAll('.remove-btn');
-                removeButtons.forEach(button => button.style.display = 'inline-block');
-            });
+        birthdayInput.addEventListener('change', function () {
+            const birthDate = new Date(this.value);
+            const age = calculateAge(birthDate);
+            ageDisplay.textContent = '年齡: ' + age;
         });
 
-        function submitFirstStep(event) {
-            event.preventDefault();
-            const form = document.getElementById('firstStepForm');
-            const formData = new FormData(form);
+        function calculateAge(birthDate) {
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
 
-            const pfnickname = formData.get('pfnickname');
-            let valid = true;
-
+        const pfnicknameInput = document.getElementById('pfnickname');
+        pfnicknameInput.addEventListener('blur', function () {
+            const pfnickname = this.value;
             if (!pfnickname) {
-                document.getElementById('nicknameError').textContent = '暱稱不得為空！';
-                valid = false;
+                document.getElementById('nicknameError').textContent = '請填寫伴遊暱稱';
+                return;
             } else {
                 document.getElementById('nicknameError').textContent = '';
             }
 
-            if (!valid) {
-                return;
-            }
+            axios.get(`/PlayCentric/playFellow/checkNickname?pfnickname=${encodeURIComponent(pfnickname)}`)
+                .then(response => {
+                    const result = response.data;
+                    if (result === '伴遊暱稱重複') {
+                        document.getElementById('nicknameError').textContent = '暱稱已存在，請選擇其他暱稱！';
+                    } else if (result === '伴遊暱稱沒重複') {
+                        document.getElementById('nicknameError').textContent = '伴遊暱稱可使用';
+                    } else {
+                        document.getElementById('nicknameError').textContent = '未知錯誤，請稍後再試！';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking nickname:', error);
+                    document.getElementById('nicknameError').textContent = '伴遊暱稱檢查錯誤，請稍後再試！';
+                });
+        });
 
-            const gender = formData.get('gender');
-            const birthday = formData.get('birthday');
-            const pfdescription = formData.get('pfdescription');
-
-            if (!gender) {
-                alert('性別不得為空！');
-                valid = false;
-            }
-
-            if (!birthday) {
-                alert('生日不得為空！');
-                valid = false;
-            }
-
-            if (!pfdescription) {
-                alert('自我介紹不得為空！');
-                valid = false;
-            }
-
-            if (!valid) {
-                return;
-            }
-
-            axios.post('/PlayCentric/playFellow/add', formData)
-            .then(response => {
-                console.log('成功創了伴遊者');
-                console.log('playFellowId:', response.data.playFellowId);
-                document.getElementById('firstStepForm').style.display = 'none';
-                document.getElementById('secondStepForm').style.display = 'block';
-                document.getElementById('uploadPlayFellowIdInput').value = response.data.playFellowId;
-
-                // 模擬點擊 data-content="content2" 的 <li> 元素
-                document.querySelector('.list-group-item[data-content="content2"]').click();
+        document.getElementById('secondStepForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const playFellowId = document.getElementById('uploadPlayFellowIdInput').value;
+            const formData = new FormData(this);
+            axios.post('/PlayCentric/playFellow/Images/add', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                onUploadProgress: function (progressEvent) {
+                    let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    document.getElementById('message').innerText = `上傳進度：${percentCompleted}%`;
+                }
             })
-            .catch(error => {
-                console.error('Error submitting first step:', error);
+            .then(function (response) {
+                document.getElementById('message').innerText = '上傳狀態: ' + response.data;
+                getImagesByPlayFellowId(playFellowId);
+            })
+            .catch(function (error) {
+                console.error('上傳狀態:', error);
+                document.getElementById('message').innerText = '上傳失敗: ' + (error.response?.data || error.message);
             });
+        });
+
+        function getImagesByPlayFellowId(playFellowId) {
+            axios.get(`/PlayCentric/playFellow/Images/${playFellowId}`)
+                .then(res => {
+                    htmlMaker(res.data);
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('photo_output').innerText = '獲取圖片失敗';
+                });
         }
-    </script>
+
+        function htmlMaker(imageUrls) {
+            const photoOutput = document.getElementById('photo_output');
+            let imageUrlString = '';
+
+            for (let i = 0; i < imageUrls.length; i++) {
+                imageUrlString += `
+                <div id="imageContainer${imageUrls[i].id}" style="display: inline-block; position: relative; margin: 10px;">
+                    <img alt="伴遊者圖片" width="200px" src="${imageUrls[i].url}" />
+                </div>
+            `;
+            }
+
+            photoOutput.innerHTML = imageUrlString;
+        }
+
+       
+
+
+        const editBtn = document.getElementById('editBtn');
+        const addBtn = document.getElementById('addBtn');
+        const addBtn2 = document.getElementById('addBtn2');
+        let editMode = false;
+
+        editBtn.addEventListener('click', function () {
+            editMode = true;
+            editBtn.style.display = 'none';
+            addBtn.style.display = 'inline-block';
+            addBtn2.style.display = 'inline-block';
+            const removeButtons = document.querySelectorAll('.remove-btn');
+            removeButtons.forEach(button => button.style.display = 'inline-block');
+        });
+        
+        //遞交
+        
+    });
+
+    function submitFirstStep(event) {
+        event.preventDefault();
+        const form = document.getElementById('firstStepForm');
+        const formData = new FormData(form);
+
+        const pfnickname = formData.get('pfnickname');
+        let valid = true;
+
+        if (!pfnickname) {
+            document.getElementById('nicknameError').textContent = '暱稱不得為空！';
+            valid = false;
+        } else {
+            document.getElementById('nicknameError').textContent = '';
+        }
+
+        if (!valid) {
+            return;
+        }
+
+        const gender = formData.get('gender');
+        const birthday = formData.get('birthday');
+        const pfdescription = formData.get('pfdescription');
+
+        if (!gender) {
+            alert('性別不得為空！');
+            valid = false;
+        }
+
+        if (!birthday) {
+            alert('生日不得為空！');
+            valid = false;
+        }
+
+        if (!pfdescription) {
+            alert('自我介紹不得為空！');
+            valid = false;
+        }
+
+        if (!valid) {
+            return;
+        }
+
+        axios.post('/PlayCentric/playFellow/add', formData)
+        .then(response => {
+            console.log('成功創了伴遊者');
+            console.log('playFellowId:', response.data.playFellowId);
+            document.getElementById('firstStepForm').style.display = 'none';
+            document.getElementById('secondStepForm').style.display = 'block';
+            document.getElementById('uploadPlayFellowIdInput').value = response.data.playFellowId;
+
+            document.getElementById('content1').classList.remove('active');
+            document.getElementById('content2').classList.add('active');
+
+            setTimeout(() => {
+                const theme1 = document.querySelector('.list-group-item[data-content="content1"]');
+                theme1.classList.add('green-text'); 
+                theme1.innerHTML += ' &#10004;'; 
+
+                const theme2 = document.querySelector('.list-group-item[data-content="content2"]');
+                theme2.classList.add('active');
+            }, 0);
+        })
+        .catch(error => {
+            console.error('Error submitting first step:', error);
+        });
+        
+        const backtoCms = document.getElementById('backtoCms');
+        backtoCms.addEventListener('click', function () {
+            alert('您的成為伴遊申請已提交，請耐心等候!');
+            
+            window.location.href = '/PlayCentric/playFellow/cms';
+        });
+
+
+    }
+</script>
+
 </body>
 </html>
