@@ -271,6 +271,8 @@
         $('#memInfo #birthday').val(data.birthday ? data.birthday : '');
         $('#memInfo #phone').val(data.phone ? data.phone : '');
         $('#memInfo #address').val(data.address ? data.address : '');
+        $('#memInfo #role').prop('checked', data.role==1 ? true : false);
+
         memInfoModal.show();
       }
 
