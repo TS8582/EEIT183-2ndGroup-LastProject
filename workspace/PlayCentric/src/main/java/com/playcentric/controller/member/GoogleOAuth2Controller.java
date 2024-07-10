@@ -129,7 +129,7 @@ public class GoogleOAuth2Controller {
 			loginMember = new LoginMemDto(memberService.memberLogin(member));
 			model.addAttribute("loginMember", loginMember);
 			redirectAttributes.addFlashAttribute("okMsg", member.getAccount() + "登入成功!");
-			return "redirect:/member/home";
+			return "redirect:/";
 
 		} catch (Exception e) {
 			e.printStackTrace();

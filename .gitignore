@@ -45,3 +45,4 @@ replay_pid*
 
 ### OAuth2 ###
 googleOAuth2.properties
+/.metadata/
