@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	if (addPfMemberBtn) {
 		addPfMemberBtn.addEventListener('click', function() {
-			const memberId = '10'; // 之後要換上當下的會員身分 替換成實際的伴遊者ID
+			const memberId = '6'; // 之後要換上當下的會員身分 替換成實際的伴遊者ID
 			const url = `http://localhost:8080/PlayCentric/playFellow/memId/${memberId}`;
 			window.location.href = url;
 		});
