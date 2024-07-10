@@ -128,14 +128,14 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="relative tag" th:switch="${loginMember}">
+                        <div class="relative tag" th:switch="${session.loginMember}">
                             <div th:case="null">
                                 <a th:href="@{/member/login}" class="btn btn-sm btn-primary">登入/註冊</a>
                             </div>
                             <div th:case="*">
                                 <div class="ms-auto d-flex align-items-center justify-content-end">
-                                    <img class="rounded rounded-5" width="30px" th:src="${loginMember.photo}">
-                                    <span class="mx-1 text-light" th:text="${loginMember.nickname}"></span>
+                                    <img class="rounded rounded-5" width="30px" th:src="${session.loginMember.photo}">
+                                    <span class="mx-1 text-light" th:text="${session.loginMember.nickname}"></span>
                                 </div>
                                 <div class="dropmenu hidden">
                                     <ul>
