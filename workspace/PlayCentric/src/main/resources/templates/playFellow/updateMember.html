@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伴遊者詳細資訊</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            background-color: #e9ecef;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #17a2b8;
+            color: #000000;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .card-footer {
+            background-color: #f8f9fa;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #56a8ff;
+            border-color: #ffffff00;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+        .status-pending {
+            color: orange;
+        }
+
+        .status-failed {
+            color: red;
+        }
+
+        .status-open {
+            color: green;
+        }
+
+        .status-closed {
+            color: gray;
+        }
+
+        .list-group-item {
+            border: none;
+            cursor: pointer;
+            background-color: transparent;
+        }
+
+        .theme.active {
+            color: #000000;
+            font-weight: bold;
+            background-color: transparent !important;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-4">
+                <ul class="list-group">
+                    <li class="list-group-item theme" data-content="content1" th:text="${pfnickname} + '基本資料'"></li>
+                    <li class="list-group-item theme" data-content="content2" th:text="${pfnickname} + '伴遊者照片'"></li>
+                </ul>
+            </div>
+            <h5 class="text-center" id="nicknameDetail"></h5>
+            <div class="col-md-8">
+                <div id="content1" class="content">
+                    <h2 class="font-weight-bold">伴遊者基本資料</h2>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <form id="memberForm">
+                                <div class="card-group mb-3">
+                                    <div class="card mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="playFellowId"
+                                                    class="font-weight-bold col-form-label-sm">伴遊者編號</label> <span
+                                                    class="form-control-plaintext" id="playFellowId"
+                                                    th:text="${playFellowId}"></span> <input type="hidden"
+                                                    name="playFellowId" id="playFellowIdInput"
+                                                    th:value="${playFellowId}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="pfstatus"
+                                                    class="font-weight-bold col-form-label-sm">狀態</label> <br>
+                                                <span class="form-control-plaintext fs-6"
+                                                    th:text="${pfstatus == 1 ? '待審核' : pfstatus == 2 ? '審核不成功' : pfstatus == 3 ? '開啟' : '關閉'}"
+                                                    th:class="${pfstatus == 1 ? 'status-pending' : pfstatus == 2 ? 'status-failed' : pfstatus == 3 ? 'status-open' : 'status-closed'}"></span>
+                                                <input type="hidden" name="pfstatus" id="pfstatus"
+                                                    th:value="${pfstatus}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="pfnickname" class="font-weight-bold">伴遊者暱稱</label>
+                                            <input type="text" class="form-control" id="pfnickname" name="pfnickname"
+                                                th:value="${pfnickname}">
+                                        </div>
+                                        <div id="nicknameError" style="color:red; font-size: 13px;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="pfdescription" class="font-weight-bold">自我描述</label>
+                                            <textarea class="form-control" id="pfdescription" name="pfdescription"
+                                                rows="6" th:text="${pfdescription}"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-3 d-flex justify-content-center">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="pfcreatedTime" class="font-weight-bold ">創建時間</label>
+                                            <input type="text" class="form-control" id="pfcreatedTime"
+                                                th:value="${pfcreatedTime}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer text-right">
+                                    <button type="submit" class="btn btn-primary" id="saveBtn">確認更新</button>
+                                </div>
+                            </form>
+                            <div id="successMessage" class="text-success mt-3" style="display: none;">更新成功！</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="content2" class="content">
+                    <h2 class="font-weight-bold">伴遊者照片</h2>
+                    <div id="photo_output" class="mt-3"></div>
+
+
+
+                    <br> <br>
+
+
+
+                    <div class="card-body">
+                        <form id="uploadForm" enctype="multipart/form-data">
+                            <input type="hidden" name="playFellowId" id="uploadPlayFellowIdInput"
+                                th:value="${playFellowId}">
+
+                            <div class="form-group" id="addBtn2" style="display: none;">
+                                <label for="file">新增圖片</label> <input type="file" class="form-control-file" id="file"
+                                    name="file" multiple required>
+                            </div>
+                            <div id="message" class="mt-3"></div>
+
+                            <button type="button" class="btn btn-success" id="editBtn">新增照片</button>
+                            <button type="submit" class="btn btn-success" id="addBtn" style="display: none;">上傳</button>
+                            <button type="button" class="btn btn-primary" id="backCmsBtn">回前頁</button>
+                        </form>
+
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const themes = document.querySelectorAll('.theme');
+            const contents = document.querySelectorAll('.content');
+            const playFellowIdElement = document.getElementById('playFellowId');
+            const playFellowId = playFellowIdElement ? playFellowIdElement.textContent : null;
+
+            // 如果存在 playFellowId，進行圖片加載
+            if (playFellowId) {
+                getImagesByPlayFellowId(playFellowId);
+            }
+
+            themes.forEach(theme => {
+                theme.addEventListener('click', function () {
+                    themes.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    contents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(this.getAttribute('data-content')).classList.add('active');
+                });
+            });
+            if (themes.length > 0) {
+                themes[0].click();
+            }
+
+
+            // 照片上傳
+            document.getElementById('uploadForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(uploadForm); // 使用表單ID來創建FormData
+                axios.post('/PlayCentric/playFellow/Images/add', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    onUploadProgress: function (progressEvent) {
+                        let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        document.getElementById('message').innerText = `上傳進度：${percentCompleted}%`;
+                    }
+                })
+                    .then(function (response) {
+                        document.getElementById('message').innerText = '上傳成功: ' + response.data;
+                        getImagesByPlayFellowId(playFellowId); // 上傳成功後 要再印一次 呼叫getImagesByPlayFellowId
+
+
+                    })
+                    .catch(function (error) {
+                        console.error('上傳失敗:', error);
+                        document.getElementById('message').innerText = '上傳失敗: ' + (error.response?.data || error.message);
+                    });
+            });
+
+
+
+
+
+            // 第一階段form表單提交監聽 不要監聽按鈕 監聽form
+            const pfmemberMsg = document.getElementById('memberForm');
+            pfmemberMsg.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const formData = new FormData(memberForm);
+                axios.post('/PlayCentric/playFellow/updateMember/save', formData)
+                    .then(response => {
+                        document.getElementById('successMessage').style.display = 'block';
+                        setTimeout(() => {
+                            document.getElementById('successMessage').style.display = 'none';
+                        }, 3000);
+                    })
+                    .catch(error => {
+                        console.error('存取失敗QQ', error);
+                    });
+            });
+
+            // 監聽 pfnickname 輸入變化事件
+            const pfnicknameInput = document.getElementById('pfnickname');
+            const saveBtn = document.getElementById('saveBtn');
+            const nicknameError = document.getElementById('nicknameError');
+
+            pfnicknameInput.addEventListener('blur', function () {
+                const pfnickname = this.value;
+                axios.get(`/PlayCentric/playFellow/checkNickname?pfnickname=${encodeURIComponent(pfnickname)}`)
+                    .then(response => {
+                        const result = response.data;
+                        console.log(result);
+                        if (result === '伴遊暱稱重複') {
+                            nicknameError.textContent = '暱稱已存在，請選擇其他暱稱！';
+                            saveBtn.disabled = true;
+                        } else if (result === '伴遊暱稱沒重複') {
+                            nicknameError.textContent = '伴遊暱稱可使用';
+                            saveBtn.disabled = false;
+                        } else {
+                            nicknameError.textContent = '未知錯誤，請稍後再試！';
+                            saveBtn.disabled = true;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking nickname:', error);
+                        nicknameError.textContent = '伴遊暱稱檢查錯誤，請稍後再試！';
+                        saveBtn.disabled = true;
+                    });
+            });
+
+            // 照片: 按了按鈕才有確認送出按鈕
+            const editBtn = document.getElementById('editBtn');
+            const addBtn = document.getElementById('addBtn');
+            const confirmBtn = document.getElementById('confirmBtn');
+            const addBtn2 = document.getElementById('addBtn2')
+            let editMode = false;
+
+            editBtn.addEventListener('click', function () {
+                editMode = true;
+                editBtn.style.display = 'none';
+                addBtn.style.display = 'inline-block';
+                addBtn2.style.display = 'inline-block';
+                confirmBtn.style.display = 'inline-block';
+                const removeButtons = document.querySelectorAll('.remove-btn');
+                removeButtons.forEach(button => button.style.display = 'inline-block');
+            });
+
+
+            //用id找照片
+            function getImagesByPlayFellowId(playFellowId) {
+                axios.get(`/PlayCentric/playFellow/Images/${playFellowId}`)
+                    .then(res => {
+                        console.log(res);
+                        htmlMaker(res.data);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        document.getElementById('photo_output').innerText = '獲取圖片失敗';
+                    });
+            }
+
+
+
+            function htmlMaker(imageUrls) {
+                const photoOutput = document.getElementById('photo_output');
+                let imageUrlString = '';
+
+                for (let i = 0; i < imageUrls.length; i++) {
+                    //照片印出邏輯 + 裡面有標記imageId的button
+                    imageUrlString += `
+                        <div id="imageContainer${imageUrls[i].id}" style="display: inline-block; position: relative; margin: 10px;">
+                            <img alt="伴遊者圖片" width="200px" src="${imageUrls[i].url}" />
+                            <button onclick="removeImage(${imageUrls[i].id})" style="background-color: #A52A2A; color: white; border: none; padding: 4px 8px; cursor: pointer; border-radius: 8px;">移除</button>
+                        </div>
+                    `;
+                }
+
+                photoOutput.innerHTML = imageUrlString;
+            }
+
+            window.removeImage = function (imageId) {
+                axios.delete(`http://localhost:8080/PlayCentric/playFellow/Images/delete/${imageId}`)
+                    .then(response => {
+                        console.log('圖片已刪除：', response.data);
+                        const imageElement = document.getElementById(`imageContainer${imageId}`);
+                        if (imageElement) {
+                            imageElement.remove();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('刪除圖片失敗：', error);
+                    });
+            };
+
+
+        });
+
+
+        const backToCms = document.getElementById('backCmsBtn');
+        const url = "http://localhost:8080/PlayCentric/playFellow/cms";
+
+        backToCms.addEventListener('click', function () {
+            axios.get(url).then(response => {
+                window.location.href = url;
+            })
+                .catch(err => {
+                    console.error('發生錯誤，請稍後再事', error);
+                })
+        })
+
+    </script>
+</body>
+
+</html>
