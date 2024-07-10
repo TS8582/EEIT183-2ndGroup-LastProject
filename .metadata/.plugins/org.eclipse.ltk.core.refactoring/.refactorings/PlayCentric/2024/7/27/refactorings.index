@@ -1,0 +1,33 @@
+1719915714519	Delete elements
+1719927060648	Copy file
+1719927076105	Rename resource 'home.html'
+1719927084788	Rename resource 'prop.html'
+1719929869920	Rename type 'PropsService'
+1719933697853	Copy file
+1719936809882	Rename resource 'prop'
+1719937128298	Move compilation units
+1719937181730	Delete element
+1719937204783	Move compilation units
+1719937210805	Delete element
+1719937242807	Rename resource 'market'
+1720002624183	Delete element
+1720029906917	Copy compilation unit
+1720095688245	Delete element
+1720205607645	Delete element
+1720283768846	Rename resource 'marketNavbar.html'
+1720283941849	Rename resource 'sellOrder.html'
+1720284595965	Copy compilation unit
+1720285916831	Copy compilation unit
+1720286300311	Move compilation units
+1720286338127	Move compilation unit
+1720286373155	Move compilation units
+1720286426423	Move compilation unit
+1720286456130	Move compilation unit
+1720286544518	Rename package 'com.playcentric.controller.prop'
+1720286563525	Move compilation unit
+1720286606486	Rename package 'com.playcentric.controller.market.prop'
+1720286613198	Rename package 'com.playcentric.controller.market'
+1720286628007	Move compilation unit
+1720286630330	Delete element
+1720286783638	Move compilation unit
+1720286796180	Rename type 'SellOrderDto'

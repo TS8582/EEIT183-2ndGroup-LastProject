@@ -60,4 +60,9 @@ public class AnnouncementService {
 		return aTRepo.findAll();
 	}
 	
+	//取得某類型的公告
+	public List<Announcement> findByAnnoTypeId(Integer typeId) {
+		return aRepo.findByAnnoTypeId(typeId);
+	}
+	
 }

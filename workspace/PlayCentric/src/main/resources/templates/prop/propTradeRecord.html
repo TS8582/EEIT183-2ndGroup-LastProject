@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>遊戲道具交易後台拍賣場總覽</title>
+</head>
+<div th:replace="~{prop/propNavbar}"></div>
+<body>
+	<header class="container">
+		<h1>遊戲道具交易後台</h1>
+		<div id="gameList">
+			<form id="RecordForm">
+				<label for="SelectGame">遊戲選單:</label> <select id="SelectGame"></select>
+				<button id="selGameSub">送出</button>
+			</form>
+			<br />
+		</div>
+	</header>
+	<!-- 表格 -->
+	<main class="container">
+		<table id="TradeRecordTable" class="display">
+			<thead>
+				<tr>
+					<th>委託單編號</th>
+					<th>道具編號</th>
+					<th>道具名稱</th>
+					<th>賣家會員編號</th>
+					<th>買家會員編號</th>
+					<th>購買時間</th>
+					<th>數量</th>
+					<th>金額</th>
+					<th>付款方式</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- 這裡的行會動態生成 -->
+			</tbody>
+		</table>
+	</main>
+	<script th:src="@{/js/prop/propSheet.js}"></script>
+	<script th:src="@{/js/prop/propTradeRecord.js}"></script>
+</body>
+</html>

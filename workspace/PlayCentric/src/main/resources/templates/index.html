@@ -1,18 +1,57 @@
-!
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant-TW" xmlms:th="http://www.thymeleaf.org/">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="../css/bootstrap.min.css">
-	<title>PlayCentric-Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayCentric Home</title>
 </head>
 
-<body>
+<body class="h-screen box-border">
+    <div th:replace="~{layout/header}"></div>
 
+    <div class="bg-white p-3 rounded-md relative z-30">
+        <div class="grid sgrid-cols-12 md:grid-cols-8 mt-5">
+            <div class="col-span-2"></div>
+            <div class="col-span-4">
+                <main>
+                    <section class="text-center">
+                        <h2 class="text-4xl">公告</h2>
+                        <article class="my-3 p-3 rounded-md border-2 shadow-lg">
+                            <div class="text-right">
+                                <select class="type border-2" name="type">
+                                    <option value="0">全部</option>
+                                    <th:block th:each="type:${allAnnoType}">
+                                        <option th:value="${type.annoTypeId}">[[${type.annoTypeName}]]</option>
+                                    </th:block>
+                                </select>
+                            </div>
 
-	<script src="../javascript/bootstrap.bundle.min.js"></script>
+                            <div class="h-48 overflow-auto noscrollbar">
+                                <div class="grid grid-cols-12 anno">
+                                    <th:block th:each="anno:${allAnno}">
+                                        <div
+                                            class="h-auto col-span-12 md:col-span-6 text-left text-2xl font-bold border-dotted md:border-b-2 border-sky-300">
+                                            <a th:href="@{/anno/showOneAnno(annoId=${anno.annoId})}"
+                                                th:text="[ + ${anno.announcementType.annoTypeName} + ] + ${anno.title}"></a>
+                                        </div>
+                                        <div
+                                            class="h-auto col-span-12 md:col-span-6 text-right text-2xl border-dotted border-b-2 border-sky-300">
+                                            <span th:text="${#dates.format(anno.createAt,'yyyy年MM月dd日')}"></span>
+                                        </div>
+                                    </th:block>
+                                </div>
+                            </div>
+
+                        </article>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <script th:src="@{/js/axios.min.js}"></script>
+        <script th:src="@{/js/announcement/index-anno.js}"></script>
+
 </body>
 
 </html>

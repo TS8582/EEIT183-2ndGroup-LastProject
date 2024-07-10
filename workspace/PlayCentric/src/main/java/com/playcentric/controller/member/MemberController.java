@@ -1,4 +1,4 @@
-package com.playcentric.controller.member;
+	package com.playcentric.controller.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +17,8 @@ import com.playcentric.model.member.Member;
 import com.playcentric.model.member.MemberDto;
 import com.playcentric.service.member.MemberService;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -80,10 +82,15 @@ public class MemberController {
 	
 	@GetMapping("/memManage")
 	public String managePage(Model model) {
-		Page<Member> memPage = memberService.findByPage(1);
-		model.addAttribute("memPage", memPage);
 		return "member/managePage";
 	}
+
+	@PostMapping("/getMemPage")
+	@ResponseBody
+	public Page<Member> showMemberByPage(@RequestParam("page") Integer page) {
+		return memberService.findByPage(page);
+	}
+	
 	
 	private boolean hasInfo(Member member) {
 		return member.getAccount()!=null &&

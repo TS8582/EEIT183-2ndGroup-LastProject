@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" xmlms:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayCentric-後台管理-新增遊戲</title>
+</head>
+
+<body>
+    <div th:replace="~{/layout/nav}"></div>
+
+    <div class="flex justify-center">
+        <div class="flex justify-center my-5 border-2 p-20 rounded-md">
+            <form th:action="@{/game/insertGame}" method="post" enctype="multipart/form-data">
+                <div class="space-y-4">
+
+                    <div class="flex flex-col">
+                        <label for="gameName" class="select-none text-lg me-2">遊戲名稱：</label>
+                        <input required type="text" name="gameName" id="gameName" class="text-input"
+                            placeholder="請輸入名稱...">
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="price" class="select-none text-lg me-2">遊戲價格：</label>
+                        <input required type="text" name="price" id="price" maxlength="5" pattern="[1-9]{1}\d{0,4}"
+                            class="text-input" placeholder="請輸入價格...">
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="description" class="select-none text-lg me-2">遊戲介紹：</label>
+                        <textarea required type="text" name="description" id="description" rows="20"
+                            class="text-input resize-none overflow-auto noscrollbar"
+                            placeholder="請輸入遊戲介紹..."></textarea>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="developer" class="select-none text-lg me-2">開發者：</label>
+                        <input required type="text" name="developer" id="developer" class="text-input"
+                            placeholder="請輸入名稱...">
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="publisher" class="select-none text-lg me-2">發行商：</label>
+                        <input required type="text" name="publisher" id="publisher" class="text-input"
+                            placeholder="請輸入名稱...">
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="gameType" class="select-none text-lg me-2">遊戲分類：</label>
+                        <div class="w-96 px-4 py-2 grid grid-cols-2">
+                            <th:block th:each="type,i: ${allType}">
+                                <div class="col-span-1">
+                                    <div class="flex items-center">
+                                        <input th:value="${type.gameTypeId}" th:id="type + ${i}" name="typeId[]"
+                                            type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                        <label th:for="type + ${i}" class="select-none ml-2 block text-sm text-gray-900"
+                                            th:text="${type.gameTypeName}"></label>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col overflow-hidden">
+
+                        <div class="showDiscount">
+                            <div class="flex flex-col">
+                                <label for="discountId" class="text-lg me-2">優惠選擇：</label>
+                                <select class="w-96 border-2 focus:outline-2 focus:outline-cyan-200" name="discountId"
+                                    id="discount-chooser">
+                                    <option value="0">無</option>
+                                    <th:block th:each="discount:${allDiscount}">
+                                        <option th:value="${discount.gameDiscountId}"
+                                            th:text="${discount.gameDiscountName} + ${#dates.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
+                                        </option>
+                                    </th:block>
+                                </select>
+
+                                <div class="rateset hidden">
+                                    <div class="flex flex-col">
+                                        <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
+
+                                        <input type="number" min="0" max="0.99" name="discountRate" id="discountRate"
+                                            value="0" step="0.01" class="text-input" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+
+                        <div class="flex">
+                            <input type="checkbox" id="isUsePhoto">
+                            <label class="select-none ms-2" for="isUsePhoto">是否加入圖片</label>
+                        </div>
+
+
+                        <!-- 所有圖片元素 -->
+                        <div class="w-96">
+
+                            <div class="imgs hidden w-full">
+                                <!-- 新增圖片元素 -->
+                                <div class="img-choose">
+                                    <div class="w-full h-full flex justify-center items-center  cursor-pointer">
+                                        <span class="text-3xl select-none">+</span>
+                                    </div>
+                                </div>
+
+                                <input accept="image/*" id="photos" class="hidden" type="file" name="photos" multiple
+                                    maxlength="6">
+
+
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center mt-3">
+                            <button class="btn btn-sky rounded-md" type="submit">新增</button>
+                        </div>
+
+
+                    </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:src="@{/js/game/insert-game.js}"></script>
+
+</body>
+
+</html>

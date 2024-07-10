@@ -50,7 +50,7 @@ public class Texts {
 	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 若要在 thymeleaf 強制使用本格式，需雙層大括號
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date donetime;
+	private Date doneTime;
 
 	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 若要在 thymeleaf 強制使用本格式，需雙層大括號
@@ -61,13 +61,13 @@ public class Texts {
 
 	private boolean hideTexts;
 
-	public Texts(Forum forum, Member member, String title, String textsContent, Date donetime, Date updatedTime,
+	public Texts(Forum forum, Member member, String title, String textsContent, Date doneTime, Date updatedTime,
 			int textsLikeNum, boolean hideTexts) {
 		this.forum = forum;
 		this.member = member;
 		this.title = title;
 		this.textsContent = textsContent;
-		this.donetime = donetime;
+		this.doneTime = doneTime;
 		this.updatedTime = updatedTime;
 		this.textsLikeNum = textsLikeNum;
 		this.hideTexts = hideTexts;

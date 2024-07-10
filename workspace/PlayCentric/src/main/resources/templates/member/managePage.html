@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.js}"></script>
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script th:src="@{/js/member/managePage.js}"></script>
+    <style>
+        .collapse{
+            visibility: visible !important;
+        }
+    </style>
     <title>會員管理</title>
 </head>
 
@@ -12,8 +20,74 @@
 
     <div th:replace="~{layout/nav}"></div>
 
-    
-    
+    <div class="container my-5">
+        <div class="row">
+            <div class="accordion" id="output">
+            </div>
+            <div id="pageBtn">
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(function () {
+            const insertUrl = "http://localhost:8080/PlayCentric/member/getMemPage"
+            let params = { page: 1 }
+
+            runAxios();
+
+            function runAxios() {
+                axios({
+                    method: 'post',
+                    url: insertUrl,
+                    params
+                })
+                    .then(res => {
+                        console.log(res);
+                        htmlMaker(res.data);
+                    })
+                    .catch(err => console.log(err))
+            }
+
+            function htmlMaker(data) {
+                $('#output').text('')
+
+                data.content.forEach((element) => {
+                    const dataHtml = `<div class="accordion-item">
+                        <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapse${element.memId}" aria-controls="flush-collapse${element.memId}">
+                        ${element.account}
+                        </button>
+                        </h2>
+                        <div id="flush-collapse${element.memId}" class="accordion-collapse collapse" data-bs-parent="#output">
+                        <div class="accordion-body">
+                            ${element.registDate}<br>
+                            ${element.lastLogin}<br>
+                            ${element.role}
+                        </div>
+                        </div>
+                        </div>`
+                    $('#output').append(dataHtml);
+                });
+
+                if (data.totalPages > 1) {
+                    $('#pageBtn').append(`<div class="d-flex justify-content-center align-items-end mt-4">
+                        <ul class="pagination">
+                        </ul>
+                        </div>`)
+                    for (let index = 1; index <= data.totalPages; index++) {
+                        if (index != params.page) {
+                            $('.pagination').append(`<li class="page-item"><a class="page-link">${index}</a></li>`)
+                            continue;
+                        }
+                        $('.pagination').append(`<li class="page-item active"><a class="page-link">${index}</a></li>`)
+                    }
+                }
+            }
+        })
+    </script>
 </body>
 
 </html>

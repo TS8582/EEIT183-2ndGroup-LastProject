@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+  <meta charset="UTF-8">
+  <title>PlayCentric論壇</title>
+</head>
+
+<body>
+  <div th:replace="~{forum/layout/navbar}"></div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <h1>討論串列表</h1>
+
+        <th:block th:each=" oneMsg : ${page.content}">
+
+          <div class="card mb-3">
+            <div class="card-body">
+              <!--      <h5 class="card-title" th:text="${oneMsg.game.gameName}">Game Name</h5>
+                <div th:if="${oneMsg.game != null}">
+                   <p th:text="${oneMsg.game.gameName}"></p>
+               </div>
+                <img th:src="@{/image/download(imageId=${oneMsg.game.imageLibs[0].imageId})}" class="img-fluid"
+                  alt="Game Image" /> -->
+
+              <p class="card-title" th:text="${oneMsg.gameName}"></p>
+
+              <p class="card-text" th:text="${oneMsg.textsIntro}">遊戲介紹</p>
+
+
+              <div class="edit-btn" style="display:flex">
+                <a th:href="@{/forum/edit(forumId=${oneMsg.forumId})}" class="btn btn-outline-success btn-sm">編輯</a>
+                <!-- 				   <a th:href="@{/forum/delete(id=${oneMsg.id})}" -->
+                <!-- 				    class="btn btn-outline-danger btn-sm" -->
+                <!-- 				    onclick="return confirm('確定刪除嗎??')">刪除</a> -->
+
+                <form method="post" th:action="@{/forum/delete}">
+                  <input name="forumId" th:value="${oneMsg.forumId}" type="hidden" />
+                  <input name="_method" value="DELETE" type="hidden" />
+                  <input type="submit" value="刪除" onclick="return confirm('確定刪除嗎??')"
+                    class="btn btn-outline-danger btn-sm">
+                </form>
+
+              </div>
+              <br>
+            </div>
+          </div>
+
+          <br>
+        </th:block>
+
+        <div th:text=" '總共有 ' + ${page.totalElements} + ' 筆'  "></div>
+
+        <ul class="pagination" th:if="${ page.totalPages != 0 }">
+
+          <!-- 上一頁 -->
+          <th:block th:switch="${page.number != 0}">
+            <li th:case="${true}" class="page-item">
+              <a class="page-link" th:href="@{/forum/page(p=${page.number})}">上一頁</a>
+            </li>
+            <li th:case="${false}" class="page-item disabled">
+              <a class="page-link">上一頁</a>
+            </li>
+          </th:block>
+
+          <!-- 頁碼 -->
+          <th:block th:each="pageNumber : ${#numbers.sequence(1,page.totalPages)}">
+            <th:block th:switch="${page.number + 1 == pageNumber}">
+              <li th:case="${false}" class="page-item">
+                <a class="page-link" th:href="@{/forum/page(p=${pageNumber})}" th:text="${pageNumber}"></a>
+              </li>
+              <li th:case="${true}" class="page-item active">
+                <span class="page-link" th:text="${pageNumber}"></span>
+              </li>
+            </th:block>
+          </th:block>
+
+
+          <!-- 下一頁 -->
+          <th:block th:switch="${page.number + 1 == page.totalPages}">
+            <li th:case="${false}" class="page-item">
+              <a class="page-link" th:href="@{/forum/page(p=${page.number + 2})}">下一頁</a>
+            </li>
+            <li th:case="${true}" class="page-item disable">
+              <a class="page-link">下一頁</a>
+            </li>
+          </th:block>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+
+</html>

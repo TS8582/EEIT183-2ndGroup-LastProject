@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>編輯頁面</title>
+</head>
+<body>
+	<div th:replace="~{forum/layout/navbar}"> </div>
+	  <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-6">
+            <h1>編輯頁面</h1>
+            
+            <div class="card">
+            <div class="card-body">
+            
+            <form th:action="@{/forum/editPost}" th:method="PUT" th:object="${forum}">
+            
+              <input th:field="*{forumId}" type="hidden" />
+<!--              <input name="_method" value="PUT" type="hidden">  -->
+              
+              <textarea class="form-control" th:field="*{textsIntro}"></textarea>
+              <input type="submit" class="btn btn-outline-primary" value="送出" />
+            </form>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+   
+</body>
+</html>

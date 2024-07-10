@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -35,13 +36,15 @@ public class Announcement implements Serializable{
 	private String content;
 	@Column(insertable = false,updatable = false)
 	private Integer annoTypeId;
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date createAt = new Date(System.currentTimeMillis());
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy年MM月dd日 HH:mm:ss")
-	@DateTimeFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastEditAt = new Date(System.currentTimeMillis());
-	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@ManyToOne
     @JoinColumn(name = "annoTypeId")
 	private AnnouncementType announcementType;
 	
