@@ -5,14 +5,7 @@
     <meta charset="UTF-8">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
     <title></title>
-    <script src="https://kit.fontawesome.com/a498fa36dc.js" crossorigin="anonymous"></script>
-    <style>
-        .i1 {
-            display: flex;
-            justify-content: end;
-            margin-left: 1250px;
-        }
-    </style>
+   
 </head>
 
 <body>
@@ -28,18 +21,11 @@
                 <div class="navbar-nav">
                     <a class="nav-link" th:href="@{/forum/page}">討論區首頁</a>
                     
-                    <a class="nav-link active" aria-current="page" th:href="@{/forum/add}">新增訊息</a>
+                    <a class="nav-link active" aria-current="page" th:href="@{/forum/add}">新增討論串</a>
                     
-                     <form th:action="@{/forum/search}" method="get">
-                    <div class="input-group">
-                        <input type="text" name="keyword" class="form-control i1" placeholder="搜尋討論串">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary ms-2" type="submit">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                                </button>
-                        </div>
-                    </div>
-                </form>
+                     <a class="nav-link" th:href="@{/texts/page}">文章首頁</a>
+                     
+                     <a class="nav-link active" aria-current="page" th:href="@{/texts/add}">新增文章</a>
                 </div>
             </div>
         </div>

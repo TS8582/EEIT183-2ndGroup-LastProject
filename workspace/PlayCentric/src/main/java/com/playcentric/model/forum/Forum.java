@@ -66,5 +66,19 @@ public class Forum {
 		this.texts = texts;
 		this.textsIntro = textsIntro;
 	}
+	
+	public String getTitle() {
+		if (!texts.isEmpty()) {
+			return texts.get(0).getTitle();
+		}
+		return null;
+	}
+
+	public int getFirstTextId() {
+		if (!texts.isEmpty()) {
+			return texts.get(0).getTextsId();
+		}
+		return -1;
+	}
 
 }
