@@ -53,6 +53,14 @@ public class GameController {
 		model.addAttribute("allDiscount", allDiscount);
 		return "game/insert-game";
 	}
+	
+	//輸入修改遊戲資料
+	@PostMapping("/game/getUpdateGame")
+	public String getUpdateGame(@RequestParam Integer gameId,Model model) {
+		Game game = gService.findById(gameId);
+		model.addAttribute("game",game);
+		return "game/update-game";
+	}
 
 	// 進行新增遊戲
 	@PostMapping("/game/insertGame")
