@@ -11,8 +11,8 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-6">
-        <p th:text="${forumId}">討論區編號</p>
-        <p th:text="${memId}">會員編號</p>
+        <p th:text="${texts.forumId}">討論區編號</p>
+        <p th:text="${texts.memId}">會員編號</p>
         <h1 th:text="${texts.title}">文章標題</h1>
         <p th:text="${texts.textsContent}">文章內容</p>
         <p th:text="${#dates.format(texts.doneTime, 'yyyy-MM-dd HH:mm:ss')}">完成時間</p>
