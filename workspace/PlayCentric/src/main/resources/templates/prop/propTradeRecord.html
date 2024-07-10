@@ -2,10 +2,48 @@
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" th:href="@{/css/output.css}">
-	<title>遊戲道具交易後台拍賣場總覽</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" th:href="@{/css/output.css}">
+<title>遊戲道具交易後台拍賣場總覽</title>
+<style>
+.marketTbody tr {
+	margin-top: 0px;
+	text-align: center;
+	padding: 0;
+	border: 1px;
+}
+
+.navbar-table td a {
+	color: black;
+	font-weight: bold;
+	font-size: 1.4rem;
+}
+
+#RecordForm {
+	max-width: 21rem;
+	margin: auto;
+	padding: 1rem;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	background-color: #f9f9f9;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+
+#selGameSub {
+	background-color: black;
+	color: white;
+	border-radius: 5px;
+	padding: 0.2rem 0.3rem;
+	font-size: 1rem;
+	font-weight: bold;
+}
+
+#selGameSub:hover {
+	background-color: rgba(97, 92, 92, 0.749);
+}
+</style>
 </head>
 <div th:replace="~{prop/propNavbar}"></div>
 
@@ -14,7 +52,7 @@
 		<div th:replace="~{/layout/aside}"></div>
 		<div class="w-full p-5">
 			<table class="table table-bordered navbar-table">
-				<tbody>
+				<tbody class="marketTbody">
 					<tr>
 						<td><a th:href="@{/prop/propSheet}">道具總覽</a></td>
 						<td><a th:href="@{/prop/propSellOrder}">拍賣場</a></td>
@@ -23,7 +61,6 @@
 				</tbody>
 			</table>
 			<header class="">
-				<h1>遊戲道具交易後台</h1>
 				<div id="gameList">
 					<form id="RecordForm">
 						<label for="SelectGame">遊戲選單:</label> <select id="SelectGame"></select>
