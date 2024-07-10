@@ -129,10 +129,41 @@ public class MemberController {
 		return member;
 	}
 
+	@PostMapping("/update")
+	@ResponseBody
+	public String updateMemberTest(@ModelAttribute Member member,@RequestParam("photoFile") MultipartFile photoFile) throws IOException {
+		try {
+			Member originMem = memberService.findById(member.getMemId());
+			System.err.println("origin:"+originMem);
+			System.err.println("updateMem:"+member);
+			member.setPassword("updating");
+			if (!hasInfo(member)) {
+				return "請填妥資訊";
+			}
+			if (!originMem.getAccount().equals(member.getAccount()) && memberService.checkAccountExist(member.getAccount())) {
+				return "帳號已存在";
+			}
+			if (!originMem.getEmail().equals(member.getEmail()) && memberService.checkEmailExist(member.getEmail())) {
+				return "Email已註冊";
+			}
+			if (!photoFile.isEmpty()) {
+				ImageLib imageLib = new ImageLib();
+				imageLib.setImageFile(photoFile.getBytes());
+				Integer imageId = imageLibService.saveImage(imageLib).getImageId();
+				member.setPhoto(imageId);
+			}
+			memberService.updateMember(member,originMem);
+			return "更新成功!";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "更新失敗!";
+	}
+
 	@DeleteMapping("/deleteMem")
+	@ResponseBody
 	public String deleteMem(@RequestParam("memId") Integer memId){
-		memberService.deleteMemById(memId);
-		return "redirect:memManage";
+		return memberService.deleteMemById(memId)? "刪除成功":"刪除失敗";
 	}
 	
 	

@@ -21,8 +21,16 @@
       }
     }
 
-    .bg-manager-blue{
+    .bg-manager-blue {
       background-color: #d0dbff !important;
+    }
+
+    .h35px{
+      height: 35px;
+    }
+
+    .w35px{
+      width: 35px;
     }
   </style>
   <title>會員管理</title>
@@ -52,11 +60,12 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header border-0">
-          <h4 class="modal-title">建立新成員</h4>
+          <h4 class="modal-title"></h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <form id="modalForm" class="regist">
           <div class="modal-body">
+            <input type="hidden" id="memId" name="memId" value="">
             <div class="input-group mb-1">
               <label for="nickname" class="input-group-text">暱稱*</label>
               <input type="text" class="form-control" id="nickname" name="nickname" required>
@@ -65,13 +74,13 @@
               <label for="account" class="input-group-text">帳號*</label>
               <input type="text" class="form-control" id="account" name="account" required>
             </div>
-            <div class="input-group mb-1">
+            <div class="input-group mb-1 password">
               <label for="password" class="input-group-text">輸入密碼*</label>
-              <input type="password" class="form-control" id="password" name="password" required>
+              <input type="password" class="form-control" id="password" name="password">
             </div>
-            <div class="input-group mb-1">
+            <div class="input-group mb-1 password">
               <label for="password-confirm" class="input-group-text">確認密碼*</label>
-              <input type="password" class="form-control" id="password-confirm" required>
+              <input type="password" class="form-control" id="password-confirm">
             </div>
             <div class="input-group mb-1">
               <label for="email" class="input-group-text">Email*</label>
@@ -84,7 +93,7 @@
             </div>
             <div class="input-group mb-1">
               <label for="gender" class="input-group-text">姓別</label>
-              <input type="text" class="form-control" id="gender" name="gender">
+              <input type="text" class="form-control" id="gender" name="gender" placeholder="男/女">
             </div>
             <div class="input-group mb-1">
               <label for="birthday" class="input-group-text">生日</label>
@@ -121,9 +130,10 @@
 
   <script>
     $(function () {
-      const registUrl = "http://localhost:8080/PlayCentric/member/regist";
       const findMemUrl = "http://localhost:8080/PlayCentric/member/getMember"
       const searchMemUrl = "http://localhost:8080/PlayCentric/member/searchMemPage"
+      const registUrl = "http://localhost:8080/PlayCentric/member/regist";
+      const updateMemUrl = "http://localhost:8080/PlayCentric/member/update";
       const deleteMemUrl = "http://localhost:8080/PlayCentric/member/deleteMem"
       const memInfoModal = new bootstrap.Modal('#memInfo');
       let params = {
@@ -140,8 +150,8 @@
         }
       })
 
-      $('#output').on('click','#edit-btn',function(){
-        const memId = $(this).parent().parent().attr('memId');
+      $('#output').on('click', '.edit-btn', function () {
+        const memId = Number.parseInt($(this).attr('memId'));
         showMemInfo(memId);
       })
 
@@ -152,19 +162,18 @@
       })
 
       $('#regist-act').click(function () {
+        $('#memInfo .modal-title').text('建立新成員');
+        $('#modalForm .password').show();
+        $('#modalForm')[0].reset();
         memInfoModal.show();
       })
 
-      $('#modalForm').submit(function (e) {
-
+      $('#output').on('submit', '.delete-form', function (e) {
         e.preventDefault()
 
-        const formdataObject = new FormData(document.getElementById('modalForm'));
-        if ($('#role').prop('checked')) {
-          formdataObject.append('role', 1)
-        }
+        const formdataObject = new FormData(this);
 
-        axios.post(registUrl, formdataObject)
+        axios.post(deleteMemUrl, formdataObject)
           .then(res => {
             console.log(res);
             alert(res.data);
@@ -173,8 +182,45 @@
           .catch(err => {
             console.log(err);
           })
+      })
 
-        $('#memInfo').Modal('hide');
+      $('#modalForm').submit(function (e) {
+
+        e.preventDefault()
+
+        const formdataObject = new FormData(this);
+        const isMng = $('#role').prop('checked');
+        formdataObject.set('role',isMng? 1:0)
+        let gender = $('#gender').val();
+        formdataObject.set('gender', gender == '男' ? 1 : gender == '女' ? 2 : 0)
+
+        if ($('#memId').val() == '') {
+          axios.post(registUrl, formdataObject)
+            .then(res => {
+              console.log(res);
+              if (res.data == '註冊成功!') {
+                searchMember();
+                closeModal();
+              }
+              alert(res.data);
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        } else {
+          axios.post(updateMemUrl, formdataObject)
+            .then(res => {
+              console.log(res);
+              if (res.data == '更新成功!') {
+                searchMember();
+                closeModal();
+              }
+              alert(res.data);
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        }
       })
 
 
@@ -184,28 +230,43 @@
           url: searchMemUrl,
           params
         })
-        .then(res => {
-          console.log(res);
-          htmlMaker(res.data);
-        })
-        .catch(err => console.log(err))
+          .then(res => {
+            console.log(res);
+            htmlMaker(res.data);
+          })
+          .catch(err => console.log(err))
       }
 
       function showMemInfo(memId) {
         axios({
           method: 'get',
           url: findMemUrl,
-          params:{ memId }
+          params: { memId }
         })
-        .then(res => {
-          console.log(res);
-          updateModal(res.data);
-        })
-        .catch(err => console.log(err))
+          .then(res => {
+            console.log(res);
+            showUpdateModal(res.data);
+          })
+          .catch(err => console.log(err))
       }
 
-      function updateModal(data){
+      function showUpdateModal(data) {
+        $('#memInfo .modal-title').text('編輯成員資訊');
+        $('#modalForm .password').hide();
+        $('#memInfo #memId').val(data.memId);
+        $('#memInfo #nickname').val(data.nickname);
+        $('#memInfo #account').val(data.account);
+        $('#memInfo #email').val(data.email);
+        $('#memInfo #memName').val(data.memName ? data.memName : '');
+        $('#memInfo #gender').val(data.gender == 1 ? '男' : data.gender == 2 ? '女' : '');
+        $('#memInfo #birthday').val(data.birthday ? data.birthday : '');
+        $('#memInfo #phone').val(data.phone ? data.phone : '');
+        $('#memInfo #address').val(data.address ? data.address : '');
+        memInfoModal.show();
+      }
 
+      function closeModal() {
+        $('#memInfo').modal('hide');
       }
 
       function htmlMaker(data) {
@@ -216,7 +277,7 @@
                         <h2 class="accordion-header">
                         <button class="accordion-button collapsed" role="${element.role}" type="button" data-bs-toggle="collapse"
                         data-bs-target="#flush-collapse${element.memId}" aria-controls="flush-collapse${element.memId}">
-                        <img width="35px" class="me-2 rounded rounded-5" src="${element.photoUrl}">
+                        <img class="me-2 rounded rounded-5 h35px w35px" src="${element.photoUrl}">
                         ${element.account}
                         </button>
                         </h2>
@@ -237,8 +298,8 @@
                             <div class="mb-3 col-5">最後登入時間: ${element.lastLogin}</div>
                         </div>
                         <div class="edit-btn ms-auto d-flex">
-                            <div class="btn btn-outline-warning me-2" memId="${element.memId}" id="edit-btn">修改</div>
-                            <form action="${deleteMemUrl}" method="post">
+                            <div class="btn btn-outline-warning me-2 edit-btn"" memId="${element.memId}">修改</div>
+                            <form action="${deleteMemUrl}" class="delete-form" method="post">
                               <input type="hidden" name="_method" value="DELETE">
                               <input type="hidden" name="memId" value="${element.memId}">
                               <input type="submit" class="btn btn-danger" onclick="return confirm('確定刪除嗎?')" value="刪除">

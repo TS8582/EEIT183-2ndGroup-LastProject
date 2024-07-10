@@ -70,6 +70,20 @@ public class MemberService {
 		return memberRepository.save(newMember);
 	}
 
+	public Member updateMember(Member member, Member originMem){
+		originMem.setAccount(member.getAccount());
+		originMem.setAddress(member.getAddress());
+		originMem.setBirthday(member.getBirthday());
+		originMem.setEmail(member.getEmail());
+		originMem.setGender(member.getGender());
+		originMem.setMemName(member.getMemName());
+		originMem.setNickname(member.getNickname());
+		originMem.setPhone(member.getPhone());
+		originMem.setPhoto(member.getPhoto());
+		originMem.setRole(member.getRole());
+		return memberRepository.save(originMem);
+	}
+
 	public boolean deleteMemById(Integer memId){
 		Optional<Member> optional = memberRepository.findById(memId);
 		if (optional.isPresent()) {
@@ -85,7 +99,8 @@ public class MemberService {
 
 	public Page<Member> findByKeyword(String keyword,Integer pageNum){
 		PageRequest pageable = PageRequest.of(pageNum-1, 6, Sort.Direction.ASC, "memId");
-		return memberRepository.findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining((short)0,keyword,keyword,keyword,keyword,pageable);
+		// return memberRepository.findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining((short)0,keyword,keyword,keyword,keyword,pageable);
+		return memberRepository.findByKeyword("%"+keyword+"%", pageable);
 	}
 
 	public Page<Member> findByPage(Integer pageNum){
