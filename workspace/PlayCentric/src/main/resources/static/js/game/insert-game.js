@@ -8,6 +8,7 @@ let imgChooser = document.querySelector('.img-choose');
 chooserAct();
 let imgcount = 0;
 
+// 選擇優惠後跳出選擇折扣
 discountChooser.addEventListener('change', e => {
     const rateset = document.querySelector('.rateset');
     if (discountChooser.value !== (0 || '')) {
@@ -36,18 +37,6 @@ document.querySelector('form').addEventListener('submit', e => {
         e.preventDefault();
     }
 
-})
-
-// 是否選擇圖片
-isUsePhoto.addEventListener('change', e => {
-    if (e.target.checked) {
-        imgs.classList.add('grid', 'grid-cols-2', 'gap-3', 'w-full');
-        imgs.classList.remove('hidden');
-    }
-    else {
-        imgs.classList.add('hidden');
-        imgs.classList.remove('grid', 'grid-cols-2', 'gap-3', 'w-full');
-    }
 })
 
 
@@ -86,7 +75,7 @@ function imgHtmlMaker(data) {
         newimg.classList.add('one-img');
         const html = `
                     <div
-                        class="absolute -top-2 -right-2 bg-black text-white rounded-full px-3 py-1 select-none cursor-pointer hover:bg-opacity-50 remove-img">
+                        class="remove-img">
                         X
                     </div>
 
@@ -102,6 +91,7 @@ function imgHtmlMaker(data) {
                 closer.addEventListener('click', e => {
                     if (imgcount == 6) {
                         newImgChooser();
+                        chooserAct();
                     }
                     imgcount = imgcount - 1;
                     const index = filelist.indexOf(file);
@@ -129,6 +119,7 @@ function newImgChooser() {
 }
 // 重置選擇圖片事件
 function chooserAct() {
+    imgChooser = document.querySelector('.img-choose');
     imgChooser.addEventListener('click', e => {
         photos.click();
     })
