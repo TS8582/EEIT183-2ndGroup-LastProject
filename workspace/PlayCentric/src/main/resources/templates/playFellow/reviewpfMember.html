@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>審核伴遊資格</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+	<style>
+		body {
+			background-color: #e9ecef;
+			font-family: 'Roboto', sans-serif;
+		}
+
+		.row-wrapper {
+			position: relative;
+			display: flex;
+			flex-direction: row;
+			align-items: flex-start;
+			border-radius: 8px;
+			padding: 30px;
+			margin-bottom: 10px;
+			background-color: #f9f9f9;
+			color: #333;
+			border: 1px solid #ddd;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			transition: opacity 0.5s ease, transform 0.5s ease, margin-bottom 0.5s ease, height 0.5s ease, padding 0.5s ease;
+		}
+
+		.row-wrapper.hidden {
+			opacity: 0;
+			transform: translateX(100%);
+			margin-bottom: 0;
+			height: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+
+
+		.row-wrapper:hover {
+			transform: scale(1.02);
+		}
+
+		.field {
+			margin-bottom: 10px;
+			flex: 1;
+		}
+
+		.field span {
+			font-weight: bold;
+			margin-right: 5px;
+		}
+
+		.action-link {
+			color: #333;
+			text-decoration: none;
+			margin-left: 10px;
+		}
+
+		.action-link:hover {
+			color: #007bff;
+		}
+
+		.delete-icon {
+			cursor: pointer;
+		}
+
+		.container {
+			max-width: 1000px;
+			margin: 0 auto;
+		}
+
+		.backBtn {
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			font-size: 0.8em;
+			background-color: lightgray;
+			border: none;
+		}
+
+		.backBtn:hover {
+			font-weight: bold;
+		}
+
+		.status-pending {
+			color: orange;
+		}
+
+		.status-failed {
+			color: red;
+		}
+
+		.creation-time {
+			position: absolute;
+			top: 10px;
+			left: 30px;
+			color: gray;
+			font-size: 0.8em;
+		}
+
+		.passStatusOrNot {
+			margin: 10px;
+			padding: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div th:replace="~{layout/nav.html}"></div>
+
+<!-- 	<div th:replace="~{/playFellow/sideBar}"></div> -->
+	<main>
+
+		<div class="container mt-5">
+        <h2 class="title">審核伴遊資格</h2>
+			<div th:each="pfmember : ${PlayFellowMembers}" class="row-wrapper" id="row-wrapper">
+				<div class="creation-time" th:text="${pfmember.pfcreatedTime}"></div>
+				<div class="field">
+					<span>編號:</span> <span th:text="${pfmember.playFellowId}"></span>
+				</div>
+				<div class="field">
+					<span>伴遊暱稱:</span> <br>
+					<span th:text="${pfmember.pfnickname}"></span>
+				</div>
+				<div class="field">
+					<span>性別:</span> <br>
+					<span th:text="${pfmember.member.gender == 1 ? '男生' : '女生'}"></span>
+				</div>
+				<div class="field">
+					<span>生日:</span> <br>
+					<span class="birthday" th:text="${pfmember.member.birthday}"></span>
+				</div>
+				<div class="field">
+					<span>年齡:</span> <span class="age"></span>
+				</div>
+				<div class="field">
+					<span>狀態:</span> <br> <span
+						th:text="${pfmember.pfstatus == 1 ? '待審核' : (pfmember.pfstatus == 2 ? '審核成功' : (pfmember.pfstatus == 3 ? '開啟' : '關閉'))}"
+						th:class="${pfmember.pfstatus == 1 ? 'status-pending' : pfmember.pfstatus == 2 ? 'status-failed' : pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'}"></span>
+				</div>
+				<div class="field">
+					<span>詳細:</span><br> <a class="action-link"
+						th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}">
+						<i class="fas fa-file-invoice"></i>
+					</a>
+				</div>
+				<div class="field">
+					<span>審核:</span><br>
+					<div class="passStatusOrNot d-flex justify-content-between">
+						<i class="fas fa-check passIcon" style="color: rgb(0, 255, 157)"
+							th:attr="data-playfellow-id=${pfmember.playFellowId} " data-pfstatus='3'></i> <i
+							class="fas fa-solid fa-xmark failIcon" style="color: rgb(255, 0, 0)"
+							th:attr="data-playfellow-id=${pfmember.playFellowId} " data-pfstatus='2'></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script>
+		function calculateAge(birthday) {
+			const birthDate = new Date(birthday);
+			const today = new Date();
+			let age = today.getFullYear() - birthDate.getFullYear();
+			const monthDifference = today.getMonth() - birthDate.getMonth();
+
+			if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+				age--;
+			}
+
+			return age;
+		}
+
+		document.addEventListener('DOMContentLoaded', function () {
+			const birthdayElements = document.querySelectorAll('.birthday');
+			const ageElements = document.querySelectorAll('.age');
+
+			birthdayElements.forEach((birthdayElement, index) => {
+				const birthday = birthdayElement.textContent;
+				const age = calculateAge(birthday);
+				ageElements[index].textContent = age;
+			});
+		});
+
+		document.addEventListener('DOMContentLoaded', function () {
+			const backBtn = document.getElementById('backBtn');
+			backBtn.addEventListener('click', function () {
+				window.location.href = "http://localhost:8080/PlayCentric/playFellow/cms";
+			});
+
+			document.querySelectorAll('.passIcon, .failIcon').forEach(function (icon) {
+				icon.addEventListener('click', function (event) {
+					const playFellowId = event.target.getAttribute('data-playfellow-id');
+					const pfstatus = event.target.getAttribute('data-pfstatus');
+
+					console.log('playFellowId:', playFellowId);
+					console.log('pfstatus:', pfstatus);
+
+					const params = new URLSearchParams();
+					params.append('playFellowId', playFellowId);
+					params.append('pfstatus', pfstatus);
+
+					axios.post('/PlayCentric/reviewPfstatus', params, {
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						}
+					}).then(res => {
+						console.log(res.data);
+
+						const rowElement = event.target.closest('.row-wrapper');
+						if (rowElement) {
+							rowElement.classList.add('hidden');
+							setTimeout(() => {
+								rowElement.style.display = 'none';
+							}, 500);
+						}
+
+					}).catch(err => {
+						console.error(err);
+					});
+				});
+			});
+		});
+
+	</script>
+</body>
+
+</html>

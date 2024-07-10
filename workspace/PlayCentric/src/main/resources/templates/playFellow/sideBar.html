@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" xmlms:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" th:href="@{/css/tabulator.min.css}">
+    <script th:src="@{/js/tabulator.min.js}"></script>
+    
+</head>
+
+<body class="h-screen flex flex-col w-screen">
+    <!-- 頂部導航欄 -->
+    <div class="" th:replace="~{/layout/nav}"></div>
+
+    <div class="flex flex-1">
+        <!-- 側邊欄 -->
+        <aside class="w-64 bg-slate-300 text-black flex flex-col rounded-md">
+            <div class="p-4">
+                <h1 class="text-2xl font-semibold">管理選單</h1>
+            </div>
+            <nav class="flex-1 left-nav">
+                <ul>
+                    <li class="leftmenuitem px-4">
+                        <a href="#" class="block py-2.5 px-4 rounded ">會員管理</a>
+                    </li>
+                    <li class="leftmenuitem px-4 ">
+                        <a href="#" class="block py-2.5 px-4 rounded ">公告管理</a>
+                    </li>
+                    <li class="leftmenuitem px-4">
+                        <a th:href="@{/back/game}" class="block py-2.5 px-4 rounded ">遊戲管理</a>
+                    </li>
+                    <li class="leftmenuitem px-4">
+                        <a th:href="@{/prop/propSheet}" class="block py-2.5 px-4 rounded ">遊戲道具管理</a>
+                    </li>
+                    <li class="leftmenuitem px-4">
+                        <a th:href="@{/playFellow/cms}" class="block py-2.5 px-4 rounded ">伴遊管理</a>
+                    </li>
+                    <li class="leftmenuitem px-4">
+                        <a href="#" class="block py-2.5 px-4 rounded ">活動管理</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script th:src="@{/js/announcement/back-anno.js}"></script>
+
+</body>
+
+</html>
