@@ -45,7 +45,7 @@ public class TextsService {
 		return textsRepository.findAllByTitleContaining(keyword);
 	}
 
-	public Texts findById(int textsId) {
+	public Texts findById(Integer textsId) {
 		Optional<Texts> optional = textsRepository.findById(textsId);
 
 		if (optional.isEmpty()) {

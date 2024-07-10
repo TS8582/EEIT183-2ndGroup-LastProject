@@ -25,10 +25,10 @@ public class TextsController {
 
 	@Autowired
 	private TextsService textsService;
-	
+
 	@Autowired
 	private ForumService forumService;
-	
+
 	@Autowired
 	private MemberService memberService;
 
@@ -39,19 +39,14 @@ public class TextsController {
 		model.addAttribute("textsList", textsList);
 		return "forum/texts/list"; // 對應的 Thymeleaf 模板名稱
 	}
-	
+
 	@GetMapping("/texts/view")
-	public String viewTexts(@RequestParam("textsId") int textsId, Model model) {
-	    Texts texts = textsService.findById(textsId);
-	    //if (texts != null) {
-	        model.addAttribute("texts", texts);
-	        model.addAttribute("forumId", texts.getForum().getForumId());
-	        model.addAttribute("memId", texts.getMember().getMemId());
-	        return "forum/texts/view"; // 對應的 Thymeleaf 模板名稱
-	   // } else {
-	        // 如果找不到文章，返回錯誤頁面或重新導向到文章列表頁面
-	       // return "redirect:/texts/page";
-	   // }
+	public String viewTexts(@RequestParam("textsId") Integer textsId, Model model) {
+		Texts texts = textsService.findById(textsId);
+		texts.setForumId(texts.getForum().getForumId());
+		model.addAttribute("texts", texts);
+
+		return "forum/texts/view";
 	}
 
 	// 新增文章
