@@ -23,7 +23,9 @@
               <img th:src="@{/image/download(imageId=${oneMsg.game.imageLibs[0].imageId})}" class="img-fluid"
                 alt="Game Image" /> -->
 
-              <p class="card-title" th:text="${oneMsg.gameName}"></p>
+              <h5 class="card-title">
+                <a th:href="@{/forum/view(forumId=${oneMsg.forumId})}" th:text="${oneMsg.title}"></a>
+            </h5>
               <p class="card-text" th:text="${oneMsg.textsIntro}">遊戲介紹</p>
 
               <div class="edit-btn" style="display:flex">

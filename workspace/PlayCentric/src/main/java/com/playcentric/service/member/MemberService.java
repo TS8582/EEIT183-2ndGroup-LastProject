@@ -26,7 +26,9 @@ public class MemberService {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
+	
+	
+	
 	public Member memAddGoogle(GoogleLogin memGoogle){
 		Integer memberId = memberRepository.findByEmail(memGoogle.getEmail()).getMemId();
 		return memAddGoogle(memberId, memGoogle);
