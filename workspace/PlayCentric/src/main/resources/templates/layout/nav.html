@@ -30,7 +30,7 @@
                 <!-- menu -->
                 <div class="text-white flex items-center font-semibold relative z-50">
                     <div class="hidden md:flex md:ml-6 md:space-x-4 select-none cursor-pointer align-items-center">
-                        <div>
+                        <div th:if="${session.loginMember!=null&&session.loginMember.role==1}">
                             <a th:href="@{/back/anno}">管理介面</a>
                         </div>
                         <div class="relative tag">

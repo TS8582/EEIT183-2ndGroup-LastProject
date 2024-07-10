@@ -39,7 +39,7 @@ public class MemberService {
 		if (optional.isPresent()) {
 			Member member = optional.get();
 			member.setGoogeId(memGoogle.getGoogleId());
-			googleRepository.save(memGoogle);
+			member.setGoogleLogin(memGoogle);
 			return memberRepository.save(member);
 		}
 		return null;
@@ -102,7 +102,7 @@ public class MemberService {
 	public Page<Member> findByKeyword(String keyword,Integer pageNum){
 		PageRequest pageable = PageRequest.of(pageNum-1, 6, Sort.Direction.ASC, "memId");
 		// return memberRepository.findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining((short)0,keyword,keyword,keyword,keyword,pageable);
-		return memberRepository.findByKeyword("%"+keyword+"%", pageable);
+		return memberRepository.findByKeyword("%"+keyword.toLowerCase()+"%", pageable);
 	}
 
 	public Page<Member> findByPage(Integer pageNum){
