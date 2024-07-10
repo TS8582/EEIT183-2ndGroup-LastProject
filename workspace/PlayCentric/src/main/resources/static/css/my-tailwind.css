@@ -86,3 +86,11 @@ a {
 .img-choose {
     @apply col-span-1 w-full h-48 bg-slate-400 rounded-md
 }
+
+.remove-img {
+    @apply absolute -top-2 -right-2 bg-black text-white rounded-full px-3 py-1 select-none cursor-pointer
+}
+
+.remove-img:hover {
+    @apply bg-opacity-50
+}

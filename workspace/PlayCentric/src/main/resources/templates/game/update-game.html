@@ -83,7 +83,16 @@
                                     </th:block>
                                 </select>
 
-                                <div class="rateset hidden">
+                                <div th:if="${#lists.isEmpty(discountIds)}" class="rateset hidden">
+                                    <div class="flex flex-col">
+                                        <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
+
+                                        <input type="number" min="0" max="0.99" name="discountRate" id="discountRate"
+                                            value="0" step="0.01" class="text-input" />
+                                    </div>
+                                </div>
+
+                                <div th:if="${!#lists.isEmpty(discountIds)}" class="rateset">
                                     <div class="flex flex-col">
                                         <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
 
@@ -98,16 +107,28 @@
 
                     <div class="flex flex-col">
 
-                        <div class="flex mb-2">
-                            <input type="checkbox" id="isUsePhoto">
-                            <label class="select-none ms-2" for="isUsePhoto">是否加入圖片</label>
-                        </div>
-
-
                         <!-- 所有圖片元素 -->
                         <div class="w-96">
+                            <div>選擇圖片：</div>
 
-                            <div class="imgs hidden w-full">
+
+                            <div class="imgs grid grid-cols-2 gap-3 w-full">
+
+
+                                <th:block th:each="photo:${game.imageLibs}">
+
+                                    <div class="one-img">
+                                        <div class="remove-img">
+                                            X
+                                        </div>
+
+                                        <div class="w-full h-full flex justify-center items-center select-none">
+                                            <img class="img-view" th:src="@{/imagesLib/image{id}(id=${photo.imageId})}"
+                                                alt="">
+                                        </div>
+                                    </div>
+                                </th:block>
+
                                 <!-- 新增圖片元素 -->
                                 <div class="img-choose">
                                     <div class="w-full h-full flex justify-center items-center  cursor-pointer">
