@@ -2,132 +2,84 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>伴遊管理介面</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-	<link rel="stylesheet" th:href="@{/css/output.css}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>伴遊管理介面</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/output.css}">
 
-	<style>
-		html,
-		body {
-			height: 100%;
-			min-height: 100%;
-		}
+<style>
+html, body {
+	height: 100% !important;
+	min-height: 100% !important;
+}
 
-		.w250px {
-			width: 250px;
-		}
+.w250px {
+	width: 250px !important;
+}
 
-		.table thead th {
-			background-color: #CBD5E1;
-			color: #ADD8E6;
-			color: rgba(29, 18, 18, 0.995);
+.table thead th {
+	background-color: #CBD5E1 !important;
+	color: #ADD8E6 !important;
+	color: rgba(29, 18, 18, 0.995) !important;
+}
 
-		}
+.delete-icon {
+	color: rgba(255, 81, 0, 0.753) !important;
+}
 
-		.delete-icon {
-			color: rgba(255, 81, 0, 0.753);
-		}
+.delete-icon:hover {
+	color: red !important;
+}
 
-		.delete-icon:hover {
-			color: red;
-		}
-	</style>
+.status-pending {
+	color: #FFC107 !important;
+}
+
+.status-failed {
+	color: #DC3545 !important; 
+}
+
+.status-open {
+	color: #28A745 !important; 
+}
+
+.status-closed {
+	color: #6C757D !important;
+}
+
+</style>
+
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-<!-- 	<div th:replace="~{layout/nav.html}"></div> -->
+	<!-- 	<div th:replace="~{layout/nav.html}"></div> -->
 	<div th:replace="~{/playFellow/sideBar}"></div>
 
-	<!-- 	<nav id="menu" class="bg-secondary-subtle shadow collapse collapse-horizontal"> -->
-	<!-- 		<div class="w250px"> -->
-	<!-- 			<div class="hstack"> -->
-	<!-- 				<button type="button" class="btn-close ms-auto" data-bs-toggle="collapse" -->
-	<!-- 					data-bs-target="#menu"></button> -->
-	<!-- 			</div> -->
-
-	<!-- 			<div class="d-grid my-1 px-3"> -->
-	<!-- 				<button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" -->
-	<!-- 					aria-expanded="false" aria-controls="collapse1">伴遊功能</button> -->
-	<!-- 				<div class="collapse" id="collapse1"> -->
-	<!-- 					<div class="card card-body gap-1 p-1 rounded-0 rounded-bottom"> -->
-	<!-- 						<div class="btn btn-secondary btn-sm" id="reviewPfMember">審核伴遊資格</div> -->
-	<!-- 						<div class="btn btn-secondary btn-sm" id="addPfMember">加入伴遊</div> -->
-	<!-- 					</div> -->
-	<!-- 				</div> -->
-	<!-- 			</div> -->
-
-	<!-- 			<div class="d-grid my-1 px-3"> -->
-	<!-- 				<button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" -->
-	<!-- 					aria-expanded="false" aria-controls="collapse2">遊戲商城</button> -->
-	<!-- 				<div class="collapse" id="collapse2"> -->
-	<!-- 					<div class="card card-body gap-1 p-1 rounded-0 rounded-bottom"> -->
-	<!-- 						<div class="btn btn-secondary btn-sm">購物車</div> -->
-	<!-- 					</div> -->
-	<!-- 				</div> -->
-	<!-- 			</div> -->
-	<!-- 			<div class="d-grid my-1 px-3"> -->
-	<!-- 				<button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" -->
-	<!-- 					aria-expanded="false" aria-controls="collapse3">遊戲道具交易</button> -->
-	<!-- 				<div class="collapse" id="collapse3"> -->
-	<!-- 					<div class="card card-body gap-1 p-1 rounded-0 rounded-bottom"> -->
-	<!-- 						<div class="btn btn-secondary btn-sm">遊戲道具</div> -->
-	<!-- 						<div class="btn btn-secondary btn-sm">交易綜覽</div> -->
-	<!-- 					</div> -->
-	<!-- 				</div> -->
-	<!-- 			</div> -->
-	<!-- 			<div class="d-grid my-1 px-3"> -->
-	<!-- 				<button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" -->
-	<!-- 					aria-expanded="false" aria-controls="collapse4">討論區</button> -->
-	<!-- 				<div class="collapse" id="collapse4"> -->
-	<!-- 					<div class="card card-body gap-1 p-1 rounded-0 rounded-bottom"> -->
-	<!-- 						<div class="btn btn-secondary btn-sm">討論區列表</div> -->
-	<!-- 					</div> -->
-	<!-- 				</div> -->
-	<!-- 			</div> -->
-	<!-- 			<div class="d-grid my-1 px-3"> -->
-	<!-- 				<button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" -->
-	<!-- 					aria-expanded="false" aria-controls="collapse5">活動辦理</button> -->
-	<!-- 				<div class="collapse" id="collapse5"> -->
-	<!-- 					<div class="card card-body gap-1 p-1 rounded-0 rounded-bottom"> -->
-	<!-- 						<div class="btn btn-secondary btn-sm">線上活動</div> -->
-	<!-- 						<div class="btn btn-secondary btn-sm">線下活動</div> -->
-	<!-- 					</div> -->
-	<!-- 				</div> -->
-	<!-- 			</div> -->
-	<!-- 		</div> -->
-	<!-- 	</nav> -->
 	<main class="w-100 p-3">
-		<!-- 		<button class="btn btn-dark mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#menu" -->
-		<!-- 			aria-expanded="false" aria-controls="menu"> -->
-		<!-- 			<i class="fa-sharp fa-solid fa-bars-staggered"></i> -->
-		<!-- 		</button> -->
-
 		<ul class="nav nav-tabs" id="myTab" role="tablist">
 			<li class="nav-item" role="presentation">
-				<button class="nav-link text-secondary" id="home-tab" data-bs-toggle="tab"
-					data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
-					aria-selected="true">伴遊者列表</button>
+				<button class="nav-link text-secondary" id="home-tab"
+					data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button"
+					role="tab" aria-controls="home-tab-pane" aria-selected="true">伴遊者列表</button>
 			</li>
-<!-- 			<li class="nav-item" role="presentation"> -->
-<!-- 				<button class="nav-link text-secondary" id="profile-tab" data-bs-toggle="tab" -->
-<!-- 					data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" -->
-<!-- 					aria-selected="false">交易綜覽</button> -->
-<!-- 			</li> -->
 		</ul>
 		<div class="tab-content" id="myTabContent">
-			<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="home-tab-pane" role="tabpanel"
-				aria-labelledby="home-tab" tabindex="0">
+			<div
+				class="tab-pane fade border border-top-0 rounded-2 rounded-top-0"
+				id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+				tabindex="0">
 				<!-- 這裡放TABLE內容  PlayFellowMember-->
 				<br>
 
 				<div class="container">
 					<div class="table-container">
-						<table id="playFellowTable" class="table table-striped table-bordered table-hover">
+						<table id="playFellowTable"
+							class="table table-striped table-bordered table-hover">
 							<thead class="thead-light small">
 								<tr>
 									<th>編號</th>
@@ -146,31 +98,32 @@
 									<td th:text="${pfmember.playFellowId}"></td>
 									<td th:text="${pfmember.pfnickname}"></td>
 									<td><span
-											th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...' : pfmember.pfdescription}"></span>
+										th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...' : pfmember.pfdescription}"></span>
 									</td>
 									<td th:text="${pfmember.member.memId}"></td>
 									<td><span th:if="${pfmember.member.gender == 1}">男生</span>
-										<span th:if="${pfmember.member.gender == 2}">女生</span>
-									</td>
+										<span th:if="${pfmember.member.gender == 2}">女生</span></td>
 									<td th:text="${pfmember.member.birthday}"></td>
 									<td th:text="${pfmember.pfcreatedTime}"></td>
-									<td
-										th:text="${pfmember.pfstatus == 1 ? '待審核' : (pfmember.pfstatus == 2 ? '審核不成功' : (pfmember.pfstatus == 3 ? '開啟' : '關閉'))}">
-										狀態</td>
-									<td><a
-											th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}">
+									<td th:text="${pfmember.pfstatus == 1 ? '待審核' : 
+													(pfmember.pfstatus == 2 ? '審核不成功' : 
+													(pfmember.pfstatus == 3 ? '開啟' : '關閉'))}"
+										th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : 
+														(pfmember.pfstatus == 2 ? 'status-failed' : 
+														(pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}">
+									</td>
+									<td><a th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}">
 											<i class="fas fa-file-invoice" style="color: rgba(162, 241, 4, 0.704);"></i>
-										</a> <i class="fas fa-trash-alt delete-icon"
-											th:attr="data-playfellow-id=${pfmember.playFellowId}"></i></td>
+									</a> <i class="fas fa-trash-alt delete-icon" th:attr="data-playfellow-id=${pfmember.playFellowId}"></i></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
 			</div>
-			<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="profile-tab-pane" role="tabpanel"
-				aria-labelledby="profile-tab" tabindex="0">
-				<!-- 這裡放TABLE內容  PfOrder-->
+			<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0"
+				id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
+				tabindex="0">
 				<br> <br>
 				<div class="container">
 					<div class="table-container">
@@ -197,16 +150,19 @@
 		</div>
 
 		<!-- 刪除跳窗 -->
-		<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+		<div class="modal fade" id="deleteModal" tabindex="-1"
+			aria-labelledby="deleteModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
 					</div>
 					<div class="modal-body">確定要刪除這筆資料嗎？</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">取消</button>
 						<button type="button" class="btn btn-danger" id="confirmDelete">刪除</button>
 					</div>
 				</div>
