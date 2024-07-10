@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter @Getter @NoArgsConstructor
-public class MemberDto {
+public class LoginMemDto {
 
     private Integer memId;
     private String account;
@@ -31,13 +31,15 @@ public class MemberDto {
     private Integer points;
 
 
-    public MemberDto(Member member) {
+    public LoginMemDto(Member member) {
         this.account = member.getAccount();
         this.lastLogin = member.getLastLogin();
         this.memId = member.getMemId();
         this.memName = member.getMemName();
         this.nickname = member.getNickname();
-        this.photo = member.getPhoto()!=null? "":member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():"";;
+        this.photo = member.getPhoto()!=null? "http://localhost:8080/PlayCentric/imagesLib/image"+member.getPhoto():
+                member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
+                "http://localhost:8080/PlayCentric/imagesLib/image144";
         this.points = member.getPoints();
         this.role = member.getRole();
     }

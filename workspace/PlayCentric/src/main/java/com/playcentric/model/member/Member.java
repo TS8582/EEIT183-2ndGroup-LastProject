@@ -19,13 +19,16 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "members")
 public class Member {
@@ -34,6 +37,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer memId;
     private String account;
+
+    @JsonIgnore
     private String password;
     private String email;
     private String nickname;
@@ -65,6 +70,8 @@ public class Member {
 	private Date lastLogin;
     private Short role;
     private Integer photo;
+    @Transient
+    private String photoUrl;
     private Short gender;
     private Short status;
     private Integer points;
