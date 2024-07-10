@@ -24,12 +24,14 @@ import com.playcentric.model.member.Member;
 import com.playcentric.service.ImageLibService;
 import com.playcentric.service.member.MemberService;
 
+import jakarta.servlet.http.HttpSession;
+
 
 
 
 @Controller
-@RequestMapping("/member")
 @SessionAttributes(names = {"loginMember"})
+@RequestMapping("/member")
 public class MemberController {
 
 	@Autowired
@@ -83,7 +85,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/login")
-	public String loginPost(@RequestParam String account,@RequestParam String password, Model model, RedirectAttributes redirectAttributes) {
+	public String loginPost(@RequestParam String account,@RequestParam String password, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
 		Member loginMember = memberService.checkLogin(account, password);
 		if (loginMember==null) {
 			model.addAttribute("errorMsg", "登入失敗");
@@ -91,15 +93,16 @@ public class MemberController {
 		}
 		loginMember = memberService.memberLogin(loginMember);
 		model.addAttribute("loginMember", new LoginMemDto(loginMember));
+		session.setAttribute("loginMember", new LoginMemDto(loginMember));
 		redirectAttributes.addFlashAttribute("okMsg", "登入成功");
-		return "redirect:home";
+		return "redirect:/";
 	}
 	
 	@GetMapping("/logout")
 	public String logout(SessionStatus status, RedirectAttributes redirectAttributes) {
 		status.setComplete();
 		redirectAttributes.addFlashAttribute("okMsg", "登出完成");
-		return "redirect:home";
+		return "redirect:/";
 	}
 	
 	@GetMapping("/memManage")
