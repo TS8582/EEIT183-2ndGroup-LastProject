@@ -10,15 +10,34 @@
 .marketTable tr {
 	text-align: center;
 	padding: 0;
-	border: 0px;
+	border: 1px;
 }
 
 .navbar-table td a {
+	color: black;
+	font-weight: bold;
+}
+
+#propSellOrderForm {
+	max-width: 21rem;
+	margin: auto;
+	padding: 1rem;
+	border : 1px solid #ccc;
+	border-radius: 5px;
+	background-color: #f9f9f9;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+
+#selGameSub {
+	background-color: black;
 	color: white;
+	border-radius: 5px;
+	padding: 0.2rem 0.3rem;
+	font-size: 1rem;
 	font-weight: bold;
 }
 </style>
-
 </head>
 
 <body class="h-screen flex flex-col w-screen">
@@ -46,14 +65,14 @@
 			</nav>
 		</aside>
 		<div class="w-full p-5 h-auto">
-			<table class="table table-bordered navbar-table">
+			<table class="table table-bordered navbar-table mb-4">
 				<tbody class="marketTable">
 					<tr>
-						<td style="background-color: black"><a
+						<td style="background-color: white"><a
 							th:href="@{/prop/propSheet}">道具總覽</a></td>
-						<td style="background-color: black"><a
+						<td style="background-color: white"><a
 							th:href="@{/prop/propSellOrder}">拍賣場</a></td>
-						<td style="background-color: black"><a
+						<td style="background-color: white"><a
 							th:href="@{/prop/propTradeRecord}">成交紀錄</a></td>
 					</tr>
 				</tbody>
