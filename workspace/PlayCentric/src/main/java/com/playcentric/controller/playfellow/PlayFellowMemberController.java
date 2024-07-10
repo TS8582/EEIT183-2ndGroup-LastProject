@@ -107,10 +107,10 @@ public class PlayFellowMemberController {
 					.addAttribute("pfstatus", playFellowMember.getPfstatus())
 					.addAttribute("pfcreatedTime", playFellowMember.getPfcreatedTime());
 
-			return "playFellow/updateMember"; // 返回伴遊者資訊的視圖
+			return "playFellow/updateMember"; 
 		} else {
 			model.addAttribute("error", "查無此伴遊者，請重新登入");
-			return "member/registMember"; // 返回錯誤視圖或路徑
+			return "member/registMember"; 
 		}
 	}
 	
