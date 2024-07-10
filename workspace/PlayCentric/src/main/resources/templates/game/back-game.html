@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <link rel="stylesheet" th:href="@{/css/tabulator.min.css}">
-    <script th:src="@{/js/tabulator.min.js}"></script>
     <title>PlayCentric-後台管理-公告</title>
 </head>
 
@@ -22,8 +20,8 @@
         <main class="w-full h-auto">
             <div class="w-full h-auto flex flex-col justify-center px-8">
                 <input class="mb-4 p-2 border border-gray-300 rounded-md" type="text" id="search" placeholder="搜尋...">
-                <div>
-                    <a class="btn btn-sky mb-2" th:href="@{/game/getSetDiscount}">新增優惠活動</a>
+                <div class="mb-2">
+                    <a class="btn btn-sky" th:href="@{/game/getSetDiscount}">新增優惠活動</a>
                 </div>
                 <div class="w-full" id="table">
                     <table class="w-full border-collapse shadow">
