@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <div th:replace="~{layout/nav}"></div>
   <meta charset="UTF-8">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
   <script th:src="@{/js/bootstrap.bundle.js}"></script>
@@ -25,107 +26,115 @@
       background-color: #d0dbff !important;
     }
 
-    .h35px{
+    .h35px {
       height: 35px;
     }
 
-    .w35px{
+    .w35px {
       width: 35px;
     }
   </style>
   <title>會員管理</title>
 </head>
 
-<body>
+<body class="h-screen w-screen flex flex-col">
 
-  <div th:replace="~{layout/nav}"></div>
+  <div class="flex flex-1">
 
-  <div class="container my-4">
-    <div class="d-flex">
-      <div class="h1">會員管理</div>
-      <input type="text" id="search" class="ms-auto" placeholder="搜尋">
-      <div id="regist-act" class="btn btn-primary ms-2 mb-3">＋</div>
-    </div>
-    <div class="accordion" id="output">
-    </div>
-    <div id="pageBtn">
-      <div class="d-flex justify-content-center align-items-end mt-4">
-        <ul class="pagination">
-        </ul>
+    <div th:replace="~{/layout/aside}"></div>
+
+
+    <div class="container my-4">
+      <div class="d-flex">
+        <div class="h1">會員管理</div>
+        <input type="search" id="search" class="ms-auto" placeholder="搜尋">
+        <div id="regist-act" class="btn btn-primary ms-2 mb-3">＋</div>
       </div>
-    </div>
-  </div>
-
-  <div id="memInfo" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header border-0">
-          <h4 class="modal-title"></h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      <div class="accordion" id="output">
+      </div>
+      <div id="pageBtn">
+        <div class="d-flex justify-content-center align-items-end mt-4">
+          <ul class="pagination">
+          </ul>
         </div>
-        <form id="modalForm" class="regist">
-          <div class="modal-body">
-            <input type="hidden" id="memId" name="memId" value="">
-            <div class="input-group mb-1">
-              <label for="nickname" class="input-group-text">暱稱*</label>
-              <input type="text" class="form-control" id="nickname" name="nickname" required>
-            </div>
-            <div class="input-group mb-1">
-              <label for="account" class="input-group-text">帳號*</label>
-              <input type="text" class="form-control" id="account" name="account" required>
-            </div>
-            <div class="input-group mb-1 password">
-              <label for="password" class="input-group-text">輸入密碼*</label>
-              <input type="password" class="form-control" id="password" name="password">
-            </div>
-            <div class="input-group mb-1 password">
-              <label for="password-confirm" class="input-group-text">確認密碼*</label>
-              <input type="password" class="form-control" id="password-confirm">
-            </div>
-            <div class="input-group mb-1">
-              <label for="email" class="input-group-text">Email*</label>
-              <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <hr class="my-2">
-            <div class="input-group mb-1">
-              <label for="memName" class="input-group-text">姓名</label>
-              <input type="text" class="form-control" id="memName" name="memName">
-            </div>
-            <div class="input-group mb-1">
-              <label for="gender" class="input-group-text">姓別</label>
-              <input type="text" class="form-control" id="gender" name="gender" placeholder="男/女">
-            </div>
-            <div class="input-group mb-1">
-              <label for="birthday" class="input-group-text">生日</label>
-              <input type="date" class="form-control" id="birthday" name="birthday">
-            </div>
-            <div class="input-group mb-1">
-              <label for="phone" class="input-group-text">手機號碼</label>
-              <input type="tel" maxlength="10" class="form-control" id="phone" name="phone">
-            </div>
-            <div class="input-group mb-1">
-              <label for="address" class="input-group-text">住址</label>
-              <textarea class="form-control" id="address" name="address"></textarea>
-            </div>
-            <div class="input-group mb-1">
-              <label for="photoFile" class="input-group-text">照片</label>
-              <input type="file" class="form-control" id="photoFile" name="photoFile">
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="role">
-              <label class="form-check-label" for="role">
-                建立為管理員
-              </label>
-            </div>
-          </div>
-          <div class="modal-footer border-0">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-            <button type="submit" class="btn btn-primary">確定</button>
-          </div>
-        </form>
       </div>
     </div>
+
+    <div id="memInfo" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h4 class="modal-title"></h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <form id="modalForm" class="regist">
+            <div class="modal-body">
+              <input type="hidden" id="memId" name="memId" value="">
+              <div class="input-group mb-1">
+                <label for="nickname" class="input-group-text">暱稱*</label>
+                <input type="text" class="form-control" id="nickname" name="nickname" required>
+              </div>
+              <div class="input-group mb-1">
+                <label for="account" class="input-group-text">帳號*</label>
+                <input type="text" class="form-control" id="account" name="account" required>
+              </div>
+              <div class="input-group mb-1 password">
+                <label for="password" class="input-group-text">輸入密碼*</label>
+                <input type="password" class="form-control" id="password" name="password">
+              </div>
+              <div class="input-group mb-1 password">
+                <label for="password-confirm" class="input-group-text">確認密碼*</label>
+                <input type="password" class="form-control" id="password-confirm">
+              </div>
+              <div class="input-group mb-1">
+                <label for="email" class="input-group-text">Email*</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+              <hr class="my-2">
+              <div class="input-group mb-1">
+                <label for="memName" class="input-group-text">姓名</label>
+                <input type="text" class="form-control" id="memName" name="memName">
+              </div>
+              <div class="input-group mb-1">
+                <label for="gender" class="input-group-text">姓別</label>
+                <input type="text" class="form-control" id="gender" name="gender" placeholder="男/女">
+              </div>
+              <div class="input-group mb-1">
+                <label for="birthday" class="input-group-text">生日</label>
+                <input type="date" class="form-control" id="birthday" name="birthday">
+              </div>
+              <div class="input-group mb-1">
+                <label for="phone" class="input-group-text">手機號碼</label>
+                <input type="tel" maxlength="10" class="form-control" id="phone" name="phone">
+              </div>
+              <div class="input-group mb-1">
+                <label for="address" class="input-group-text">住址</label>
+                <textarea class="form-control" id="address" name="address"></textarea>
+              </div>
+              <div class="input-group mb-1">
+                <label for="photoFile" class="input-group-text">照片</label>
+                <input type="file" class="form-control" id="photoFile" name="photoFile">
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="role">
+                <label class="form-check-label" for="role">
+                  管理員
+                </label>
+              </div>
+            </div>
+            <div class="modal-footer border-0">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+              <button type="submit" class="btn btn-primary">確定</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
   </div>
+
+
+
 
 
   <script>
@@ -190,7 +199,7 @@
 
         const formdataObject = new FormData(this);
         const isMng = $('#role').prop('checked');
-        formdataObject.set('role',isMng? 1:0)
+        formdataObject.set('role', isMng ? 1 : 0)
         let gender = $('#gender').val();
         formdataObject.set('gender', gender == '男' ? 1 : gender == '女' ? 2 : 0)
 

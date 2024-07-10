@@ -16,33 +16,7 @@
 
     <div class="flex flex-1">
         <!-- 側邊欄 -->
-        <aside class="w-64 bg-slate-300 text-black flex flex-col rounded-md">
-            <div class="p-4">
-                <h1 class="text-2xl font-semibold">管理選單</h1>
-            </div>
-            <nav class="flex-1 left-nav">
-                <ul>
-                    <li class="leftmenuitem px-4">
-                        <a href="#" class="block py-2.5 px-4 rounded ">會員管理</a>
-                    </li>
-                    <li class="leftmenuitem px-4">
-                        <a th:href="@{/back/anno}" class="block py-2.5 px-4 rounded ">公告管理</a>
-                    </li>
-                    <li class="leftmenuitem px-4 left-selected">
-                        <a th:href="@{/back/game}" class="block py-2.5 px-4 rounded ">遊戲管理</a>
-                    </li>
-                    <li class="leftmenuitem px-4">
-                        <a th:href="@{/prop/propSheet}" class="block py-2.5 px-4 rounded ">遊戲道具管理</a>
-                    </li>
-                    <li class="leftmenuitem px-4">
-                        <a href="#" class="block py-2.5 px-4 rounded ">伴遊管理</a>
-                    </li>
-                    <li class="leftmenuitem px-4">
-                        <a href="#" class="block py-2.5 px-4 rounded ">活動管理</a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
+        <div th:replace="~{/layout/aside}"></div>
 
         <!-- 主要內容區域 -->
         <main class="w-full h-auto">
@@ -77,10 +51,11 @@
                                         class="text-center border p-3 score"></td>
                                     <td th:if="${game.totalReviews == 0}" class="text-center border p-3 score">0</td>
                                     <td class="text-center border p-3">
-                                        <a href="#" class="btn btn-sky rounded-md me-2 block md:inline">修改</a>
-                                        <a th:if="${!game.isShow}" href="#"
+                                        <a th:href="@{/game/getUpdateGame(gameId=${game.gameId})}"
+                                            class="btn btn-sky rounded-md me-2 block md:inline">修改</a>
+                                        <a th:if="${!game.isShow}" th:href="@{/game/isShow(gameId=${game.gameId})}"
                                             class="btn btn-green rounded-md me-2 block md:inline">上架</a>
-                                        <a th:if="${game.isShow}" href="#"
+                                        <a th:if="${game.isShow}" th:href="@{/game/isShow(gameId=${game.gameId})}"
                                             class="btn btn-danger rounded-md me-2 block md:inline">下架</a>
                                     </td>
                                 </tr>
