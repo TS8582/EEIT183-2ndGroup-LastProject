@@ -14,36 +14,36 @@
         <div class="flex justify-center my-5 border-2 p-20 rounded-md">
             <form th:action="@{/game/insertGame}" method="post" enctype="multipart/form-data">
                 <div class="space-y-4">
-
+                    <input type="hidden" name="gameId" th:value="${game.gameId}">
                     <div class="flex flex-col">
                         <label for="gameName" class="select-none text-lg me-2">遊戲名稱：</label>
-                        <input required type="text" name="gameName" id="gameName" class="text-input"
-                            placeholder="請輸入名稱...">
+                        <input th:value="${game.gameName}" required type="text" name="gameName" id="gameName"
+                            class="text-input" placeholder="請輸入名稱...">
                     </div>
 
                     <div class="flex flex-col">
                         <label for="price" class="select-none text-lg me-2">遊戲價格：</label>
                         <input required type="text" name="price" id="price" maxlength="5" pattern="[1-9]{1}\d{0,4}"
-                            class="text-input" placeholder="請輸入價格...">
+                            th:value="${game.price}" class="text-input" placeholder="請輸入價格...">
                     </div>
 
                     <div class="flex flex-col">
                         <label for="description" class="select-none text-lg me-2">遊戲介紹：</label>
                         <textarea required type="text" name="description" id="description" rows="20"
                             class="text-input resize-none overflow-auto noscrollbar"
-                            placeholder="請輸入遊戲介紹..."></textarea>
+                            placeholder="請輸入遊戲介紹...">[[${game.description}]]</textarea>
                     </div>
 
                     <div class="flex flex-col">
                         <label for="developer" class="select-none text-lg me-2">開發者：</label>
-                        <input required type="text" name="developer" id="developer" class="text-input"
-                            placeholder="請輸入名稱...">
+                        <input required type="text" name="developer" id="developer" th:value="${game.developer}"
+                            class="text-input" placeholder="請輸入名稱...">
                     </div>
 
                     <div class="flex flex-col">
                         <label for="publisher" class="select-none text-lg me-2">發行商：</label>
                         <input required type="text" name="publisher" id="publisher" class="text-input"
-                            placeholder="請輸入名稱...">
+                            th:value="${game.publisher}" placeholder="請輸入名稱...">
                     </div>
 
                     <div class="flex flex-col">
@@ -52,7 +52,8 @@
                             <th:block th:each="type,i: ${allType}">
                                 <div class="col-span-1">
                                     <div class="flex items-center">
-                                        <input th:value="${type.gameTypeId}" th:id="type + ${i}" name="typeId[]"
+                                        <input th:checked="${typeIds.contains(type.gameTypeId)}"
+                                            th:value="${type.gameTypeId}" th:id="type + ${i}" name="typeId[]"
                                             type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
                                         <label th:for="type + ${i}" class="select-none ml-2 block text-sm text-gray-900"
                                             th:text="${type.gameTypeName}"></label>
@@ -71,13 +72,27 @@
                                     id="discount-chooser">
                                     <option value="0">無</option>
                                     <th:block th:each="discount:${allDiscount}">
+                                        <option th:if="${discountIds}"
+                                            th:selected="${discountIds.contains(discount.gameDiscountId)}"
+                                            th:value="${discount.gameDiscountId}"
+                                            th:text="${discount.gameDiscountName} + ${#dates.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
+                                        </option>
                                         <option th:value="${discount.gameDiscountId}"
                                             th:text="${discount.gameDiscountName} + ${#dates.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
                                         </option>
                                     </th:block>
                                 </select>
 
-                                <div class="rateset hidden">
+                                <div th:if="${#lists.isEmpty(discountIds)}" class="rateset hidden">
+                                    <div class="flex flex-col">
+                                        <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
+
+                                        <input type="number" min="0" max="0.99" name="discountRate" id="discountRate"
+                                            value="0" step="0.01" class="text-input" />
+                                    </div>
+                                </div>
+
+                                <div th:if="${!#lists.isEmpty(discountIds)}" class="rateset">
                                     <div class="flex flex-col">
                                         <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
 
@@ -95,7 +110,25 @@
                         <!-- 所有圖片元素 -->
                         <div class="w-96">
                             <div>選擇圖片：</div>
+
+
                             <div class="imgs grid grid-cols-2 gap-3 w-full">
+
+
+                                <th:block th:each="photo:${game.imageLibs}">
+
+                                    <div class="one-img">
+                                        <div class="remove-img">
+                                            X
+                                        </div>
+
+                                        <div class="w-full h-full flex justify-center items-center select-none">
+                                            <img class="img-view" th:src="@{/imagesLib/image{id}(id=${photo.imageId})}"
+                                                alt="">
+                                        </div>
+                                    </div>
+                                </th:block>
+
                                 <!-- 新增圖片元素 -->
                                 <div class="img-choose">
                                     <div class="w-full h-full flex justify-center items-center  cursor-pointer">

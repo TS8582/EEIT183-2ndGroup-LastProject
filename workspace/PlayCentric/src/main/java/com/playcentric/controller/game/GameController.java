@@ -53,6 +53,41 @@ public class GameController {
 		model.addAttribute("allDiscount", allDiscount);
 		return "game/insert-game";
 	}
+	
+	//輸入修改遊戲資料
+	@GetMapping("/game/getUpdateGame")
+	public String getUpdateGame(@RequestParam Integer gameId,Model model) {
+		Game game = gService.findById(gameId);
+		model.addAttribute("game",game);
+		List<Integer> typeIds = new ArrayList<>();
+		for (GameTypeLib type : game.getGameTypeLibs()) {
+			typeIds.add(type.getGameTypeId());
+		}
+		model.addAttribute("typeIds",typeIds);
+		List<GameTypeLib> allType = gtService.findAll();
+		List<GameDiscountSet> allDiscount = gdsService.findAll();
+		model.addAttribute("allType", allType);
+		model.addAttribute("allDiscount", allDiscount);
+		List<Integer> discountIds = new ArrayList<>();
+		List<GameDiscount> gameDiscounts = game.getGameDiscounts();
+		for (GameDiscount gameDiscount : gameDiscounts) {
+			discountIds.add(gameDiscount.getGameDiscountId());
+		}
+		model.addAttribute("discountIds",discountIds);
+		System.out.println("我在這裡" + discountIds.toString());
+		return "game/update-game";
+	}
+	//遊戲上下架
+	@GetMapping("/game/isShow")
+	public String postMethodName(@RequestParam Integer gameId) {
+		Game game = gService.findById(gameId);
+		if (game.getIsShow() == true) game.setIsShow(false);
+		else game.setIsShow(true);
+		gService.save(game);
+			
+		return "redirect:/back/game";
+	}
+	
 
 	// 進行新增遊戲
 	@PostMapping("/game/insertGame")
@@ -101,6 +136,58 @@ public class GameController {
 		gService.save(newGame);
 		return "redirect:/back/game";
 	}
+	
+	// 進行新增遊戲
+		@PostMapping("/game/updateGame")
+		public String updateGame(@ModelAttribute Game game, @RequestParam List<Integer> typeId,
+				@RequestParam("photos") MultipartFile[] photos, @RequestParam BigDecimal discountRate,
+				@RequestParam Integer discountId) throws IOException {
+			Game myGame = gService.findById(game.getGameId());
+			myGame.setGameName(game.getGameName());
+			myGame.setDescription(game.getDescription());
+			myGame.setPrice(game.getPrice());
+			myGame.setDeveloper(game.getDeveloper());
+			myGame.setPublisher(game.getPublisher());
+			// 設定遊戲分類
+			List<GameTypeLib> types = new ArrayList<>();
+			for (Integer id : typeId) {
+				GameTypeLib type = gtService.findById(id);
+				types.add(type);
+			}
+			myGame.setGameTypeLibs(types);
+			//多對多關係需要創立
+			List<Game> games = new ArrayList<>();
+			games.add(myGame);
+			// 設定遊戲圖片
+			List<ImageLib> imgs = new ArrayList<>();
+			if (!photos[0].isEmpty()) {
+				for (MultipartFile file : photos) {
+					System.out.println("到底會有幾個檔案");
+					ImageLib imageLib = new ImageLib();
+					imageLib.setImageFile(file.getBytes());
+					ImageLib saveImage = iService.saveImage(imageLib);
+					imageLib.setGames(games);
+					imgs.add(saveImage);
+				}
+				myGame.setImageLibs(imgs);
+			}
+			if (discountId != 0 && discountRate.compareTo(BigDecimal.ZERO) != 0) {
+				//取得優惠活動
+				GameDiscountSet discountSet = gdsService.findById(discountId);
+				//新增遊戲優惠
+				GameDiscount gameDiscount = new GameDiscount();
+				gameDiscount.setDiscountRate(discountRate);
+				gameDiscount.setGameId(myGame.getGameId());
+				gameDiscount.setGameDiscountId(discountId);
+				List<GameDiscount> gameDiscounts = new ArrayList<>();
+				gameDiscounts.add(gameDiscount);
+				game.setGameDiscounts(gameDiscounts);
+				discountSet.setGameDiscounts(gameDiscounts);
+			}
+			//重新存入帶有圖片與優惠的遊戲
+			gService.save(myGame);
+			return "redirect:/back/game";
+		}
 	
 	
 	// 輸入優惠活動資料
