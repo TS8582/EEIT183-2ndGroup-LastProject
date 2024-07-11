@@ -2,19 +2,79 @@
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" th:href="@{/css/output.css}">
-	<title>遊戲道具交易後台拍賣場總覽</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" th:href="@{/css/output.css}">
+<title>遊戲道具交易後台拍賣場總覽</title>
+<style>
+.marketTable tr {
+	text-align: center;
+	padding: 0;
+	border: 1px;
+}
+
+.navbar-table td a {
+	color: black;
+	font-weight: bold;
+}
+
+#RecordForm {
+	max-width: 21rem;
+	margin: auto;
+	padding: 1rem;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	background-color: #f9f9f9;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+
+#selGameSub {
+	background-color: black;
+	color: white;
+	border-radius: 5px;
+	padding: 0.2rem 0.3rem;
+	font-size: 1rem;
+	font-weight: bold;
+}
+
+#selGameSub:hover {
+	background-color: rgba(97, 92, 92, 0.749);
+}
+</style>
+
 </head>
 <div th:replace="~{prop/propNavbar}"></div>
 
 <body class="h-screen flex flex-col w-screen">
 	<div class="flex flex-1 w-full h-auto">
-		<div th:replace="~{/layout/aside}"></div>
+		<aside class="w-64 bg-slate-300 text-black flex flex-col rounded-md">
+			<div class="p-4">
+				<h1 class="text-2xl font-semibold">管理選單</h1>
+			</div>
+			<nav class="flex-1 left-nav">
+				<ul>
+					<li class="leftmenuitem px-4"><a th:href="@{/memManage}"
+						class="block py-2.5 px-4 rounded ">會員管理</a></li>
+					<li class="leftmenuitem px-4"><a th:href="@{/back/anno}"
+						class="block py-2.5 px-4 rounded ">公告管理</a></li>
+					<li class="leftmenuitem px-4"><a th:href="@{/back/game}"
+						class="block py-2.5 px-4 rounded ">遊戲管理</a></li>
+					<li class="leftmenuitem px-4 left-selected"><a
+						th:href="@{/prop/propSheet}" class="block py-2.5 px-4 rounded ">遊戲道具管理</a>
+					</li>
+					<li class="leftmenuitem px-4"><a th:href="@{/playFellow/cms}"
+						class="block py-2.5 px-4 rounded ">伴遊管理</a></li>
+					<li class="leftmenuitem px-4"><a th:href="@{/events/listEvents}"
+						class="block py-2.5 px-4 rounded ">活動管理</a></li>
+					<li class="leftmenuitem px-4"><a th:href="@{/forum/page}"
+						class="block py-2.5 px-4 rounded ">討論區管理</a></li>
+				</ul>
+			</nav>
+		</aside>
 		<div class="w-full p-5">
-			<table class="table table-bordered navbar-table">
-				<tbody>
+			<table class="table table-bordered navbar-table mb-4">
+				<tbody class="marketTable">
 					<tr>
 						<td><a th:href="@{/prop/propSheet}">道具總覽</a></td>
 						<td><a th:href="@{/prop/propSellOrder}">拍賣場</a></td>
@@ -23,7 +83,6 @@
 				</tbody>
 			</table>
 			<header class="">
-				<h1>遊戲道具交易後台</h1>
 				<div id="gameList">
 					<form id="RecordForm">
 						<label for="SelectGame">遊戲選單:</label> <select id="SelectGame"></select>
