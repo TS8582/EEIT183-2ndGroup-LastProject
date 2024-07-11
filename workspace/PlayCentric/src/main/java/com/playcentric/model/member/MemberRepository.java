@@ -18,7 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 	Page<Member> findByStatus(Short status, Pageable pageable);
 
-	@Query("from Member where status = 0 and (account like :keyword or nickname like :keyword or memName like :keyword)")
+	@Query("from Member where status = 0 and (lower(account) like :keyword or lower(nickname) like :keyword or lower(memName) like :keyword or lower(email) like :keyword)")
 	Page<Member> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
 	Page<Member> findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining(Short status, String account, String nickname, String memName, String email, Pageable pageable);

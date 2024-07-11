@@ -7,7 +7,8 @@
 <link rel="stylesheet" th:href="@{/css/output.css}">
 <title>遊戲道具交易後台道具總覽</title>
 <style>
-.marketTable tr {
+.marketTbody tr {
+	margin-top: 0px;
 	text-align: center;
 	padding: 0;
 	border: 1px;
@@ -16,6 +17,7 @@
 .navbar-table td a {
 	color: black;
 	font-weight: bold;
+	font-size: 1.4rem;
 }
 
 #myForm {
@@ -49,34 +51,11 @@
 
 
 	<div class="flex flex-1 h-auto">
-		<aside class="w-64 bg-slate-300 text-black flex flex-col rounded-md">
-			<div class="p-4">
-				<h1 class="text-2xl font-semibold">管理選單</h1>
-			</div>
-			<nav class="flex-1 left-nav">
-				<ul>
-					<li class="leftmenuitem px-4"><a href="#"
-						class="block py-2.5 px-4 rounded ">會員管理</a></li>
-					<li class="leftmenuitem px-4"><a href="#"
-						class="block py-2.5 px-4 rounded ">公告管理</a></li>
-					<li class="leftmenuitem px-4"><a th:href="@{/back/game}"
-						class="block py-2.5 px-4 rounded ">遊戲管理</a></li>
-					<li class="leftmenuitem px-4 left-selected"><a
-						th:href="@{/prop/propSheet}" class="block py-2.5 px-4 rounded ">遊戲道具管理</a>
-					</li>
-					<li class="leftmenuitem px-4"><a href="#"
-						class="block py-2.5 px-4 rounded ">伴遊管理</a></li>
-					<li class="leftmenuitem px-4"><a href="#"
-						class="block py-2.5 px-4 rounded ">活動管理</a></li>
-					<li class="leftmenuitem px-4"><a th:href="@{/forum/page}"
-						class="block py-2.5 px-4 rounded ">討論區管理</a></li>
-				</ul>
-			</nav>
-		</aside>
+		<div th:replace="~{/layout/aside}"></div>
 
 		<div class="w-full p-5">
-			<table class="table table-bordered navbar-table  mb-4">
-				<tbody class="marketTable">
+			<table class="table table-bordered navbar-table">
+				<tbody class=marketTbody>
 					<tr>
 						<td><a th:href="@{/prop/propSheet}">道具總覽</a></td>
 						<td><a th:href="@{/prop/propSellOrder}">拍賣場</a></td>
@@ -189,7 +168,7 @@
 					<tr>
 						<th>編號</th>
 						<th>名稱</th>
-						<th>圖片</th>
+						<th class="text-start">圖片</th>
 						<th>種類</th>
 						<th>稀有度</th>
 						<th>描述</th>
