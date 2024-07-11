@@ -1,8 +1,0 @@
-{
-    "watch": [
-        "main",
-        "tailwind.config.js"
-    ],
-    "ext": "html,css,js",
-    "exec": "npm run build:css"
-}
