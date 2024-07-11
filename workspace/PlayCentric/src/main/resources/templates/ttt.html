@@ -11,104 +11,108 @@
             height: 100vh;
             min-height: 100vh;
         }
+
+        .dropdown-item:hover {
+            background-color: gray;
+        }
     </style>
     <title></title>
 </head>
 
 <body class="h-100 w-100">
-    <div class="d-flex flex-column h-75 bg-black rounded-bottom-circle">
+    <div class="container-fluid d-flex flex-column h-100 bg-black rounded-bottom-circle">
 
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
                 <a class="navbar-brand d-flex align-items-center" href="#">
-                    <img src="../static/images/MyLogo.png" alt="品牌名稱" width="80" height="80"
+                    <img src="../static/images/MyLogo.png" alt="品牌名稱" width="100" height="100"
                         class="d-inline-block align-top">
-                    <span class="fs-1 ms-1">PlayCentric</span>
+                    <span class="display-4 ms-1">PlayCentric</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <div class="collapse navbar-collapse text-center" id="navbarNavDropdown">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-light dropdown-toggle" href="#" id="adminDropdown" role="button"
+                        <li class="nav-item dropdown ms-1 fs-5">
+                            <a class="nav-link  text-light dropdown-toggle" href="#" id="adminDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 管理介面
                             </a>
                             <div class="d-flex me-auto">
-                                <ul class="dropdown-menu dropdown-menu-end bg-black text-light text-center"
+                                <ul class="dropdown-menu dropdown-menu-end bg-dark text-center w-100 rounded-pill"
                                     aria-labelledby="adminDropdown">
-                                    <li><a class="dropdown-item" href="#">管理選項 1</a></li>
-                                    <li><a class="dropdown-item" href="#">管理選項 2</a></li>
+                                    <li><a class="dropdown-item text-white rounded-pill" href="#">管理選項 1</a></li>
+                                    <li><a class="dropdown-item text-white rounded-pill" href="#">管理選項 2</a></li>
                                 </ul>
                             </div>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="memberDropdown" role="button"
+                        <li class="nav-item dropdown ms-1 fs-5">
+                            <a class="nav-link  text-light dropdown-toggle" href="#" id="memberDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 會員
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end bg-black text-light text-center"
+                            <ul class="dropdown-menu dropdown-menu-end bg-dark text-center w-100 rounded-pill"
                                 aria-labelledby="memberDropdown">
-                                <li><a class="dropdown-item" href="#">會員選項 1</a></li>
-                                <li><a class="dropdown-item" href="#">會員選項 2</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">會員選項 1</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">會員選項 2</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="storeDropdown" role="button"
+                        <li class="nav-item dropdown ms-1 fs-5">
+                            <a class="nav-link  text-light dropdown-toggle" href="#" id="storeDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 遊戲商店
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end bg-black text-light text-center"
+                            <ul class="dropdown-menu dropdown-menu-end bg-dark text-center w-100 rounded-pill"
                                 aria-labelledby="storeDropdown">
-                                <li><a class="dropdown-item" href="#">商店選項 1</a></li>
-                                <li><a class="dropdown-item" href="#">商店選項 2</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">商店選項 1</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">商店選項 2</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="itemsDropdown" role="button"
+                        <li class="nav-item dropdown ms-1 fs-5">
+                            <a class="nav-link  text-light dropdown-toggle" href="#" id="itemsDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 遊戲道具
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end bg-black text-light text-center"
+                            <ul class="dropdown-menu dropdown-menu-end bg-dark text-center w-100 rounded-pill"
                                 aria-labelledby="itemsDropdown">
-                                <li><a class="dropdown-item" href="#">道具選項 1</a></li>
-                                <li><a class="dropdown-item" href="#">道具選項 2</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">道具選項 1</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">道具選項 2</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="escortDropdown" role="button"
+                        <li class="nav-item dropdown ms-1 fs-5">
+                            <a class="nav-link  text-light dropdown-toggle" href="#" id="escortDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 伴遊
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end bg-black text-light text-center"
+                            <ul class="dropdown-menu dropdown-menu-end bg-dark text-center w-100 rounded-pill"
                                 aria-labelledby="escortDropdown">
-                                <li><a class="dropdown-item" href="#">伴遊選項 1</a></li>
-                                <li><a class="dropdown-item" href="#">伴遊選項 2</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">伴遊選項 1</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">伴遊選項 2</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="eventsDropdown" role="button"
+                        <li class="nav-item dropdown ms-1 fs-5">
+                            <a class="nav-link  text-light dropdown-toggle" href="#" id="eventsDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 活動
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end bg-black text-light text-center"
+                            <ul class="dropdown-menu dropdown-menu-end bg-dark text-center w-100 rounded-pill"
                                 aria-labelledby="eventsDropdown">
-                                <li><a class="dropdown-item" href="#">活動選項 1</a></li>
-                                <li><a class="dropdown-item" href="#">活動選項 2</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">活動選項 1</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">活動選項 2</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="forumDropdown" role="button"
+                        <li class="nav-item dropdown ms-1 fs-5">
+                            <a class="nav-link  text-light dropdown-toggle" href="#" id="forumDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 討論區
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end bg-black text-light text-center"
+                            <ul class="dropdown-menu dropdown-menu-end bg-dark text-center w-100 rounded-pill"
                                 aria-labelledby="forumDropdown">
-                                <li><a class="dropdown-item" href="#">討論區選項 1</a></li>
-                                <li><a class="dropdown-item" href="#">討論區選項 2</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">討論區選項 1</a></li>
+                                <li><a class="dropdown-item text-white rounded-pill" href="#">討論區選項 2</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -116,8 +120,14 @@
             </div>
         </nav>
 
-        <div class="h-full">
-
+        <div class="h-100 d-flex justify-content-center align-items-start ">
+            <div class="d-flex flex-column position-relative h-100
+            e">
+                <div class="w-100 mt-5 text-center text-white display-3 ">
+                    Enjoy Your Play！
+                </div>
+                <img class="img-fluid h-75 w-auto" src="../static/images/controller3.png" alt="">
+            </div>
         </div>
 
     </div>
