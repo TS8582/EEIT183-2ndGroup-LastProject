@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"> -->
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <title>nav</title>
+    <!-- <title>nav</title> -->
 </head>
 
 <body>
@@ -133,7 +133,7 @@
                                 <a th:href="@{/member/login}" class="btn btn-sm btn-primary">登入/註冊</a>
                             </div>
                             <div th:case="*">
-                                <div class="ms-auto d-flex align-items-center justify-content-end">
+                                <div class="ms-auto flex align-items-center justify-content-end">
                                     <img class="rounded rounded-5" width="30px" th:src="${session.loginMember.photo}">
                                     <span class="mx-1 text-light" th:text="${session.loginMember.nickname}"></span>
                                 </div>
