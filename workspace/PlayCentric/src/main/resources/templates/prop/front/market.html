@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-  <title>道具交易</title>
+  <title>道具交易前台</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,281 +10,221 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="keywords" content="ecommerce, pet, shop">
   <meta name="description" content="Free eCommerce Pet Shop HTML Website Template">
-</head>
 
-<link rel="stylesheet" th:href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
-
-<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-
-<link rel="stylesheet" type="text/css" th:href="css/vendor.css">
-<link rel="stylesheet" type="text/css" th:href="style.css">
-
-<link rel="preconnect" th:href="https://fonts.googleapis.com">
-<link rel="preconnect" th:href="https://fonts.gstatic.com" crossorigin>
-<link th:href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
-  rel="stylesheet">
-
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
+  <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/prop/template/vendor.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/prop/template/style.css}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
-
-  <section id="clothing" class="my-5 overflow-hidden">
-    <div class="container pb-5">
-
-      <div class="section-header d-md-flex justify-content-between align-items-center mb-3">
-        <h2 class="display-3 fw-normal">Pet Clothing</h2>
-        <div>
-          <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
-            shop now
-            <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
-              <use xlink:href="#arrow-right"></use>
-            </svg></a>
-        </div>
-      </div>
-
-      <div class="products-carousel swiper">
-        <div class="swiper-wrapper">
-
-          <div class="swiper-slide">
-            <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-              New
-            </div>
-            <div class="card position-relative">
-              <a href="single-product.html"><img src="images/item1.jpg" class="img-fluid rounded-4" alt="image"></a>
-              <div class="card-body p-0">
-                <a href="single-product.html">
-                  <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-                </a>
-
-                <div class="card-text">
-                  <span class="rating secondary-font">
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    5.0</span>
-
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
-                      <h5 class="text-uppercase m-0">Add to Cart</h5>
-                    </a>
-                    <a href="#" class="btn-wishlist px-4 pt-3 ">
-                      <iconify-icon icon="fluent:heart-28-filled" class="fs-5"></iconify-icon>
-                    </a>
-                  </div>
-
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-              New
-            </div> -->
-            <div class="card position-relative">
-              <a href="single-product.html"><img src="images/item2.jpg" class="img-fluid rounded-4" alt="image"></a>
-              <div class="card-body p-0">
-                <a href="single-product.html">
-                  <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-                </a>
-
-                <div class="card-text">
-                  <span class="rating secondary-font">
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    5.0</span>
-
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
-                      <h5 class="text-uppercase m-0">Add to Cart</h5>
-                    </a>
-                    <a href="#" class="btn-wishlist px-4 pt-3 ">
-                      <iconify-icon icon="fluent:heart-28-filled" class="fs-5"></iconify-icon>
-                    </a>
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-              -10%
-            </div>
-            <div class="card position-relative">
-              <a href="single-product.html"><img src="images/item3.jpg" class="img-fluid rounded-4" alt="image"></a>
-              <div class="card-body p-0">
-                <a href="single-product.html">
-                  <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-                </a>
-
-                <div class="card-text">
-                  <span class="rating secondary-font">
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    5.0</span>
-
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
-                      <h5 class="text-uppercase m-0">Add to Cart</h5>
-                    </a>
-                    <a href="#" class="btn-wishlist px-4 pt-3 ">
-                      <iconify-icon icon="fluent:heart-28-filled" class="fs-5"></iconify-icon>
-                    </a>
-                  </div>
-
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-              New
-            </div> -->
-            <div class="card position-relative">
-              <a href="single-product.html"><img src="images/item4.jpg" class="img-fluid rounded-4" alt="image"></a>
-              <div class="card-body p-0">
-                <a href="single-product.html">
-                  <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-                </a>
-
-                <div class="card-text">
-                  <span class="rating secondary-font">
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    5.0</span>
-
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
-                      <h5 class="text-uppercase m-0">Add to Cart</h5>
-                    </a>
-                    <a href="#" class="btn-wishlist px-4 pt-3 ">
-                      <iconify-icon icon="fluent:heart-28-filled" class="fs-5"></iconify-icon>
-                    </a>
-                  </div>
-
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-              New
-            </div> -->
-            <div class="card position-relative">
-              <a href="single-product.html"><img src="images/item7.jpg" class="img-fluid rounded-4" alt="image"></a>
-              <div class="card-body p-0">
-                <a href="single-product.html">
-                  <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-                </a>
-
-                <div class="card-text">
-                  <span class="rating secondary-font">
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    5.0</span>
-
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
-                      <h5 class="text-uppercase m-0">Add to Cart</h5>
-                    </a>
-                    <a href="#" class="btn-wishlist px-4 pt-3 ">
-                      <iconify-icon icon="fluent:heart-28-filled" class="fs-5"></iconify-icon>
-                    </a>
-                  </div>
-
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <!-- <div class="z-1 position-absolute rounded-3 m-3 px-3 border border-dark-subtle">
-              New
-            </div> -->
-            <div class="card position-relative">
-              <a href="single-product.html"><img src="images/item8.jpg" class="img-fluid rounded-4" alt="image"></a>
-              <div class="card-body p-0">
-                <a href="single-product.html">
-                  <h3 class="card-title pt-4 m-0">Grey hoodie</h3>
-                </a>
-
-                <div class="card-text">
-                  <span class="rating secondary-font">
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                    5.0</span>
-
-                  <h3 class="secondary-font text-primary">$18.00</h3>
-
-                  <div class="d-flex flex-wrap mt-3">
-                    <a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
-                      <h5 class="text-uppercase m-0">Add to Cart</h5>
-                    </a>
-                    <a href="#" class="btn-wishlist px-4 pt-3 ">
-                      <iconify-icon icon="fluent:heart-28-filled" class="fs-5"></iconify-icon>
-                    </a>
-                  </div>
-
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <!-- / products-carousel -->
-
-
+  <header class="">
+    <div id="gameList">
+      <form id="myForm">
+        <label for="SelectGame">遊戲選單:</label>
+        <select class="border-2" id="SelectGame" name="gameId"></select>
+        <button id="submitBtn">送出</button>
+      </form>
+      <br />
     </div>
-  </section>
+  </header>
+  <div class="">
 
+    <div class="section-header d-md-flex justify-content-between align-items-center">
+      <h2 class="display-3 fw-normal">遊戲道具交易</h2>
+      <div class="mb-4 mb-md-0">
+        <p class="m-0">
+          <!-- 自動新增按鈕 -->
+        </p>
+      </div>
+      <div>
+        <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+          shop now
+          <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
+            <use xlink:href="#arrow-right"></use>
+          </svg></a>
+      </div>
+    </div>
 
-  <script th:src="js/jquery-1.11.0.min.js"></script>
-  <script th:src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
-  <script th:src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"
-    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-    crossorigin="anonymous"></script>
-  <script th:src="js/plugins.js"></script>
-  <script th:src="js/script.js"></script>
-  <script th:src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <div class="isotope-container row">
+      <!-- 商品項目將在這裡動態生成 -->
+    </div>
+
+    <script th:src="@{/js/prop/template/jquery-1.11.0.min.js}"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"></script>
+    <script th:src="@{/js/prop/template/plugins.js}"></script>
+    <script th:src="@{/js/prop/template/script.js}"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
+    <!-- Isotope库 -->
+
+    <script>
+      // 加載所有遊戲
+      const propTypesMap = {};
+
+      $(document).ready(function () {
+        loadGames();
+
+        // 提交按鈕點擊事件
+        $("#submitBtn").click(function (event) {
+          event.preventDefault(); // 取消表單的默認提交行為
+          const selectedGameId = $("#SelectGame").val(); // 獲取選中的遊戲ID
+          fetchPropTypesByGameId(selectedGameId, function (propTypes) {
+            propTypes.forEach(function (propType) {
+              propTypesMap[propType.propTypeId] = propType.propType; // 填充 propTypesMap
+            });
+            generateFilterButtons(propTypes); // 生成篩選按鈕
+            findAllPropsByGameId(selectedGameId); // 查找所有道具
+          });
+        });
+
+        // 初始化 Isotope
+        const $container = $('.isotope-container').isotope({
+          itemSelector: '.item',
+          layoutMode: 'fitRows'
+        });
+
+        // 篩選按鈕點擊事件
+        $(document).on('click', '.filter-button', function () {
+          const filterValue = $(this).attr('data-filter');
+          $container.isotope({ filter: filterValue });
+          $('.filter-button').removeClass('active');
+          $(this).addClass('active');
+        });
+      });
+
+      function loadGames() {
+        axios
+          .get("http://localhost:8080/PlayCentric/prop/findAllGame")
+          .then(function (res) {
+            const games = res.data;
+            const selectGame = $("#SelectGame");
+            console.log("Games data:", games); // 打印數據內容
+
+            selectGame.empty();
+            games.forEach(function (game) {
+              const option = $("<option></option>")
+                .val(game.gameId)
+                .text(game.gameName);
+              selectGame.append(option);
+            });
+
+            if (games.length > 0) {
+              selectGame.val(games[0].gameId);
+              $("#submitBtn").click();
+            }
+          })
+          .catch(function (error) {
+            console.error("獲取遊戲數據時出錯:", error);
+          });
+      }
+
+      // 根據 gameId 獲取所有道具種類
+      function fetchPropTypesByGameId(gameId, callback) {
+        axios
+          .get("http://localhost:8080/PlayCentric/prop/findAllPropTypesByGameId", {
+            params: { gameId: gameId },
+          })
+          .then((res) => {
+            callback(res.data);
+            const propTypes = res.data;
+            propTypes.forEach(function (propType) {
+              propTypesMap[propType.propTypeId] = propType.propType;
+              console.log(`propTypeId: ${propType.propTypeId}, propType: ${propType.propType}`);
+            });
+          })
+          .catch((error) => {
+            console.error("獲取道具種類數據時出錯:", error);
+          });
+      }
+
+      // 根據 gameId 查找所有道具
+      function findAllPropsByGameId(gameId) {
+        axios
+          .get("http://localhost:8080/PlayCentric/prop/findAllPropsByGameId", {
+            params: { gameId: gameId },
+          })
+          .then((res) => {
+            const props = res.data;
+            generatePropItems(props); // 動態生成道具項目
+            console.log(props);
+          })
+          .catch((error) => {
+            console.error("獲取道具數據時出錯:", error);
+          });
+      }
+
+      // 生成篩選按鈕
+      function generateFilterButtons(propTypes) {
+        const filterButtonsContainer = $(".m-0");
+        filterButtonsContainer.empty();
+        const allButton = $('<button class="filter-button me-4 active" data-filter="*">ALL</button>');
+        filterButtonsContainer.append(allButton);
+        propTypes.forEach(function (propType) {
+          const button = $('<button class="filter-button me-4"></button>')
+            .attr("data-filter", `.${propType.propTypeId}`)
+            .text(propType.propType);
+          console.log(propType.propType)
+          filterButtonsContainer.append(button);
+        });
+      }
+
+      // 生成道具項目
+      function generatePropItems(props) {
+        const propsContainer = $(".isotope-container");
+        propsContainer.empty();
+        props.forEach(function (prop) {
+          const itemClassId = prop.propTypeId ? prop.propTypeId : 'unknown';
+          console.log(`Item classId is: ${itemClassId}`);
+          const item = $(`
+            <div class="item ${itemClassId} col-md-4 col-lg-3 my-4">
+              <div class="card position-relative">
+                <a th:href="@{/single-product.html}">
+                  <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 5vw;">
+                </a>
+                <div class="card-body p-0">
+                  <a th:href="@{/single-product.html}">
+                    <h3 class="card-title pt-4 m-0">${prop.propName}</h3>
+                  </a>
+                  <div class="card-text">
+                    <span class="rating secondary-font">
+                      <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
+                      <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
+                      <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
+                      <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
+                      <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
+                      5.0
+                    </span>
+                    <h3 class="secondary-font text-primary">${prop.propPrice}</h3>
+                    <div class="d-flex flex-wrap mt-3">
+                      <a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
+                        <h5 class="text-uppercase m-0">購買</h5>
+                      </a>
+                      <a href="#" class="btn-wishlist px-4 pt-3">
+                        <iconify-icon icon="fluent:heart-28-filled" class="fs-5"></iconify-icon>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `);
+          propsContainer.append(item);
+        });
+
+        // 更新 Isotope 布局
+        $('.isotope-container').isotope('reloadItems').isotope({ sortBy: 'original-order' });
+      }
+    </script>
 </body>
 
 </html>
