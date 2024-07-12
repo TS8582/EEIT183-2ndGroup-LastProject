@@ -3,14 +3,13 @@
 
 <head>
 	<meta charset="UTF-8">
-	<div th:replace="~{layout/nav.html}"></div>
+	<link rel="stylesheet" th:href="@{/css/output.css}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>伴遊管理介面</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-	<link rel="stylesheet" th:href="@{/css/output.css}">
 
 	<style>
 		html,
@@ -59,6 +58,7 @@
 
 <body class="h-screen flex flex-col w-screen">
 	<!-- <div th:replace="~{/playFellow/sideBar}"></div> -->
+	<div th:replace="~{layout/nav}"></div>
 	<div class="flex flex-1">
 
 		<div th:replace="~{/layout/aside}"></div>

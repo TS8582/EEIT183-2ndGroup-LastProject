@@ -39,7 +39,7 @@
                         <tbody>
                             <th:block th:each="game:${allGame}">
                                 <tr>
-                                    <td class="border p-3 gameName">
+                                    <td class="border p-3 gameName mylink">
                                         <a href="#" th:text="${game.gameName}" class="text-center"></a>
                                     </td>
                                     <td th:text="${game.price}" class="text-center border p-3 price"></td>
