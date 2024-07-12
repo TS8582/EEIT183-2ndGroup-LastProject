@@ -41,4 +41,6 @@ public class Event {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") 
 	@Temporal(TemporalType.TIMESTAMP)
     private Date eventSignupDeadLine;
+    
+    private Integer eventStatus;
 }

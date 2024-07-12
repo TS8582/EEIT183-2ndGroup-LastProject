@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
-
 <head>
 	<meta charset="UTF-8">
 	<title>活動管理</title>
@@ -143,10 +141,10 @@
 		}
 
 		$('#eventList').on('click', '.edit-btn', function () {
-			showMemInfo($(this).attr('eventId'))
+			showEventInfo($(this).attr('eventId'))
 		})
 
-		function showMemInfo(eventId) {
+		function showEventInfo(eventId) {
 			axios({
 				method: 'get',
 				url: findEventUrl + eventId
