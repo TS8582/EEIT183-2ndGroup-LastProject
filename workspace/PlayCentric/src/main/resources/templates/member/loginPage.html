@@ -7,6 +7,7 @@
   <script th:src="@{/js/bootstrap.bundle.js}"></script>
   <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
   <script th:src="@{/js/axios.min.js}"></script>
+  <script th:src="@{/js/utils/doAlertJQ.js}"></script>
   <title>登入頁面</title>
   <style>
     html,
@@ -17,6 +18,12 @@
 
     body {
       background-image: url("/PlayCentric/images/會員登入背景.jpg");
+      background-size: cover;
+      /* 確保圖片覆蓋整個容器 */
+      background-position: center;
+      /* 確保圖片居中 */
+      background-repeat: no-repeat;
+      /* 防止圖片重複 */
     }
 
     .h-0 {
@@ -27,6 +34,17 @@
       height: 35px;
     }
   </style>
+  <!-- <style class="alert-style">
+    .fade-alert {
+      opacity: 0 !important;
+      transition: opacity 1.5s ease-in-out !important;
+    }
+
+    .fade-alert.show-alert {
+      opacity: 0.75 !important;
+      transition: opacity 0.5s ease-in-out !important;
+    }
+  </style> -->
 </head>
 
 <body>
@@ -83,33 +101,39 @@
     </div>
     <div>
     </div>
+  </div>
 
-    <script>
-      $(function () {
-        const homePageUrl = "http://localhost:8080/PlayCentric/member/login"
-        const loginUrl = "http://localhost:8080/PlayCentric/member/login"
+  <!-- <div class="rounded-2 position-absolute top-50 start-50 translate-middle bg-dark text-light p-2 fade-alert">
+    登入失敗!
+  </div> -->
+
+  <script>
+    $(function () {
+      const homePageUrl = "http://localhost:8080/PlayCentric/member/login"
+      const loginUrl = "http://localhost:8080/PlayCentric/member/login"
 
 
-        $('#login-form').submit(function (e) {
+      $('#login-form').submit(function (e) {
 
-          e.preventDefault()
+        e.preventDefault()
 
-          const formdataObject = new FormData(this);
+        const formdataObject = new FormData(this);
 
-          axios.post(loginUrl, formdataObject)
-            .then(res => {
-              console.log(res);
-              alert(res.data);
-              if (res.data == '登入成功!') {
-                window.location.href = "/PlayCentric";
-              }
-            })
-            .catch(err => {
-              console.log(err);
-            })
-        })
+        axios.post(loginUrl, formdataObject)
+          .then(res => {
+            console.log(res);
+            doAlert(res.data);
+            if (res.data == '登入成功!') {
+              window.location.href = "/PlayCentric";
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
       })
-    </script>
+
+    })
+  </script>
 </body>
 
 </html>
