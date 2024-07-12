@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.playcentric.model.member.Member;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -44,6 +45,7 @@ public class Talk {
 	@JoinColumn(name = "memId")
 	private Member member;
 	
+	@Column(insertable = false, updatable = false)
 	private Integer memId;
 	
 	private String talkContent;

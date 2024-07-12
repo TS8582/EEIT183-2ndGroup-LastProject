@@ -81,7 +81,7 @@ public class TextsService {
 	// 分頁
 	public Texts findLastestMsg() {
 		Pageable pgb = PageRequest.of(0, 1, Sort.Direction.DESC, "doneTime");
-		Page<Texts> page = textsRepository.findLatest(pgb);
+		Page<Texts> page = textsRepository.findAll(pgb);
 
 		List<Texts> resultList = page.getContent();
 		System.out.println("Result List: " + resultList);

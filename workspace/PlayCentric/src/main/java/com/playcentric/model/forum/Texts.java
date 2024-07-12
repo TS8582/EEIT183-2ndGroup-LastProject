@@ -40,13 +40,13 @@ public class Texts {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer textsId;
 
-//	@Column(insertable = false, updatable = false)
+	@Column(insertable = false, updatable = false)
 	private Integer forumId;
 
-//	@JsonIgnore
-//	@ManyToOne
-//	@JoinColumn(name = "forumId")
-//	private Forum forum;
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "forumId")
+	private Forum forum;
 
 	@Column(insertable = false, updatable = false)
 	private Integer memId;
@@ -60,9 +60,9 @@ public class Texts {
 	@OneToMany(mappedBy = "texts", cascade = CascadeType.ALL)
 	private List<Talk> talk = new ArrayList<>();
 	
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "texts")
-    private List<ImageLib> imgLib = new ArrayList<>();
+//	@JsonIgnore
+//	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "texts")
+//    private List<ImageLib> imgLib = new ArrayList<>();
 
 	private String title;
 

@@ -54,11 +54,11 @@ public class TextsController {
 			for (MultipartFile file : imageFile) {
 				ImageLib imgLib = new ImageLib();
 				imgLib.setImageFile(file.getBytes());
-				imgLib.setTexts(texts); // 設置圖片對應的文章
+//				imgLib.setTexts(texts); // 設置圖片對應的文章
 				imgList.add(imgLib);
 			}
 
-			texts.setImgLib(imgList); // 將圖片列表設置到文章中
+//			texts.setImgLib(imgList); // 將圖片列表設置到文章中
 		}
 
 		textsService.insert(texts); // 儲存文章到資料庫

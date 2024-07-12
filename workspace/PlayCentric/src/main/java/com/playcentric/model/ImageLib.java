@@ -40,9 +40,6 @@ public class ImageLib {
 	@OneToOne(mappedBy = "imageLib")
 	private Props props;
 	
-	// 討論區使用
-	@JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "textsId")
-    private Texts texts; 
+	
+	
 }

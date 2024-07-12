@@ -19,7 +19,7 @@ public interface TextsRepository extends JpaRepository<Texts, Integer> {
 	// 是否顯示
 	List<Texts> findAllByHideTexts(boolean hideTexts);
 
-	@Query("from Post")
+	@Query("from Texts")
 	Page<Texts> findLatest(Pageable pgb);
 
 }

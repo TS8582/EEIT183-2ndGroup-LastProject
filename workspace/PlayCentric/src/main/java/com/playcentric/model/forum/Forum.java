@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -38,10 +39,17 @@ public class Forum {
 //	@OneToOne( fetch = FetchType.LAZY )
 //	@JoinColumn(name = "gameId")
 //	private Game game;
+	
+//	@JsonIgnore
+//    @ManyToOne
+//    @JoinColumn(name = "imageId")
+//    private ImageLib imageLib; 
+	
+	private Integer imageId;
 
 	@JsonIgnore
 	@Lob
-	private byte[] imageLib;
+	private byte[] textsPhoto;
 
 
 	@JsonIgnore

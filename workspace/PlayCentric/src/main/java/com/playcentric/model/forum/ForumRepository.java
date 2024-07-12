@@ -18,6 +18,6 @@ public interface ForumRepository extends JpaRepository<Forum, Integer> {
 //	Optional<Forum> findByGame(Game game);
 	
 	// 模糊查詢全部
-		 @Query("from forum where forumName like %:forumName%")
+		 @Query("from Forum where forumName like %:forumName%")
 		    List<Forum> findAllByForumName(@Param(value = "forumName") String name);
 }

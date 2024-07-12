@@ -37,7 +37,7 @@ public class ForumService {
 	}
 
 	// 模糊forumName查詢
-	public List<Forum> findTheme(String forumName) {
+	public List<Forum> findForumByForumName(String forumName) {
 		return forumRepository.findAllByForumName(forumName);
 	}
 
