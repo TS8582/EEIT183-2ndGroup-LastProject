@@ -76,10 +76,10 @@
                                         <option th:if="${discountIds}"
                                             th:selected="${discountIds.contains(discount.gameDiscountId)}"
                                             th:value="${discount.gameDiscountId}"
-                                            th:text="${discount.gameDiscountName} + ${#dates.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
+                                            th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
                                         </option>
-                                        <option th:value="${discount.gameDiscountId}"
-                                            th:text="${discount.gameDiscountName} + ${#dates.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
+                                        <option th:if="${discountIds == null}" th:value="${discount.gameDiscountId}"
+                                            th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
                                         </option>
                                     </th:block>
                                 </select>
@@ -115,11 +115,12 @@
 
                             <div class="imgs grid grid-cols-2 gap-3 w-full">
 
-
+                                <input class="hidden" type="checkbox" value="0" name="photoId" />
                                 <th:block th:each="photo:${game.imageLibs}">
 
                                     <div class="one-img">
-                                        <input class="hidden" type="checkbox" th:value="${photo.imageId}" />
+                                        <input class="hidden" type="checkbox" th:value="${photo.imageId}"
+                                            name="photoId" />
                                         <div class="remove-img">
                                             X
                                         </div>

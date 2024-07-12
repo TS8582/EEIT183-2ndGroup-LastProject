@@ -1,5 +1,6 @@
 package com.playcentric.service.game;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ public class GameDiscountSetService {
 	//以id找優惠活動
 	public GameDiscountSet findById(Integer id) {
 		return rep.findById(id).get();
+	}
+	
+	//找進行中的優惠活動
+	public List<GameDiscountSet> findBetweenStartAndEnd(LocalDateTime date) {
+		return rep.findBetweenStartAndEnd(date);
 	}
 	
 }

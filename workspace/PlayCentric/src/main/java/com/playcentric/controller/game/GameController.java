@@ -2,6 +2,7 @@ package com.playcentric.controller.game;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class GameController {
 	@GetMapping("/game/getInsertGame")
 	public String getInsertGame(Model model) {
 		List<GameTypeLib> allType = gtService.findAll();
-		List<GameDiscountSet> allDiscount = gdsService.findAll();
+		List<GameDiscountSet> allDiscount = gdsService.findBetweenStartAndEnd(LocalDateTime.now());
 		model.addAttribute("allType", allType);
 		model.addAttribute("allDiscount", allDiscount);
 		return "game/insert-game";
@@ -65,7 +66,7 @@ public class GameController {
 		}
 		model.addAttribute("typeIds",typeIds);
 		List<GameTypeLib> allType = gtService.findAll();
-		List<GameDiscountSet> allDiscount = gdsService.findAll();
+		List<GameDiscountSet> allDiscount = gdsService.findBetweenStartAndEnd(LocalDateTime.now());
 		model.addAttribute("allType", allType);
 		model.addAttribute("allDiscount", allDiscount);
 		List<Integer> discountIds = new ArrayList<>();
@@ -137,11 +138,11 @@ public class GameController {
 		return "redirect:/back/game";
 	}
 	
-	// 進行新增遊戲
+		// 進行修改遊戲
 		@PostMapping("/game/updateGame")
 		public String updateGame(@ModelAttribute Game game, @RequestParam List<Integer> typeId,
 				@RequestParam("photos") MultipartFile[] photos, @RequestParam BigDecimal discountRate,
-				@RequestParam Integer discountId) throws IOException {
+				@RequestParam Integer discountId,@RequestParam Integer[] photoId) throws IOException {
 			Game myGame = gService.findById(game.getGameId());
 			myGame.setGameName(game.getGameName());
 			myGame.setDescription(game.getDescription());
@@ -160,6 +161,14 @@ public class GameController {
 			games.add(myGame);
 			// 設定遊戲圖片
 			List<ImageLib> imgs = new ArrayList<>();
+			
+			for (Integer pId : photoId) {
+				if (pId != 0) {
+					ImageLib img = iService.findImageById(pId);
+					imgs.add(img);
+				}
+			}
+			
 			if (!photos[0].isEmpty()) {
 				for (MultipartFile file : photos) {
 					System.out.println("到底會有幾個檔案");
