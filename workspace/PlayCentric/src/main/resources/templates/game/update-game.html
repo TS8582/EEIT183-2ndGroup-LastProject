@@ -118,6 +118,7 @@
                                 <th:block th:each="photo:${game.imageLibs}">
 
                                     <div class="one-img">
+                                        <input class="hidden" type="checkbox" th:value="${photo.imageId}" />
                                         <div class="remove-img">
                                             X
                                         </div>
