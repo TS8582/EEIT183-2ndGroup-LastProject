@@ -120,11 +120,11 @@
                     </li>
                     <li th:case="*" class="nav-item dropdown">
                         <a
-                            class="d-flex nav-link fs-4" role="button"
+                            class="nav-link dropdown-toggle fs-4" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <img class="rounded-circle h35px w35px" th:src="${session.loginMember.photo}">
-                            <!-- [[${session.loginMember.nickname}]] -->
-                            <span class="mx-1 text-light" th:text="${session.loginMember.nickname}"></span>
+                            [[${session.loginMember.nickname}]]
+                            <!-- <span class="mx-1 text-light" th:text="${session.loginMember.nickname}"></span> -->
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                             <li>
