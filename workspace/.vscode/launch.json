@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-PlayCentricApplication<PlayCentric>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.playcentric.PlayCentricApplication",
+            "projectName": "PlayCentric",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
