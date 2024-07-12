@@ -1,292 +1,118 @@
 <!DOCTYPE html>
-<html lang="zh-TW" xmlms:th="http://www.thymeleaf.org/">
+<html lang="zh-Hant">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"> -->
-    <link rel="stylesheet" th:href="@{/css/output.css}">
-    <title>nav</title>
+    <title>Bootstrap 5 響應式導航欄</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        .collapse {
+          visibility: visible !important;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: white;
+        }
+
+        body,
+        html {
+            height: 100vh;
+            min-height: 100vh;
+            width: 100vw;
+        }
+
+        .rounded-buttom-150px {
+            border-radius: 0 0 150px 150px;
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="mb-2 bg-black top-nav">
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="pt-1">
 
-            </div>
-            <div class="flex items-center justify-between h-20">
-                <!-- Logo及名稱 -->
-                <div class="flex items-center relative z-20">
-                    <div class="shrink-0 flex items-center">
-                        <a class="flex items-center" th:href="@{/}">
-                            <img th:src="@{/images/MyLogo.png}" alt="logo" class="h-14 w-auto sm:h-16">
 
-                            <span class="text-white ml-1 text-4xl">PlayCentric</span>
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+                <img th:src="@{/images/MyLogo.png}" alt="Logo" width="100" height="100"
+                    class="d-inline-block align-text-top img-fluid">
+                <span class="ms-2 display-4">PlayCentric</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link fs-4" href="#">管理介面</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-4" href="#" id="memberDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            會員
                         </a>
-                    </div>
-                </div>
-
-                <!-- menu -->
-                <div class="text-white flex items-center font-semibold relative z-50">
-                    <div class="hidden md:flex md:ml-6 md:space-x-4 select-none cursor-pointer align-items-center">
-                        <div th:if="${session.loginMember!=null&&session.loginMember.role==1}">
-                            <a th:href="@{/back/anno}">管理介面</a>
-                        </div>
-                        <div class="relative tag">
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="memberDropdown">
+                            <li><a class="dropdown-item fs-5" href="#">會員資料</a></li>
+                            <li><a class="dropdown-item fs-5" href="#">會員設定</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-4" href="#" id="storeDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             遊戲商店
-                            <div class="dropmenu hidden">
-                                <ul>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="relative tag">
-                            討論區
-                            <div class="dropmenu hidden">
-                                <ul>
-                                    <li class="menu-item">
-                                        <a th:href="@{/forum/page}">首頁</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="relative tag">
-                            物品交易
-                            <div class="dropmenu hidden">
-                                <ul>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="relative tag">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="storeDropdown">
+                            <li><a class="dropdown-item fs-5" href="#">熱門遊戲</a></li>
+                            <li><a class="dropdown-item fs-5" href="#">新遊戲</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-4" href="#" id="tradeDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            道具交易
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="tradeDropdown">
+                            <li><a class="dropdown-item fs-5" href="#">道具一</a></li>
+                            <li><a class="dropdown-item fs-5" href="#">道具二</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-4" href="#" id="escortDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             伴遊
-                            <div class="dropmenu hidden">
-                                <ul>
-                                    <li class="menu-item">
-                                        <a href="#">尋找玩伴</a>
-                                    </li>
-                                    <li class="menu-item" id="addPfMember">
-                                        <a href="#">加入伴遊</a>
-                                    </li>
-                                    <li class="menu-item" id="reviewPfMember">
-                                        <a th:href="@{/playFellow/reviewpfMember}">審核伴遊申請資格</a>
-                                    </li>
-                                    <!--                                     <li class="menu-item"> -->
-                                    <!--                                         <a href="#">我的選項</a> -->
-                                    <!--                                     </li> -->
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="relative tag">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="escortDropdown">
+                            <li><a class="dropdown-item fs-5" href="#">伴遊一</a></li>
+                            <li><a class="dropdown-item fs-5" href="#">伴遊二</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-4" href="#" id="eventDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             活動
-                            <div class="dropmenu hidden">
-                                <ul>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                    <li class="menu-item">
-                                        <a href="#">我的選項</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="relative tag" th:switch="${session.loginMember}">
-                            <div th:case="null">
-                                <a th:href="@{/member/login}" class="btn btn-sm btn-primary">登入/註冊</a>
-                            </div>
-                            <div th:case="*">
-                                <div class="ms-auto d-flex align-items-center justify-content-end">
-                                    <img class="rounded rounded-5" width="30px" th:src="${session.loginMember.photo}">
-                                    <span class="mx-1 text-light" th:text="${session.loginMember.nickname}"></span>
-                                </div>
-                                <div class="dropmenu hidden">
-                                    <ul>
-                                        <li class="menu-item">
-                                            <a th:href="@{/member/logout}">登出</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="md:hidden flex items-center">
-                        <button id="mobile-menu-button" class="text-white hover:text-opacity-80">
-                            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="text-white bg-black md:hidden hidden text-center select-none relative z-50">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:pl-1">
-                <div>
-                    <a th:href="@{/back/anno}">管理介面</a>
-                </div>
-                <div class="tag-m">
-                    會員
-                    <div class="dropmenu-m hidden">
-                        <ul>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="eventDropdown">
+                            <li><a class="dropdown-item fs-5" href="#">活動一</a></li>
+                            <li><a class="dropdown-item fs-5" href="#">活動二</a></li>
                         </ul>
-                    </div>
-                </div>
-
-                <div class="tag-m">
-                    遊戲商店
-                    <div class="dropmenu-m hidden">
-                        <ul>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fs-4" href="#" id="forumDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            討論區
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="forumDropdown">
+                            <li><a class="dropdown-item fs-5" href="#">討論區一</a></li>
+                            <li><a class="dropdown-item fs-5" href="#">討論區二</a></li>
                         </ul>
-                    </div>
-                </div>
-                <div class="tag-m">
-                    討論區
-                    <div class="dropmenu-m hidden" th:href="@{/messages/page}">
-                        <ul>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="tag-m">
-                    物品交易
-                    <div class="dropmenu-m hidden">
-                        <ul>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="tag-m">
-                    伴遊
-                    <div class="dropmenu-m hidden">
-                        <ul>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="tag-m">
-                    活動
-                    <div class="dropmenu-m hidden">
-                        <ul>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#">我的選項</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <script th:src="@{/js/layout/nav.js}"></script>
+    <!-- <script th:src="@{/js/bootstrap.bundle.js}"></script> -->
 </body>
 
 </html>

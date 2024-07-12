@@ -1,32 +1,46 @@
 <!DOCTYPE html>
-<html lang="zh-TW" xmlms:th="http://www.thymeleaf.org/">
+<html lang="zh-Hant">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/output.css}">
-    <title>nav</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        .navbar-dark .navbar-nav .nav-link {
+            color: white;
+        }
+
+        body,
+        html {
+            height: 100vh;
+            min-height: 100vh;
+            width: 100vw;
+        }
+
+        .rounded-buttom-150px {
+            border-radius: 0 0 150px 150px;
+        }
+    </style>
 </head>
 
 <body>
-    <header class="h-2/3 bg-black relative justify-center">
-        <!-- 上方文字 -->
-        <div class="h-full w-full absolute flex justify-center items-start top-24 z-10">
-            <span class="text-white text-3xl">Enjoy your play !</span>
+    <header class="h-50 w-100 position-relative top-0 bg-dark rounded-buttom-150px pb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <h3 class="display-4 text-light">Enjoy Your Play !</h3>
+                </div>
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                    <img class="h-75" th:src="@{/images/controller3.png}" alt="">
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <a href="" class="btn btn-outline-info w-50  rounded-pill">Play Now !</a>
+                </div>
+            </div>
         </div>
-        <!-- 中間圖片 -->
-        <div class="h-full w-full absolute flex justify-center items-center z-10">
-            <img class="size-1/2 md:size-auto" th:src="@{images/controller3.png}" alt="">
-        </div>
-        <!-- 下方文字/按鈕 -->
-        <div class="h-full w-full absolute flex justify-center items-end bottom-20 z-10">
-            <span class="btn btn-sky rounded-3xl">Play
-                Now!!!</span>
-        </div>
-        <div th:replace="~{layout/nav}"></div>
     </header>
 
-    <script th:src="@{/js/nav.js}"></script>
+    <!-- <script src="../static/js/bootstrap.bundle.js"></script> -->
 </body>
 
 </html>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <div th:replace="~{layout/nav}"></div>
   <meta charset="UTF-8">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <div th:replace="~{layout/nav}"></div>
   <script th:src="@{/js/bootstrap.bundle.js}"></script>
   <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
   <script th:src="@{/js/axios.min.js}"></script>
