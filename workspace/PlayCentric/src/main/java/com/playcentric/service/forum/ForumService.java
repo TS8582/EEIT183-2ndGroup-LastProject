@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.playcentric.model.forum.Forum;
 import com.playcentric.model.forum.ForumRepository;
@@ -20,36 +21,67 @@ public class ForumService {
 
 	@Autowired
 	private ForumRepository forumRepository;
-	
-	@Autowired
-	private GameRepository gameRepository;
 
-	public List<Forum> getAllForums(int page, int size) {
-		Pageable paging = PageRequest.of(page, size);
-		Page<Forum> pagedResult = forumRepository.findAll(paging);
-		return pagedResult.toList();
+//	@Autowired
+//	private GameRepository gameRepository;
+
+	// id查詢
+	public Forum findById(Integer forumId) {
+		Optional<Forum> optional = forumRepository.findById(forumId);
+
+		if (optional.isEmpty()) {
+			return null;
+		}
+
+		return optional.get();
 	}
 
-	public Optional<Forum> findForumById(int forumId) {
-		return forumRepository.findById(forumId);
+	// 模糊forumName查詢
+	public List<Forum> findTheme(String forumName) {
+		return forumRepository.findAllByForumName(forumName);
 	}
 
-	public List<Forum> searchByTextsIntro(String keyword) {
-        return forumRepository.findByTextsIntroContaining(keyword);
-    }
+	// 查詢全部
+	public List<Forum> findAll() {
+		return forumRepository.findAll();
+	}
 
-	public Forum saveForum(Forum forum) {
+	// 新增
+	public Forum insertForum(Forum forum) {
 		return forumRepository.save(forum);
 	}
 
+	// 修改主题
+	@Transactional
+	public Forum update(Forum updateForum) {
+		if (forumRepository.existsById(updateForum.getForumId())) {
+			return forumRepository.save(updateForum);
+		} else {
+			System.out.println("查無討論串");
+			return null;
+		}
+	}
+
+	// 删除主题
+	@Transactional
 	public void deleteForumById(int forumId) {
-		forumRepository.deleteById(forumId);
+		if (forumRepository.existsById(forumId)) {
+	        forumRepository.deleteById(forumId);
+	    } else {
+	    	System.out.println("查無討論串");
+	    }
 	}
-	
-	public Page<Forum> findByPage(Integer pageNumber){
-		Pageable pgb = PageRequest.of(pageNumber-1, 10, Sort.Direction.DESC, "forumId");
-		Page<Forum> page = forumRepository.findAll(pgb);
-		return page;
-	}
+
+//	public List<Forum> getAllForums(int page, int size) {
+//		Pageable paging = PageRequest.of(page, size);
+//		Page<Forum> pagedResult = forumRepository.findAll(paging);
+//		return pagedResult.toList();
+//	}
+
+//	public Page<Forum> findByPage(Integer pageNumber){
+//		Pageable pgb = PageRequest.of(pageNumber-1, 10, Sort.Direction.DESC, "forumId");
+//		Page<Forum> page = forumRepository.findAll(pgb);
+//		return page;
+//	}
 
 }

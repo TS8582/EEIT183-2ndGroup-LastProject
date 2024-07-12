@@ -22,10 +22,11 @@ public class ForumController {
 	@Autowired
 	private ForumService forumService;
 
-	@GetMapping("forum/add")
-	public String showAddPage(Model model) {
-		model.addAttribute("forum", new Forum());
-		return "forum/addForumPage";
+	// 新增討論串
+	@GetMapping("/forum/insertForum")
+	public String insertTheme() {
+		System.out.println(123);
+		return "/forum/insertTheme";
 	}
 
 	@PostMapping("forum/addPost")
@@ -64,12 +65,12 @@ public class ForumController {
 		return "redirect:/forum/page";
 	}
 
-	 @GetMapping("/forum/search")
-	 public String search(@RequestParam("keyword") String keyword, Model model) {
-	        List<Forum> forums = forumService.searchByTextsIntro(keyword);
-	        model.addAttribute("forums", forums);
-	        return "forum/search"; // 返回包含查詢結果的HTML視圖
-	    }
+	@GetMapping("/forum/search")
+	public String search(@RequestParam("keyword") String keyword, Model model) {
+		List<Forum> forums = forumService.searchByTextsIntro(keyword);
+		model.addAttribute("forums", forums);
+		return "forum/search"; // 返回包含查詢結果的HTML視圖
+	}
 
 	@GetMapping("/forum/page")
 	public String findByPage(@RequestParam(value = "p", defaultValue = "1") Integer pageNum, Model model) {

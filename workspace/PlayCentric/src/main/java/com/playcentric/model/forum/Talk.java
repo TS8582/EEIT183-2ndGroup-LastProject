@@ -1,5 +1,6 @@
 package com.playcentric.model.forum;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,37 +32,32 @@ public class Talk {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int talkId;
+	private Integer talkId;
 	
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "textsId")
 	private Texts texts;
 	
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "memId")
 	private Member member;
+	
+	private Integer memId;
 	
 	private String talkContent;
 	
 	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 若要在 thymeleaf 強制使用本格式，需雙層大括號
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date talkTime;
+	private Timestamp talkTime = new Timestamp(System.currentTimeMillis());
 	
-	private int talkLikeNum;
+	private Integer talkLikeNum;
 	
-	private boolean hideTalk;
+	private boolean hideTalk = false;
 
-	public Talk(Texts texts, Member member, String talkContent, Date talkTime, int talkLikeNum, boolean hideTalk) {
-		this.texts = texts;
-		this.member = member;
-		this.talkContent = talkContent;
-		this.talkTime = talkTime;
-		this.talkLikeNum = talkLikeNum;
-		this.hideTalk = hideTalk;
-	}
+	
 
 	
 }
