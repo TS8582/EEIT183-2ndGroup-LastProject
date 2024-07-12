@@ -33,12 +33,12 @@ public class Event {
     private Date eventStartTime;
     
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") // 若要在 thymeleaf 強制使用本格式，需雙層大括號
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") 
 	@Temporal(TemporalType.TIMESTAMP)
     private Date eventEndTime;
     
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") // 若要在 thymeleaf 強制使用本格式，需雙層大括號
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") 
 	@Temporal(TemporalType.TIMESTAMP)
     private Date eventSignupDeadLine;
 }
