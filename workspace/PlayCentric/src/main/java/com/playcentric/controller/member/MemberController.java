@@ -78,21 +78,25 @@ public class MemberController {
 	}
 
 	@GetMapping("/login")
-	public String loginPage() {
+	public String loginPage(Model model) {
+		if (model.getAttribute("loginMember")!=null) {
+			return "redirect:/";
+		}
 		return "member/loginPage";
 	}
 
 	@PostMapping("/login")
+	@ResponseBody
 	public String loginPost(@RequestParam String account,@RequestParam String password, Model model, RedirectAttributes redirectAttributes) {
 		Member loginMember = memberService.checkLogin(account, password);
 		if (loginMember==null) {
-			model.addAttribute("errorMsg", "登入失敗");
-			return "member/loginPage";
+			// model.addAttribute("errorMsg", "登入失敗");
+			return "登入失敗!";
 		}
 		loginMember = memberService.memberLogin(loginMember);
 		model.addAttribute("loginMember", new LoginMemDto(loginMember));
-		redirectAttributes.addFlashAttribute("okMsg", "登入成功");
-		return "redirect:/";
+		// redirectAttributes.addFlashAttribute("okMsg", "登入成功");
+		return "登入成功!";
 	}
 	
 	@GetMapping("/logout")
