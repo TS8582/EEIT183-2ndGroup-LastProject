@@ -73,7 +73,7 @@
                                     <option value="0">無</option>
                                     <th:block th:each="discount:${allDiscount}">
                                         <option th:value="${discount.gameDiscountId}"
-                                            th:text="${discount.gameDiscountName} + ${#dates.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
+                                            th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
                                         </option>
                                     </th:block>
                                 </select>
