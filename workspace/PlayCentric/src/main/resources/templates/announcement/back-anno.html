@@ -47,7 +47,7 @@
                                 <tr>
                                     <td class="border p-3 title">
                                         <a th:href="@{/anno/showOneAnno(annoId=${anno.annoId})}" th:text="${anno.title}"
-                                            class="text-center"></a>
+                                            class="text-center mylink"></a>
                                     </td>
                                     <td th:text="${anno.announcementType.annoTypeName}"
                                         class="border p-3 title text-center">
@@ -57,9 +57,9 @@
                                         class="text-center border p-3 lastEditAt"></td>
                                     <td class="text-center border p-3">
                                         <a th:href="@{/anno/getUpdatAnno(annoId=${anno.annoId})}"
-                                            class="btn btn-sky rounded-md me-2 block md:inline">修改</a>
+                                            class="mybtn mybtn-sky rounded-md me-2 block md:inline">修改</a>
                                         <a th:href="@{/anno/deleteAnno(annoId=${anno.annoId})}"
-                                            class="btn btn-danger rounded-md me-2 block md:inline">刪除</a>
+                                            class="mybtn mybtn-danger rounded-md me-2 block md:inline">刪除</a>
                                     </td>
                                 </tr>
                             </th:block>
@@ -70,9 +70,8 @@
         </main>
     </div>
 
-    <div class="fixed w-16 h-16 p-2 bg-sky-200 bottom-20 right-10 rounded-full flex justify-center items-center">
-        <a th:href="@{/anno/getInsertAnno}" class="text-4xl text-black">+</a>
-    </div>
+    <a th:href="@{/anno/getInsertAnno}" class="text-4xl text-black plus-btn mybtn">+</a>
+
     <script th:src="@{/js/axios.min.js}"></script>
     <script th:src="@{/js/announcement/back-anno.js}"></script>
 </body>

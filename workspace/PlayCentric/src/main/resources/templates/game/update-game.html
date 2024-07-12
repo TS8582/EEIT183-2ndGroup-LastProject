@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
     <title>PlayCentric-後台管理-新增遊戲</title>
 </head>
 
@@ -118,6 +119,7 @@
                                 <th:block th:each="photo:${game.imageLibs}">
 
                                     <div class="one-img">
+                                        <input class="hidden" type="checkbox" th:value="${photo.imageId}" />
                                         <div class="remove-img">
                                             X
                                         </div>
@@ -144,7 +146,7 @@
                         </div>
 
                         <div class="flex items-center justify-center mt-3">
-                            <button class="btn btn-sky rounded-md" type="submit">新增</button>
+                            <button class="mybtn mybtn-sky rounded-md" type="submit">新增</button>
                         </div>
 
 

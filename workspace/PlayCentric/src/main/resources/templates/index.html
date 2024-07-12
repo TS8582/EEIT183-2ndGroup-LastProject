@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{css/output.css}">
     <title>PlayCentric Home</title>
 </head>
 
@@ -33,7 +34,7 @@
                                     <th:block th:each="anno:${allAnno}">
                                         <div
                                             class="h-auto col-span-12 md:col-span-6 text-left text-2xl font-bold border-dotted md:border-b-2 border-sky-300">
-                                            <a th:href="@{/anno/showOneAnno(annoId=${anno.annoId})}"
+                                            <a class="mylink" th:href="@{/anno/showOneAnno(annoId=${anno.annoId})}"
                                                 th:text="[ + ${anno.announcementType.annoTypeName} + ] + ${anno.title}"></a>
                                         </div>
                                         <div
