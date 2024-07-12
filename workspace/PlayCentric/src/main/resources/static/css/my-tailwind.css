@@ -26,19 +26,19 @@ a {
     @apply border-gray-900 bg-slate-200
 }
 
-.btn-sky {
+.mybtn-sky {
     @apply text-white py-2 px-3 cursor-pointer bg-sky-500
 }
 
-.btn-green {
+.mybtn-green {
     @apply text-white py-2 px-3 cursor-pointer bg-lime-600
 }
 
-.btn-danger {
+.mybtn-danger {
     @apply text-white py-2 px-3 cursor-pointer bg-red-700
 }
 
-.btn:hover {
+.mybtn:hover {
     @apply bg-opacity-60
 }
 
@@ -68,7 +68,7 @@ a {
 }
 
 .plus-btn {
-    @apply fixed w-16 h-16 p-2 bg-sky-200 bottom-20 right-10 rounded-full flex justify-center items-center
+    @apply fixed w-16 h-16 p-2 bg-sky-200 bottom-20 right-10 rounded-full flex justify-center items-center cursor-pointer
 }
 
 .text-input {
