@@ -5,31 +5,111 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
   <script th:src="@{/js/bootstrap.bundle.js}"></script>
+  <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+  <script th:src="@{/js/axios.min.js}"></script>
   <title>登入頁面</title>
+  <style>
+    html,
+    body {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    body {
+      background-image: url("/PlayCentric/images/會員登入背景.jpg");
+    }
+
+    .h-0 {
+      height: 0;
+    }
+
+    .h-35px {
+      height: 35px;
+    }
+  </style>
 </head>
 
 <body>
+  <div th:replace="~{layout/nav}"></div>
 
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-4">
-        <div class="h1 my-3">登入</div>
-        <form method="POST" th:action="@{/member/login}">
-          <div class="mb-3">
-            <label for="account" class="form-label">帳號</label>
-            <input type="text" class="form-control" name="account" required>
+  <div class="container-fluid h-100 position-absolute ms-auto top-0">
+    <div class="row h-100 justify-content-center align-content-center ">
+      <div class="col-3">
+
+        <div class=" bg-secondary-subtle p-0 rounded-3 rounded-bottom-0">
+
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+              type="button" role="tab" aria-controls="nav-home" aria-selected="true">登入</button>
+            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+              type="button" role="tab" aria-controls="nav-profile" aria-selected="false">註冊</button>
           </div>
-          <div class="mb-3">
-            <label for="password" class="form-label">密碼</label>
-            <input type="password" class="form-control" name="password" required>
+        </div>
+
+        <div class="tab-content bg-white" id="nav-tabContent">
+          <div class="tab-pane fade show active border border-top-0 border-bottom-0 p-2 bg-white" id="nav-home"
+            role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+            <form method="POST" id="login-form" th:action="@{/member/login}">
+              <div class="mb-3">
+                <label for="account" class="form-label">帳號</label>
+                <input type="text" class="form-control" name="account" required>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">密碼</label>
+                <input type="password" class="form-control" name="password" required>
+              </div>
+              <button type="submit" class="btn btn-primary">登入</button>
+              <button type="button" class="btn btn-secondary" onclick="window.history.back()">取消</button>
+            </form>
+            <div th:text="${errorMsg} ? ${errorMsg}"></div>
           </div>
-          <button type="submit" class="btn btn-primary">登入</button>
-          <a th:href="@{/member/google-login}">使用google登入</a>
-        </form>
-        <div th:text="${errorMsg} ? ${errorMsg}"></div>
+          <div class="tab-pane fade border border-top-0 border-bottom-0 p-2" id="nav-profile" role="tabpanel"
+            aria-labelledby="nav-profile-tab" tabindex="0">
+            註冊表單
+          </div>
+        </div>
+
+        <div class="border border-top-0 rounded-2 rounded-top-0 p-2 bg-white">
+          <div class="d-flex mt-2 mb-4 justify-content-center align-items-center border border-secondary-subtle h-0">
+            <span class="px-3 text-secondary bg-white">或者</span>
+          </div>
+          <div class="d-flex mb-3 justify-content-center">
+            <a class="btn p-3 border rounded-0" th:href="@{/member/google-login}">
+              <img class="h-35px" th:src="@{/images/googleLogo.png}" alt="">
+              使用Google登入</a>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+    <div>
+    </div>
+
+    <script>
+      $(function () {
+        const homePageUrl = "http://localhost:8080/PlayCentric/member/login"
+        const loginUrl = "http://localhost:8080/PlayCentric/member/login"
+
+
+        $('#login-form').submit(function (e) {
+
+          e.preventDefault()
+
+          const formdataObject = new FormData(this);
+
+          axios.post(loginUrl, formdataObject)
+            .then(res => {
+              console.log(res);
+              alert(res.data);
+              if (res.data == '登入成功!') {
+                window.location.href = "/PlayCentric";
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        })
+      })
+    </script>
 </body>
 
 </html>
