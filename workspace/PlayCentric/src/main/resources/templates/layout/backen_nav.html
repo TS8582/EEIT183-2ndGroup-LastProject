@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        .collapse {
+            visibility: visible !important;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: white;
+            &.disabled{
+                font-weight: 700;
+                color: rgb(0, 0, 0);
+                background-color: #d8d8d8;
+                border-radius: 5px;
+            }
+        }
+
+        body,
+        html {
+            height: 100vh;
+            min-height: 100vh;
+            width: 100vw;
+        }
+
+        .rounded-buttom-150px {
+            border-radius: 0 0 150px 150px;
+        }
+
+        .h35px {
+            height: 35px;
+        }
+
+        .w35px {
+            width: 35px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+                <img th:src="@{/images/MyLogo.png}" alt="Logo" width="100" height="100"
+                    class="d-inline-block align-text-top img-fluid">
+                <span class="ms-2 display-4">PlayCentric</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto"  th:switch="${session.loginMember}">
+                    <li class="nav-item">
+                        <a class="nav-link fs-4" th:href="@{/back/anno}">公告管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-4" th:href="@{/member/memManage}">會員管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-4" th:href="@{/back/game}">遊戲管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-4" th:href="@{/prop/propSheet}">遊戲道具管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-4" th:href="@{/playFellow/cms}">伴遊管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-4" th:href="@{/events/listEvents}">活動管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-4" th:href="@{/forum/page}">討論區管理</a>
+                    </li>
+                    <li th:case="null" class="nav-item">
+                        <a th:href="@{/member/login}" class="btn btn-sm btn-primary me-3 fs-4">登入/註冊</a>
+                    </li>
+                    <li th:case="*" class="nav-item dropdown">
+                        <a
+                            class="d-flex nav-link fs-4" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="rounded-circle h35px w35px" th:src="${session.loginMember.photo}">
+                            <span class="mx-1 text-light" th:text="${session.loginMember.nickname}"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item fs-5" th:href="@{/member/logout}">登出</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <script th:src="@{/js/bootstrap.bundle.js}"></script>
+    <script th:src="@{/js/layout/backen-nav.js}"></script>
+</body>
+
+</html>

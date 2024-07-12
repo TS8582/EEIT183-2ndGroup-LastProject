@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap 5 響應式導航欄</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <style>
         .collapse {
@@ -25,6 +24,14 @@
         .rounded-buttom-150px {
             border-radius: 0 0 150px 150px;
         }
+
+        .h35px {
+            height: 35px;
+        }
+
+        .w35px {
+            width: 35px;
+        }
     </style>
 </head>
 
@@ -42,10 +49,10 @@
                 aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse me-3" id="navbarNavDropdown">
-                <ul class="navbar-nav ms-auto">
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto"  th:switch="${session.loginMember}">
                     <li class="nav-item">
-                        <a class="nav-link fs-4" th:href="@{/member/memManage}">管理介面</a>
+                        <a class="nav-link fs-4" th:href="@{/back/anno}">管理介面</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle fs-4" href="#" id="memberDropdown" role="button"
@@ -105,6 +112,25 @@
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="forumDropdown">
                             <li><a class="dropdown-item fs-5" href="#">討論區一</a></li>
                             <li><a class="dropdown-item fs-5" href="#">討論區二</a></li>
+                        </ul>
+                    </li>
+                    <li th:case="null" class="nav-item">
+                        <a th:href="@{/member/login}" class="btn btn-sm btn-primary me-3 fs-4">登入/註冊</a>
+                    </li>
+                    <li th:case="*" class="nav-item dropdown">
+                        <a
+                            class="d-flex nav-link fs-4" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="rounded-circle h35px w35px" th:src="${session.loginMember.photo}">
+                            <span class="mx-1 text-light" th:text="${session.loginMember.nickname}"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item fs-5" href="#">個人資訊</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item fs-5" th:href="@{/member/logout}">登出</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

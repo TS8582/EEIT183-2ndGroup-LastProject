@@ -4,8 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-  <div th:replace="~{layout/nav}"></div>
-  <script th:src="@{/js/bootstrap.bundle.js}"></script>
+  <!-- <script th:src="@{/js/bootstrap.bundle.js}"></script> -->
   <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
   <script th:src="@{/js/axios.min.js}"></script>
   <script th:src="@{/js/member/managePage.js}"></script>
@@ -13,23 +12,23 @@
     .collapse {
       visibility: visible !important;
     }
-
+    
     .page-item {
       cursor: pointer;
-
+      
       &.active {
         cursor: default;
       }
     }
-
+    
     .bg-manager-blue {
       background-color: #d0dbff !important;
     }
-
+    
     .h35px {
       height: 35px;
     }
-
+    
     .w35px {
       width: 35px;
     }
@@ -38,7 +37,8 @@
 </head>
 
 <body class="h-screen w-screen flex flex-col">
-
+  <div th:replace="~{layout/backen_nav}"></div>
+  
   <div class="flex flex-1">
 
     <div th:replace="~{/layout/aside}"></div>
