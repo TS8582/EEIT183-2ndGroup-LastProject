@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>新增伴遊者遊戲</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<style>
+body {
+	background-color: #f8f9fa;
+	font-family: Arial, sans-serif;
+}
+
+.container {
+	width: 60%;
+	margin-top: 50px;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.h5 {
+	margin-bottom: 20px;
+	font-weight: bold;
+	color: #007bff;
+}
+
+.btn-primary {
+	background-color: #007bff;
+	border: none;
+}
+
+.btn-primary:hover {
+	background-color: #0056b3;
+}
+
+#pfGameList {
+	margin-top: 40px;
+}
+
+.custom-hr {
+	border: 0;
+	height: 1px;
+	background: #333;
+	background-image: linear-gradient(to right, #ccc, #333, #ccc);
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<p class="h5">新增想伴遊的遊戲</p>
+		<form id="thirdStepForm" class="mb-4">
+			<div class="form-group row">
+				<label for="playFellowId"
+					class="col-sm-2 col-form-label font-weight-bold">待審核編號</label>
+				<div class="col-sm-10">
+					<input id="playFellowId" class="form-control"
+						th:value="${pfGame.playFellowMember.playFellowId}" readonly />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="gameSelect"
+					class="col-sm-2 col-form-label font-weight-bold">擅長遊戲</label>
+				<div class="col-sm-10">
+					<select id="gameSelect" class="form-control">
+						<option value="" disabled selected>選擇遊戲</option>
+						<th:block th:each="game : ${games}">
+							<option th:value="${game.gameId}" th:text="${game.gameName}"></option>
+						</th:block>
+					</select> <input id="gameId" type="hidden" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="pricingCategory"
+					class="col-sm-2 col-form-label font-weight-bold">每場計價方式</label>
+				<div class="col-sm-10">
+					<select id="pricingCategory" class="form-control">
+						<option value="小時計">小時計</option>
+						<option value="場次計">場次計</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="amount" class="col-sm-2 col-form-label font-weight-bold">單價</label>
+				<div class="col-sm-10">
+					<input type="text" id="amount" class="form-control"
+						th:value="${pfGame.amount}" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-sm-10">
+					<input type="hidden" id="pfGameStatus" class="form-control"
+						th:value="${pfGame.pfGameStatus}" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-sm-10 offset-sm-2 d-flex justify-content-between">
+					<button type="button" class="btn btn-success"
+						onclick="submitPfGameForm()">新增</button>
+					<button type="button" class="btn btn-primary ml-auto"
+						onclick="backToCms()">遞交審核</button>
+				</div>
+			</div>
+		</form>
+		<hr class="custom-hr">
+		<div id="pfGameList">
+			<p class="h5">目前所有伴遊的遊戲</p>
+			<div class="card mb-3">
+				<div class="card-body">
+					<div id="pfGameItems"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+        document.getElementById('gameSelect').addEventListener('change', function() {
+            document.getElementById('gameId').value = this.value;
+        });
+
+        function submitPfGameForm() {
+            const playFellowId = document.getElementById('playFellowId').value;
+            const gameId = document.getElementById('gameId').value;
+            const pricingCategory = document.getElementById('pricingCategory').value;
+            const amount = document.getElementById('amount').value;
+            const pfGameStatus = document.getElementById('pfGameStatus').value;
+
+            if (!gameId) {
+                alert('請選擇一個遊戲');
+                return;
+            }
+
+            const pfGame = {
+                playFellowMember: { playFellowId: parseInt(playFellowId) },
+                game: { gameId: parseInt(gameId) },
+                pricingCategory: pricingCategory,
+                amount: parseInt(amount),
+                pfGameStatus: parseInt(pfGameStatus)
+            };
+
+            axios.post('/PlayCentric/playFellow/pfGame/save', pfGame)
+                .then(response => {
+                    showAllPfGame(playFellowId);
+                })
+                .catch(error => {
+                    console.error('Error adding PfGame:', error);
+                    alert('新增失敗');
+                });
+        }
+
+        function showAllPfGame(playFellowId) {
+            axios.get(`/PlayCentric/playFellow/pfGame/list/${playFellowId}`)
+                .then(response => {
+                    const pfGames = response.data;
+                    const pfGameItems = document.getElementById('pfGameItems');
+                    pfGameItems.innerHTML = '';
+                    pfGames.forEach(pfGame => {
+                        const card = document.createElement('div');
+                        card.className = 'card mb-3';
+                        card.innerHTML = `
+                            <div class="card-body">
+                                <h5 class="card-title">${pfGame.gameName}</h5>
+                                <p class="card-text">
+
+                                    <strong>計價方式:</strong> ${pfGame.pricingCategory}<br>
+                                    <strong>單價:</strong>新臺幣 ${pfGame.amount}元<br>
+                                </p>
+                                <button class="btn btn-danger" onclick="deletePfGame(${pfGame.pfGameId})">移除</button>
+                            </div>
+                        `;
+                        pfGameItems.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('錯誤', error);
+                });
+        }
+
+        function deletePfGame(pfGameId) {
+                axios.delete(`/PlayCentric/playFellow/pfGame/${pfGameId}`)
+                    .then(response => {
+
+                        const playFellowId = document.getElementById('playFellowId').value;
+                        showAllPfGame(playFellowId);
+                    })
+                    .catch(error => {
+                        console.error('移除失敗:', error);
+                        alert('移除失敗');
+                    });
+            }
+        
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const playFellowId = document.getElementById('playFellowId').value;
+            showAllPfGame(playFellowId);
+        });
+
+        function backToCms() {
+            alert('您的申請須經後台管理人員審核，請耐心等候!');
+            window.location.href = '/PlayCentric/playFellow/cms';
+        }
+    </script>
+</body>
+</html>

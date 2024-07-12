@@ -25,6 +25,8 @@ import com.playcentric.model.member.Member;
 import com.playcentric.model.member.MemberRepository;
 import com.playcentric.model.playfellow.ImageLibPfmemberAssociation;
 import com.playcentric.model.playfellow.ImageLibPfmemberAssociationRepository;
+import com.playcentric.model.playfellow.PfGame;
+import com.playcentric.model.playfellow.PfGameRepository;
 import com.playcentric.model.playfellow.PlayFellowMember;
 import com.playcentric.model.playfellow.PlayFellowMemberRepository;
 import com.playcentric.service.playfellow.PlayFellowMemberService;
@@ -49,6 +51,8 @@ public class PlayFellowMemberRestController {
 
 	@Autowired
 	MemberRepository memberRepository;
+	 @Autowired
+	    private PfGameRepository pfGameRepository; // 新增的 PfGameRepository 注入
 
 	@PostMapping("/playFellow/add") // 按下新增
 	public ResponseEntity<Map<String, Object>> addPlayFellowMember(@ModelAttribute("members") Member member,
@@ -149,8 +153,10 @@ public class PlayFellowMemberRestController {
 	}
 
 	@PostMapping("/playFellow/updateMember/save")
-	public String savePlayFellowMemberMsg(@RequestParam("pfnickname") String pfnickname,
-			@RequestParam("pfdescription") String pfdescription, @RequestParam("playFellowId") Integer playFellowId,
+	public String savePlayFellowMemberMsg(
+			@RequestParam("pfnickname") String pfnickname,
+			@RequestParam("pfdescription") String pfdescription, 
+			@RequestParam("playFellowId") Integer playFellowId,
 			@RequestParam("pfstatus") Byte pfstatus) {
 
 		Optional<PlayFellowMember> optPlayFellowMember = playFellowMemberRepository.findById(playFellowId);
@@ -165,35 +171,41 @@ public class PlayFellowMemberRestController {
 		return "";
 	}
 
-	@DeleteMapping("/playFellow/deleteMember/{playFellowId}")
-	public ResponseEntity<String> deletePlayFellowMember(@PathVariable Integer playFellowId) {
-		// 檢查 playFellowId 是否為空
-		if (playFellowId != null) {
-			// 獲取要刪除的 PlayFellowMember
-			PlayFellowMember playFellowMember = playFellowMemberService.getPlayFellowMemberById(playFellowId);
+	 @DeleteMapping("/playFellow/deleteMember/{playFellowId}")
+	    public ResponseEntity<String> deletePlayFellowMember(@PathVariable Integer playFellowId) {
+	        // 檢查 playFellowId 是否為空
+	        if (playFellowId != null) {
+	            // 獲取要刪除的 PlayFellowMember
+	            PlayFellowMember playFellowMember = playFellowMemberService.getPlayFellowMemberById(playFellowId);
 
-			if (playFellowMember != null) {
-				// 查找與之關聯的 ImageLibPfmemberAssociation
-				List<ImageLibPfmemberAssociation> associations = imageLibPfmemberAssociationRepository
-						.findByPlayFellowMember(playFellowMember);
+	            if (playFellowMember != null) {
+	                // 查找與之關聯的 ImageLibPfmemberAssociation
+	                List<ImageLibPfmemberAssociation> associations = imageLibPfmemberAssociationRepository
+	                        .findByPlayFellowMember(playFellowMember);
 
-				// 刪除所有關聯的 ImageLibPfmemberAssociation
-				imageLibPfmemberAssociationRepository.deleteAll(associations);
+	                // 查找與之關聯的 PfGame
+	                List<PfGame> pfGames = pfGameRepository.findByPlayFellowMemberPlayFellowId(playFellowId);
 
-				// 刪除 PlayFellowMember
-				playFellowMemberRepository.delete(playFellowMember);
+	                // 刪除所有關聯的 ImageLibPfmemberAssociation
+	                imageLibPfmemberAssociationRepository.deleteAll(associations);
 
-				// 返回成功訊息
-				return ResponseEntity.ok("刪除成功");
-			} else {
-				// 如果 playFellowMember 為空，返回錯誤訊息
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("無該伴遊者，請重新登入或洽後台管理人員");
-			}
-		} else {
-			// 如果 playFellowId 為空，返回錯誤訊息
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("無效的請求，playFellowId 為空");
-		}
-	}
+	                // 刪除所有關聯的 PfGame
+	                pfGameRepository.deleteAll(pfGames);
+
+	                // 刪除 PlayFellowMember
+	                playFellowMemberRepository.delete(playFellowMember);
+
+	                // 返回成功訊息
+	                return ResponseEntity.ok("刪除成功");
+	            } else {
+	                // 如果 playFellowMember 為空，返回錯誤訊息
+	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("無該伴遊者，請重新登入或洽後台管理人員");
+	            }
+	        } else {
+	            // 如果 playFellowId 為空，返回錯誤訊息
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("無效的請求，playFellowId 為空");
+	        }
+	    }
 
 	@PostMapping("/reviewPfstatus")
 	public String reviewPfstatus(@RequestParam("playFellowId") Integer playFellowId,
