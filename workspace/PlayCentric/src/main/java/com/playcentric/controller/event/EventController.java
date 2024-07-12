@@ -1,6 +1,5 @@
 package com.playcentric.controller.event;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,4 +90,5 @@ public class EventController {
     	model.addAttribute("allEvents", allEvents);
         return "event/events";
     }
+    
 }

@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
     <title th:text="${anno.title}"></title>
 </head>
 
 <body class="h-screen">
-    <div th:replace="~{/layout/nav}"></div>
+    <div th:replace="~{/layout/backen_nav}"></div>
     <div class="flex justify-center">
         <div class="container">
             <div class="my-5 grid grid-cols-6 h-3/4">
