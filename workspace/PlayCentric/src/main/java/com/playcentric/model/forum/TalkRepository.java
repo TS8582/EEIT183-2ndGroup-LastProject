@@ -10,16 +10,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TextsRepository extends JpaRepository<Texts, Integer> {
+public interface TalkRepository extends JpaRepository<Talk, Integer> {
 
-	// 模糊查詢全部
-	@Query("FROM Texts WHERE title LIKE %:title%")
-	List<Texts> findAllByTitle(@Param("title") String title);
-
-	// 是否顯示
-	List<Texts> findAllByHideTexts(boolean hideTexts);
-
-	@Query("from Texts")
-	Page<Texts> findLatest(Pageable pgb);
-
+	@Query("FROM Talk")
+	Page<Talk> findLatest(Pageable pgb);
+	
+	// 查詢文章底下留言
+		  @Query("FROM Talk WHERE texts.textsId = :textsId")
+		    List<Talk> findTalkBytextsId(@Param("textsId") Integer textsId);
 }

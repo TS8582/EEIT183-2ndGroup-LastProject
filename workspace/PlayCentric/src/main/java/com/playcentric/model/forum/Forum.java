@@ -14,6 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -33,23 +35,34 @@ public class Forum {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int forumId;
 
-	@JsonIgnore
-	@OneToOne( fetch = FetchType.LAZY )
-	@JoinColumn(name = "gameId")
-	private Game game;
-
 //	@JsonIgnore
-//	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//	private List<ImageLib> imageLib = new ArrayList<>();
+//	@OneToOne( fetch = FetchType.LAZY )
+//	@JoinColumn(name = "gameId")
+//	private Game game;
+	
+//	@JsonIgnore
+//    @ManyToOne
+//    @JoinColumn(name = "imageId")
+//    private ImageLib imageLib; 
+	
+	private Integer imageId;
+
+	@JsonIgnore
+	@Lob
+	private byte[] textsPhoto;
+
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Texts> texts = new ArrayList<>();
 
+	private String forumName;
+	
+
 	private String textsIntro;
 	
-	@Transient
-	private String gameName;
+//	@Transient
+//	private String gameName;
 //	private ForumGameDto gameIfo;
 	
 //	public Forum() {
@@ -61,24 +74,12 @@ public class Forum {
 //		gameIfo.setGameImg(gameImg);
 //	}
 	
-	public Forum(List<Texts> texts, String textsIntro) {
-		this();
+	public Forum(int forumId, List<Texts> texts, String forumName, String textsIntro) {
+		this.forumId = forumId;
 		this.texts = texts;
+		this.forumName = forumName;
 		this.textsIntro = textsIntro;
 	}
-	
-	public String getTitle() {
-		if (!texts.isEmpty()) {
-			return texts.get(0).getTitle();
-		}
-		return null;
-	}
 
-	public int getFirstTextId() {
-		if (!texts.isEmpty()) {
-			return texts.get(0).getTextsId();
-		}
-		return -1;
-	}
 
 }
