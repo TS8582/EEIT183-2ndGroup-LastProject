@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-  <title>道具交易前台</title>
+  <title>道具交易前台 - 市場</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,8 +33,7 @@
       <input type="text" id="searchInput" class="form-control" placeholder="在拍賣場中搜尋" style="font-size: 1.5rem; border: 2px solid #343a40;">
     </div>
   </header>
-  <div class="">
-
+  <div class="container mt-5">
     <div class="section-header d-md-flex justify-content-between align-items-center">
       <h2 class="display-3 fw-normal">所有商品</h2>
       <div class="mb-4 mb-md-0">
@@ -51,7 +50,7 @@
       </div>
     </div>
 
-    <div class="isotope-container row">
+    <div class="row isotope-container">
       <!-- 商品項目將在這裡動態生成 -->
     </div>
 
@@ -204,19 +203,14 @@
           const itemClassId = prop.propTypeId ? prop.propTypeId : 'unknown';
           console.log(`Item classId is: ${itemClassId}`);
           const item = $(`
-  <div class="item ${itemClassId}" style="margin-bottom:35rem; width:12vw">
-    <a href="http://localhost:8080/PlayCentric/prop/single-product.html" class="card position-absolute" style="text-decoration: none; color: inherit;">
-      <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 9vw;">
-      <div class="card-body p-0">
-        <h3 class="card-title pt-4 m-0">${prop.propName}</h3>
-        <div class="card-text">
+  <div class="item ${itemClassId} col-md-4 mb-4">
+    <div class="card shadow-sm h-100">
+      <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="card-img-top" alt="${prop.propName}" style="height: 200px; object-fit: cover;">
+      <div class="card-body">
+        <h5 class="card-title">${prop.propName}</h5>
           <h3 class="secondary-font text-primary">平均NT$:${prop.propPrice}</h3>
-          <div class="d-flex flex-wrap mt-3">
-
-          </div>
-        </div>
       </div>
-    </a>
+    </div>
   </div>
 `);
 

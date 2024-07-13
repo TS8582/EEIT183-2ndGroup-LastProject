@@ -30,7 +30,7 @@
         <select class="form-select me-2" id="SelectGame" name="gameId" style="font-size: 2rem; border: 2px solid #343a40;"></select>
         <button id="submitBtn" class="btn btn-dark" style="font-size: 1.5rem;">🕹️</button>
       </form>
-      <input type="text" id="searchInput" class="form-control" placeholder="在拍賣場中搜尋" style="font-size: 1.5rem; border: 2px solid #343a40;">
+      <input type="text" id="searchInput" class="form-control" placeholder="在倉庫中搜尋" style="font-size: 1.5rem; border: 2px solid #343a40;">
     </div>
   </header>
   <div class="">
@@ -204,20 +204,23 @@
           const itemClassId = prop.propTypeId ? prop.propTypeId : 'unknown';
           console.log(`Item classId is: ${itemClassId}`);
           const item = $(`
-  <div class="item ${itemClassId}" style="margin-bottom:35rem; width:12vw">
-    <a href="http://localhost:8080/PlayCentric/prop/single-product.html" class="card position-absolute" style="text-decoration: none; color: inherit;">
+<div class="item ${itemClassId}" style="margin-bottom:35rem; width:12vw; position: relative;">
+  <a href="#" class="card position-absolute" style="text-decoration: none; color: inherit;">
+    <h3 class="card-title pt-4 m-0">${prop.propName}</h3>
+    <div style="position: relative;">
       <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 9vw;">
-      <div class="card-body p-0">
-        <h3 class="card-title pt-4 m-0">${prop.propName}</h3>
-        <div class="card-text">
-          <h3 class="secondary-font text-primary">平均NT$:${prop.propPrice}</h3>
-          <div class="d-flex flex-wrap mt-3">
-
-          </div>
+      <h3 class="secondary-font" style="font-weight: bold; color: white; position: absolute; bottom: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.5); padding: 5px;">數量: 1</h3>
+    </div>
+    <div class="card-body p-0">
+      <div class="card-text">
+        <h3 class="secondary-font text-primary">平均NT$:${prop.propPrice}</h3>
+        <div class="d-flex flex-wrap mt-3">
+          <!-- Additional content here -->
         </div>
       </div>
-    </a>
-  </div>
+    </div>
+  </a>
+</div>
 `);
 
           propsContainer.append(item);
