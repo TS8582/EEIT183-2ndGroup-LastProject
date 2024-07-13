@@ -2,6 +2,7 @@ package com.playcentric.controller.game;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class GameController {
 	@GetMapping("/game/getInsertGame")
 	public String getInsertGame(Model model) {
 		List<GameTypeLib> allType = gtService.findAll();
-		List<GameDiscountSet> allDiscount = gdsService.findAll();
+		List<GameDiscountSet> allDiscount = gdsService.findBetweenStartAndEnd(LocalDateTime.now());
 		model.addAttribute("allType", allType);
 		model.addAttribute("allDiscount", allDiscount);
 		return "game/insert-game";
@@ -65,16 +66,13 @@ public class GameController {
 		}
 		model.addAttribute("typeIds",typeIds);
 		List<GameTypeLib> allType = gtService.findAll();
-		List<GameDiscountSet> allDiscount = gdsService.findAll();
+		List<GameDiscountSet> allDiscount = gdsService.findBetweenStartAndEnd(LocalDateTime.now());
 		model.addAttribute("allType", allType);
 		model.addAttribute("allDiscount", allDiscount);
-		List<Integer> discountIds = new ArrayList<>();
-		List<GameDiscount> gameDiscounts = game.getGameDiscounts();
-		for (GameDiscount gameDiscount : gameDiscounts) {
-			discountIds.add(gameDiscount.getGameDiscountId());
-		}
-		model.addAttribute("discountIds",discountIds);
-		System.out.println("我在這裡" + discountIds.toString());
+		
+		GameDiscount nowDiscount = gService.findNowDiscount(gameId);
+		
+		model.addAttribute("nowDiscount",nowDiscount);
 		return "game/update-game";
 	}
 	//遊戲上下架
@@ -137,11 +135,11 @@ public class GameController {
 		return "redirect:/back/game";
 	}
 	
-	// 進行新增遊戲
+		// 進行修改遊戲
 		@PostMapping("/game/updateGame")
 		public String updateGame(@ModelAttribute Game game, @RequestParam List<Integer> typeId,
 				@RequestParam("photos") MultipartFile[] photos, @RequestParam BigDecimal discountRate,
-				@RequestParam Integer discountId) throws IOException {
+				@RequestParam Integer discountId,@RequestParam List<Integer> photoId) throws IOException {
 			Game myGame = gService.findById(game.getGameId());
 			myGame.setGameName(game.getGameName());
 			myGame.setDescription(game.getDescription());
@@ -159,30 +157,43 @@ public class GameController {
 			List<Game> games = new ArrayList<>();
 			games.add(myGame);
 			// 設定遊戲圖片
+			myGame.setImageLibs(null);
+			gService.save(myGame);
 			List<ImageLib> imgs = new ArrayList<>();
+			
+			for (Integer pId : photoId) {
+				List<ImageLib> imageLibs = myGame.getImageLibs();
+				if (pId != 0) {
+					
+					ImageLib img = iService.findImageById(pId);
+					imgs.add(img);
+				}
+			}
+			
 			if (!photos[0].isEmpty()) {
 				for (MultipartFile file : photos) {
-					System.out.println("到底會有幾個檔案");
 					ImageLib imageLib = new ImageLib();
 					imageLib.setImageFile(file.getBytes());
 					ImageLib saveImage = iService.saveImage(imageLib);
 					imageLib.setGames(games);
 					imgs.add(saveImage);
 				}
-				myGame.setImageLibs(imgs);
 			}
+			myGame.setImageLibs(imgs);
 			if (discountId != 0 && discountRate.compareTo(BigDecimal.ZERO) != 0) {
-				//取得優惠活動
-				GameDiscountSet discountSet = gdsService.findById(discountId);
-				//新增遊戲優惠
-				GameDiscount gameDiscount = new GameDiscount();
-				gameDiscount.setDiscountRate(discountRate);
-				gameDiscount.setGameId(myGame.getGameId());
-				gameDiscount.setGameDiscountId(discountId);
-				List<GameDiscount> gameDiscounts = new ArrayList<>();
-				gameDiscounts.add(gameDiscount);
-				game.setGameDiscounts(gameDiscounts);
-				discountSet.setGameDiscounts(gameDiscounts);
+				if (gService.findNowDiscount(myGame.getGameId()).getGameDiscountId() != discountId) {
+					//取得優惠活動
+					GameDiscountSet discountSet = gdsService.findById(discountId);
+					//新增遊戲優惠
+					GameDiscount gameDiscount = new GameDiscount();
+					gameDiscount.setDiscountRate(discountRate);
+					gameDiscount.setGameId(myGame.getGameId());
+					gameDiscount.setGameDiscountId(discountId);
+					List<GameDiscount> gameDiscounts = new ArrayList<>();
+					gameDiscounts.add(gameDiscount);
+					game.setGameDiscounts(gameDiscounts);
+					discountSet.setGameDiscounts(gameDiscounts);
+				}
 			}
 			//重新存入帶有圖片與優惠的遊戲
 			gService.save(myGame);

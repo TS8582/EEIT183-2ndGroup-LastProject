@@ -3,6 +3,9 @@ package com.playcentric.service.announcement;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.playcentric.model.announcement.Announcement;
@@ -27,6 +30,12 @@ public class AnnouncementService {
 	//取得全部公告
 	public List<Announcement> findAll() {
 		return aRepo.findAll();
+	}
+	
+	public Page<Announcement> findByPage(Integer pageNum,Integer size) {
+		PageRequest pgb = PageRequest.of(pageNum - 1,size,Direction.DESC,"annoId");
+		Page<Announcement> page = aRepo.findAll(pgb);
+		return page;
 	}
 	
 	//更新以id找到的公告
