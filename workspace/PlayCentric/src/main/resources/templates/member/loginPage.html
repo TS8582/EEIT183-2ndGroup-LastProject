@@ -13,11 +13,12 @@
     html,
     body {
       height: 100vh;
+      width: 100%;
       overflow: hidden;
     }
 
     body {
-      background-image: url("/PlayCentric/images/會員登入背景.jpg");
+      background-image: url("[[@{/images/loginBG.jpg}]]");
       background-size: cover;
       /* 確保圖片覆蓋整個容器 */
       background-position: center;
@@ -33,6 +34,10 @@
     .h-35px {
       height: 35px;
     }
+
+    .mt150px {
+      margin-top: 150px !important;
+    }
   </style>
 </head>
 
@@ -40,21 +45,22 @@
   <div th:replace="~{layout/nav}"></div>
 
   <div class="container-fluid h-100 position-absolute ms-auto top-0">
-    <div class="row h-100 justify-content-center align-content-center ">
+    <div class="row justify-content-center mt150px">
       <div class="col-3">
 
         <div class=" bg-secondary-subtle p-0 rounded-3 rounded-bottom-0">
 
-          <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+          <div class="nav nav-tabs" role="tablist">
+            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
               type="button" role="tab" aria-controls="nav-home" aria-selected="true">登入</button>
-            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+            <button class="nav-link" id="regist-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
               type="button" role="tab" aria-controls="nav-profile" aria-selected="false">註冊</button>
           </div>
         </div>
 
-        <div class="tab-content bg-white" id="nav-tabContent">
-          <div class="tab-pane fade show active border border-top-0 border-bottom-0 p-2 bg-white" id="nav-home"
+        <div class="tab-content bg-white rounded-bottom-2" id="nav-tabContent">
+          <!-- 登入框內容 -->
+          <div class="tab-pane fade show active border border-top-0 rounded-bottom-2 border-bottom-0 p-2 bg-white" id="nav-home"
             role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
             <form method="POST" id="login-form" th:action="@{/member/login}">
               <div class="mb-3">
@@ -65,27 +71,77 @@
                 <label for="password" class="form-label">密碼</label>
                 <input type="password" class="form-control" name="password" required>
               </div>
-              <button type="submit" class="btn btn-primary">登入</button>
+              <div class="form-btn d-flex">
+              <button type="submit" class="btn btn-primary ms-auto me-2">登入</button>
               <button type="button" class="btn btn-secondary" onclick="window.history.back()">取消</button>
+              </div>
             </form>
-            <div th:text="${errorMsg} ? ${errorMsg}"></div>
+            <div class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0">
+              <span class="px-3 text-secondary bg-white">或者</span>
+            </div>
+            <div class="d-flex mb-3 justify-content-center">
+              <a class="btn p-3 border rounded-0" th:href="@{/member/google-login}">
+                <img class="h-35px" th:src="@{/images/googleLogo.png}" alt="">
+                使用Google登入</a>
+            </div>
           </div>
-          <div class="tab-pane fade border border-top-0 border-bottom-0 p-2" id="nav-profile" role="tabpanel"
+          <!-- 註冊框內容 -->
+          <div class="tab-pane fade border border-top-0 border-bottom-0 p-2 rounded-bottom-2" id="nav-profile" role="tabpanel"
             aria-labelledby="nav-profile-tab" tabindex="0">
-            註冊表單
+            <form id="registForm">
+              <div class="input-group mb-1">
+                <label for="nickname" class="input-group-text">暱稱*</label>
+                <input type="text" class="form-control" id="nickname" name="nickname" required>
+              </div>
+              <div class="input-group mb-1">
+                <label for="account" class="input-group-text">帳號*</label>
+                <input type="text" class="form-control" id="account" name="account" required>
+              </div>
+              <div class="input-group mb-1 password">
+                <label for="password" class="input-group-text">輸入密碼*</label>
+                <input type="password" class="form-control" id="password" name="password">
+              </div>
+              <div class="input-group mb-1 password">
+                <label for="password-confirm" class="input-group-text">確認密碼*</label>
+                <input type="password" class="form-control" id="password-confirm">
+              </div>
+              <div class="input-group mb-1">
+                <label for="email" class="input-group-text">Email*</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+              <hr class="my-2">
+              <div class="input-group mb-1">
+                <label for="memName" class="input-group-text">姓名</label>
+                <input type="text" class="form-control" id="memName" name="memName">
+              </div>
+              <div class="input-group mb-1">
+                <label for="gender" class="input-group-text">姓別</label>
+                <input type="text" class="form-control" id="gender" name="gender" placeholder="男/女">
+              </div>
+              <div class="input-group mb-1">
+                <label for="birthday" class="input-group-text">生日</label>
+                <input type="date" class="form-control" id="birthday" name="birthday">
+              </div>
+              <div class="input-group mb-1">
+                <label for="phone" class="input-group-text">手機號碼</label>
+                <input type="tel" maxlength="10" class="form-control" id="phone" name="phone">
+              </div>
+              <div class="input-group mb-1">
+                <label for="address" class="input-group-text">住址</label>
+                <textarea class="form-control" id="address" name="address"></textarea>
+              </div>
+              <div class="input-group mb-1">
+                <label for="photoFile" class="input-group-text">照片</label>
+                <input type="file" class="form-control" id="photoFile" name="photoFile">
+              </div>
+              <div class="form-btn d-flex mt-4">
+                <button type="submit" class="btn btn-primary ms-auto me-2">註冊</button>
+                <button type="button" class="btn btn-secondary" id="cancelRegist">取消</button>
+              </div>
+            </form>
           </div>
         </div>
 
-        <div class="border border-top-0 rounded-2 rounded-top-0 p-2 bg-white">
-          <div class="d-flex mt-2 mb-4 justify-content-center align-items-center border border-secondary-subtle h-0">
-            <span class="px-3 text-secondary bg-white">或者</span>
-          </div>
-          <div class="d-flex mb-3 justify-content-center">
-            <a class="btn p-3 border rounded-0" th:href="@{/member/google-login}">
-              <img class="h-35px" th:src="@{/images/googleLogo.png}" alt="">
-              使用Google登入</a>
-          </div>
-        </div>
       </div>
     </div>
     <div>
@@ -96,6 +152,8 @@
     $(function () {
       const homePageUrl = "http://localhost:8080/PlayCentric/member/login"
       const loginUrl = "http://localhost:8080/PlayCentric/member/login"
+      const registUrl = "http://localhost:8080/PlayCentric/member/regist";
+      var loginTab = new bootstrap.Tab(document.querySelector('#login-tab'));
 
 
       $('#login-form').submit(function (e) {
@@ -115,6 +173,33 @@
           .catch(err => {
             console.log(err);
           })
+      })
+
+      $('#registForm').submit(function (e) {
+
+        e.preventDefault()
+
+        const formdataObject = new FormData(this);
+        formdataObject.set('role',0)
+        let gender = $('#gender').val();
+        formdataObject.set('gender', gender == '男' ? 1 : gender == '女' ? 2 : 0)
+
+        axios.post(registUrl, formdataObject)
+          .then(res => {
+            console.log(res);
+            doAlert(res.data);
+            if (res.data == '註冊成功!') {
+              loginTab.show();
+              this.reset();
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      })
+
+      $('#cancelRegist').click(function(){
+        loginTab.show();
       })
 
     })
