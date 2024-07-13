@@ -2,6 +2,7 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="D:\EEIT183-2ndGroup-LastProject\workspace"/>
 			<item value="D:\EEIT183-2ndGroup-LastProject"/>
 		</list>
 		<list key="projectNameTemplate">

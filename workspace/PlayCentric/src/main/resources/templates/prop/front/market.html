@@ -23,28 +23,28 @@
 </head>
 
 <body>
-  <header class="">
-    <div id="gameList">
-      <form id="myForm">
-        <label for="SelectGame">遊戲選單:</label>
-        <select class="border-2" id="SelectGame" name="gameId"></select>
-        <button id="submitBtn">送出</button>
+  <div th:replace="~{prop/propNavbar}"></div>
+  <header class="mt-5 d-flex justify-content-center">
+    <div id="gameList" class="bg-light text-dark p-4 rounded shadow-sm">
+      <form id="myForm" class="d-flex mb-3 align-items-center">
+        <select class="form-select me-2" id="SelectGame" name="gameId" style="font-size: 2rem; border: 2px solid #343a40;"></select>
+        <button id="submitBtn" class="btn btn-dark" style="font-size: 1.5rem;">🕹️</button>
       </form>
-      <br />
+      <input type="text" id="searchInput" class="form-control" placeholder="在拍賣場中搜尋" style="font-size: 1.5rem; border: 2px solid #343a40;">
     </div>
   </header>
   <div class="">
 
     <div class="section-header d-md-flex justify-content-between align-items-center">
-      <h2 class="display-3 fw-normal">遊戲道具交易</h2>
+      <h2 class="display-3 fw-normal">所有商品</h2>
       <div class="mb-4 mb-md-0">
         <p class="m-0">
           <!-- 自動新增按鈕 -->
         </p>
       </div>
       <div>
-        <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
-          shop now
+        <a th:href="@{propInventory}" class="btn btn-outline-dark btn-lg text-uppercase fs-2 rounded-1">
+          我的倉庫
           <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
             <use xlink:href="#arrow-right"></use>
           </svg></a>
@@ -99,6 +99,24 @@
           $container.isotope({ filter: filterValue });
           $('.filter-button').removeClass('active');
           $(this).addClass('active');
+
+          // 重新觸發搜索條件
+          $('#searchInput').trigger('input');
+        });
+
+        // 搜尋輸入框事件
+        $('#searchInput').on('input', function () {
+          const searchValue = $(this).val().toLowerCase();
+          const activeTypeFilter = $('.filter-button.active').attr('data-filter');
+
+          $container.isotope({
+            filter: function () {
+              const name = $(this).find('.card-title').text().toLowerCase();
+              const typeClass = $(this).attr('class').split(' ').filter(cls => cls.startsWith(activeTypeFilter.replace('.', '')));
+
+              return name.includes(searchValue) && (activeTypeFilter === '*' || typeClass.length > 0);
+            }
+          });
         });
       });
 
@@ -167,10 +185,10 @@
       function generateFilterButtons(propTypes) {
         const filterButtonsContainer = $(".m-0");
         filterButtonsContainer.empty();
-        const allButton = $('<button class="filter-button me-4 active" data-filter="*">ALL</button>');
+        const allButton = $('<button class="filter-button me-4 active" data-filter="*" style="font-size: 2rem;">ALL</button>');
         filterButtonsContainer.append(allButton);
         propTypes.forEach(function (propType) {
-          const button = $('<button class="filter-button me-4"></button>')
+          const button = $('<button class="filter-button me-4" style="font-size: 2rem;"></button>')
             .attr("data-filter", `.${propType.propTypeId}`)
             .text(propType.propType);
           console.log(propType.propType)
@@ -186,38 +204,22 @@
           const itemClassId = prop.propTypeId ? prop.propTypeId : 'unknown';
           console.log(`Item classId is: ${itemClassId}`);
           const item = $(`
-            <div class="item ${itemClassId} col-md-4 col-lg-3 my-4">
-              <div class="card position-relative">
-                <a th:href="@{/single-product.html}">
-                  <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 5vw;">
-                </a>
-                <div class="card-body p-0">
-                  <a th:href="@{/single-product.html}">
-                    <h3 class="card-title pt-4 m-0">${prop.propName}</h3>
-                  </a>
-                  <div class="card-text">
-                    <span class="rating secondary-font">
-                      <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                      <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                      <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                      <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                      <iconify-icon icon="clarity:star-solid" class="text-primary"></iconify-icon>
-                      5.0
-                    </span>
-                    <h3 class="secondary-font text-primary">${prop.propPrice}</h3>
-                    <div class="d-flex flex-wrap mt-3">
-                      <a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
-                        <h5 class="text-uppercase m-0">購買</h5>
-                      </a>
-                      <a href="#" class="btn-wishlist px-4 pt-3">
-                        <iconify-icon icon="fluent:heart-28-filled" class="fs-5"></iconify-icon>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `);
+  <div class="item ${itemClassId}" style="margin-bottom:35rem; width:12vw">
+    <a href="http://localhost:8080/PlayCentric/prop/single-product.html" class="card position-absolute" style="text-decoration: none; color: inherit;">
+      <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 9vw;">
+      <div class="card-body p-0">
+        <h3 class="card-title pt-4 m-0">${prop.propName}</h3>
+        <div class="card-text">
+          <h3 class="secondary-font text-primary">平均NT$:${prop.propPrice}</h3>
+          <div class="d-flex flex-wrap mt-3">
+
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+`);
+
           propsContainer.append(item);
         });
 
