@@ -157,10 +157,14 @@ public class GameController {
 			List<Game> games = new ArrayList<>();
 			games.add(myGame);
 			// 設定遊戲圖片
+			myGame.setImageLibs(null);
+			gService.save(myGame);
 			List<ImageLib> imgs = new ArrayList<>();
 			
 			for (Integer pId : photoId) {
+				List<ImageLib> imageLibs = myGame.getImageLibs();
 				if (pId != 0) {
+					
 					ImageLib img = iService.findImageById(pId);
 					imgs.add(img);
 				}
@@ -174,8 +178,8 @@ public class GameController {
 					imageLib.setGames(games);
 					imgs.add(saveImage);
 				}
-				myGame.setImageLibs(imgs);
 			}
+			myGame.setImageLibs(imgs);
 			if (discountId != 0 && discountRate.compareTo(BigDecimal.ZERO) != 0) {
 				if (gService.findNowDiscount(myGame.getGameId()).getGameDiscountId() != discountId) {
 					//取得優惠活動

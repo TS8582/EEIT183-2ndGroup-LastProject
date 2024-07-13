@@ -69,7 +69,8 @@
                         <div class="showDiscount">
                             <div class="flex flex-col">
                                 <label for="discountId" class="text-lg me-2">優惠選擇：</label>
-                                <select class="w-96 border-2 focus:outline-2 focus:outline-cyan-200" name="discountId"
+                                <select th:if="${nowDiscount == null}"
+                                    class="w-96 border-2 focus:outline-2 focus:outline-cyan-200" name="discountId"
                                     id="discount-chooser">
                                     <option value="0">無</option>
                                     <th:block th:each="discount:${allDiscount}">
@@ -82,7 +83,24 @@
                                     </th:block>
                                 </select>
 
-                                <div th:if="${nowDiscount == null}" class="rateset hidden">
+
+                                <select th:if="${nowDiscount}" disabled
+                                    class="w-96 bg-gray-500 border-2 focus:outline-2 focus:outline-cyan-200"
+                                    name="discountId" id="discount-chooser">
+                                    <option value="0">無</option>
+                                    <th:block th:each="discount:${allDiscount}">
+                                        <option th:if="${nowDiscount}" selected th:value="${discount.gameDiscountId}"
+                                            th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
+                                        </option>
+                                        <option th:if="${nowDiscount == null}" th:value="${discount.gameDiscountId}"
+                                            th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
+                                        </option>
+                                    </th:block>
+                                </select>
+
+                                <input type="hidden" name="discountId" value="0">
+
+                                <div th:if="${nowDiscount == null}" class="rateset">
                                     <div class="flex flex-col">
                                         <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
 
@@ -95,13 +113,12 @@
                                     <div class="flex flex-col">
                                         <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
 
-                                        <input th:if="${nowDiscount}" type="number" min="0" max="0.99"
+
+                                        <input th:if="${nowDiscount}" type="number" disabled min="0" max="0.99"
                                             name="discountRate" id="discountRate" th:value="${nowDiscount.discountRate}"
-                                            step="0.01" class="text-input" />
-                                        <input th:if="${nowDiscount == null}" type="number" min="0" max="0.99"
-                                            name="discountRate" id="discountRate" value="0" step="0.01"
-                                            class="text-input" />
+                                            step="0.01" class="text-input bg-gray-500" />
                                     </div>
+                                    <input th:if="${nowDiscount}" type="hidden" name="discountRate" value="0">
                                 </div>
 
                             </div>

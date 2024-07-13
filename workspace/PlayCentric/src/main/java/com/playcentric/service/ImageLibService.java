@@ -22,4 +22,8 @@ public class ImageLibService {
     public ImageLib saveImage(ImageLib imageLib){
         return imageLibRepository.save(imageLib);
     }
+    
+    public void deleteById(Integer id) {
+		imageLibRepository.deleteById(id);
+	}
 }
