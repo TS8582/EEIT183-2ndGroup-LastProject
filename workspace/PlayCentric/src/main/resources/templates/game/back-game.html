@@ -4,28 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div class="" th:replace="~{/layout/backen_nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
     <title>PlayCentric-後台管理-公告</title>
 </head>
 
 <body class="h-screen flex flex-col w-screen">
     <!-- 頂部導航欄 -->
-    <div class="" th:replace="~{/layout/nav}"></div>
 
     <div class="flex flex-1">
         <!-- 側邊欄 -->
-        <div th:replace="~{/layout/aside}"></div>
+        <!-- <div th:replace="~{/layout/aside}"></div> -->
 
         <!-- 主要內容區域 -->
         <main class="w-full h-auto">
             <div class="w-full h-auto flex flex-col justify-center px-8">
                 <input class="mb-4 p-2 border border-gray-300 rounded-md" type="text" id="search" placeholder="搜尋...">
                 <div class="mb-2">
-                    <a class="btn btn-sky" th:href="@{/game/getSetDiscount}">新增優惠活動</a>
+                    <a class="mybtn mybtn-sky" th:href="@{/game/getSetDiscount}">新增優惠活動</a>
                 </div>
-                <div class="w-full" id="table">
-                    <table class="w-full border-collapse shadow">
-                        <thead>
+                <div class="w-full h-3/5 overflow-y-auto noscrollbar shadow" id="table">
+                    <table class="w-full border-collapse">
+                        <thead class="sticky sticky-top bg-black text-white">
                             <tr>
                                 <th class="text-center w-2/12 border">遊戲名稱</th>
                                 <th class="text-center w-1/12 border">價格</th>
@@ -39,7 +39,7 @@
                         <tbody>
                             <th:block th:each="game:${allGame}">
                                 <tr>
-                                    <td class="border p-3 gameName">
+                                    <td class="border p-3 gameName mylink">
                                         <a href="#" th:text="${game.gameName}" class="text-center"></a>
                                     </td>
                                     <td th:text="${game.price}" class="text-center border p-3 price"></td>
@@ -53,11 +53,11 @@
                                     <td th:if="${game.totalReviews == 0}" class="text-center border p-3 score">0</td>
                                     <td class="text-center border p-3">
                                         <a th:href="@{/game/getUpdateGame(gameId=${game.gameId})}"
-                                            class="btn btn-sky rounded-md me-2 block md:inline">修改</a>
+                                            class="mybtn mybtn-sky rounded-md me-2 block lg:inline">修改</a>
                                         <a th:if="${!game.isShow}" th:href="@{/game/isShow(gameId=${game.gameId})}"
-                                            class="btn btn-green rounded-md me-2 block md:inline">上架</a>
+                                            class="mybtn mybtn-green rounded-md me-2 block lg:inline">上架</a>
                                         <a th:if="${game.isShow}" th:href="@{/game/isShow(gameId=${game.gameId})}"
-                                            class="btn btn-danger rounded-md me-2 block md:inline">下架</a>
+                                            class="mybtn mybtn-danger rounded-md me-2 block lg:inline">下架</a>
                                     </td>
                                 </tr>
                             </th:block>
@@ -68,9 +68,7 @@
         </main>
     </div>
 
-    <div class="plus-btn">
-        <a th:href="@{/game/getInsertGame}" class="text-4xl text-black">+</a>
-    </div>
+    <a th:href="@{/game/getInsertGame}" class="text-4xl text-black plus-btn mybtn">+</a>
 
     <script>
         let allData = document.querySelectorAll('tbody tr');

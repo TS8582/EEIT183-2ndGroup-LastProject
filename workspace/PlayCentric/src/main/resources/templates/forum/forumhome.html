@@ -21,106 +21,33 @@
 
 
 
-  <div class="flex flex-1">
+  <div>
+    <section id="Wishlist" class="py-5 my-5">
+      <div class="container">
+        <div th:replace="~{layout/navbar}"></div>
 
-    <div th:replace="~{/layout/aside}"></div>
-
-
-
-    <div class="w-full h-auto">
-      <div class="w-full">
-
-        <div class="w-full text-2xl flex justify-center text-sky-400 border-2 mb-2">
-          <div class="w-auto flex space-x-4">
-            <a class="nav-link" th:href="@{/forum/page}">討論區首頁</a>
-
-            <a class="nav-link" aria-current="page" th:href="@{/forum/add}">新增討論串</a>
-
-            <a class="nav-link" th:href="@{/texts/page}">文章首頁</a>
-
-            <a class="nav-link" aria-current="page" th:href="@{/texts/add}">新增文章</a>
-          </div>
-        </div>
-
-        <div class="row justify-content-center">
-          <div class="col-6">
-            <h1>討論串列表</h1>
-
-            <form th:action="@{/forum/search}" method="get" class="mt-3">
-              <div class="input-group">
-                <input type="text" name="keyword" class="form-control" placeholder="搜尋討論串">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="submit">
-                    <i class="fas fa-search"></i> <!-- 使用 Font Awesome 5 的正確圖標 -->
-                  </button>
-                </div>
+        <h1 class="my-4">討論串首頁</h1>
+        <div class="row">
+          <div th:each="forum : ${arrayList}" class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+              <a th:href="@{/forum/{id}(id=${forum.forumId})}">
+                <img th:src="@{/imageLib(forumId=${forum.forumId})}" class="card-img-top" alt="Image">
+              </a>
+              <div class="card-body">
+                <h4 class="card-title">
+                  <a th:href="@{/forum/{id}(id=${forum.forumId})}" th:text="${forum.forumName}"></a>
+                </h4>
+                <p class="card-text" th:text="${forum.textsIntro}"></p>
               </div>
-            </form>
-            <br>
-
-            <th:block th:each="oneMsg : ${page.content}">
-              <div class="card mb-3">
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <a th:href="@{/texts/view(textsId=${oneMsg.forumId})}" th:text="${oneMsg.title}"></a>
-                  </h5>
-                  <p class="card-text" th:text="${oneMsg.textsIntro}"></p>
-                  <div class="edit-btn">
-                    <a th:href="@{/forum/edit(forumId=${oneMsg.forumId})}" class="btn btn-outline-success btn-sm">編輯</a>
-                    <form method="post" th:action="@{/forum/delete}">
-                      <input type="hidden" name="forumId" th:value="${oneMsg.forumId}" />
-                      <input type="hidden" name="_method" value="DELETE" />
-                      <button type="submit" class="btn btn-outline-danger btn-sm"
-                        onclick="return confirm('確定刪除嗎??')">刪除</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </th:block>
-
-            <div th:text=" '總共有 ' + ${page.totalElements} + ' 筆'  "></div>
-
-            <ul class="pagination" th:if="${ page.totalPages != 0 }">
-
-              <!-- 上一頁 -->
-              <th:block th:switch="${page.number != 0}">
-                <li th:case="${true}" class="page-item">
-                  <a class="page-link" th:href="@{/forum/page(p=${page.number})}">上一頁</a>
-                </li>
-                <li th:case="${false}" class="page-item disabled">
-                  <a class="page-link">上一頁</a>
-                </li>
-              </th:block>
-
-              <!-- 頁碼 -->
-              <th:block th:each="pageNumber : ${#numbers.sequence(1,page.totalPages)}">
-                <th:block th:switch="${page.number + 1 == pageNumber}">
-                  <li th:case="${false}" class="page-item">
-                    <a class="page-link" th:href="@{/forum/page(p=${pageNumber})}" th:text="${pageNumber}"></a>
-                  </li>
-                  <li th:case="${true}" class="page-item active">
-                    <span class="page-link" th:text="${pageNumber}"></span>
-                  </li>
-                </th:block>
-              </th:block>
-
-
-              <!-- 下一頁 -->
-              <th:block th:switch="${page.number + 1 == page.totalPages}">
-                <li th:case="${false}" class="page-item">
-                  <a class="page-link" th:href="@{/forum/page(p=${page.number + 2})}">下一頁</a>
-                </li>
-                <li th:case="${true}" class="page-item disable">
-                  <a class="page-link">下一頁</a>
-                </li>
-              </th:block>
-
-            </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   </div>
+  <!-- <div class="footer">
+    <div th:replace="~{layout/footer}"></div>
+  </div> -->
 
 
 </body>

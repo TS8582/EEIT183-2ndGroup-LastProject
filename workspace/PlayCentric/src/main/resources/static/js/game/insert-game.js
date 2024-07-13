@@ -8,6 +8,28 @@ let imgChooser = document.querySelector('.img-choose');
 chooserAct();
 let imgcount = 0;
 
+let oneimg = document.querySelectorAll('.one-img');
+if (oneimg.length > 0) {
+    imgcount = oneimg.length;
+    if (imgcount >= 6) {
+        const chooser = document.querySelector('.img-choose');
+        chooser.remove();
+    }
+    oneimg.forEach(img => {
+        imgcount = oneimg.length;
+        const closer = img.querySelector('.remove-img');
+        closer.addEventListener('click', e => {
+            if (imgcount == 6) {
+                newImgChooser();
+                chooserAct();
+            }
+            imgcount = imgcount - 1;
+            closer.closest('.one-img').remove();
+        })
+    });
+}
+
+
 // 選擇優惠後跳出選擇折扣
 discountChooser.addEventListener('change', e => {
     const rateset = document.querySelector('.rateset');

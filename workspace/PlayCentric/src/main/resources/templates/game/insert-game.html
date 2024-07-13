@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
     <title>PlayCentric-後台管理-新增遊戲</title>
 </head>
 
 <body>
-    <div th:replace="~{/layout/nav}"></div>
+    <div th:replace="~{/layout/backen_nav}"></div>
 
     <div class="flex justify-center">
         <div class="flex justify-center my-5 border-2 p-20 rounded-md">
@@ -72,7 +73,7 @@
                                     <option value="0">無</option>
                                     <th:block th:each="discount:${allDiscount}">
                                         <option th:value="${discount.gameDiscountId}"
-                                            th:text="${discount.gameDiscountName} + ${#dates.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
+                                            th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
                                         </option>
                                     </th:block>
                                 </select>
@@ -111,7 +112,7 @@
                         </div>
 
                         <div class="flex items-center justify-center mt-3">
-                            <button class="btn btn-sky rounded-md" type="submit">新增</button>
+                            <button class="mybtn mybtn-sky rounded-md" type="submit">新增</button>
                         </div>
 
 
