@@ -39,32 +39,41 @@ public class Forum {
 //	@OneToOne( fetch = FetchType.LAZY )
 //	@JoinColumn(name = "gameId")
 //	private Game game;
-	
+
 //	@JsonIgnore
 //    @ManyToOne
 //    @JoinColumn(name = "imageId")
 //    private ImageLib imageLib; 
-	
+
 	private Integer imageId;
 
 	@JsonIgnore
 	@Lob
 	private byte[] textsPhoto;
 
-
 	@JsonIgnore
 	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Texts> texts = new ArrayList<>();
 
 	private String forumName;
-	
 
 	private String textsIntro;
-	
+
+	public Forum(int forumId, Integer imageId, byte[] textsPhoto, List<Texts> texts, String forumName,
+			String textsIntro) {
+		super();
+		this.forumId = forumId;
+		this.imageId = imageId;
+		this.textsPhoto = textsPhoto;
+		this.texts = texts;
+		this.forumName = forumName;
+		this.textsIntro = textsIntro;
+	}
+
 //	@Transient
 //	private String gameName;
 //	private ForumGameDto gameIfo;
-	
+
 //	public Forum() {
 //		Game game = getGame();
 //		gameIfo.setGameId(game.getGameId());
@@ -73,13 +82,5 @@ public class Forum {
 //		byte[] gameImg = imageLibs.get(0).getImageFile();
 //		gameIfo.setGameImg(gameImg);
 //	}
-	
-	public Forum(int forumId, List<Texts> texts, String forumName, String textsIntro) {
-		this.forumId = forumId;
-		this.texts = texts;
-		this.forumName = forumName;
-		this.textsIntro = textsIntro;
-	}
-
 
 }
