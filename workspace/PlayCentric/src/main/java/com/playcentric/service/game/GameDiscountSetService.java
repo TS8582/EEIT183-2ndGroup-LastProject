@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.playcentric.model.game.primary.GameDiscount;
 import com.playcentric.model.game.primary.GameDiscountSet;
 import com.playcentric.model.game.primary.GameDiscountSetRepository;
 
@@ -34,5 +35,6 @@ public class GameDiscountSetService {
 	public List<GameDiscountSet> findBetweenStartAndEnd(LocalDateTime date) {
 		return rep.findBetweenStartAndEnd(date);
 	}
+	
 	
 }

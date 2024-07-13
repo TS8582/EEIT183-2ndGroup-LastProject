@@ -13,7 +13,7 @@
 
     <div class="flex justify-center">
         <div class="flex justify-center my-5 border-2 p-20 rounded-md">
-            <form th:action="@{/game/insertGame}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/game/updateGame}" method="post" enctype="multipart/form-data">
                 <div class="space-y-4">
                     <input type="hidden" name="gameId" th:value="${game.gameId}">
                     <div class="flex flex-col">
@@ -73,18 +73,16 @@
                                     id="discount-chooser">
                                     <option value="0">無</option>
                                     <th:block th:each="discount:${allDiscount}">
-                                        <option th:if="${discountIds}"
-                                            th:selected="${discountIds.contains(discount.gameDiscountId)}"
-                                            th:value="${discount.gameDiscountId}"
+                                        <option th:if="${nowDiscount}" selected th:value="${discount.gameDiscountId}"
                                             th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
                                         </option>
-                                        <option th:if="${discountIds == null}" th:value="${discount.gameDiscountId}"
+                                        <option th:if="${nowDiscount == null}" th:value="${discount.gameDiscountId}"
                                             th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
                                         </option>
                                     </th:block>
                                 </select>
 
-                                <div th:if="${#lists.isEmpty(discountIds)}" class="rateset hidden">
+                                <div th:if="${nowDiscount == null}" class="rateset hidden">
                                     <div class="flex flex-col">
                                         <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
 
@@ -93,12 +91,16 @@
                                     </div>
                                 </div>
 
-                                <div th:if="${!#lists.isEmpty(discountIds)}" class="rateset">
+                                <div th:if="${nowDiscount}" class="rateset">
                                     <div class="flex flex-col">
                                         <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
 
-                                        <input type="number" min="0" max="0.99" name="discountRate" id="discountRate"
-                                            value="0" step="0.01" class="text-input" />
+                                        <input th:if="${nowDiscount}" type="number" min="0" max="0.99"
+                                            name="discountRate" id="discountRate" th:value="${nowDiscount.discountRate}"
+                                            step="0.01" class="text-input" />
+                                        <input th:if="${nowDiscount == null}" type="number" min="0" max="0.99"
+                                            name="discountRate" id="discountRate" value="0" step="0.01"
+                                            class="text-input" />
                                     </div>
                                 </div>
 
@@ -115,11 +117,11 @@
 
                             <div class="imgs grid grid-cols-2 gap-3 w-full">
 
-                                <input class="hidden" type="checkbox" value="0" name="photoId" />
+                                <input class="hidden" checked type="checkbox" value="0" name="photoId" />
                                 <th:block th:each="photo:${game.imageLibs}">
 
                                     <div class="one-img">
-                                        <input class="hidden" type="checkbox" th:value="${photo.imageId}"
+                                        <input class="hidden" type="checkbox" checked th:value="${photo.imageId}"
                                             name="photoId" />
                                         <div class="remove-img">
                                             X
@@ -147,7 +149,7 @@
                         </div>
 
                         <div class="flex items-center justify-center mt-3">
-                            <button class="mybtn mybtn-sky rounded-md" type="submit">新增</button>
+                            <button class="mybtn mybtn-sky rounded-md" type="submit">修改</button>
                         </div>
 
 
