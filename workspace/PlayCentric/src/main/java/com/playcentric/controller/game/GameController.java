@@ -213,5 +213,12 @@ public class GameController {
 		gdsService.insert(discountSet);
 		return "redirect:/back/game";
 	}
-
+	
+	//遊戲商店頁面
+	@GetMapping("/game/gameStore")
+	public String gameStore(Model model) {
+		List<Game> games = gService.findShowInStore();
+		model.addAttribute("games",games);
+		return "game/game-store";
+	}
 }

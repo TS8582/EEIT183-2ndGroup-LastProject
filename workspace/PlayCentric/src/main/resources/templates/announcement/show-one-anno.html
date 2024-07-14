@@ -17,7 +17,8 @@
                 <div class="col-span-4 py-3 h-full">
                     <main class="h-full">
                         <section class="h-full">
-                            <h1 th:text="${anno.title}" class="text-center text-5xl"></h1>
+                            <h1 th:text="[ + ${anno.announcementType.annoTypeName} + ] + ${anno.title}"
+                                class="text-center text-5xl"></h1>
                             <article class="relative m-5 h-full bg-content rounded-md p-5 border-2 shadow">
                                 <div th:text="${anno.content}"></div>
                                 <div class="absolute right-5 bottom-5"
