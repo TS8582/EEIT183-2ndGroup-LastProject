@@ -1,6 +1,5 @@
 package com.playcentric.model.playfellow;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +17,6 @@ public class PfGameDTO {
     private String pricingCategory; // 計費方式(小時or計次)單位初始只能1
     private Integer amount; // 單價金額 沒小數
     private Byte pfGameStatus; // 狀態 1:開啟 2:關閉
+    private String pfNickname; // 暱稱
+    private String base64Image; // 照片的 base64 編碼
 }

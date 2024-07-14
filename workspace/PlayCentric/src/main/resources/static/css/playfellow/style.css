@@ -679,8 +679,8 @@ Single Product section style start
 .fixed-size {
     width: 500px;
     height: 200px;
-    object-fit: cover; /* 裁切圖片 */
-    object-position: center; /* 圖片位置居中 */
+    object-fit: cover; 
+    object-position: center; 
 }
 
 

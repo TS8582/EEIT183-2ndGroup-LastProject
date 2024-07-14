@@ -1,5 +1,6 @@
 package com.playcentric.service.playfellow;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,23 +35,25 @@ public class PfGameService {
 		List<PfGame> pfGames = pfGameRepository.findByPlayFellowMemberPlayFellowId(playFellowId);
 		return pfGames.stream().map(this::convertToDTO).collect(Collectors.toList());
 	}
-	
-	 public List<PfGame> getAllPlayFellowMembersByGameId(Integer gameId) {
-	        return pfGameRepository.findAllByGameId(gameId);
-	    }
-	 
-	
-	 @Transactional
-	    public void deletePfGame(Integer pfGameId) {
-	        pfGameRepository.deleteById(pfGameId);
-	    }
+
+	public List<PfGame> getAllPlayFellowMembersByGameId(Integer gameId) {
+        List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
+        System.out.println("Number of games found: " + pfGames.size());
+        return pfGames;
+    }
+
+	@Transactional
+	public void deletePfGame(Integer pfGameId) {
+		pfGameRepository.deleteById(pfGameId);
+	}
 
 	@Transactional
 	public PfGameDTO saveOrUpdatePfGame(PfGame pfGame) {
 		Integer playFellowId = pfGame.getPlayFellowMember().getPlayFellowId();
 		Integer gameId = pfGame.getGame().getGameId();
 
-		Optional<PfGame> existingPfGame = pfGameRepository.findByPlayFellowMemberPlayFellowIdAndGameGameId(playFellowId, gameId);
+		Optional<PfGame> existingPfGame = pfGameRepository.findByPlayFellowMemberPlayFellowIdAndGameGameId(playFellowId,
+				gameId);
 
 		PfGame savedPfGame;
 		if (existingPfGame.isPresent()) {
@@ -66,16 +69,25 @@ public class PfGameService {
 		return convertToDTO(savedPfGame);
 	}
 
-	private PfGameDTO convertToDTO(PfGame pfGame) {
+	public PfGameDTO convertToDTO(PfGame pfGame) {
 		PfGameDTO dto = new PfGameDTO();
 		dto.setPfGameId(pfGame.getPfGameId());
-		dto.setPlayFellowId(pfGame.getPlayFellowMember() != null ? pfGame.getPlayFellowMember().getPlayFellowId() : null);
+		dto.setPlayFellowId(
+				pfGame.getPlayFellowMember() != null ? pfGame.getPlayFellowMember().getPlayFellowId() : null);
 		dto.setGameId(pfGame.getGame() != null ? pfGame.getGame().getGameId() : null);
 		dto.setGameName(pfGame.getGame() != null ? pfGame.getGame().getGameName() : null);
 		dto.setPricingCategory(pfGame.getPricingCategory());
 		dto.setAmount(pfGame.getAmount());
 		dto.setPfGameStatus(pfGame.getPfGameStatus());
+		dto.setPfNickname(pfGame.getPlayFellowMember() != null ? pfGame.getPlayFellowMember().getPfnickname() : null);
+
+		if (pfGame.getPlayFellowMember() != null && pfGame.getPlayFellowMember().getImageLibAssociations() != null
+				&& !pfGame.getPlayFellowMember().getImageLibAssociations().isEmpty()) {
+			byte[] imageBytes = pfGame.getPlayFellowMember().getImageLibAssociations().get(0).getImageLib()
+					.getImageFile();
+			String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+			dto.setBase64Image(base64Image);
+		}
 		return dto;
 	}
-
 }
