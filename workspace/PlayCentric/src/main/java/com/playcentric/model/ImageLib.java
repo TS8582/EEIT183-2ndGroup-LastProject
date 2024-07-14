@@ -13,6 +13,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,16 +24,20 @@ import lombok.Setter;
 @Entity
 @Table(name = "imageLib")
 public class ImageLib {
-	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer imageId;
-	
+
 	@Lob
 	private byte[] imageFile;
-	
+
 	@ManyToMany(mappedBy = "imageLibs")
 	private List<Game> games;
-	
+
 	@OneToOne(mappedBy = "imageLib")
 	private Props props;
+
+	@Transient
+	private String base64Image;
 }

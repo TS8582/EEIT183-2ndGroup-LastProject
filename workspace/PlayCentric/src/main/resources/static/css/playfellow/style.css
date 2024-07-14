@@ -117,9 +117,9 @@ CSS STRUCTURE:
 
 /* Fonts */
 :root {
-  --body-font: 'Chilanka', cursive;
-  --heading-font: 'Chilanka', cursive;
-  --secondary-font: 'Montserrat', sans-serif;
+  --body-font: 'Proxima Nova', sans-serif;
+  --heading-font: 'Proxima Nova', sans-serif;
+  --secondary-font: 'Proxima Nova', sans-serif;
 }
 
 
@@ -135,7 +135,7 @@ body {
 
   --bs-light-rgb: 248, 248, 248;
 
-  --bs-font-sans-serif: 'Chilanka', cursive;
+  --bs-font-sans-serif: 'Proxima Nova', sans-serif;
   --bs-body-font-family: var(--bs-font-sans-serif);
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
@@ -156,7 +156,7 @@ body {
   --bs-info-rgb: 230, 243, 250;
 }
 
-.btn-primary {
+.btn-primary pf{
   padding: 1.2rem 3rem;
   --bs-btn-color: #fff;
   --bs-btn-bg: #DEAD6F;
@@ -258,7 +258,7 @@ h5,
 h6 {
   font-family: var(--heading-font);
   color: var(--bs-body-color);
-  font-weight: 400;
+  font-weight:200;
   text-transform: capitalize;
 }
 
@@ -673,4 +673,12 @@ Single Product section style start
 .nav-pills .show>.nav-link {
   color: var(--light-color);
   background-color: var(--accent-color);
+}
+
+
+.fixed-size {
+    width: 500px;
+    height: 200px;
+    object-fit: cover; /* 裁切圖片 */
+    object-position: center; /* 圖片位置居中 */
 }

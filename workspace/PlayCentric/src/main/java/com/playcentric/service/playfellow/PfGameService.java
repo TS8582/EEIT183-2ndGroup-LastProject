@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.playcentric.model.playfellow.PfGame;
 import com.playcentric.model.playfellow.PfGameDTO;
 import com.playcentric.model.playfellow.PfGameRepository;
+import com.playcentric.model.playfellow.PlayFellowMember;
 
 import jakarta.transaction.Transactional;
 
@@ -33,6 +34,11 @@ public class PfGameService {
 		List<PfGame> pfGames = pfGameRepository.findByPlayFellowMemberPlayFellowId(playFellowId);
 		return pfGames.stream().map(this::convertToDTO).collect(Collectors.toList());
 	}
+	
+	 public List<PfGame> getAllPlayFellowMembersByGameId(Integer gameId) {
+	        return pfGameRepository.findAllByGameId(gameId);
+	    }
+	 
 	
 	 @Transactional
 	    public void deletePfGame(Integer pfGameId) {
@@ -71,4 +77,5 @@ public class PfGameService {
 		dto.setPfGameStatus(pfGame.getPfGameStatus());
 		return dto;
 	}
+
 }

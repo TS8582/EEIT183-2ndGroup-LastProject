@@ -77,6 +77,20 @@ html, body {
 	opacity: 1;
 	pointer-events: auto;
 }
+#review {
+    background-color: transparent;
+    color: #666; 
+    padding: 5px 10px; 
+    transition: background-color 0.3s;
+    bottom:10px;
+    }
+    
+    	
+
+
+#review:hover {
+    background-color: #013220; 
+}
 
 
 
@@ -212,8 +226,11 @@ html, body {
 				</div>
 			</div>
 		</main>
+		
 
 	</div>
+	
+<a class="text-sm text-gray plus-btn mybtn" id="review">REVIEW</a>
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -226,7 +243,9 @@ html, body {
 	<script th:src="@{/js/layout/nav.js}"></script>
 
 	<script>
-		$(document).on('click', '#reviewPfMember', function () {
+	
+	
+		$(document).on('click', '#review', function () {
 			window.location.href = '/PlayCentric/playFellow/reviewpfMember';
 		})
 
