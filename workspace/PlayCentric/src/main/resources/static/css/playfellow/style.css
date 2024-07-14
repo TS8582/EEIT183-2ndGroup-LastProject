@@ -682,3 +682,11 @@ Single Product section style start
     object-fit: cover; /* 裁切圖片 */
     object-position: center; /* 圖片位置居中 */
 }
+
+
+.banner-title {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+
