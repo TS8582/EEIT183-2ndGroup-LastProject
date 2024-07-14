@@ -218,6 +218,8 @@ public class GameController {
 	@GetMapping("/game/gameStore")
 	public String gameStore(Model model) {
 		List<Game> games = gService.findShowInStore();
+		List<GameTypeLib> allType = gtService.findAll();
+		model.addAttribute("allType",allType);
 		model.addAttribute("games",games);
 		return "game/game-store";
 	}
