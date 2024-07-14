@@ -169,6 +169,21 @@ public class MemberController {
 	public String deleteMem(@RequestParam("memId") Integer memId){
 		return memberService.deleteMemById(memId)? "刪除成功":"刪除失敗";
 	}
+
+	@GetMapping("/memInfo")
+	public String memInfoPage() {
+		return "member/memInfoPage";
+	}
+	
+	@GetMapping("/getMemInfo")
+	@ResponseBody
+	public Member getMemInfo(Model model) {
+		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		if (loginMember!=null) {
+			return memberService.findById(loginMember.getMemId());
+		}
+		return null;
+	}
 	
 	
 	private boolean hasInfo(Member member) {
