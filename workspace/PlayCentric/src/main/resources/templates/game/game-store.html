@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div class="" th:replace="~{/layout/nav}"></div>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>PlayCentric-遊戲商店</title>
+    <style>
+
+    </style>
+</head>
+
+<body class="h-screen">
+    <!-- 頂部導航欄 -->
+
+    <div class="flex flex-col h-5/6">
+
+        <!-- 篩選欄 -->
+        <div class="flex justify-center h-auto mt-2">
+            <div class="w-1/2 h-auto bg-gray-700 text-white flex flex-col rounded-md">
+                <!-- 以價格篩選 -->
+                <div class="flex align-items-center justify-center p-2">
+                    <label for="minPrice">最低價格： </label>
+                    <input type="text" name="minPrice" id="minPrice" class="me-3 text-input w-1/3 text-black"
+                        maxlength="5">
+                    <label for="maxPrice">最高價格： </label>
+                    <input type="text" name="maxPrice" id="maxPrice" class="text-input w-1/3 text-black" maxlength="5">
+                </div>
+
+                <!-- 以分類篩選 -->
+
+
+                <span class="block px-2">分類：</span>
+
+                <div class="p-2 flex flex-wrap">
+
+
+                    <div class="text-sm mybtn mybtn-tag">
+                        <span>分類一1541651651165</span>
+                        <input class="hidden" type="checkbox" name="type" id="">
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <main class="bg-sky-400">
+
+        </main>
+
+
+    </div>
+
+
+    <script>
+        // const lefttoggle = document.querySelector('.left-toggle');
+        // const aside = document.querySelector('.aside');
+
+        // lefttoggle.addEventListener('click', e => {
+        //     aside.classList.toggle('-left-48');
+        //     aside.classList.toggle('left-0');
+        // })
+
+
+    </script>
+
+</body>
+
+</html>
