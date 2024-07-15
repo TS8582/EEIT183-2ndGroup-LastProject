@@ -8,10 +8,28 @@
   <title>PlayCentric論壇</title>
   <script src="https://kit.fontawesome.com/a498fa36dc.js" crossorigin="anonymous"></script>
   <style>
-    .i1 {
-      display: flex;
-      justify-content: end;
-      margin-left: 1250px;
+    .spaced-column {
+      padding-right: 20px;
+    }
+
+    th.card-title {
+      padding-right: 20px;
+    }
+
+    th.spaced-column {
+      padding-left: 20px;
+    }
+
+    #title1 {
+      padding-right: 50px;
+    }
+
+    #d1 {
+      width: 500px;
+    }
+
+    #th1 {
+      width: 45%;
     }
   </style>
 </head>
@@ -20,29 +38,65 @@
   <div th:replace="~{/layout/nav}"></div>
 
 
+  <div th:replace="~{forum/layout/navbar}"></div>
 
   <div>
     <section id="Wishlist" class="py-5 my-5">
       <div class="container">
-        <div th:replace="~{layout/navbar}"></div>
-
-        <h1 class="my-4">討論串首頁</h1>
         <div class="row">
-          <div th:each="forum : ${arrayList}" class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <a th:href="@{/forum/{id}(id=${forum.forumId})}">
-                <img th:src="@{/imageLib(forumId=${forum.forumId})}" class="card-img-top" alt="Image">
-              </a>
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a th:href="@{/forum/{id}(id=${forum.forumId})}" th:text="${forum.forumName}"></a>
-                </h4>
-                <p class="card-text" th:text="${forum.textsIntro}"></p>
-              </div>
-            </div>
-          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" id="th1" class="card-title text-uppercase">標題</th>
+                <th scope="col" id="title1" class="card-title text-uppercase spaced-column">簡介</th>
+                <th scope="col" class="card-title text-uppercase spaced-column"></th>
+              </tr>
+            </thead>
+            <tbody class="table table-striped table-hover">
+              <tr th:each="forumBean : ${arrayList}">
+                <td class="py-4">
+                  <div class="cart-info d-flex flex-wrap align-items-center">
+                    <div class="col-lg-3">
+                      <div class="card-image">
+                        <a th:href="@{/texts/findTextsByForumId(forumId=${forumBean.forumId})}"
+                          class="text-decoration-none">
+                          <img style="max-width: 100%;" th:src="@{/forumPhoto(forumId=${forumBean.forumId})}"
+                            alt="cloth" class="img-fluid">
+                        </a>
+                      </div>
+                    </div>
+                    <div class="col-lg-9">
+                      <div class="card-detail ps-3">
+                        <h5 class="card-title">
+                          <a th:href="@{/texts/findTextsByForumId(forumId=${forumBean.forumId})}"
+                            class="text-decoration-none">
+                            <p th:text="${forumBean.forumName}"></p>
+                          </a>
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4 align-middle spaced-column">
+                  <div class="total-price">
+                    <a th:href="@{/texts/findTextsByForumId(forumId=${forumBean.forumId})}"
+                      class="text-decoration-none">
+                      <span class="secondary-font fw-medium  text-area">
+                        <p th:utext="${forumBean.textsIntro}"></p>
+
+                      </span>
+                    </a>
+                  </div>
+                </td>
+                <td class="py-4 align-middle spaced-column">
+                  <div class="total-price">
+                    <span class="secondary-font fw-medium"></span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </div>
     </section>
   </div>
   <!-- <div class="footer">
