@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
             margin: 10px;
             box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.2);
         }
+
         .member-card img {
             max-width: 100px;
             height: auto;
@@ -19,6 +21,7 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
+
         .member-card img.loaded {
             opacity: 1;
         }
@@ -26,6 +29,7 @@
     <!-- 引入 Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
+
 <body>
     <h1>PlayFellow Members</h1>
     <input type="text" id="gameId" placeholder="Enter Game ID">
@@ -44,24 +48,24 @@
                     gameId: gameId // 傳遞 Game ID 作為請求參數
                 }
             })
-            .then(response => {
-                // 請求成功，處理返回的數據
-                const members = response.data;
+                .then(response => {
+                    // 請求成功，處理返回的數據
+                    const members = response.data;
 
-                // 獲取顯示成員列表的 div
-                const membersDiv = document.getElementById('members');
-                membersDiv.innerHTML = ''; // 清空之前的內容
+                    // 獲取顯示成員列表的 div
+                    const membersDiv = document.getElementById('members');
+                    membersDiv.innerHTML = ''; // 清空之前的內容
 
-                // 檢查返回的數據
-                console.log(members);
+                    // 檢查返回的數據
+                    console.log(members);
 
-                // 遍歷成員列表，並創建相應的 HTML 元素來顯示每個成員的信息
-                members.forEach(member => {
-                    const memberDiv = document.createElement('div');
-                    memberDiv.classList.add('member-card');
+                    // 遍歷成員列表，並創建相應的 HTML 元素來顯示每個成員的信息
+                    members.forEach(member => {
+                        const memberDiv = document.createElement('div');
+                        memberDiv.classList.add('member-card');
 
-                    // 使用 innerHTML 插入 HTML 標籤和數據
-                    memberDiv.innerHTML = `
+                        // 使用 innerHTML 插入 HTML 標籤和數據
+                        memberDiv.innerHTML = `
                         <h2>PlayFellow ID: ${member.playFellowId}</h2>
                         <p>Game: ${member.gameName}</p>
                         <p>Nickname: ${member.pfNickname}</p>
@@ -70,17 +74,17 @@
                         ${member.base64Image ? `<img data-src="data:image/jpeg;base64,${member.base64Image}" alt="Member Image" class="lazy-load"/>` : ''}
                     `;
 
-                    // 將成員的卡片添加到 membersDiv 中
-                    membersDiv.appendChild(memberDiv);
-                });
+                        // 將成員的卡片添加到 membersDiv 中
+                        membersDiv.appendChild(memberDiv);
+                    });
 
-                // 懶加載圖片
-                lazyLoadImages();
-            })
-            .catch(error => {
-                // 請求失敗，處理錯誤
-                console.error('Error fetching members:', error);
-            });
+                    // 懶加載圖片
+                    lazyLoadImages();
+                })
+                .catch(error => {
+                    // 請求失敗，處理錯誤
+                    console.error('Error fetching members:', error);
+                });
         }
 
         function lazyLoadImages() {
@@ -90,7 +94,7 @@
                 threshold: 0.01
             };
 
-            let observer = new IntersectionObserver(function(entries, self) {
+            let observer = new IntersectionObserver(function (entries, self) {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         preloadImage(entry.target);
@@ -115,4 +119,5 @@
         }
     </script>
 </body>
+
 </html>
