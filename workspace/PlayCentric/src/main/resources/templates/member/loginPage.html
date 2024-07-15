@@ -116,7 +116,11 @@
               </div>
               <div class="input-group mb-1">
                 <label for="gender" class="input-group-text">姓別</label>
-                <input type="text" class="form-control" id="gender" name="gender" placeholder="男/女">
+                <select id="gender" name="gender" class="form-select form-control" aria-label="Default select example">
+                  <option value="0" selected>選擇性別</option>
+                  <option value="1">男</option>
+                  <option value="2">女</option>
+                </select>
               </div>
               <div class="input-group mb-1">
                 <label for="birthday" class="input-group-text">生日</label>
@@ -154,6 +158,11 @@
       const loginUrl = "http://localhost:8080/PlayCentric/member/login"
       const registUrl = "http://localhost:8080/PlayCentric/member/regist";
       var loginTab = new bootstrap.Tab(document.querySelector('#login-tab'));
+      const errMsg = '[[${errorMsg}]]'
+
+      if (errMsg && errMsg.trim() != "") {
+        doAlert(errMsg);
+      }
 
 
       $('#login-form').submit(function (e) {
@@ -167,7 +176,7 @@
             console.log(res);
             doAlert(res.data);
             if (res.data == '登入成功!') {
-              window.location.href = "/PlayCentric";
+              window.location.href = "/PlayCentric/member/loginSeccess";
             }
           })
           .catch(err => {
@@ -181,8 +190,6 @@
 
         const formdataObject = new FormData(this);
         formdataObject.set('role',0)
-        let gender = $('#gender').val();
-        formdataObject.set('gender', gender == '男' ? 1 : gender == '女' ? 2 : 0)
 
         axios.post(registUrl, formdataObject)
           .then(res => {

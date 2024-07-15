@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -77,6 +78,12 @@ public class MemberController {
 		return "註冊失敗!";
 	}
 
+	@GetMapping("/showLoginErr{err}")
+	public String showLoginErr(@PathVariable String err, Model model) {
+		model.addAttribute("errMsg", err);
+		return "member/loginPage";
+	}
+
 	@GetMapping("/login")
 	public String loginPage(Model model) {
 		if (model.getAttribute("loginMember")!=null) {
@@ -98,6 +105,15 @@ public class MemberController {
 		// redirectAttributes.addFlashAttribute("okMsg", "登入成功");
 		return "登入成功!";
 	}
+
+	@GetMapping("/loginSeccess")
+	public String loginSeccess(RedirectAttributes redirectAttributes, Model model) {
+		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		String loginName = loginMember!=null? loginMember.getNickname():"";
+		redirectAttributes.addFlashAttribute("loginOK",loginName+"登入成功!");
+		return "redirect:/";
+	}
+	
 	
 	@GetMapping("/logout")
 	public String logout(SessionStatus status, RedirectAttributes redirectAttributes) {
