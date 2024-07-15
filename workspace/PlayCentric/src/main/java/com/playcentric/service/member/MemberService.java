@@ -39,6 +39,7 @@ public class MemberService {
 		if (optional.isPresent()) {
 			Member member = optional.get();
 			member.setGoogeId(memGoogle.getGoogleId());
+			member.setGoogleLogin(memGoogle);
 			googleRepository.save(memGoogle);
 			return memberRepository.save(member);
 		}
