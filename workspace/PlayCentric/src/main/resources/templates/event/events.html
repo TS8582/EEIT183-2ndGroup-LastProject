@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
-
 <head>
 	<meta charset="UTF-8">
 	<title>活動管理</title>
 	<div th:replace="~{layout/backen_nav}"></div>
-	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
 	 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 
@@ -144,10 +141,10 @@
 		}
 
 		$('#eventList').on('click', '.edit-btn', function () {
-			showMemInfo($(this).attr('eventId'))
+			showEventInfo($(this).attr('eventId'))
 		})
 
-		function showMemInfo(eventId) {
+		function showEventInfo(eventId) {
 			axios({
 				method: 'get',
 				url: findEventUrl + eventId
@@ -176,6 +173,26 @@
 			$('#eventModal').modal('show');
 		}
 
+
+		$('#eventForm').submit(function (event) {
+			event.preventDefault();
+
+			const startTime = new Date($('#eventStartTime').val());
+			const endTime = new Date($('#eventEndTime').val());
+			const signupDeadline = new Date($('#eventSignupDeadLine').val());
+
+			if (endTime <= startTime) {
+				alert("結束時間必須在開始時間之後");
+				return false;
+			}
+
+			if (signupDeadline >= endTime) {
+				alert("報名截止時間必須在結束時間之前");
+				return false;
+			}
+
+		});
+
 		$('#eventForm').submit(function () {
 			event.preventDefault();
 			$('#eventForm .datetime').attr('type', 'datetime');
@@ -197,7 +214,7 @@
 			$('#eventId').val('');
 			$('#deleteEventBtn').hide();  // 隱藏刪除按鈕
 		};
-		
+
 		// 模糊查詢活動功能
 		function searchEvents() {
 			const searchValue = document.getElementById("searchEventInput").value.toLowerCase();

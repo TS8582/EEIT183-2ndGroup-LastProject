@@ -18,18 +18,18 @@
 
                     <div class="flex flex-col">
                         <label for="gameDiscountName" class="text-lg me-2">優惠名稱：</label>
-                        <input required type="text" name="gameDiscountName" id="gameDiscountName" class="text-input"
-                            placeholder="請輸入名稱">
+                        <input required type="text" name="gameDiscountName" id="gameDiscountName"
+                            class="text-input w-96" placeholder="請輸入名稱">
                     </div>
 
                     <div class="flex flex-col">
                         <label for="startAt" class="text-lg me-2">開始時間：</label>
-                        <input required type="datetime-local" id="startAt" name="startAt" class="text-input">
+                        <input required type="datetime-local" id="startAt" name="startAt" class="text-input w-96">
                     </div>
 
                     <div class="flex flex-col">
                         <label for="endAt" class="text-lg me-2">結束時間：</label>
-                        <input required type="datetime-local" id="endAt" name="endAt" class="text-input">
+                        <input required type="datetime-local" id="endAt" name="endAt" class="text-input w-96">
                     </div>
 
                     <div id="msg" class="text-red-700">
@@ -45,24 +45,7 @@
         </div>
     </div>
 
-    <script>
-
-        document.querySelector('form').addEventListener('submit', e => {
-            const now = new Date();
-            const startAt = new Date(document.querySelector('#startAt').value);
-            const endAt = new Date(document.querySelector('#endAt').value);
-            const msg = document.querySelector('#msg');
-            if (startAt < now) {
-                msg.innerHTML = '開始日期設定錯誤';
-                e.preventDefault();
-            }
-            else if (endAt < startAt) {
-                msg.innerHTML = '結束日期不得在開始日期之前';
-                e.preventDefault();
-            }
-        })
-
-    </script>
+    <script th:src="@{/js/game/set-discount.js}"></script>
 
 </body>
 
