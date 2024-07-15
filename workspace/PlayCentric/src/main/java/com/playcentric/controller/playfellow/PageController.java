@@ -22,10 +22,15 @@ public class PageController {
 	@Autowired
 	PfGameService pfGameService;
 
-	@GetMapping("/playFellow/testGameIdfunction")
-	public String testGameIdfunction() {
-		return "/playFellow/testGameId";
+	@GetMapping("/playFellow/playFellowCart")
+	public String playFellowCart() {
+		return "/playFellow/playFellowCart";
 	}
+	
+//	@GetMapping("/playFellow/testGameIdfunction")
+//	public String testGameIdfunction() {
+//		return "/playFellow/testGameId";
+//	}
 
 	@GetMapping("/playFellow")
     public String getMethodName(Model model) {

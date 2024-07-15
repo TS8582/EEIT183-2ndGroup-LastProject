@@ -10,8 +10,10 @@ import org.springframework.ui.Model;
 
 import com.playcentric.model.member.Member;
 import com.playcentric.model.member.MemberRepository;
+import com.playcentric.model.playfellow.PfOrder;
 import com.playcentric.model.playfellow.PlayFellowMember;
 import com.playcentric.model.playfellow.PlayFellowMemberRepository;
+import com.playcentric.service.playfellow.PfOrderService;
 import com.playcentric.service.playfellow.PlayFellowMemberService;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,8 @@ public class PlayFellowMemberController {
 	@Autowired
 	private PlayFellowMemberRepository playFellowMemberRepository;
 	
+	@Autowired
+	PfOrderService pfOrderService;
 	
 
 	@GetMapping("/playFellow/addImage")
@@ -54,8 +58,11 @@ public class PlayFellowMemberController {
 	@GetMapping("/playFellow/cms")
 	public String getMethodName(Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
+		List<PfOrder> pfOrders = pfOrderService.getAllPfOrder();
+		
 		model.addAttribute("PlayFellowMember", playFellowMembers);
-
+		model.addAttribute("PfOrder",pfOrders);
+		
 		return "playFellow/playFellowCMS";
 	}
 

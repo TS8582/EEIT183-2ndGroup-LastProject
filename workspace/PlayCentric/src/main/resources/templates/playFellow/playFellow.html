@@ -11,7 +11,7 @@
 	<meta name="keywords" content="ecommerce, pet, shop">
 	<meta name="description" content="Free eCommerce Pet Shop HTML Website Template">
 
-	<div th:replace="~{layout/nav}"></div>
+	<link th:replace="~{layout/nav}"/>
 	<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
 	<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
@@ -103,7 +103,7 @@
 								<div class="carousel-inner">
 									<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
 										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item" >
-										<img class=" rounded-4 img-fluid playFellowImg-size"
+										<img class=" rounded-1 img-fluid playFellowImg-size"
 											th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
 											alt="Image" />
 									</div>
@@ -153,7 +153,7 @@
 								<div class="carousel-inner">
 									<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
 										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
-										<img class=" rounded-4 img-fluid playFellowImg-size"
+										<img class=" rounded-1 img-fluid playFellowImg-size"
 											th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
 											alt="Image" />
 									</div>
@@ -223,7 +223,7 @@
 								<div class="carousel-inner">
 									<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
 										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
-										<img class=" rounded-4 img-fluid playFellowImg-size"
+										<img class=" rounded-1 img-fluid playFellowImg-size"
 											th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
 											alt="Image" />
 									</div>
@@ -262,7 +262,7 @@
 								<div class="carousel-inner">
 									<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
 										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
-										<img class=" rounded-4 img-fluid playFellowImg-size"
+										<img class=" rounded-1 img-fluid playFellowImg-size"
 											th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
 											alt="Image" />
 									</div>
@@ -351,50 +351,7 @@
 	<script th:src="@{/js/playfellow/plugins.js}"></script>
 	<script th:src="@{/js/playfellow/script.js}"></script>
 	<script>
-		$(document).ready(function () {
-			// 初始化 Swiper
-			var swiper = new Swiper('.main-swiper', {
-				loop: true,
-				autoplay: {
-					delay: 2000,
-				},
-				pagination: {
-					el: '.swiper-pagination',
-					clickable: true,
-				},
-				navigation: {
-					nextEl: '.swiper-button-next',
-					prevEl: '.swiper-button-prev',
-				},
-			});
-
-			// 初始化 Isotope for PlayFellow
-			var $playfellowContainer = $('#playfellow-container').isotope({
-				itemSelector: '.item',
-				layoutMode: 'fitRows'
-			});
-
-			// 過濾按鈕的點擊事件 for PlayFellow
-			$('.filter-button').click(function () {
-				// 切換 active 樣式
-				$('.filter-button').removeClass('active');
-				$(this).addClass('active');
-
-				// 過濾項目
-				var filterValue = $(this).attr('data-filter');
-				if (filterValue === '*') {
-					// 顯示所有項目
-					$playfellowContainer.isotope({
-						filter: '*'
-					});
-				} else {
-					// 顯示過濾後的項目
-					$playfellowContainer.isotope({
-						filter: filterValue
-					});
-				}
-			});
-		});
+		
 	</script>
 </body>
 
