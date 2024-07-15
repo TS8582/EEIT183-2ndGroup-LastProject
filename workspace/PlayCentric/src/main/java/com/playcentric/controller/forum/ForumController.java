@@ -34,10 +34,10 @@ public class ForumController {
 	}
 
 	@PostMapping("/addForumData")
-	public String addForumData(@RequestParam MultipartFile forumPhoto, @RequestParam("forumName") String forumName,
+	public String addForumData(@RequestParam MultipartFile textsPhoto, @RequestParam("forumName") String forumName,
 			@RequestParam("textsIntro") String textsIntro, Model model) throws IllegalStateException, IOException {
 		Forum forum = new Forum();
-		forum.setForumPhoto(forumPhoto.getBytes());
+		forum.setTextsPhoto(textsPhoto.getBytes());
 		forum.setForumName(forumName);
 		forum.setTextsIntro(textsIntro);
 
@@ -55,7 +55,7 @@ public class ForumController {
 	}
 
 	// 新增要改富文本的新增圖片要轉base64 未成功
-	@PostMapping("/addForumData")
+	@PostMapping("/addForumData2")
 	public String addForumData2(@RequestParam("forumPhoto") MultipartFile forumPhoto,
 			@RequestParam("forumName") String forumName,
 			@RequestParam("textsIntro") String textsIntro,
@@ -82,7 +82,7 @@ public class ForumController {
 
 			// 創建主题對象
 			Forum forum1 = new Forum();
-			forum1.setForumPhoto(imageBytes); // 這裡保存原始的圖片字節數據
+			forum1.setTextsPhoto(imageBytes); // 這裡保存原始的圖片字節數據
 			forum1.setForumName(forumName);
 			forum1.setTextsIntro(textsIntro);
 
@@ -146,13 +146,13 @@ public class ForumController {
 	}
 
 	@PostMapping("/editTheme")
-	public String editTheme(@RequestParam("forumId") Integer forumId, @RequestParam MultipartFile forumPhoto,
+	public String editTheme(@RequestParam("forumId") Integer forumId, @RequestParam MultipartFile textsPhoto,
 			@RequestParam("forumName") String forumName, @RequestParam("textsIntro") String textsIntro, Model model)
 			throws IllegalStateException, IOException {
 
 		Forum forumBean = new Forum();
 
-		forumBean.setForumPhoto(forumPhoto.getBytes());
+		forumBean.setTextsPhoto(textsPhoto.getBytes());
 		forumBean.setForumId(forumId);
 		forumBean.setForumName(forumName);
 		forumBean.setTextsIntro(textsIntro);
@@ -167,7 +167,7 @@ public class ForumController {
 	public ResponseEntity<byte[]> downloadPhoto(@RequestParam Integer forumId) {
 		Forum forumPhoto = forumService.findById(forumId);
 
-		byte[] photoFile = forumPhoto.getForumPhoto();
+		byte[] photoFile = forumPhoto.getTextsPhoto();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.IMAGE_JPEG);

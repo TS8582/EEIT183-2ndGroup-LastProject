@@ -49,7 +49,7 @@ public class Forum {
 
 	@JsonIgnore
 	@Lob
-	private byte[] forumPhoto;
+	private byte[] textsPhoto;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
