@@ -78,16 +78,16 @@ public class TalkController {
 		return "forum/Talk/addTalkPage";
 	}
 
-	// Ajax分頁
-	@GetMapping("/talk/page")
-	public String findByPage(@RequestParam(value = "p", defaultValue = "1") Integer pageNum, Model model) {
-
-		Page<Talk> page = talkService.findByPage(pageNum);
-
-		model.addAttribute("page", page);
-
-		return "forum/talk/listTalkPageAjax";
-	}
+//	// Ajax分頁
+//	@GetMapping("/talk/page")
+//	public String findByPage(@RequestParam(value = "p", defaultValue = "1") Integer pageNum, Model model) {
+//
+//		Page<Talk> page = talkService.findByPage(pageNum);
+//
+//		model.addAttribute("page", page);
+//
+//		return "forum/talk/listTalkPageAjax";
+//	}
 
 	// 尋找修改ID
 	@GetMapping("/talk/edit")
@@ -98,13 +98,20 @@ public class TalkController {
 		return "forum/talk/editPage";
 	}
 
-	// 不知會什麼不能PUT
-	@PutMapping("/talk/editPost")
-	public String editPost(@ModelAttribute Talk talk) {
-		talkService.insert(talk);
-		return "redirect:/findAllTalk";
-	}
+	// 更新談話
+    @PutMapping("/update")
+    public String updateTalk(@RequestParam("talkId") Integer talkId,
+                             @RequestParam("talkContent") String talkContent,
+                             Model model) {
+        Talk talk = talkService.findTalkById(talkId);
+        if (talk != null) {
+            talk.setTalkContent(talkContent);
+            talkService.insert(talk);
+        }
+        return "redirect:/talks";
+    }
 
+	// 刪除留言
 	@GetMapping("/talk/delete")
 	public String deleteTalk(@RequestParam Integer talkId) {
 		talkService.deleteTalkById(talkId);
