@@ -106,11 +106,13 @@ public class MemberController {
 		return "登入成功!";
 	}
 
-	@GetMapping("/loginSeccess")
+	@GetMapping("/loginSuccess")
 	public String loginSeccess(RedirectAttributes redirectAttributes, Model model) {
 		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
-		String loginName = loginMember!=null? loginMember.getNickname():"";
-		redirectAttributes.addFlashAttribute("loginOK",loginName+"登入成功!");
+		if (loginMember != null) {
+			String loginName = loginMember.getNickname();
+			redirectAttributes.addFlashAttribute("loginOK",loginName+"登入成功!");
+		}
 		return "redirect:/";
 	}
 	
