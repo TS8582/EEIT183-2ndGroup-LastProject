@@ -1,5 +1,5 @@
 function doAlert(message) {
-  $('body').append(`<div class="rounded-2 position-absolute top-50 start-50 translate-middle bg-dark text-light p-2 alert-log">${message}</div>`)
+  $('body').append(`<div class="rounded-2 position-absolute top-50 start-50 translate-middle bg-dark text-light p-2 alert-log z-3">${message}</div>`)
   $('.alert-log').hide();
   $('.alert-log').fadeIn(500);
   setTimeout(function () {
