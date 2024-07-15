@@ -11,8 +11,7 @@ public class MarketController {
 
 	// 進入市場頁面
 	@GetMapping("prop/front/market")
-	public String showMarketPage(HttpSession httpSession,Model model) {
-		httpSession.getAttribute("loginMember");
+	public String showMarketPage() {
 		return "prop/front/market";
 	}
 }

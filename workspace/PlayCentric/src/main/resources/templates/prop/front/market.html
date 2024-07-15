@@ -25,13 +25,24 @@
     .container {
       font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
     }
+
+    .selected {
+      border: 3px solid gold;
+    }
+
+    .quantity {
+      background-color: grey;
+      color: white;
+      text-align: center;
+      margin-top: 5px;
+    }
   </style>
 </head>
 
 <body>
 
   <div th:replace="~{prop/propNavbar}"></div>
-  <div width="500px" height="500px" th:if="${session.loginMember}" th:text="${session.loginMember.memId}"></div>
+  <div id="memberId" class="d-none" th:if="${session.loginMember}" th:text="${session.loginMember.memId}"></div>
 
   <header class="mt-5 d-flex justify-content-center">
     <div id="gameList" class="bg-light text-dark p-4 rounded shadow-sm">
@@ -55,16 +66,16 @@
           <!-- 自動新增按鈕 -->
         </p>
         <div class="m-3">
-          <a href="#" class="btn btn-dark btn-lg" data-bs-toggle="modal" data-bs-target="#inventory"
+          <a href="#" id="inventoryBtn" class="btn btn-dark btn-lg" data-bs-toggle="modal" data-bs-target="#inventory"
             style="font-weight: 700; padding: 0rem 2rem">
             販售
           </a>
         </div>
       </div>
 
-      <!-- Modal -->
+      <!-- 倉庫Modal -->
       <div class="modal fade" id="inventory" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header" style="background-color: rgb(0, 5, 70); color: white">
               <h5 class="modal-title" id="exampleModalLabel" style="
@@ -77,14 +88,21 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <!-- 模态窗口内容 -->
-              内容
+              <div class="row">
+                <div class="col-8" id="inventoryPropsContainer">
+                  <!-- 道具圖片會在這裡生成 -->
+                </div>
+                <div class="col-4">
+                  完整商品資訊
+                </div>
+              </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                關閉
+
+              <button type="button" class="btn btn-dark">💰</button>
+              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">
+                ❌
               </button>
-              <button type="button" class="btn btn-primary">保存更改</button>
             </div>
           </div>
         </div>
@@ -111,6 +129,10 @@
   <script>
     // 加載所有遊戲
     const propTypesMap = {};
+    const inventoryBtn = document.getElementById('inventoryBtn');
+    let memId = document.getElementById('memberId')?.textContent.trim() || null;
+    let selectedGameId;
+    let inventoryProps; //倉庫裡的所有道具
 
     $(document).ready(function () {
       loadGames();
@@ -118,7 +140,7 @@
       // 提交按鈕點擊事件
       $("#submitBtn").click(function (event) {
         event.preventDefault(); // 取消表單的默認提交行為
-        const selectedGameId = $("#SelectGame").val(); // 獲取選中的遊戲ID
+        selectedGameId = $("#SelectGame").val(); // 獲取選中的遊戲ID
         fetchPropTypesByGameId(selectedGameId, function (propTypes) {
           propTypes.forEach(function (propType) {
             propTypesMap[propType.propTypeId] = propType.propType; // 填充 propTypesMap
@@ -256,6 +278,71 @@
       });
     }
 
+    // 根據memId(JAVA)跟 gameId(JS) 找尋倉庫道具
+    inventoryBtn.addEventListener('click', function () {
+      generateInventoryItems(memId, selectedGameId);
+    })
+
+    function generateInventoryItems(memId, selectedGameId) {
+      axios({
+        method: 'get',
+        url: 'http://localhost:8080/PlayCentric/prop/memberPropsbyMemId',
+        params: { memId: memId }
+      })
+        .then((res) => {
+          const inventory = res.data.filter(item => item.prop.gameId == selectedGameId);
+          generateInventoryPropImages(inventory); // 調用生成倉庫道具圖片的函數
+
+        })
+        .catch((error) => {
+          console.error('獲取倉庫資訊時出錯:', error);
+        });
+    }
+
+    // 生成倉庫道具圖片
+    function generateInventoryPropImages(inventoryProps) {
+      const container = document.getElementById('inventoryPropsContainer');
+      container.innerHTML = ''; // 清空容器
+
+      let rowDiv = null;
+
+      inventoryProps.forEach((item, index) => { // 這裡需要改為item來包含prop和propQuantity
+        if (index % 6 === 0) { // 每6個道具生成一個新的row
+          rowDiv = document.createElement('div');
+          rowDiv.className = 'row mb-3';
+          container.appendChild(rowDiv);
+        }
+
+        const colDiv = document.createElement('div');
+        colDiv.className = 'col-3 mb-3'; // 每個圖片占3列，並且有底部外邊距
+
+        const img = document.createElement('img');
+        img.src = `http://localhost:8080/PlayCentric/prop/image?id=${item.prop.propImageId}`;
+        img.alt = item.prop.propName;
+        img.className = 'img-fluid';
+        img.style.width = '6vw';
+
+        // 添加點擊事件監聽器
+        img.addEventListener('click', function () {
+          // 先移除其他圖片的選中樣式
+          const allImages = container.getElementsByTagName('img');
+          for (let i = 0; i < allImages.length; i++) {
+            allImages[i].classList.remove('selected');
+          }
+          // 為當前點擊的圖片添加選中樣式
+          img.classList.add('selected');
+        });
+
+        const quantityDiv = document.createElement('div');
+        quantityDiv.textContent = `數量: ${item.propQuantity}`; // 使用正確的變量名
+        quantityDiv.className = 'quantity';
+
+        colDiv.appendChild(img);
+        colDiv.appendChild(quantityDiv); // 將數量 div 添加到 colDiv 中
+        rowDiv.appendChild(colDiv);
+      });
+    }
+
     // 生成道具項目
     function generatePropItems(props) {
       const propsContainer = $(".isotope-container");
@@ -265,7 +352,7 @@
         console.log(`Item classId is: ${itemClassId}`);
         const item = $(`
   <div class="item ${itemClassId}" style="margin-bottom:28rem; width:12vw; position: relative;">
-    <a href="#" class="card position-absolute" style="text-decoration: none; color: inherit;">
+    <a href="#" class="card" style="text-decoration: none; color: inherit;">
       <div style="position: relative;">
         <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw;">
       </div>
@@ -290,6 +377,7 @@
         .isotope("reloadItems")
         .isotope({ sortBy: "original-order" });
     }
+
   </script>
 </body>
 
