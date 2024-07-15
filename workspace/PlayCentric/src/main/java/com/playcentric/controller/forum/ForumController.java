@@ -145,8 +145,8 @@ public class ForumController {
 
 	}
 
-	@PostMapping("/editTheme")
-	public String editTheme(@RequestParam("forumId") Integer forumId, @RequestParam MultipartFile textsPhoto,
+	@PostMapping("/editForum")
+	public String editForum(@RequestParam("forumId") Integer forumId, @RequestParam MultipartFile textsPhoto,
 			@RequestParam("forumName") String forumName, @RequestParam("textsIntro") String textsIntro, Model model)
 			throws IllegalStateException, IOException {
 
