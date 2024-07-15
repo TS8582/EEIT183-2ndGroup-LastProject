@@ -1,11 +1,13 @@
 package com.playcentric.model.game.primary;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.playcentric.model.ImageLib;
 
 import jakarta.persistence.CascadeType;
@@ -38,10 +40,10 @@ public class Game {
 	private String gameName;
 	private Integer price;
 	private String description;
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy年MM月dd日")
-	@DateTimeFormat(pattern = "yyyy年MM月dd日")
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy年MM月dd日 HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Timestamp releaseAt = new Timestamp(System.currentTimeMillis());
+	private LocalDateTime releaseAt = LocalDateTime.now();
 	private String developer;
 	private String publisher;
 	private String gameFilePath;
@@ -53,15 +55,17 @@ public class Game {
 	joinColumns = @JoinColumn(name ="gameId"),
 	inverseJoinColumns = @JoinColumn(name = "gameTypeId"))
 	private List<GameTypeLib> gameTypeLibs;
+	
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinTable(name = "gameImages",
 	joinColumns = @JoinColumn(name ="gameId"),
 	inverseJoinColumns = @JoinColumn(name = "imageId"))
 	private List<ImageLib> imageLibs;
+	
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "game")
 	private List<GameDiscount> gameDiscounts;
-	@Transient
-	private Boolean isFirstRelease = true;
+	@JsonProperty
 	@Transient
 	private Integer rate;
+	
 }

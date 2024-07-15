@@ -2,6 +2,7 @@ package com.playcentric.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.prop.Props;
 
@@ -31,7 +32,8 @@ public class ImageLib {
 
 	@Lob
 	private byte[] imageFile;
-
+	
+	@JsonIgnore
 	@ManyToMany(mappedBy = "imageLibs")
 	private List<Game> games;
 

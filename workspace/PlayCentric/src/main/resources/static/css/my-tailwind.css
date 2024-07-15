@@ -43,7 +43,7 @@
 }
 
 .mybtn-tag {
-    @apply text-black py-2 px-3 cursor-pointer m-1 bg-orange-200 rounded-full
+    @apply text-black py-2 px-3 cursor-pointer m-1 bg-orange-200 rounded-full select-none
 }
 
 .mybtn-tag:hover {
@@ -51,7 +51,7 @@
 }
 
 .tag-selected {
-    @apply bg-orange-950 text-white py-2 px-3 cursor-pointer m-1 rounded-full
+    @apply bg-orange-950 text-white py-2 px-3 cursor-pointer m-1 rounded-full select-none
 }
 
 .tag-selected:hover {
