@@ -19,7 +19,18 @@ public interface TextsRepository extends JpaRepository<Texts, Integer> {
 	// 是否顯示
 	List<Texts> findAllByHideTexts(boolean hideTexts);
 
+	// 分頁
 	@Query("from Texts")
 	Page<Texts> findLatest(Pageable pgb);
+
+	// 尋找主題的文章
+	@Query("FROM Texts m WHERE m.forum.forumId = :forumId")
+	List<Texts> findTextsByForumId(@Param("forumId") Integer forumId);
+
+	// 分页查询某主题下的文章
+	@Query("FROM Texts t WHERE t.forum.forumId = :forumId")
+	List<Texts> findTextsByForumId2(Integer forumId);
+
+	Page<Texts> findByForumForumId(Integer forumId, Pageable pageable);
 
 }

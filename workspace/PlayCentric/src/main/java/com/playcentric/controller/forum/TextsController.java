@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.forum.Forum;
+import com.playcentric.model.forum.ForumPhoto;
 import com.playcentric.model.forum.Texts;
 import com.playcentric.model.member.Member;
 import com.playcentric.service.forum.ForumService;
@@ -37,41 +38,54 @@ public class TextsController {
 	@Autowired
 	private MemberService memberService;
 
+	// 顯示當前主題文章
+	@GetMapping("/texts/findTextsByForumId")
+	public String findTextsByForumId(@RequestParam("forumId") Integer forumId,
+			@RequestParam(value = "p", defaultValue = "1") Integer pageNum, Model model) {
+		List<Texts> texts = textsService.findTextsByForumId(forumId);
+		Page<Texts> page = textsService.findByPage(forumId, pageNum); // 使用新的分页方法
+		model.addAttribute("texts", texts);
+		model.addAttribute("page", page);
+		model.addAttribute("forumId", forumId); // 将themeId传递给前端
+
+		System.out.println("Forum Id: " + forumId);
+		System.out.println("Page Number: " + pageNum);
+
+		return "forum/texts/listFront";
+	}
+
 	// 處理文章發布與圖片上傳
 	@PostMapping("/texts/publish")
 	public String publish(@RequestParam("textsContent") String textsContent, @RequestParam("title") String title,
-			@RequestParam("imageFile") MultipartFile[] imageFile, HttpSession session, Model model) throws IOException {
+			@RequestParam("files") MultipartFile[] files, @RequestParam("forumId") Integer forumId, HttpSession session,
+			Model model) throws IOException {
+
+		Forum forum = forumService.findById(forumId);
 
 		// 建立一個新的文章物件
 		Texts texts = new Texts();
-		texts.setTextsContent(textsContent); // 設置文章內容
 		texts.setTitle(title);
+		texts.setTextsContent(textsContent); // 設置文章內容
+		texts.setForum(forum);
 
 		// 如果有上傳的圖片，處理圖片上傳
-		if (imageFile != null && imageFile.length > 0) {
-			ArrayList<ImageLib> imgList = new ArrayList<>();
+		if (files != null && files.length > 0) {
+			ArrayList<ForumPhoto> forumPhotoList = new ArrayList<>();
 
-			for (MultipartFile file : imageFile) {
-				ImageLib imgLib = new ImageLib();
-				imgLib.setImageFile(file.getBytes());
-//				imgLib.setTexts(texts); // 設置圖片對應的文章
-				imgList.add(imgLib);
+			for (MultipartFile file : files) {
+				ForumPhoto forumPhoto = new ForumPhoto();
+				forumPhoto.setPhotoFile(file.getBytes());
+				forumPhoto.setTexts(texts); // 設置圖片對應的文章
+				forumPhotoList.add(forumPhoto);
 			}
 
-//			texts.setImgLib(imgList); // 將圖片列表設置到文章中
+			texts.setForumPhoto(forumPhotoList); // 將圖片列表設置到文章中
 		}
 
 		textsService.insert(texts); // 儲存文章到資料庫
 
 		// 重定向到文章列表頁面或其他適當的處理
 		return "redirect:/texts/page";
-	}
-
-	// 查詢全部文章
-	@GetMapping("/texts/findAllTextHtml")
-	public String findAllTextsHtml() {
-
-		return "forum/texts/getAllTexts";
 	}
 
 	// 導入後台
@@ -107,7 +121,9 @@ public class TextsController {
 
 	// TinyMCE新增
 	@GetMapping("/texts/insertTexts2")
-	public String insertTexts2() {
+	public String insertTexts2(Model model) {
+		List<Forum> arrayList = forumService.findAll();
+		model.addAttribute("arrayList", arrayList);
 		return "forum/texts/TinyMCE";
 	}
 
@@ -150,7 +166,7 @@ public class TextsController {
 	@GetMapping("/texts/page")
 	public String findByPage2(@RequestParam(value = "p", defaultValue = "1") Integer pageNum, Model model) {
 
-		Page<Texts> page = textsService.findByPage(pageNum);
+		Page<Texts> page = textsService.findAllByPage(pageNum);
 
 		model.addAttribute("page", page);
 		return "forum/texts/listFront";

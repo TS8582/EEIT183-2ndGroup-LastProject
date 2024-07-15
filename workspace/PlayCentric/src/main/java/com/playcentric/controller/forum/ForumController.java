@@ -1,21 +1,20 @@
 package com.playcentric.controller.forum;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,10 +34,10 @@ public class ForumController {
 	}
 
 	@PostMapping("/addForumData")
-	public String addForumData(@RequestParam MultipartFile imageLib, @RequestParam("forumName") String forumName,
+	public String addForumData(@RequestParam MultipartFile textsPhoto, @RequestParam("forumName") String forumName,
 			@RequestParam("textsIntro") String textsIntro, Model model) throws IllegalStateException, IOException {
 		Forum forum = new Forum();
-		forum.setTextsPhoto(imageLib.getBytes());
+		forum.setTextsPhoto(textsPhoto.getBytes());
 		forum.setForumName(forumName);
 		forum.setTextsIntro(textsIntro);
 
@@ -46,6 +45,57 @@ public class ForumController {
 
 		model.addAttribute("insetOK", "成功");
 		return "redirect:/findAllForum";
+	}
+
+	// 新增跳轉頁面
+	@GetMapping("/forum/insertForum2")
+	public String insertForum2() {
+		return "/forum/addForumPage.html";
+
+	}
+
+	// 新增要改富文本的新增圖片要轉base64 未成功
+	@PostMapping("/addForumData2")
+	public String addForumData2(@RequestParam("forumPhoto") MultipartFile forumPhoto,
+			@RequestParam("forumName") String forumName,
+			@RequestParam("textsIntro") String textsIntro,
+			@RequestParam("csrfmiddlewaretoken") String csrfToken, Model model)
+			throws IllegalStateException, IOException {
+
+		// 實現 CSRF token 驗證，如果需要
+		// validateCsrfToken(csrfToken);
+
+		// 確認文件不為空且類型為圖片
+		if (forumPhoto != null && forumPhoto.getContentType().startsWith("image")) {
+			// 讀取文件內容
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			try (InputStream fileContent = forumPhoto.getInputStream()) {
+				while ((bytesRead = fileContent.read(buffer)) != -1) {
+					outputStream.write(buffer, 0, bytesRead);
+				}
+			}
+
+			byte[] imageBytes = outputStream.toByteArray();
+			String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
+			// 創建主题對象
+			Forum forum1 = new Forum();
+			forum1.setTextsPhoto(imageBytes); // 這裡保存原始的圖片字節數據
+			forum1.setForumName(forumName);
+			forum1.setTextsIntro(textsIntro);
+
+			forumService.insertForum(forum1);
+
+			model.addAttribute("insertOK", "成功");
+
+			// 返回 JSON 響應
+			return String.format("{\"type\":\"%s\", \"data\":\"%s\"}", forumPhoto.getContentType(), base64Image);
+		} else {
+			// 返回錯誤信息
+			return "{\"error\": \"Invalid file type\"}";
+		}
 	}
 
 	// 顯示主頁
@@ -96,13 +146,13 @@ public class ForumController {
 	}
 
 	@PostMapping("/editTheme")
-	public String editTheme(@RequestParam("forumId") Integer forumId, @RequestParam MultipartFile imageLib,
+	public String editTheme(@RequestParam("forumId") Integer forumId, @RequestParam MultipartFile textsPhoto,
 			@RequestParam("forumName") String forumName, @RequestParam("textsIntro") String textsIntro, Model model)
 			throws IllegalStateException, IOException {
 
 		Forum forumBean = new Forum();
 
-		forumBean.setTextsPhoto(imageLib.getBytes());
+		forumBean.setTextsPhoto(textsPhoto.getBytes());
 		forumBean.setForumId(forumId);
 		forumBean.setForumName(forumName);
 		forumBean.setTextsIntro(textsIntro);
@@ -113,15 +163,15 @@ public class ForumController {
 		return "redirect:/findAllForum2";
 	}
 
-	@GetMapping("/forumImg")
-	public ResponseEntity<byte[]> downloadImage(@RequestParam Integer forumId) {
-		Forum forumImg = forumService.findById(forumId);
+	@GetMapping("/forumPhoto")
+	public ResponseEntity<byte[]> downloadPhoto(@RequestParam Integer forumId) {
+		Forum forumPhoto = forumService.findById(forumId);
 
-		byte[] imgFile = forumImg.getTextsPhoto();
+		byte[] photoFile = forumPhoto.getTextsPhoto();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.IMAGE_JPEG);
 		// body, headers , http status code
-		return new ResponseEntity<byte[]>(imgFile, headers, HttpStatus.OK);
+		return new ResponseEntity<byte[]>(photoFile, headers, HttpStatus.OK);
 	}
 }

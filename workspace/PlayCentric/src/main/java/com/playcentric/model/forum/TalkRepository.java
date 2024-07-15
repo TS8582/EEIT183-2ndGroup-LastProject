@@ -16,6 +16,6 @@ public interface TalkRepository extends JpaRepository<Talk, Integer> {
 	Page<Talk> findLatest(Pageable pgb);
 	
 	// 查詢文章底下留言
-		  @Query("FROM Talk WHERE texts.textsId = :textsId")
-		    List<Talk> findTalkBytextsId(@Param("textsId") Integer textsId);
+		  @Query("FROM Talk t WHERE t.texts.textsId = :textsId")
+		    List<Talk> findTalkByTextsId(@Param("textsId") Integer textsId);
 }
