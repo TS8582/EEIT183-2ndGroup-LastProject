@@ -772,9 +772,6 @@ video {
 .h-14 {
   height: 3.5rem;
 }
-.h-2 {
-  height: 0.5rem;
-}
 .h-2\/3 {
   height: 66.666667%;
 }
@@ -792,9 +789,6 @@ video {
 }
 .h-48 {
   height: 12rem;
-}
-.h-5\/6 {
-  height: 83.333333%;
 }
 .h-6 {
   height: 1.5rem;
@@ -1303,6 +1297,9 @@ video {
 .mybtn-tag {
   margin: 0.25rem;
   cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   border-radius: 9999px;
   --tw-bg-opacity: 1;
   background-color: rgb(254 215 170 / var(--tw-bg-opacity));
@@ -1331,6 +1328,9 @@ video {
 .tag-selected {
   margin: 0.25rem;
   cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   border-radius: 9999px;
   --tw-bg-opacity: 1;
   background-color: rgb(67 20 7 / var(--tw-bg-opacity));

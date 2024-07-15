@@ -19,7 +19,7 @@
 
 <body class="h-screen bg-gray-500">
     <!-- 頂部導航欄 -->
-    <div class="flex flex-col h-5/6 container mx-auto">
+    <div class="flex flex-col h-auto container mx-auto">
         <!-- 篩選欄 -->
         <div class="flex justify-center h-auto my-2 text-white">
             <div class="w-full lg:w-1/2 h-auto border-2 flex flex-col rounded-md justify-center items-center">
@@ -46,7 +46,7 @@
         </div>
 
         <main class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 h-full container mt-2">
-
+            <input id="pages" type="hidden" th:value="${games.totalPages}">
             <th:block th:each="game:${games.content}">
 
                 <div
@@ -76,12 +76,98 @@
                 </div>
             </th:block>
 
-            <div class="mt-2 h-2"></div>
 
         </main>
+
     </div>
 
+    <script th:src="@{/js/axios.min.js}"></script>
     <script>
+        let pgnum = 0;
+        const totalPages = document.querySelector('#pages').value;
+
+
+        window.addEventListener('scroll', function () {
+            // 計算視窗的高度
+            var windowHeight = window.innerHeight;
+            // 計算網頁內容的高度
+            var documentHeight = document.documentElement.scrollHeight;
+            // 計算已經滾動過的距離
+            var scrollTop = window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0);
+
+            // 判斷是否已經滾動到底部
+            if (windowHeight + scrollTop >= documentHeight) {
+
+                if (pgnum < (totalPages - 1)) {
+                    axios.get('/PlayCentric/game/getGamePage', {
+                        params: {
+                            pg: pgnum + 1
+                        }
+                    })
+                        .then(res => {
+                            const data = res.data.content;
+                            console.log(data);
+                            data.forEach(elm => {
+                                htmlmaker(elm);
+                            });
+                            pgnum += 1;
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                }
+
+
+            }
+        });
+
+        function htmlmaker(game) {
+            const main = document.querySelector('main');
+
+            // 建立完整的 HTML 字符串
+            let html =
+                `<div class="h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500">
+            <div class="py-2 h-64 flex justify-center rounded-md">`;
+
+            // 添加圖片部分
+            if (game.imageLibs.length > 0) {
+                html += `<img class="w-auto h-full rounded-md"
+                    src="/PlayCentric/imagesLib/image${game.imageLibs[0].imageId}" alt="">`;
+            }
+
+            // 添加遊戲名稱和價格部分
+            html +=
+                `</div>
+            <div class="h-1/3 flex text-black flex-col items-center p-2">
+                <div class="flex justify-center">
+                    <span class="text-xl p-2 rounded-md select-none">${game.gameName}</span>
+                </div>
+                <div class="flex justify-center my-2 space-x-3">`;
+
+            // 判斷是否有折扣
+            if (game.rate != null) {
+                html +=
+                    `<span class="price-tag font-semibold">-${100 - game.rate}%</span>
+            <span class="price-tag font-semibold">NT$${(game.price * game.rate / 100).toFixed(2)}</span>`;
+            } else {
+                html += `<span class="price-tag text-black font-semibold">NT$${game.price}</span>`;
+            }
+
+            // 添加加入購物車按鈕部分
+            html +=
+                `</div>
+            <div class="flex justify-center">
+                <span class="border border-red-300 mybtn mybtn-green">加入購物車</span>
+            </div>
+        </div>
+    </div>`;
+
+            // 將完整的 HTML 插入到 main 元素中
+            main.innerHTML += html;
+        }
+
+
+        // 分類標籤事件
         const typeTag = document.querySelectorAll('.mybtn-tag');
         typeTag.forEach(tag => {
             tag.addEventListener('click', e => {
