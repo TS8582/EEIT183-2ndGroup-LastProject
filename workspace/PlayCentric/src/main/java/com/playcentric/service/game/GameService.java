@@ -20,6 +20,10 @@ public class GameService {
 	@Autowired
 	private GameDiscountRepository gdRepo;
 	
+	//商店展示的遊戲
+	public List<Game> findShowInStore() {
+		return gRepo.findByIsShow(true);
+	}
 	
 	//新增遊戲
 	public Game save(Game game) {

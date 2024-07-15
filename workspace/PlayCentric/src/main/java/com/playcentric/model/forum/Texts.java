@@ -60,9 +60,9 @@ public class Texts {
 	@OneToMany(mappedBy = "texts", cascade = CascadeType.ALL)
 	private List<Talk> talk = new ArrayList<>();
 	
-//	@JsonIgnore
-//	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "texts")
-//    private List<ImageLib> imgLib = new ArrayList<>();
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "texts")
+    private List<ForumPhoto> forumPhoto = new ArrayList<>();
 
 	private String title;
 

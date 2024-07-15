@@ -90,5 +90,4 @@ public class EventController {
     	model.addAttribute("allEvents", allEvents);
         return "event/events";
     }
-    
 }

@@ -21,7 +21,7 @@ public class TalkService {
 
 	// 當前所有文章的訊息
 	public List<Talk> getTalkByTextsId(Integer textsId) {
-		return talkRepository.findTalkBytextsId(textsId);
+		return talkRepository.findTalkByTextsId(textsId);
 	}
 
 	// 新增留言

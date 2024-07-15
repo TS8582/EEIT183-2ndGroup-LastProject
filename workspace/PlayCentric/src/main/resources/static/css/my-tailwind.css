@@ -42,6 +42,18 @@
     @apply text-white py-2 px-3 cursor-pointer bg-red-700 rounded-md
 }
 
+.mybtn-tag {
+    @apply text-black py-2 px-3 cursor-pointer m-1 bg-orange-200 rounded-full
+}
+
+.mybtn-tag:hover {
+    @apply bg-orange-950 text-white
+}
+
+.tag-selected {
+    @apply bg-orange-950 text-white
+}
+
 .mybtn:hover {
     @apply bg-opacity-60
 }
@@ -76,7 +88,7 @@
 }
 
 .text-input {
-    @apply w-96 px-4 py-2 border border-gray-300 rounded-lg
+    @apply px-4 py-2 border border-gray-300 rounded-lg
 }
 
 .text-input:focus {
