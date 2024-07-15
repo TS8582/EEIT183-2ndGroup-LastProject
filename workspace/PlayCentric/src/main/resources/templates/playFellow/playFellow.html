@@ -1,4 +1,4 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -10,35 +10,29 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="keywords" content="ecommerce, pet, shop">
 	<meta name="description" content="Free eCommerce Pet Shop HTML Website Template">
-</head>
-<div th:replace="~{layout/nav}"></div>
 
-<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
+	<div th:replace="~{layout/nav}"></div>
+	<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
+	<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/playfellow/playFellow.css}">
 
-<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet"
-	integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-
-<link rel="stylesheet" type="text/css" th:href="@{css/playfellow/style.css}">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
-	rel="stylesheet">
-
-
-
+	<style>
+		
+	</style>
 </head>
 
 <body>
-
-
 
 	<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart"
 		aria-labelledby="My Cart">
 		<div class="offcanvas-header justify-content-center">
 			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
-
 	</div>
 
 	<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasSearch"
@@ -46,12 +40,9 @@
 		<div class="offcanvas-header justify-content-center">
 			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
-
 	</div>
 
-
-
-	<section id="banner" style="box-shadow: 0 4px 4px -3px rgba(0, 0, 0, 0.1);">
+	<section id="banner" style="box-shadow: 0 4px 4px -3px rgba(0, 0, 0, 0.1); background-color: #ffffff;">
 		<div class="container">
 			<div class="swiper main-swiper">
 				<div class="swiper-wrapper">
@@ -70,9 +61,7 @@
 						</div>
 					</div>
 					<div class="swiper-slide py-5">
-
 						<div class="row banner-content align-items-center">
-
 							<div class="img-wrapper col-md-5">
 								<a th:href="@{/playFellow/memId/6}"> <img src="images/playFellow/pftop2.png"
 										class="img-fluid">
@@ -97,23 +86,24 @@
 
 
 
+
 	<section id="clothing" class="overflow-hidden" style="margin-top: 100px;">
-		<div class="container pb-5">
+		<div class="container pb-3">
 			<div class="section-header d-md-flex justify-content-between align-items-center mb-3">
-				<h2 class="display-6 fw-normal">Counter-Strike 2</h2>
+				<h3 class=" fw-normal">Counter-Strike 2</h3>
 			</div>
 
 			<!-- 放置CS2 -->
 			<div class="products-carousel swiper">
 				<div class="isotope-container row">
-					<div th:each="pfgame : ${PfGame}" class="col-md-3 col-lg-2 my-4">
-						<div class="card position-relative">
+					<div th:each="pfgame : ${PfGame}" class="item col-md-3 col-lg-2 my-4">
+						<div class="card position-relative" style="background-color: #FFFFFF;">
 							<!-- Carousel -->
 							<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide" data-bs-ride="carousel">
 								<div class="carousel-inner">
 									<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
-										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
-										<img class="fixed-size rounded-4 img-fluid"
+										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item" >
+										<img class=" rounded-4 img-fluid playFellowImg-size"
 											th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
 											alt="Image" />
 									</div>
@@ -122,38 +112,99 @@
 							<!-- End of Carousel -->
 
 							<div class="card-body p-0">
-								<a href="single-product.html">
-									<h3 class="card-title pt-2 m-0" th:text="${pfgame.playFellowMember.pfnickname}">
-									</h3>
+								<a href="#"> <span class="card-title pt-2 m-0"
+										th:text="${pfgame.playFellowMember.pfnickname}"></span>
 								</a>
 								<div class="card-text">
 									<div class="card-body pt-0">
-										<p class="card-text" th:text="${pfgame.playFellowMember.pfdescription}"></p>
+										<div class="marquee-container">
+											<p class="card-text marquee"
+												th:text="${pfgame.playFellowMember.pfdescription}"></p>
+										</div>
 									</div>
-									<h3 class="secondary-font text-primary pt-0">$18.00</h3>
+
+									<h6 class="secondary-font text-primary pt-0"
+										th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
 									<div class="d-flex flex-wrap mt-3">
-										<a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
-											<h5 class="text-uppercase m-0">購買</h5>
+										<a href="#" class="btn-cart me-1 px-1 pt-1 pb-1">
+											<h6 class="text-uppercase m-0">購買</h6>
 										</a>
 									</div>
 								</div>
 							</div>
+
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div class="container pb-3">
+			<div class="section-header d-md-flex justify-content-between align-items-center mb-3">
+				<h3 class=" fw-normal">遊戲王</h3>
+			</div>
+
+			<!-- 放置遊戲王 -->
+			<div class="products-carousel swiper">
+				<div class="isotope-container row">
+					<div th:each="pfgame : ${PfGame2}" class="item col-md-3 col-lg-2 my-4">
+						<div class="card position-relative" style="background-color: #FFFFFF;">
+							<!-- Carousel -->
+							<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide" data-bs-ride="carousel">
+								<div class="carousel-inner">
+									<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
+										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
+										<img class=" rounded-4 img-fluid playFellowImg-size"
+											th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
+											alt="Image" />
+									</div>
+								</div>
+							</div>
+							<!-- End of Carousel -->
+
+							<div class="card-body p-0">
+								<a href="#"> <span class="card-title pt-2 m-0"
+										th:text="${pfgame.playFellowMember.pfnickname}"></span>
+								</a>
+								<div class="card-text">
+
+									<div class="marquee-container">
+										<p class="card-text marquee" th:text="${pfgame.playFellowMember.pfdescription}">
+										</p>
+									</div>
+								</div>
+
+
+								<h6 class="secondary-font text-primary pt-0"
+									th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
+								<div class="d-flex flex-wrap mt-3">
+									<a href="#" class="btn-cart me-1 px-1 pt-1 pb-1">
+										<h6 class="text-uppercase m-0">購買</h6>
+									</a>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
 		<!-- / products-carousel -->
 	</section>
 
+
+
+
+
+
+
+
 	<section id="foodies" style="margin-top: 10px;">
 		<div class="container my-1 py-0">
-
 			<div class="section-header d-md-flex justify-content-between align-items-center">
 				<h2 class="display-6 fw-normal">伴遊列表</h2>
 				<div class="mb-4 mb-md-0">
 					<p class="m-0">
-						<button class="filter-button me-4 active" data-filter="*">全部</button>
 						<button class="filter-button me-4" data-filter=".cat">CS2</button>
 						<button class="filter-button me-4" data-filter=".dog">遊戲王</button>
 						<button class="filter-button me-4" data-filter=".bird">傳說對決</button>
@@ -161,46 +212,99 @@
 				</div>
 			</div>
 
-			<div class="isotope-container row">
-				<div th:each="pfmember : ${PlayFellowMember}" class="item dog col-md-3 col-lg-2 my-4">
-					<div class="card position-relative">
-						<!-- Carousel -->
-						<div id="carousel-[[${pfmember.playFellowId}]]" class="carousel slide" data-bs-ride="carousel">
-							<div class="carousel-inner">
-								<div th:each="association, stat : ${pfmember.imageLibAssociations}"
-									th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
-									<img class="fixed-size rounded-4 img-fluid"
-										th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
-										alt="Image" />
+
+
+			<div id="playfellow-container" class="isotope-container row">
+<!-- 				CS2        	-->
+				<div th:each="pfgame : ${PfGame}" class="item cat col-md-3 col-lg-2 my-4">
+					<div class="card position-relative" style="background-color: #FFFFFF;">
+							<!-- Carousel -->
+							<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide" data-bs-ride="carousel">
+								<div class="carousel-inner">
+									<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
+										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
+										<img class=" rounded-4 img-fluid playFellowImg-size"
+											th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
+											alt="Image" />
+									</div>
+								</div>
+							</div>
+							<!-- End of Carousel -->
+
+							<div class="card-body p-0">
+								<a href="#"> <span class="card-title pt-2 m-0"
+										th:text="${pfgame.playFellowMember.pfnickname}"></span>
+								</a>
+								<div class="card-text">
+									<div class="card-body pt-0">
+										<div class="marquee-container">
+											<p class="card-text marquee"
+												th:text="${pfgame.playFellowMember.pfdescription}"></p>
+										</div>
+									</div>
+
+									<h6 class="secondary-font text-primary pt-0"
+										th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
+									<div class="d-flex flex-wrap mt-3">
+										<a href="#" class="btn-cart me-1 px-1 pt-1 pb-1">
+											<h6 class="text-uppercase m-0">購買</h6>
+										</a>
+									</div>
 								</div>
 							</div>
 
 						</div>
-						<!-- End of Carousel -->
-
-						<div class="card-body p-0">
-							<a href="single-product.html">
-								<h3 class="card-title pt-2 m-0" th:text="${pfmember.pfnickname}"></h3>
-							</a>
-							<div class="card-text">
-								<div class="card-body pt-0">
-									<p class="card-text" th:text="${pfmember.pfdescription}"></p>
-								</div>
-								<h3 class="secondary-font text-primary pt-0">$18.00</h3>
-								<div class="d-flex flex-wrap mt-3">
-									<a href="#" class="btn-cart me-3 px-4 pt-3 pb-3">
-										<h5 class="text-uppercase m-0">購買</h5>
-									</a>
-								</div>
-
-							</div>
-						</div>
-					</div>
 				</div>
+				<div th:each="pfgame : ${PfGame2}" class="item dog col-md-3 col-lg-2 my-4">
+					<div class="card position-relative" style="background-color: #FFFFFF;">
+							<!-- Carousel -->
+							<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide" data-bs-ride="carousel">
+								<div class="carousel-inner">
+									<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
+										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
+										<img class=" rounded-4 img-fluid playFellowImg-size"
+											th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
+											alt="Image" />
+									</div>
+								</div>
+							</div>
+							<!-- End of Carousel -->
+
+							<div class="card-body p-0">
+								<a href="#"> <span class="card-title pt-2 m-0"
+										th:text="${pfgame.playFellowMember.pfnickname}"></span>
+								</a>
+								<div class="card-text">
+									<div class="card-body pt-0">
+										<div class="marquee-container">
+											<p class="card-text marquee"
+												th:text="${pfgame.playFellowMember.pfdescription}"></p>
+										</div>
+									</div>
+
+									<h6 class="secondary-font text-primary pt-0"
+										th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
+									<div class="d-flex flex-wrap mt-3">
+										<a href="#" class="btn-cart me-1 px-1 pt-1 pb-1">
+											<h6 class="text-uppercase m-0">購買</h6>
+										</a>
+									</div>
+								</div>
+							</div>
+
+						</div>
+				</div>
+				<!-- Repeat other items here -->
 			</div>
+			
+			
+			
+			
+			
+			
+
 		</div>
 	</section>
-
 
 	<section id="banner-2" class="my-3" style="background: #F9F3EC;">
 		<div class="container">
@@ -223,6 +327,7 @@
 			</div>
 		</div>
 	</section>
+
 	<div id="footer-bottom">
 		<div class="container">
 			<hr class="m-0">
@@ -235,25 +340,23 @@
 		</div>
 	</div>
 
-
-	<script th:src="@{/js/playfellow/jquery-1.11.0.min.js}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
 	<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"
 		integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
 		crossorigin="anonymous"></script>
-	<script th:src="@{/js/playfellow/plugins.js}"></script>
-	<script th:src="@{/js/playfellow/script.js}"></script>
 	<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
+	<script th:src="@{/js/playfellow/plugins.js}"></script>
+	<script th:src="@{/js/playfellow/script.js}"></script>
 	<script>
-		document.addEventListener('DOMContentLoaded', function () {
+		$(document).ready(function () {
+			// 初始化 Swiper
 			var swiper = new Swiper('.main-swiper', {
 				loop: true,
 				autoplay: {
-					delay: 2000, // 每5秒切換到下一張
+					delay: 2000,
 				},
 				pagination: {
 					el: '.swiper-pagination',
@@ -264,60 +367,35 @@
 					prevEl: '.swiper-button-prev',
 				},
 			});
+
+			// 初始化 Isotope for PlayFellow
+			var $playfellowContainer = $('#playfellow-container').isotope({
+				itemSelector: '.item',
+				layoutMode: 'fitRows'
+			});
+
+			// 過濾按鈕的點擊事件 for PlayFellow
+			$('.filter-button').click(function () {
+				// 切換 active 樣式
+				$('.filter-button').removeClass('active');
+				$(this).addClass('active');
+
+				// 過濾項目
+				var filterValue = $(this).attr('data-filter');
+				if (filterValue === '*') {
+					// 顯示所有項目
+					$playfellowContainer.isotope({
+						filter: '*'
+					});
+				} else {
+					// 顯示過濾後的項目
+					$playfellowContainer.isotope({
+						filter: filterValue
+					});
+				}
+			});
 		});
-
-		// 		document.addEventListener('DOMContentLoaded', function () {
-		// 			// 呼叫 API 獲取資料
-		// 			axios.get('/PlayCentric/playFellow/playFellowByGameId?gameId=1')
-		// 				.then(function (response) {
-		// 					// 取得 API 回應的資料
-		// 					const members = response.data;
-
-		// 					// 檢查回應的資料結構
-		// 					console.log('API 回應資料:', members);
-
-		// 					// 選擇要插入資料的元素
-		// 					const swiperWrapper = document.querySelector('.cs2');
-		// 					if (!swiperWrapper) {
-		// 						console.error('swiperWrapper 不存在');
-		// 						return;
-		// 					}
-
-		// 					// 清空原本的內容
-		// 					swiperWrapper.innerHTML = '';
-
-		// 					// 生成 HTML
-		// 					let htmlContent = '';
-		// 					members.forEach(function (pfmember) {
-		// 						console.log('處理的成員資料:', pfmember);
-
-		// 						const memberHTML = `
-		// 						<div class="swiper-slide mx-0">
-		//            					 <div class="item col-md-5 col-lg-5 ">
-		//               					<div class="card position-relative ">
-		//                 					<div>${pfmember.pfNickname}
-		// 									</div>
-		// 								</div>
-		// 							</div>
-		// 						</div>
-
-		//         `;
-		// 						console.log('生成的 HTML:', memberHTML);
-		// 						htmlContent += memberHTML;
-		// 					});
-
-		// 					// 將生成的 HTML 插入到 swiperWrapper 中
-		// 					swiperWrapper.innerHTML = htmlContent;
-
-		// 					// 初始化或更新 Swiper
-
-		// 				})
-		// 				.catch(function (error) {
-		// 					console.error('Error fetching member data:', error);
-		// 				});
-		// 		});
 	</script>
-
 </body>
 
 </html>

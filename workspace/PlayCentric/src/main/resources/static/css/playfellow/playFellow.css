@@ -248,6 +248,7 @@ body {
 
 body {
   letter-spacing: 0.01625rem;
+  background-color:#F9F9F9;
 }
 
 h1,
@@ -676,7 +677,7 @@ Single Product section style start
 }
 
 
-.fixed-size {
+.playFellowImg-size {
     width: 500px;
     height: 200px;
     object-fit: cover; 
@@ -686,6 +687,57 @@ Single Product section style start
 
 .banner-title {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.banner{
+  background-color: #C1DCED;
+}
+
+.marquee-container {
+			width: 180px;
+			/* 設置容器的寬度 */
+			overflow: hidden;
+			/* 隱藏超出容器寬度的部分 */
+			white-space: nowrap;
+			/* 確保文字不換行 */
+			/*  	border: 1px solid #000; /* 用來顯示容器邊界，便於檢查  */
+		}
+
+		.marquee {
+			display: inline-block;
+			padding-left: 0%;
+			/* 確保文字從容器外部開始 */
+		}
+
+		.marquee:hover {
+			animation: marquee 5s linear infinite;
+			/* 當鼠標懸停時，變慢滾動速度 */
+		}
+
+		@keyframes marquee {
+			from {
+				transform: translateX(0%);
+				/* 動畫從0%開始 */
+			}
+
+			to {
+				transform: translateX(-100%);
+				/* 動畫到-100%結束 */
+			}
+		}
+		
+		/* 設置圖片容器樣式 */
+.carousel-item {
+    overflow: hidden; /* 確保圖片放大時不會超出容器 */
+}
+
+/* 設置圖片放大效果 */
+.carousel-item img {
+    transition: transform 0.3s ease-in-out; /* 設置過渡效果 */
+}
+
+.carousel-item img:hover {
+    transform: scale(1.2); /* 當鼠標懸停時，圖片放大 1.2 倍 */
 }
 
 

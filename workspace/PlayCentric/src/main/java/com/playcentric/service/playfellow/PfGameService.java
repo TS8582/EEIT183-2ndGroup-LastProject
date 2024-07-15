@@ -27,9 +27,28 @@ public class PfGameService {
 		return convertToDTO(savedPfGame);
 	}
 
+	public List<PfGame> getAllReviewSuccessPlayFellowMembers() {
+		List<PfGame> pfGames = pfGameRepository.findAll();
+
+		List<PfGame> reviewSuccessPfmem = new ArrayList<>();
+		for (PfGame pfGame : pfGames) {
+			if (pfGame.getPlayFellowMember() != null && pfGame.getPlayFellowMember().getPfstatus() == 3) {
+				reviewSuccessPfmem.add(pfGame);
+			}
+		}
+		return reviewSuccessPfmem;
+	}
+
 	public List<PfGameDTO> findAllPfGame() {
 		List<PfGame> pfGames = pfGameRepository.findAll();
-		return pfGames.stream().map(this::convertToDTO).collect(Collectors.toList());
+		List<PfGameDTO> pfGameDTOs = new ArrayList<PfGameDTO>();
+
+		for (PfGame pfGame : pfGames) {
+			PfGameDTO dto = convertToDTO(pfGame);
+			pfGameDTOs.add(dto);
+		}
+
+		return pfGameDTOs;
 	}
 
 	public List<PfGameDTO> findByPlayFellowId(Integer playFellowId) {
@@ -106,14 +125,10 @@ public class PfGameService {
 		pfGameDTO.setAmount(pfGame.getAmount());
 		pfGameDTO.setPfGameStatus(pfGame.getPfGameStatus());
 
-		if (pfGame.getPlayFellowMember() != null
-				&& pfGame.getPlayFellowMember().getImageLibAssociations() != null
+		if (pfGame.getPlayFellowMember() != null && pfGame.getPlayFellowMember().getImageLibAssociations() != null
 				&& !pfGame.getPlayFellowMember().getImageLibAssociations().isEmpty()) {
 
-			byte[] imageBytes = pfGame.getPlayFellowMember()
-					.getImageLibAssociations()
-					.get(0)
-					.getImageLib()
+			byte[] imageBytes = pfGame.getPlayFellowMember().getImageLibAssociations().get(0).getImageLib()
 					.getImageFile();
 			String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 			pfGameDTO.setBase64Image(base64Image);

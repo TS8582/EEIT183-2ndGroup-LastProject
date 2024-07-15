@@ -46,10 +46,12 @@ public class PageController {
         Integer gameId2 = 2;
         List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(gameId1);
         List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(gameId2);
+        List<PfGame> reviewSuccessPfGame = pfGameService.getAllReviewSuccessPlayFellowMembers();
         
         model.addAttribute("PfGame", pfGames);
         model.addAttribute("PfGame2", pfGames2);
         model.addAttribute("PlayFellowMember", playFellowMembers);
+        model.addAttribute("ReviewSuccessPfGame",reviewSuccessPfGame);
         
         return "playFellow/playFellow";
     }
