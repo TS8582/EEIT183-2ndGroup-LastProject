@@ -18,8 +18,7 @@
 </head>
 
 <body class="h-screen bg-gray-500">
-    <!-- 頂部導航欄 -->
-    <div class="flex flex-col h-5/6 container mx-auto">
+    <div class="flex flex-col h-auto container mx-auto w-full">
         <!-- 篩選欄 -->
         <div class="flex justify-center h-auto my-2 text-white">
             <div class="w-full lg:w-1/2 h-auto border-2 flex flex-col rounded-md justify-center items-center">
@@ -45,7 +44,7 @@
             </div>
         </div>
 
-        <main class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 h-full container mt-2">
+        <main class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 h-full container mt-2 w-full">
 
             <th:block th:each="game:${games.content}">
 
@@ -64,10 +63,10 @@
                                 th:text="'-' + ${100 -  game.rate} + '%'"></span>
                             <!-- 沒優惠顯示的價格 -->
                             <span th:if="${game.rate == null}" class="price-tag text-black font-semibold"
-                                th:text=" '$' + ${game.price}"></span>
+                                th:text=" 'NT$' + ${game.price}"></span>
                             <!-- 有優惠顯示的價格 -->
                             <span th:if="${game.rate}" class="price-tag font-semibold"
-                                th:text=" '$' + ${game.price * game.rate / 100}"></span>
+                                th:text=" 'NT$' + ${game.price * game.rate / 100}"></span>
                         </div>
                         <div class="flex justify-center">
                             <span class="border border-red-300 mybtn mybtn-green">加入購物車</span>
@@ -75,14 +74,35 @@
                     </div>
                 </div>
             </th:block>
-
-            <div class="mt-2 h-2"></div>
-
         </main>
+
+        <div class="mt-2 w-full">
+            <div class="flex justify-center" th:object="${games}">
+                <span th:if="${games.number == 0}" class="pageTag cursor-default bg-slate-400">&lt;</span>
+                <span id="previous" th:if="${games.number != 0}"
+                    class="pageTag mybtn cursor-pointer bg-white">&lt;</span>
+                <th:block th:each="pageNumber : ${#numbers.sequence(0, games.totalPages - 1)}">
+                    <span id="pg" th:class="${pageNumber == games.number ? 'pageTag cursor-default bg-slate-400'}"
+                        th:text="${pageNumber + 1}" th:if="${games.totalPages > 1}"
+                        th:href="@{/products(page=${pageNumber}, size=${games.size})}">
+                    </span>
+                </th:block>
+                <span th:if="${games.last}" class="pageTag cursor-default bg-slate-400">&gt;</span>
+                <span id="next" th:if="${!games.last}" class="pageTag mybtn cursor-pointer bg-white">&gt;</span>
+            </div>
+        </div>
+
     </div>
 
     <script>
         const typeTag = document.querySelectorAll('.mybtn-tag');
+        const previous = document.querySelector('#previous');
+        const next = document.querySelector('#next');
+        const pg = document.querySelectorAll('#pg');
+
+
+
+        // 分類標籤事件
         typeTag.forEach(tag => {
             tag.addEventListener('click', e => {
                 if (tag.classList.contains('mybtn-tag')) {

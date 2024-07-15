@@ -66,6 +66,10 @@
     @apply bg-opacity-60
 }
 
+.pageTag {
+    @apply p-2 select-none border-2 border-sky-300
+}
+
 .noscrollbar {
     scrollbar-width: 0;
     -ms-overflow-style: none;
