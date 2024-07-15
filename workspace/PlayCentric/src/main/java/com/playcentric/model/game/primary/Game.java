@@ -62,4 +62,6 @@ public class Game {
 	private List<GameDiscount> gameDiscounts;
 	@Transient
 	private Boolean isFirstRelease = true;
+	@Transient
+	private GameDiscount nowDiscount;
 }

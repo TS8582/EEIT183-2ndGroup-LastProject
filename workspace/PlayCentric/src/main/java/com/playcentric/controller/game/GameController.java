@@ -25,6 +25,8 @@ import com.playcentric.service.game.GameDiscountSetService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
 
+import jakarta.websocket.server.PathParam;
+
 @Controller
 public class GameController {
 
@@ -221,6 +223,9 @@ public class GameController {
 		List<GameTypeLib> allType = gtService.findAll();
 		model.addAttribute("allType",allType);
 		model.addAttribute("games",games);
+		for (Game game : games) {
+			
+		}
 		return "game/game-store";
 	}
 }
