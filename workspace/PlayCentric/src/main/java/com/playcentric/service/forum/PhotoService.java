@@ -8,16 +8,23 @@ import org.springframework.stereotype.Service;
 
 import com.playcentric.model.forum.ForumPhoto;
 import com.playcentric.model.forum.PhotoRepository;
+import com.playcentric.model.forum.Texts;
+import com.playcentric.model.forum.TextsRepository;
 
 @Service
 public class PhotoService {
 
 	@Autowired
 	private PhotoRepository photoRepository;
+	
+	@Autowired
+	private TextsRepository textsRepository;
 
 	// 尋找單前TextsId圖片
 	public ForumPhoto getPhotoDataByTextsId(Integer textsId) {
-		List<ForumPhoto> photos = photoRepository.findByTextsId(textsId);
+		Optional<Texts> optional = textsRepository.findById(textsId);
+		Texts texts = optional.isPresent()? optional.get():null;
+		List<ForumPhoto> photos = photoRepository.findByTexts(texts);
 		if (!photos.isEmpty()) {
 			return photos.get(0); // 返回第一个匹配的图片对象
 		} else {
