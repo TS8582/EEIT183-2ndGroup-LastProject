@@ -35,7 +35,7 @@
 </head>
 
 <body>
-
+    <div th:text="${session.loginMember.memId}"></div>
 
     <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
         <div class="container-fluid">
@@ -90,8 +90,9 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="escortDropdown">
                             <li><a class="dropdown-item fs-5" th:href="@{/playFellow}">找玩伴</a></li>
-                            <li><a class="dropdown-item fs-5" id="addPfMember" th:href="@{/playFellow/memId/6}" >加入伴遊</a></li>
-                            											<!-- 暫時寫死!! 方便快速測試後台 -->	
+                            <li><a class="dropdown-item fs-5" id="addPfMember" th:href="@{/playFellow/memId/6}">加入伴遊</a>
+                            </li>
+                            <!-- 暫時寫死!! 方便快速測試後台 -->
                         </ul>
                     </li>
                     <li class="nav-item dropdown">

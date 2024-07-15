@@ -29,7 +29,10 @@
 </head>
 
 <body>
+
   <div th:replace="~{prop/propNavbar}"></div>
+  <div width="500px" height="500px" th:if="${session.loginMember}" th:text="${session.loginMember.memId}"></div>
+
   <header class="mt-5 d-flex justify-content-center">
     <div id="gameList" class="bg-light text-dark p-4 rounded shadow-sm">
       <form id="myForm" class="d-flex mb-3 align-items-center">

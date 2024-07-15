@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.playcentric.model.ImageLib;
-import com.playcentric.model.forum.Texts;
 import com.playcentric.service.ImageLibService;
-import com.playcentric.service.forum.TextsService;
 
 @Controller
 @RequestMapping("/imagesLib")

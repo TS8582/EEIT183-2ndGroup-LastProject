@@ -16,7 +16,7 @@ public class MemberPropInventoryService {
     @Autowired
     private MemberPropInventoryRepository memberPropInventoryRepo;
 
-    public List<MemberPropInventoryForFrontDto> memberProps(int memId) {
+    public List<MemberPropInventoryForFrontDto> memberPropsbyMemId(int memId) {
         List<MemberPropInventory> memberPropInventories = memberPropInventoryRepo.findByIdMemId(memId);
         return memberPropInventories.stream()
                                     .map(this::convertToDto)
