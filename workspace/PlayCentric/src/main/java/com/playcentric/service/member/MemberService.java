@@ -40,7 +40,6 @@ public class MemberService {
 			Member member = optional.get();
 			member.setGoogeId(memGoogle.getGoogleId());
 			member.setGoogleLogin(memGoogle);
-			googleRepository.save(memGoogle);
 			return memberRepository.save(member);
 		}
 		return null;
