@@ -1,17 +1,22 @@
 package com.playcentric.controller.forum;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.playcentric.model.forum.Forum;
 import com.playcentric.service.forum.ForumService;
@@ -22,73 +27,151 @@ public class ForumController {
 	@Autowired
 	private ForumService forumService;
 
-	@GetMapping("forum/add")
-	public String showAddPage(Model model) {
-		model.addAttribute("forum", new Forum());
-		return "forum/addForumPage";
+	// 新增討論串
+	@GetMapping("/forum/insertForum")
+	public String insertForum() {
+		return "/forum/addForumPage";
 	}
 
-	@PostMapping("forum/addPost")
-	public String addForum(@RequestParam("textsIntro") String textsIntro) {
+	@PostMapping("/addForumData")
+	public String addForumData(@RequestParam MultipartFile forumPhoto, @RequestParam("forumName") String forumName,
+			@RequestParam("textsIntro") String textsIntro, Model model) throws IllegalStateException, IOException {
 		Forum forum = new Forum();
+		forum.setForumPhoto(forumPhoto.getBytes());
+		forum.setForumName(forumName);
 		forum.setTextsIntro(textsIntro);
-		forumService.saveForum(forum);
-		return "redirect:/forum/page";
+
+		forumService.insertForum(forum);
+
+		model.addAttribute("insetOK", "成功");
+		return "redirect:/findAllForum";
 	}
 
-	@GetMapping("/forum/edit")
-	public String showEditPage(@RequestParam("forumId") int forumId, Model model) {
-		Optional<Forum> forum = forumService.findForumById(forumId);
-		if (forum.isPresent()) {
-			model.addAttribute("forum", forum.get());
-			return "forum/editPage"; // 返回到名為"editPage"的HTML模板，顯示編輯forum的表單
+	// 新增跳轉頁面
+	@GetMapping("/forum/insertForum2")
+	public String insertForum2() {
+		return "/forum/addForumPage.html";
+
+	}
+
+	// 新增要改富文本的新增圖片要轉base64 未成功
+	@PostMapping("/addForumData")
+	public String addForumData2(@RequestParam("forumPhoto") MultipartFile forumPhoto,
+			@RequestParam("forumName") String forumName,
+			@RequestParam("textsIntro") String textsIntro,
+			@RequestParam("csrfmiddlewaretoken") String csrfToken, Model model)
+			throws IllegalStateException, IOException {
+
+		// 實現 CSRF token 驗證，如果需要
+		// validateCsrfToken(csrfToken);
+
+		// 確認文件不為空且類型為圖片
+		if (forumPhoto != null && forumPhoto.getContentType().startsWith("image")) {
+			// 讀取文件內容
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			try (InputStream fileContent = forumPhoto.getInputStream()) {
+				while ((bytesRead = fileContent.read(buffer)) != -1) {
+					outputStream.write(buffer, 0, bytesRead);
+				}
+			}
+
+			byte[] imageBytes = outputStream.toByteArray();
+			String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
+			// 創建主题對象
+			Forum forum1 = new Forum();
+			forum1.setForumPhoto(imageBytes); // 這裡保存原始的圖片字節數據
+			forum1.setForumName(forumName);
+			forum1.setTextsIntro(textsIntro);
+
+			forumService.insertForum(forum1);
+
+			model.addAttribute("insertOK", "成功");
+
+			// 返回 JSON 響應
+			return String.format("{\"type\":\"%s\", \"data\":\"%s\"}", forumPhoto.getContentType(), base64Image);
 		} else {
-			return "redirect:/forum/forumhome"; // 如果forum不存在，重定向到首頁
+			// 返回錯誤信息
+			return "{\"error\": \"Invalid file type\"}";
 		}
 	}
 
-	@PutMapping("/forum/editPost")
-	public String editForum(@RequestParam("forumId") int forumId, @RequestParam("textsIntro") String textsIntro) {
-		Optional<Forum> optionalForum = forumService.findForumById(forumId);
-		if (optionalForum.isPresent()) {
-			Forum forum = optionalForum.get();
-			forum.setTextsIntro(textsIntro);
-			forumService.saveForum(forum);
-		}
-		return "redirect:/forum/page"; // 更新完後重定向到首頁
-	}
+	// 顯示主頁
+	@GetMapping("/findAllForum")
+	public String findAllForum(Model model) {
 
-	@DeleteMapping("/forum/delete")
-	public String deleteForum(@RequestParam("forumId") int forumId) {
-		forumService.deleteForumById(forumId);
-		return "redirect:/forum/page";
-	}
-
-	 @GetMapping("/forum/search")
-	 public String search(@RequestParam("keyword") String keyword, Model model) {
-	        List<Forum> forums = forumService.searchByTextsIntro(keyword);
-	        model.addAttribute("forums", forums);
-	        return "forum/search"; // 返回包含查詢結果的HTML視圖
-	    }
-
-	@GetMapping("/forum/page")
-	public String findByPage(@RequestParam(value = "p", defaultValue = "1") Integer pageNum, Model model) {
-
-		Page<Forum> page = forumService.findByPage(pageNum);
-
-		model.addAttribute("page", page);
-
+		List<Forum> arrayList = forumService.findAll();
+		model.addAttribute("arrayList", arrayList);
 		return "forum/forumhome";
 	}
 
-//    private void setGameInfo(Forum forum) {
-//
-//		Game game = forum.getGame();
-//		ForumGameDto gameIfo = forum.getGameIfo();
-//		gameIfo.setGameId(game.getGameId());
-//		gameIfo.setGameName(game.getGameName());
-//		List<ImageLib> imageLibs = game.getImageLibs();
-//		byte[] gameImg = imageLibs.get(0).getImageFile();
-//		gameIfo.setGameImg(gameImg);
-//    }
+	// 後臺查詢全部
+	@GetMapping("/findAllForum2")
+	public String findAllForum2(Model model) {
+
+		List<Forum> arrayList = forumService.findAll();
+		model.addAttribute("arrayList", arrayList);
+
+		return "/forum/getAllForum";
+	}
+
+	// 模糊查詢
+	@PostMapping("/findByForumName")
+	public String findByForumName(@RequestParam("forumName") String forumName, Model model) {
+		List<Forum> arrayList = forumService.findForumByForumName(forumName);
+		model.addAttribute("arrayList", arrayList);
+		return "/forum/getAllForum";
+	}
+
+	// 刪除討論串
+	@GetMapping("/deleteForum")
+	public String deleteForum(@RequestParam("forumId") Integer forumId) {
+		forumService.deleteForumById(forumId);
+
+		return "redirect:/findAllForum2";
+	}
+
+	// 編輯討論串
+	@GetMapping("/updateByForumId")
+	private String updateByForumId(Model model, @RequestParam("forumId") Integer forumId) {
+
+		Forum forumBean = forumService.findById(forumId);
+
+		model.addAttribute("forumBean", forumBean);
+
+		return "forum/editPage";
+
+	}
+
+	@PostMapping("/editTheme")
+	public String editTheme(@RequestParam("forumId") Integer forumId, @RequestParam MultipartFile forumPhoto,
+			@RequestParam("forumName") String forumName, @RequestParam("textsIntro") String textsIntro, Model model)
+			throws IllegalStateException, IOException {
+
+		Forum forumBean = new Forum();
+
+		forumBean.setForumPhoto(forumPhoto.getBytes());
+		forumBean.setForumId(forumId);
+		forumBean.setForumName(forumName);
+		forumBean.setTextsIntro(textsIntro);
+
+		forumService.update(forumBean);
+
+		model.addAttribute("updataOK", "成功");
+		return "redirect:/findAllForum2";
+	}
+
+	@GetMapping("/forumPhoto")
+	public ResponseEntity<byte[]> downloadPhoto(@RequestParam Integer forumId) {
+		Forum forumPhoto = forumService.findById(forumId);
+
+		byte[] photoFile = forumPhoto.getForumPhoto();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.IMAGE_JPEG);
+		// body, headers , http status code
+		return new ResponseEntity<byte[]>(photoFile, headers, HttpStatus.OK);
+	}
 }

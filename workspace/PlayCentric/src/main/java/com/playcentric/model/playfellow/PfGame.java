@@ -25,9 +25,9 @@ public class PfGame {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer pfGameId;// 伴遊遊戲編號
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "playFellowId") // 伴遊者id
-	private PlayFellowMember playFellowMember;
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "playFellowId") // 伴遊者id
+    private PlayFellowMember playFellowMember;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gameId") // 遊戲id 一個伴遊者會有多個遊戲OneToMany

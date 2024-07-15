@@ -14,6 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -33,52 +35,35 @@ public class Forum {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int forumId;
 
-	@JsonIgnore
-	@OneToOne( fetch = FetchType.LAZY )
-	@JoinColumn(name = "gameId")
-	private Game game;
+//	@JsonIgnore
+//	@OneToOne( fetch = FetchType.LAZY )
+//	@JoinColumn(name = "gameId")
+//	private Game game;
 
 //	@JsonIgnore
-//	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//	private List<ImageLib> imageLib = new ArrayList<>();
+//    @ManyToOne
+//    @JoinColumn(name = "imageId")
+//    private ImageLib imageLib; 
+
+//	private Integer imageId;
+
+	@JsonIgnore
+	@Lob
+	private byte[] forumPhoto;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Texts> texts = new ArrayList<>();
 
-	private String textsIntro;
-	
-	@Transient
-	private String gameName;
-//	private ForumGameDto gameIfo;
-	
-//	public Forum() {
-//		Game game = getGame();
-//		gameIfo.setGameId(game.getGameId());
-//		gameIfo.setGameName(game.getGameName());
-//		List<ImageLib> imageLibs = game.getImageLibs();
-//		byte[] gameImg = imageLibs.get(0).getImageFile();
-//		gameIfo.setGameImg(gameImg);
-//	}
-	
-	public Forum(List<Texts> texts, String textsIntro) {
-		this();
-		this.texts = texts;
-		this.textsIntro = textsIntro;
-	}
-	
-	public String getTitle() {
-		if (!texts.isEmpty()) {
-			return texts.get(0).getTitle();
-		}
-		return null;
-	}
+	private String forumName;
 
-	public int getFirstTextId() {
-		if (!texts.isEmpty()) {
-			return texts.get(0).getTextsId();
-		}
-		return -1;
+	private String textsIntro;
+
+	public Forum(int forumId, String forumName, String textsIntro) {
+		super();
+		this.forumId = forumId;
+		this.forumName = forumName;
+		this.textsIntro = textsIntro;
 	}
 
 }

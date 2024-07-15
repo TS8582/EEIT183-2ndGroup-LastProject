@@ -1,17 +1,23 @@
 package com.playcentric.controller.forum;
 
 import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.playcentric.model.ImageLib;
 import com.playcentric.model.forum.Forum;
+import com.playcentric.model.forum.ForumPhoto;
 import com.playcentric.model.forum.Texts;
 import com.playcentric.model.member.Member;
 import com.playcentric.service.forum.ForumService;
@@ -32,42 +38,138 @@ public class TextsController {
 	@Autowired
 	private MemberService memberService;
 
-	// 顯示所有文章
-	@GetMapping("/texts/page")
-	public String listAllTexts(Model model) {
-		List<Texts> textsList = textsService.findAllText();
-		model.addAttribute("textsList", textsList);
-		return "forum/texts/list"; // 對應的 Thymeleaf 模板名稱
+	// 顯示當前主題文章
+	@GetMapping("/texts/findTextsByForumId")
+	public String findTextsByForumId(@RequestParam("forumId") Integer forumId,
+			@RequestParam(value = "p", defaultValue = "1") Integer pageNum, Model model) {
+		List<Texts> texts = textsService.findTextsByForumId(forumId);
+		Page<Texts> page = textsService.findByPage(forumId, pageNum); // 使用新的分页方法
+		model.addAttribute("texts", texts);
+		model.addAttribute("page", page);
+		model.addAttribute("forumId", forumId); // 将themeId传递给前端
+
+		System.out.println("Forum Id: " + forumId);
+		System.out.println("Page Number: " + pageNum);
+
+		return "forum/texts/listFront";
 	}
 
-	@GetMapping("/texts/view")
-	public String viewTexts(@RequestParam("textsId") Integer textsId, Model model) {
+	// 處理文章發布與圖片上傳
+	@PostMapping("/texts/publish")
+	public String publish(@RequestParam("textsContent") String textsContent, @RequestParam("title") String title,
+			@RequestParam("files") MultipartFile[] files, @RequestParam("forumId") Integer forumId, HttpSession session,
+			Model model) throws IOException {
+
+		Forum forum = forumService.findById(forumId);
+
+		// 建立一個新的文章物件
+		Texts texts = new Texts();
+		texts.setTitle(title);
+		texts.setTextsContent(textsContent); // 設置文章內容
+		texts.setForum(forum);
+
+		// 如果有上傳的圖片，處理圖片上傳
+		if (files != null && files.length > 0) {
+			ArrayList<ForumPhoto> forumPhotoList = new ArrayList<>();
+
+			for (MultipartFile file : files) {
+				ForumPhoto forumPhoto = new ForumPhoto();
+				forumPhoto.setPhotoFile(file.getBytes());
+				forumPhoto.setTexts(texts); // 設置圖片對應的文章
+				forumPhotoList.add(forumPhoto);
+			}
+
+			texts.setForumPhoto(forumPhotoList); // 將圖片列表設置到文章中
+		}
+
+		textsService.insert(texts); // 儲存文章到資料庫
+
+		// 重定向到文章列表頁面或其他適當的處理
+		return "redirect:/texts/page";
+	}
+
+	// 導入後台
+	@GetMapping("/findAllTexts")
+	public String findAllTexts(Model model) {
+
+		List<Texts> arrayList = textsService.findAll();
+		model.addAttribute("arrayList", arrayList);
+
+		return "forum/texts/lsit";
+	}
+
+	// 查詢名稱
+	@PostMapping("/findTextsByTitle")
+	public String findTextsByTitle(@RequestParam("title") String title, Model model) {
+
+		List<Texts> arrayList = textsService.findAllText(title);
+
+		model.addAttribute("arrayList", arrayList);
+
+		return "forum/texts/getAllTexts";
+	}
+
+	// 查詢Id 跳轉到文章內容
+	@GetMapping("/texts/findTextsById")
+	public String findTextsById(@RequestParam Integer textsId, Model model) {
 		Texts texts = textsService.findById(textsId);
-		texts.setForumId(texts.getForum().getForumId());
 		model.addAttribute("texts", texts);
 
-		return "forum/texts/view";
+		return "forum/texts/textsContent";
+
+	}
+
+	// TinyMCE新增
+	@GetMapping("/texts/insertTexts2")
+	public String insertTexts2(Model model) {
+		List<Forum> arrayList = forumService.findAll();
+		model.addAttribute("arrayList", arrayList);
+		return "forum/texts/TinyMCE";
+	}
+
+	@PostMapping("/texts/insertTextsData2")
+	public String insertTextsData2(@RequestParam("textsContent") String textsContent, Model model,
+			HttpSession httpSession) {
+
+		Texts texts = new Texts();
+		texts.setTextsContent(textsContent);
+		textsService.insert(texts);
+
+		Texts lastestTexts = textsService.findLastestMsg();
+		model.addAttribute("lastestTexts", lastestTexts);
+
+		return "redirect:/texts/page"; // Ajax分頁(前台)
 	}
 
 	// 新增文章
-	@GetMapping("/texts/add")
-	public String showAddForm() {
-//		model.addAttribute("texts", new Texts());
-		return "forum/texts/add"; // 對應的 Thymeleaf 模板名稱
+	@GetMapping("/texts/insertTexts")
+	public String insertTexts() {
+		return "forum/texts/add";
 	}
 
-	@PostMapping("/texts/add")
-	public String addTexts(@ModelAttribute Texts texts, HttpSession httpSession) {
-		Optional<Forum> optionalForum = forumService.findForumById(texts.getForumId());
-		Member mem = memberService.findById(texts.getMemId());
-		texts.setMember(mem);
-		if (optionalForum.isPresent()) {
-			Forum forum = optionalForum.get();
-			texts.setForum(forum);
-		}
-		System.out.println(texts.getForumId());
+	@PostMapping("/texts/insertTextsData")
+	public String insertTextsData(@RequestParam("textsContent") String textsContent, Model model,
+			HttpSession httpSession) {
+
+		Texts texts = new Texts();
+		texts.setTextsContent(textsContent);// 設置文章內容
+
 		textsService.insert(texts);
-		return "redirect:/texts/page";
+
+		Texts lastestTexts = textsService.findLastestMsg();
+		model.addAttribute("lastestTexts", lastestTexts);
+
+		return "forum/texts/add";
+	}
+
+	// Ajax分頁(前台)
+	@GetMapping("/texts/page")
+	public String findByPage2(@RequestParam(value = "p", defaultValue = "1") Integer pageNum, Model model) {
+
+		Page<Texts> page = textsService.findAllByPage(pageNum);
+
+		model.addAttribute("page", page);
+		return "forum/texts/listFront";
 	}
 
 	// 編輯文章
@@ -85,29 +187,15 @@ public class TextsController {
 	@PostMapping("/texts/edit")
 	public String editTexts(@ModelAttribute Texts texts) {
 		textsService.update(texts);
-		return "redirect:/texts/page";
+		return "redirect:/texts/page"; // Ajax分頁(前台)
 	}
 
 	// 刪除文章
-	@PostMapping("/texts/delete")
-	public String deleteTexts(@RequestParam("textsId") int textsId) {
-		textsService.deleteTexts(textsId);
-		return "redirect:/texts/page";
-	}
+	@GetMapping("/texts/delete")
+	public String deleteTexts(@RequestParam("textsId") Integer textsId) {
+		textsService.deleteTextsById(textsId);
 
-	// 搜尋文章
-	@GetMapping("texts/search")
-	public String searchTexts(@RequestParam("keyword") String keyword, Model model) {
-		List<Texts> textsList = textsService.searchTextsByTitle(keyword);
-		model.addAttribute("textsList", textsList);
-		return "forum/texts/list"; // 確保這裡返回的模板與顯示所有文章的模板一致
-	}
-
-	// 更新文章是否顯示
-	@PostMapping("texts/updateVisibility")
-	public String updateVisibility(@RequestParam("textsId") int textsId, @RequestParam("hideTexts") boolean hideTexts) {
-		textsService.updateIsShow(textsId, hideTexts);
-		return "redirect:/texts/page";
+		return "redirect:/findAllTexts"; // 導入後台
 	}
 
 }

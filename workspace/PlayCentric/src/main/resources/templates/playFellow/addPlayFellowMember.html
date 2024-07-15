@@ -22,10 +22,6 @@
 	font-weight: bold !important;
 }
 
-.list-group-item {
-	cursor: pointer !important;
-}
-
 /*         .list-group-item:hover { */
 /*             background-color: #f0f0f0!important; */
 /*         } */
@@ -45,6 +41,7 @@
 .list-group-item {
 	border: none !important;
 	cursor: pointer !important;
+
 	/*             background-color: transparent!important; */
 }
 
@@ -88,7 +85,8 @@
 					<li class="list-group-item theme active" data-content="content1">基本資料</li>
 					<li class="list-group-item theme" data-content="content2">伴遊者照片</li>
 					<li class="list-group-item theme" data-content="content3"><a
-						href="http://localhost:8080/PlayCentric/playFellow/cms" id="backBtn">回前頁</a></li>
+						href="http://localhost:8080/PlayCentric/playFellow/cms"
+						id="backBtn">回前頁</a></li>
 				</ul>
 			</div>
 			<div class="col-md-9">
@@ -134,6 +132,7 @@
 								class="form-control" id="pfCreatedTime" name="pfcreatedTime"
 								required>
 						</div>
+
 						<button type="submit" class="btn btn-primary"
 							onclick="submitFirstStep(event)">確定送出</button>
 					</form>
@@ -155,8 +154,10 @@
 						<button type="button" class="btn btn-success" id="editBtn">新增照片</button>
 						<button type="submit" class="btn btn-success" id="addBtn"
 							style="display: none;">上傳</button>
-						<button type="button" class="btn btn-info" id="backtoCms">確定提交</button>
+						<button type="button" class="btn btn-info float-right"
+							id="backtoCms">下一步</button>
 					</form>
+
 				</div>
 			</div>
 		</div>
@@ -230,6 +231,10 @@
                 });
         });
 
+        
+        
+        
+        //照片上傳
         document.getElementById('secondStepForm').addEventListener('submit', function (event) {
             event.preventDefault();
             const playFellowId = document.getElementById('uploadPlayFellowIdInput').value;
@@ -253,6 +258,9 @@
             });
         });
 
+        
+        
+        //SHOW 照片
         function getImagesByPlayFellowId(playFellowId) {
             axios.get(`/PlayCentric/playFellow/Images/${playFellowId}`)
                 .then(res => {
@@ -269,19 +277,19 @@
             let imageUrlString = '';
 
             for (let i = 0; i < imageUrls.length; i++) {
+            	
                 imageUrlString += `
                 <div id="imageContainer${imageUrls[i].id}" style="display: inline-block; position: relative; margin: 10px;">
                     <img alt="伴遊者圖片" width="200px" src="${imageUrls[i].url}" />
                 </div>
-            `;
-            }
+            `;}
 
             photoOutput.innerHTML = imageUrlString;
         }
 
        
 
-
+//第二表單的按鈕邏輯
         const editBtn = document.getElementById('editBtn');
         const addBtn = document.getElementById('addBtn');
         const addBtn2 = document.getElementById('addBtn2');
@@ -296,10 +304,10 @@
             removeButtons.forEach(button => button.style.display = 'inline-block');
         });
         
-        //遞交
         
     });
 
+//表單1的命名檢查
     function submitFirstStep(event) {
         event.preventDefault();
         const form = document.getElementById('firstStepForm');
@@ -345,33 +353,37 @@
         axios.post('/PlayCentric/playFellow/add', formData)
         .then(response => {
             console.log('成功創了伴遊者');
-            console.log('playFellowId:', response.data.playFellowId);
+            const playFellowId = response.data.playFellowId;
+            console.log('playFellowId:', playFellowId);
+            
             document.getElementById('firstStepForm').style.display = 'none';
             document.getElementById('secondStepForm').style.display = 'block';
-            document.getElementById('uploadPlayFellowIdInput').value = response.data.playFellowId;
+            document.getElementById('uploadPlayFellowIdInput').value = playFellowId;
 
             document.getElementById('content1').classList.remove('active');
             document.getElementById('content2').classList.add('active');
 
             setTimeout(() => {
                 const theme1 = document.querySelector('.list-group-item[data-content="content1"]');
-                theme1.classList.add('green-text'); 
                 theme1.innerHTML += ' &#10004;'; 
 
                 const theme2 = document.querySelector('.list-group-item[data-content="content2"]');
                 theme2.classList.add('active');
             }, 0);
+            
+            
+            
+            
+            
+            const backtoCms = document.getElementById('backtoCms');
+            backtoCms.addEventListener('click', function () {
+                window.location.href = `/PlayCentric/playFellow/pfGame/${playFellowId}`;
+            });
         })
         .catch(error => {
             console.error('Error submitting first step:', error);
         });
-        
-        const backtoCms = document.getElementById('backtoCms');
-        backtoCms.addEventListener('click', function () {
-            alert('您的成為伴遊申請需經管理員審核，請耐心等候!');
-            
-            window.location.href = '/PlayCentric/playFellow/cms';
-        });
+
 
 
     }

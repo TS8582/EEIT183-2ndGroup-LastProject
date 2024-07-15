@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant-TW" xmlms:th="http://www.thymeleaf.org/">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div class="" th:replace="~{/layout/backen_nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
     <title>PlayCentric-後台管理-公告</title>
 </head>
 
 <body class="h-screen flex flex-col w-screen">
     <!-- 頂部導航欄 -->
-    <div class="" th:replace="~{/layout/backen_nav}"></div>
 
     <div class="flex flex-1">
         <!-- 側邊欄 -->
-        <div th:replace="~{/layout/aside}"></div>
+        <!-- <div th:replace="~{/layout/aside}"></div> -->
 
         <!-- 主要內容區域 -->
         <main class="w-full h-auto">
@@ -23,9 +23,9 @@
                 <div class="mb-2">
                     <a class="mybtn mybtn-sky" th:href="@{/game/getSetDiscount}">新增優惠活動</a>
                 </div>
-                <div class="w-full" id="table">
-                    <table class="w-full border-collapse shadow">
-                        <thead>
+                <div class="w-full h-3/5 overflow-y-auto noscrollbar shadow" id="table">
+                    <table class="w-full border-collapse">
+                        <thead class="sticky sticky-top bg-black text-white">
                             <tr>
                                 <th class="text-center w-2/12 border">遊戲名稱</th>
                                 <th class="text-center w-1/12 border">價格</th>
@@ -70,30 +70,7 @@
 
     <a th:href="@{/game/getInsertGame}" class="text-4xl text-black plus-btn mybtn">+</a>
 
-    <script>
-        let allData = document.querySelectorAll('tbody tr');
-        const search = document.querySelector('#search');
-
-        allData.forEach(elm => {
-            elm.addEventListener('mouseenter', () => {
-                elm.classList.add('bg-gray-300');
-            })
-            elm.addEventListener('mouseleave', () => {
-                elm.classList.remove('bg-gray-300');
-            })
-        });
-
-        search.addEventListener('keyup', () => {
-            allData.forEach(data => {
-                if (!data.innerText.includes(search.value)) {
-                    data.classList.add('hidden');
-                }
-                else {
-                    data.classList.remove('hidden');
-                }
-            });
-        })
-    </script>
+    <script th:src="@{/js/game/back-game.js}"></script>
 
 </body>
 

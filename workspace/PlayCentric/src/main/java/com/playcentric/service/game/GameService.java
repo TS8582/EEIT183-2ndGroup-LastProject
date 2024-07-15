@@ -1,11 +1,14 @@
 package com.playcentric.service.game;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.playcentric.model.game.primary.Game;
+import com.playcentric.model.game.primary.GameDiscount;
+import com.playcentric.model.game.primary.GameDiscountRepository;
 import com.playcentric.model.game.primary.GameRepository;
 
 @Service
@@ -14,6 +17,13 @@ public class GameService {
 	@Autowired
 	private GameRepository gRepo;
 	
+	@Autowired
+	private GameDiscountRepository gdRepo;
+	
+	//商店展示的遊戲
+	public List<Game> findShowInStore() {
+		return gRepo.findByIsShow(true);
+	}
 	
 	//新增遊戲
 	public Game save(Game game) {
@@ -54,7 +64,10 @@ public class GameService {
 		gRepo.delete(game);
 	}
 	
-	
+	//找遊戲目前的優惠
+	public GameDiscount findNowDiscount(Integer gameId) {
+		return gdRepo.findNowDiscount(LocalDateTime.now(), gameId);
+	}
 	
 	
 	
