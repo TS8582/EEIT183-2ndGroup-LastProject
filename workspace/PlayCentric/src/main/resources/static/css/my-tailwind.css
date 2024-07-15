@@ -55,11 +55,11 @@
 }
 
 .tag-selected:hover {
-    @apply text-black py-2 px-3 cursor-pointer m-1 bg-orange-200 rounded-full
+    @apply text-white py-2 px-3 cursor-pointer m-1 bg-orange-700 rounded-full
 }
 
 .price-tag {
-    @apply p-2 border-red-300 border bg-slate-500 rounded-md text-lime-400 select-none
+    @apply p-2 border-red-300 border bg-slate-300 rounded-md text-lime-800 select-none
 }
 
 .mybtn:hover {

@@ -63,5 +63,5 @@ public class Game {
 	@Transient
 	private Boolean isFirstRelease = true;
 	@Transient
-	private GameDiscount nowDiscount;
+	private Integer rate;
 }

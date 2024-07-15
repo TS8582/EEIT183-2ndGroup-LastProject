@@ -47,10 +47,11 @@
 
         <main class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 h-full container mt-2">
 
-            <th:block th:each="game:${games}">
+            <th:block th:each="game:${games.content}">
 
-                <div class="h-auto shadow-sm border-2 rounded-lg flex flex-col p-2">
-                    <div class="py-2 h-64 flex justify-center bg-slate-300 rounded-md">
+                <div
+                    class="h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500">
+                    <div class="py-2 h-64 flex justify-center rounded-md">
                         <img th:if="${!game.imageLibs.empty}" class="w-auto h-full rounded-md"
                             th:src="@{/imagesLib/image{id}(id=${game.ImageLibs[0].imageId})}" alt="">
                     </div>
@@ -59,20 +60,24 @@
                             <span class="text-xl p-2 rounded-md select-none" th:text="${game.gameName}"></span>
                         </div>
                         <div class="flex justify-center my-2 space-x-3">
-                            <span class="price-tag"></span>
-                            <span class="price-tag" th:text="${game.price}"></span>
+                            <span th:if="${game.rate}" class="price-tag font-semibold"
+                                th:text="'-' + ${100 -  game.rate} + '%'"></span>
+                            <!-- 沒優惠顯示的價格 -->
+                            <span th:if="${game.rate == null}" class="price-tag text-black font-semibold"
+                                th:text=" '$' + ${game.price}"></span>
+                            <!-- 有優惠顯示的價格 -->
+                            <span th:if="${game.rate}" class="price-tag font-semibold"
+                                th:text=" '$' + ${game.price * game.rate / 100}"></span>
                         </div>
                         <div class="flex justify-center">
                             <span class="border border-red-300 mybtn mybtn-green">加入購物車</span>
                         </div>
                     </div>
                 </div>
-
             </th:block>
 
+            <div class="mt-2 h-2"></div>
 
-            <div class="h-auto shadow-sm border-2 rounded-lg"></div>
-            <div class="h-auto shadow-sm border-2 rounded-lg"></div>
         </main>
     </div>
 
