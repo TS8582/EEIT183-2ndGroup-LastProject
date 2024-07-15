@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
     <title>PlayCentric-後台管理-新增公告</title>
 </head>
 
@@ -17,7 +18,7 @@
 
                     <div class="flex overflow-hidden items-center">
                         <label for="title" class="text-lg me-2">標題：</label> <input required type="text" name="title"
-                            id="title" class="text-input" placeholder="請輸入標題">
+                            id="title" class="text-input w-96" placeholder="請輸入標題">
                     </div>
 
                     <div class="flex overflow-hidden items-center">
@@ -37,7 +38,7 @@
                     </div>
 
                     <div class="flex overflow-hidden items-center justify-center">
-                        <button class="ms-8 btn btn-sky rounded-md" type="submit">新增</button>
+                        <button class="ms-8 mybtn mybtn-sky rounded-md" type="submit">新增</button>
                     </div>
 
                 </div>

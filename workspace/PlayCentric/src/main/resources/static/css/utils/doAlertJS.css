@@ -1,0 +1,9 @@
+.fade-alert {
+    opacity: 0 !important;
+    transition: opacity 1.5s ease-in-out !important;
+}
+
+.fade-alert.show-alert {
+    opacity: 0.75 !important;
+    transition: opacity 0.5s ease-in-out !important;
+}

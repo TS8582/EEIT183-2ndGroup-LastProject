@@ -12,11 +12,13 @@
 
         .navbar-dark .navbar-nav .nav-link {
             color: white;
-            &.disabled{
+            border-radius: 5px;
+
+            &.disabled,
+            &:hover {
                 font-weight: 700;
                 color: rgb(0, 0, 0);
                 background-color: #d8d8d8;
-                border-radius: 5px;
             }
         }
 
@@ -24,7 +26,6 @@
         html {
             height: 100vh;
             min-height: 100vh;
-            width: 100vw;
         }
 
         .rounded-buttom-150px {
@@ -56,37 +57,35 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav ms-auto"  th:switch="${session.loginMember}">
-                    <li class="nav-item">
+                <ul class="navbar-nav ms-auto" th:switch="${session.loginMember}">
+                    <li class="nav-item me-2">
                         <a class="nav-link fs-4" th:href="@{/back/anno}">公告管理</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item me-2">
                         <a class="nav-link fs-4" th:href="@{/member/memManage}">會員管理</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item me-2">
                         <a class="nav-link fs-4" th:href="@{/back/game}">遊戲管理</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item me-2">
                         <a class="nav-link fs-4" th:href="@{/prop/propSheet}">遊戲道具管理</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item me-2">
                         <a class="nav-link fs-4" th:href="@{/playFellow/cms}">伴遊管理</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item me-2">
                         <a class="nav-link fs-4" th:href="@{/events/listEvents}">活動管理</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item me-2">
                         <a class="nav-link fs-4" th:href="@{/forum/page}">討論區管理</a>
                     </li>
-                    <li th:case="null" class="nav-item">
+                    <li th:case="null" class="nav-item me-2">
                         <a th:href="@{/member/login}" class="btn btn-sm btn-primary me-3 fs-4">登入/註冊</a>
                     </li>
-                    <li th:case="*" class="nav-item dropdown">
-                        <a
-                            class="d-flex nav-link fs-4" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                    <li th:case="*" class="nav-item me-2 dropdown">
+                        <a class="d-flex nav-link fs-4" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img class="rounded-circle h35px w35px" th:src="${session.loginMember.photo}">
-                            <span class="mx-1 text-light" th:text="${session.loginMember.nickname}"></span>
+                            <span class="mx-1" th:text="${session.loginMember.nickname}"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                             <li>

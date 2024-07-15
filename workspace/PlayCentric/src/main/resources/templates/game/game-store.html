@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" xmlms:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div class="" th:replace="~{/layout/nav}"></div>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>PlayCentric-遊戲商店</title>
+    <style>
+
+    </style>
+</head>
+
+<body class="h-screen">
+    <!-- 頂部導航欄 -->
+
+    <div class="flex flex-col h-5/6">
+
+        <!-- 篩選欄 -->
+        <div class="flex justify-center h-auto my-2">
+            <div class="w-full lg:w-1/2 h-auto border-2 flex flex-col rounded-md justify-center items-center">
+                <!-- 以價格篩選 -->
+                <div class="flex flex-col items-center justify-center p-2 w-full">
+                    <span class="block text-lg">依價格篩選</span>
+                    <label for="minPrice">最低價格： </label>
+                    <input type="text" name="minPrice" id="minPrice" class="text-input w-1/3" maxlength="5">
+                    <label for="maxPrice">最高價格： </label>
+                    <input type="text" name="maxPrice" id="maxPrice" class="text-input w-1/3" maxlength="5">
+                </div>
+
+                <!-- 以分類篩選 -->
+                <span class="block text-lg">依分類篩選</span>
+                <!-- 取所有分類 -->
+                <div class="p-2 flex flex-wrap">
+                    <th:block th:each="type:${allType}">
+                        <div class="text-sm mybtn mybtn-tag">
+                            <span th:text="${type.gameTypeName}"></span>
+                            <input class="hidden" type="checkbox" name="typeId" th:value="${type.gameTypeId}">
+                        </div>
+                    </th:block>
+                </div>
+
+            </div>
+        </div>
+
+
+        <main class="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-3 h-full container mt-2">
+            <div class="h-96 shadow-sm border-2 col-span-3 md:col-span-2 lg:col-span-1 rounded-lg">
+
+            </div>
+            <div class="h-96 shadow-sm border-2 col-span-3 md:col-span-2 lg:col-span-1 rounded-lg">
+
+            </div>
+            <div class="h-96 shadow-sm border-2 col-span-3 md:col-span-2 lg:col-span-1 rounded-lg">
+
+            </div>
+        </main>
+
+
+    </div>
+
+
+    <script>
+        // const lefttoggle = document.querySelector('.left-toggle');
+        // const aside = document.querySelector('.aside');
+
+        // lefttoggle.addEventListener('click', e => {
+        //     aside.classList.toggle('-left-48');
+        //     aside.classList.toggle('left-0');
+        // })
+
+
+    </script>
+
+</body>
+
+</html>
