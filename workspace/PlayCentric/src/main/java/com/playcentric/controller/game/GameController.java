@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,8 @@ import com.playcentric.service.ImageLibService;
 import com.playcentric.service.game.GameDiscountSetService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
+
+import jakarta.websocket.server.PathParam;
 
 @Controller
 public class GameController {
@@ -217,8 +222,17 @@ public class GameController {
 	//遊戲商店頁面
 	@GetMapping("/game/gameStore")
 	public String gameStore(Model model) {
-		List<Game> games = gService.findShowInStore();
+		PageRequest pgb = PageRequest.of(0, 9);
+		Page<Game> games = gService.findShowInStore(pgb);
 		List<GameTypeLib> allType = gtService.findAll();
+		for (Game game : games) {
+			GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
+			if (nowDiscount != null) {
+				Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
+				int rate = (int) (oldRate * 100);
+				game.setRate(rate);
+			}
+		}
 		model.addAttribute("allType",allType);
 		model.addAttribute("games",games);
 		return "game/game-store";
