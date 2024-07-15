@@ -66,22 +66,10 @@ public class ForumService {
 	@Transactional
 	public void deleteForumById(int forumId) {
 		if (forumRepository.existsById(forumId)) {
-	        forumRepository.deleteById(forumId);
-	    } else {
-	    	System.out.println("查無討論串");
-	    }
+			forumRepository.deleteById(forumId);
+		} else {
+			System.out.println("查無討論串");
+		}
 	}
-
-//	public List<Forum> getAllForums(int page, int size) {
-//		Pageable paging = PageRequest.of(page, size);
-//		Page<Forum> pagedResult = forumRepository.findAll(paging);
-//		return pagedResult.toList();
-//	}
-
-//	public Page<Forum> findByPage(Integer pageNumber){
-//		Pageable pgb = PageRequest.of(pageNumber-1, 10, Sort.Direction.DESC, "forumId");
-//		Page<Forum> page = forumRepository.findAll(pgb);
-//		return page;
-//	}
 
 }

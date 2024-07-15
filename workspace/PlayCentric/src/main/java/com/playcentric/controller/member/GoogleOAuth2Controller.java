@@ -34,7 +34,11 @@ public class GoogleOAuth2Controller {
 	private final String scope = "https://www.googleapis.com/auth/userinfo.eamil";
 
 	@GetMapping("/google-login")
-	public String googleLogin() {
+	public String googleLogin(Model model, RedirectAttributes redirectAttributes) {
+		if (model != null && model.getAttribute("loginMember") != null) {
+			redirectAttributes.addFlashAttribute("loginMsg", "已登入，請先登出!");
+			return "redirect:/";
+		}
 		String authUrl = "https://accounts.google.com/o/oauth2/v2/auth?"
 				+ "client_id=" + googleOAuth2Config.getClientId()
 				+ "&response_type=code"
@@ -48,7 +52,7 @@ public class GoogleOAuth2Controller {
 	public String googleCallback(@RequestParam(required = false) String code, Model model,
 			RedirectAttributes redirectAttributes) {
 		if (code == null) {
-			String authUrl = googleLogin();
+			String authUrl = googleLogin(null, null);
 			authUrl = authUrl.substring(0, authUrl.lastIndexOf("openid%20email%20profile"))
 					+ scope;
 			return authUrl;
@@ -95,10 +99,10 @@ public class GoogleOAuth2Controller {
 			boolean hasEmail = memberService.checkEmailExist(userEmail);
 			// 檢查是否已經有此帳號
 			Member member = null;
-			if (hasGoogle) {  //利用google帳號登入
+			if (hasGoogle) { // 利用google帳號登入
 				System.err.println("利用google登入");
 				member = memberService.findByGoogleId(googleId);
-			} else {		//利用google帳號註冊
+			} else { // 利用google帳號註冊
 				GoogleLogin memGoogle = new GoogleLogin();
 				String googlePhoto = userInfo.get("picture").asText();
 				String googleName = userInfo.get("name").asText();
@@ -128,8 +132,7 @@ public class GoogleOAuth2Controller {
 			}
 			loginMember = new LoginMemDto(memberService.memberLogin(member));
 			model.addAttribute("loginMember", loginMember);
-			redirectAttributes.addFlashAttribute("okMsg", member.getAccount() + "登入成功!");
-			return "redirect:/";
+			return "redirect:/member/loginSuccess";
 
 		} catch (Exception e) {
 			e.printStackTrace();
