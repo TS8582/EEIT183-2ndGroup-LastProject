@@ -23,6 +23,7 @@ public class GameRestController {
 		Pageable pgb = PageRequest.of(pg, 9);
 		Page<Game> findGames = gService.findShowInStore(pgb);
 		for (Game game : findGames) {
+			System.out.println(game);
 			GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
 			if (nowDiscount != null) {
 				Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());

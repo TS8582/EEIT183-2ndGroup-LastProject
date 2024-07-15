@@ -148,7 +148,7 @@
             if (game.rate != null) {
                 html +=
                     `<span class="price-tag font-semibold">-${100 - game.rate}%</span>
-            <span class="price-tag font-semibold">NT$${(game.price * game.rate / 100).toFixed(2)}</span>`;
+                  <span class="price-tag font-semibold">NT$${Math.round(game.price * game.rate / 100)}</span>`;
             } else {
                 html += `<span class="price-tag text-black font-semibold">NT$${game.price}</span>`;
             }
