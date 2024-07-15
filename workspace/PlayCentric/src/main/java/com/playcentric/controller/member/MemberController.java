@@ -95,6 +95,10 @@ public class MemberController {
 	@PostMapping("/login")
 	@ResponseBody
 	public String loginPost(@RequestParam String account,@RequestParam String password, Model model, RedirectAttributes redirectAttributes) {
+		if (model.getAttribute("loginMember")!=null) {
+			redirectAttributes.addFlashAttribute("loginMsg","已登入，請先登出!");
+			return "redirect:/";
+		}
 		Member loginMember = memberService.checkLogin(account, password);
 		if (loginMember==null) {
 			// model.addAttribute("errorMsg", "登入失敗");
@@ -189,7 +193,11 @@ public class MemberController {
 	}
 
 	@GetMapping("/memInfo")
-	public String memInfoPage() {
+	public String memInfoPage(Model model, RedirectAttributes redirectAttributes) {
+		if (model.getAttribute("loginMember")==null) {
+			redirectAttributes.addFlashAttribute("errorMsg","請先登入會員!");
+			return "redirect:login";
+		}
 		return "member/memInfoPage";
 	}
 	
