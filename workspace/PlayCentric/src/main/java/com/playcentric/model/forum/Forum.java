@@ -45,11 +45,11 @@ public class Forum {
 //    @JoinColumn(name = "imageId")
 //    private ImageLib imageLib; 
 
-	private Integer imageId;
+//	private Integer imageId;
 
 	@JsonIgnore
 	@Lob
-	private byte[] textsPhoto;
+	private byte[] forumPhoto;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -59,28 +59,11 @@ public class Forum {
 
 	private String textsIntro;
 
-	public Forum(int forumId, Integer imageId, byte[] textsPhoto, List<Texts> texts, String forumName,
-			String textsIntro) {
+	public Forum(int forumId, String forumName, String textsIntro) {
 		super();
 		this.forumId = forumId;
-		this.imageId = imageId;
-		this.textsPhoto = textsPhoto;
-		this.texts = texts;
 		this.forumName = forumName;
 		this.textsIntro = textsIntro;
 	}
-
-//	@Transient
-//	private String gameName;
-//	private ForumGameDto gameIfo;
-
-//	public Forum() {
-//		Game game = getGame();
-//		gameIfo.setGameId(game.getGameId());
-//		gameIfo.setGameName(game.getGameName());
-//		List<ImageLib> imageLibs = game.getImageLibs();
-//		byte[] gameImg = imageLibs.get(0).getImageFile();
-//		gameIfo.setGameImg(gameImg);
-//	}
 
 }

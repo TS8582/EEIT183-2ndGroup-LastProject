@@ -21,6 +21,23 @@ public class TextsService {
 	@Autowired
 	private TextsRepository textsRepository;
 
+	// 當前所有主題的文章
+	public List<Texts> findTextsByForumId(Integer forumId) {
+		return textsRepository.findTextsByForumId(forumId);
+	}
+
+	// 分頁 當forumId下的
+	public Page<Texts> findByPage(Integer forumId, Integer pageNumber) {
+		Pageable pageable = PageRequest.of(pageNumber - 1, 12, Sort.Direction.DESC, "doneTime");
+		return textsRepository.findByForumForumId(forumId, pageable);
+	}
+
+	// 分頁 當forumId下的(All)
+	public Page<Texts> findAllByPage(Integer pageNumber) {
+		Pageable pageable = PageRequest.of(pageNumber - 1, 12, Sort.Direction.DESC, "doneTime");
+		return textsRepository.findAll(pageable);
+	}
+
 	// 是否顯示
 	public Texts findByHideTexts(Boolean hideTexts) {
 		List<Texts> optional = textsRepository.findAllByHideTexts(hideTexts);
@@ -32,7 +49,12 @@ public class TextsService {
 		return optional.get(0);
 	}
 
-	//模糊查詢
+	// 新增
+	public Texts insert(Texts texts) {
+		return textsRepository.save(texts);
+	}
+
+	// 模糊查詢
 	public List<Texts> findAllText(String texts) {
 		return textsRepository.findAllByTitle(texts);
 	}
@@ -41,15 +63,20 @@ public class TextsService {
 	public Texts findById(Integer textsId) {
 		Optional<Texts> optional = textsRepository.findById(textsId);
 
-		if (optional.isEmpty()) {
+		// isPresent檢查Optional是否為空直
+		if (!optional.isPresent()) {
 			return null;
 		}
 		return optional.get();
 	}
 
-	// 新增
-	public Texts insert(Texts texts) {
-		return textsRepository.save(texts);
+	// 刪除
+	public void deleteTextsById(int textsId) {
+		if (textsRepository.existsById(textsId)) {
+			textsRepository.deleteById(textsId);
+		} else {
+			System.out.println("查無主題");
+		}
 	}
 
 	@Transactional
@@ -69,19 +96,10 @@ public class TextsService {
 		}
 	}
 
-	// 刪除
-	public void deleteTextsById(int textsId) {
-		if (textsRepository.existsById(textsId)) {
-			textsRepository.deleteById(textsId);
-		} else {
-			System.out.println("查無主題");
-		}
-	}
-
 	// 分頁
 	public Texts findLastestMsg() {
 		Pageable pgb = PageRequest.of(0, 1, Sort.Direction.DESC, "doneTime");
-		Page<Texts> page = textsRepository.findAll(pgb);
+		Page<Texts> page = textsRepository.findLatest(pgb);
 
 		List<Texts> resultList = page.getContent();
 		System.out.println("Result List: " + resultList);
@@ -92,13 +110,7 @@ public class TextsService {
 		return resultList.get(0);
 	}
 
-	// 分頁
-	public Page<Texts> findByPage(Integer pageNumber) {
-		Pageable pgb = PageRequest.of(pageNumber - 1, 3, Sort.Direction.DESC, "doneTime");
-		Page<Texts> page = textsRepository.findAll(pgb);
-		return page;
-	}
-
+	// 查詢全部文章
 	public List<Texts> findAll() {
 		return textsRepository.findAll();
 	}
