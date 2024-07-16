@@ -136,6 +136,9 @@ public class GameController {
 			gameDiscounts.add(gameDiscount);
 			game.setGameDiscounts(gameDiscounts);
 			discountSet.setGameDiscounts(gameDiscounts);
+			Double oldRate = Double.parseDouble(gameDiscount.getDiscountRate().toString());
+			int rate = (int) (oldRate * 100);
+			game.setRate(rate);
 		}
 		//重新存入帶有圖片與優惠的遊戲
 		gService.save(newGame);
@@ -202,6 +205,9 @@ public class GameController {
 						gameDiscounts.add(gameDiscount);
 						game.setGameDiscounts(gameDiscounts);
 						discountSet.setGameDiscounts(gameDiscounts);
+						Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
+						int rate = (int) (oldRate * 100);
+						game.setRate(rate);
 					}
 				}
 				else {

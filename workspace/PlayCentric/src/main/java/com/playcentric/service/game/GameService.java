@@ -53,7 +53,6 @@ public class GameService {
 		origin.setGameName(game.getGameName());
 		origin.setGameTypeLibs(game.getGameTypeLibs());
 		origin.setImageLibs(game.getImageLibs());
-		origin.setIsFirstRelease(game.getIsFirstRelease());
 		origin.setIsShow(game.getIsShow());
 		origin.setPrice(game.getPrice());
 		origin.setPublisher(game.getPublisher());

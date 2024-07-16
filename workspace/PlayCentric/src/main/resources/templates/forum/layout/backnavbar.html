@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <title></title>
+    <style>
+        nav label {
+            border: 6px outset rgb(128, 60, 5);
+            margin-right: 10px;
+            display: inline-block;
+            /* 確保label內的內容看起來像按鈕 */
+            transition: transform 0.1s ease, color 0.1s ease;
+            /* 添加平滑過渡效果 */
+        }
+
+        nav label:hover {
+            background-color: gold;
+            transform: scale(0.88);
+            /* 模擬按下的效果 */
+        }
+
+        nav label:active {
+            border-style: inset;
+            /* 讓按下時有按下去的感覺 */
+            background-color: rgb(255, 200, 0);
+            /* 按下時變色 */
+        }
+
+        .n1 {
+            background-color: rgb(255, 115, 1);
+            margin: 0;
+            padding: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg n1">
+        <div class="container-fluid">
+            <div class="navbar-nav">
+                <label>
+                    <a class="nav-link active" aria-current="page" th:href="@{/findAllForum}">
+                        討論串</a>
+                </label>
+
+                <label>
+                    <a class="nav-link active" aria-current="page" th:href="@{/texts/page}">
+                        文章總覽</a>
+                </label>
+
+                <label>
+                    <a class="nav-link active" th:href="@{/findAllForum2}">
+                        後台主題
+                    </a>
+                </label>
+                <label>
+                    <a class="nav-link active" th:href="@{/findAllTexts}">
+                        後台文章
+                    </a>
+                </label>
+                <label>
+                    <a class="nav-link active" th:href="@{/findAllTalk}">
+                        後台留言
+                    </a>
+                </label>
+            </div>
+        </div>
+    </nav>
+
+    <script th:src="@{/js/jquery-3.7.1.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/axios.min.js}"></script>
+
+</body>
+
+</html>
