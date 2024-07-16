@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,12 +56,21 @@ public class GameRestController {
 	                    .containsAll(typeId))
 	            .collect(Collectors.toList());
 	    
+	    if (gamePage.isEmpty()) {
+	        return new PageImpl<>(Collections.emptyList(), pgb, 0);
+	    }
+	    
+	    // 計算分頁索引
 	    int start = (int) pgb.getOffset();
-	    int end = Math.min((start + pgb.getPageSize()), gamePage.size());
-	    List<Game> subList = gamePage.subList(start, end);
-
-	    Page<Game> game = new PageImpl<>(subList, pgb, gamePage.size());
-	    return game;
+	    int end = Math.min(start + pgb.getPageSize(), gamePage.size());
+	    
+	    // 檢查分頁索引是否超出遊戲列表範圍
+	    if (start <= end) {
+	        List<Game> subList = gamePage.subList(start, end);
+	        return new PageImpl<>(subList, pgb, gamePage.size());
+	    } else {
+	        return new PageImpl<>(Collections.emptyList(), pgb, gamePage.size());
+	    }
 	}
 	
 	//價格找遊戲

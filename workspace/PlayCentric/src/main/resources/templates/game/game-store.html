@@ -123,6 +123,27 @@
             }
         });
 
+        minPrice.addEventListener('input', handlePriceFilter);
+        maxPrice.addEventListener('input', handlePriceFilter);
+
+        function handlePriceFilter() {
+            if (minPrice.value !== '' && maxPrice.value !== '') {
+                if (typeId.length > 0) {
+                    typeAndPriceFilter();
+                } else {
+                    pricefilter();
+                }
+            }
+            else if (minPrice.value === '' && maxPrice.value === '') {
+                if (typeId.length > 0) {
+                    typefilter();
+                }
+            }
+            else {
+                nofilter();
+            }
+        }
+
         typeselector.forEach(typecheck => {
             typecheck.addEventListener('change', e => {
                 typeId = Array.from(typeselector)
@@ -131,7 +152,7 @@
                 pgnum = 0; // 重置 pgnum 變數
                 main.innerHTML = ''; // 清空主要內容區域
                 if (typeId.length > 0 && minPrice.value === '' && maxPrice.value === '') {
-                    typefilter(typeId);
+                    typefilter();
                 }
                 else if (typeId.length > 0 && minPrice.value !== '' && maxPrice.value !== '') {
                     typeAndPriceFilter();
@@ -145,13 +166,33 @@
             });
         });
 
-        function typefilter(typeIds) {
+        const typeTag = document.querySelectorAll('.mybtn-tag');
+        typeTag.forEach(tag => {
+            tag.addEventListener('click', e => {
+                const checkbox = tag.querySelector('input');
+                if (tag.classList.contains('mybtn-tag')) {
+                    tag.classList.remove('mybtn-tag');
+                    tag.classList.add('tag-selected');
+                    checkbox.checked = true;
+                    typeId.push(parseInt(checkbox.value));
+                } else {
+                    tag.classList.add('mybtn-tag');
+                    tag.classList.remove('tag-selected');
+                    checkbox.checked = false;
+                    typeId = typeId.filter(item => item !== parseInt(checkbox.value));
+                }
+                checkbox.dispatchEvent(new Event('change'));
+            });
+        });
+
+
+        function typefilter() {
             pgnum = 0;
             spin.classList.remove('hidden');
             axios.get('/PlayCentric/game/getGamePageByType', {
                 params: {
                     pg: pgnum,
-                    typeId: typeIds
+                    typeId: typeId
                 },
                 paramsSerializer: function (params) {
                     return Object.keys(params).map(key => {
@@ -212,14 +253,14 @@
             }
         }
 
-        function pricefilter(minPrice, maxPrice) {
+        function pricefilter() {
             pgnum = 0;
             spin.classList.remove('hidden');
             axios.get('/PlayCentric/game/getGamePageByPrice', {
                 params: {
                     pg: pgnum,
-                    minPrice: minPrice,
-                    maxPrice: maxPrice
+                    minPrice: minPrice.value,
+                    maxPrice: maxPrice.value
                 }
             })
                 .then(response => {
@@ -268,35 +309,31 @@
         function typeAndPriceFilter() {
             pgnum = 0;
             spin.classList.remove('hidden');
-            if (pgnum < totalPages - 1) {
-                axios.get('/PlayCentric/game/getGamePageByPriceAndType', {
-                    params: {
-                        pg: pgnum,
-                        typeId: typeId,
-                        minPrice: minPrice.value,
-                        maxPrice: maxPrice.value
-                    },
-                    paramsSerializer: function (params) {
-                        return Object.keys(params).map(key => {
-                            if (Array.isArray(params[key])) {
-                                return params[key].map(val => `${key}=${val}`).join('&');
-                            }
-                            return `${key}=${params[key]}`;
-                        }).join('&');
-                    }
+            axios.get('/PlayCentric/game/getGamePageByPriceAndType', {
+                params: {
+                    pg: pgnum,
+                    typeId: typeId,
+                    minPrice: minPrice.value,
+                    maxPrice: maxPrice.value
+                },
+                paramsSerializer: function (params) {
+                    return Object.keys(params).map(key => {
+                        if (Array.isArray(params[key])) {
+                            return params[key].map(val => `${key}=${val}`).join('&');
+                        }
+                        return `${key}=${params[key]}`;
+                    }).join('&');
+                }
+            })
+                .then(res => {
+                    main.innerHTML = '';
+                    res.data.content.forEach(elm => htmlmaker(elm));
+                    spin.classList.add('hidden');
                 })
-                    .then(res => {
-                        main.innerHTML = '';
-                        res.data.content.forEach(elm => htmlmaker(elm));
-                        spin.classList.add('hidden');
-                    })
-                    .catch(err => {
-                        spin.classList.add('hidden');
-                        console.error(err);
-                    });
-            } else {
-                spin.classList.add('hidden');
-            }
+                .catch(err => {
+                    spin.classList.add('hidden');
+                    console.log(err);
+                });
         }
 
         function typeAndPriceFilterPlus() {
@@ -335,28 +372,6 @@
             }
         }
 
-        minPrice.addEventListener('input', handlePriceFilter);
-        maxPrice.addEventListener('input', handlePriceFilter);
-
-        function handlePriceFilter() {
-            if (minPrice.value !== '' && maxPrice.value !== '') {
-                pgnum = 0;
-                if (typeId.length > 0) {
-                    typeAndPriceFilter();
-                } else {
-                    pricefilter(minPrice.value, maxPrice.value);
-                }
-            }
-            if (minPrice.value === '' && maxPrice.value === '') {
-                if (typeId.length > 0) {
-                    pgnum = 0;
-                    typefilter(typeId);
-                }
-            }
-            else {
-                nofilter();
-            }
-        }
 
         function nofilter() {
             if (minPrice.value === '' && maxPrice.value === '' && typeId.length === 0) {
@@ -426,26 +441,6 @@
 </div>`;
             main.innerHTML += html;
         }
-
-        const typeTag = document.querySelectorAll('.mybtn-tag');
-        typeTag.forEach(tag => {
-            tag.addEventListener('click', e => {
-                const checkbox = tag.querySelector('input');
-                if (tag.classList.contains('mybtn-tag')) {
-                    tag.classList.remove('mybtn-tag');
-                    tag.classList.add('tag-selected');
-                    checkbox.checked = true;
-                    typeId.push(parseInt(checkbox.value));
-                } else {
-                    tag.classList.add('mybtn-tag');
-                    tag.classList.remove('tag-selected');
-                    checkbox.checked = false;
-                    typeId = typeId.filter(item => item !== parseInt(checkbox.value));
-                }
-                checkbox.dispatchEvent(new Event('change'));
-            });
-        });
-
 
 
     </script>
