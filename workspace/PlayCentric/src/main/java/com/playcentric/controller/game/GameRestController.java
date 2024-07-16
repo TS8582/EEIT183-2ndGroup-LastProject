@@ -99,7 +99,6 @@ public class GameRestController {
 	                    .collect(Collectors.toSet())
 	                    .containsAll(typeId))
 	            .collect(Collectors.toList());
-	    System.out.println(gService.findByPriceList(minPrice, maxPrice));
 	    // 如果查詢結果為空，返回空的分頁結果
 	    if (gamePage.isEmpty()) {
 	        return new PageImpl<>(Collections.emptyList(), pgb, 0);
