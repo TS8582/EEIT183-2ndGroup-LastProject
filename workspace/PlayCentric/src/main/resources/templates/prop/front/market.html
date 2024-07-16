@@ -68,7 +68,7 @@
         <div class="m-3">
           <a href="#" id="inventoryBtn" class="btn btn-dark btn-lg" data-bs-toggle="modal" data-bs-target="#inventory"
             style="font-weight: 700; padding: 0rem 2rem">
-            販售
+            倉庫
           </a>
         </div>
       </div>
@@ -98,8 +98,8 @@
               </div>
             </div>
             <div class="modal-footer">
-
-              <button type="button" class="btn btn-dark">💰</button>
+              <input type="text" id="sellNum" name="" placeholder="請輸入數量" class="m-0">
+              <button type="button" id="sellBtn" class="btn btn-dark">販售</button>
               <button type="button" class="btn btn-dark" data-bs-dismiss="modal">
                 ❌
               </button>
@@ -113,6 +113,7 @@
   <div class="row isotope-container justify-content-center">
     <!-- 商品項目將在這裡動態生成 -->
   </div>
+
 
   <script th:src="@{/js/prop/template/jquery-1.11.0.min.js}"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
@@ -133,6 +134,7 @@
     let memId = document.getElementById('memberId')?.textContent.trim() || null;
     let selectedGameId;
     let inventoryProps; //倉庫裡的所有道具
+    let focusProp; //倉庫被點擊的道具
 
     $(document).ready(function () {
       loadGames();
@@ -307,6 +309,10 @@
       let rowDiv = null;
 
       inventoryProps.forEach((item, index) => { // 這裡需要改為item來包含prop和propQuantity
+        if (item.propQuantity <= 0) {
+          return; // 如果數量 <= 0，就跳過這個 item
+        }
+
         if (index % 6 === 0) { // 每6個道具生成一個新的row
           rowDiv = document.createElement('div');
           rowDiv.className = 'row mb-3';
@@ -331,10 +337,12 @@
           }
           // 為當前點擊的圖片添加選中樣式
           img.classList.add('selected');
+          focusProp = item;
+          console.log(focusProp);
         });
 
         const quantityDiv = document.createElement('div');
-        quantityDiv.textContent = `數量: ${item.propQuantity}`; // 使用正確的變量名
+        quantityDiv.textContent = `數量: ${item.propQuantity}`;
         quantityDiv.className = 'quantity';
 
         colDiv.appendChild(img);
@@ -342,7 +350,6 @@
         rowDiv.appendChild(colDiv);
       });
     }
-
     // 生成道具項目
     function generatePropItems(props) {
       const propsContainer = $(".isotope-container");
@@ -378,6 +385,30 @@
         .isotope({ sortBy: "original-order" });
     }
 
+    // 販賣按鈕
+    document.getElementById('sellBtn').addEventListener('click', function () {
+      if (focusProp) {
+        console.log('販售按鈕被點擊');
+        console.log(focusProp);
+        if (focusProp.propQuantity < document.getElementById('sellNum').value) {
+          window.alert('數量不足')
+        } else {
+          console.log(document.getElementById('sellNum').value);
+          axios({
+            method: 'post',
+            url: requestUrl,
+            data: {
+              id: requestUrl
+            }
+          })
+        }
+
+
+
+      } else {
+        window.alert('請選擇要販賣的物品')
+      }
+    });
   </script>
 </body>
 

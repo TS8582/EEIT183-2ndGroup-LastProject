@@ -82,5 +82,9 @@ public class PropSellOrderService {
         return optionalPropSellOrder.map(PropSellOrderDto::new).orElse(null);
     }
     
-
+    //新增賣單
+    public String SavePropSellOrder(PropSellOrder propSellOrder) {
+    	propSellOrderRepo.save(propSellOrder);
+    	return "賣單新增成功";
+    }  
 }

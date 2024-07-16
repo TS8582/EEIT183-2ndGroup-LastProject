@@ -64,4 +64,10 @@ public class PropBuyOrderService {
 //        //調用倉庫service修改倉庫的數量
 //        
 //    }
+	
+//	public String saveBuyOrder(PropBuyOrder propBuyOrder) {
+//		propBuyOrderRepo.save(propBuyOrder);
+//		return "成功新增買單";
+//	}
+	
 }
