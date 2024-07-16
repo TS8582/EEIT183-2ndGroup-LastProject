@@ -6,6 +6,10 @@
     <title th:text="${event.eventName}">活動詳情</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+<!--導覽列-->
+<body class="h-screen flex flex-col w-screen">
+  <div th:replace="~{/layout/nav}"></div>
+  
 <body>
     <div class="container mt-5">
         <h1 class="mb-4" th:text="${event.eventName}">活動名稱</h1>
@@ -19,13 +23,13 @@
                 <p class="card-text"><strong>狀態：</strong> 
                     <span th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"></span>
                 </p>
-                <a href="#" class="btn btn-primary" th:if="${event.eventStatus != 2}">報名參加</a>
+                <a th:href="@{'/eventSignup/new/' + ${event.eventId}}" class="btn btn-primary" th:if="${event.eventStatus != 2}">報名參加</a>
                 <a href="#" class="btn btn-secondary" th:if="${event.eventStatus == 2}" disabled>活動已結束</a>
             </div>
         </div>
-        <a href="/events/public/list" class="btn btn-link mt-3">返回活動列表</a>
+        <a th:href="@{/events/public/list}" class="btn btn-link mt-3">返回活動列表</a>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

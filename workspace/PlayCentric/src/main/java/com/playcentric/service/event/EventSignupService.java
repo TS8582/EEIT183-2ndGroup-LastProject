@@ -1,85 +1,93 @@
-//package com.playcentric.service.event;
-//
-//import java.util.List;
-//import java.util.stream.Collectors;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import com.playcentric.model.event.Event;
-//import com.playcentric.model.event.EventRepository;
-//import com.playcentric.model.event.EventSignup;
-//import com.playcentric.model.event.EventSignupDTO;
-//import com.playcentric.model.event.EventSignupRepository;
-//import com.playcentric.model.member.Member;
-//import com.playcentric.model.member.MemberRepository;
-//
-//@Service
-//public class EventSignupService {
-//
-//    @Autowired
-//    private EventSignupRepository eventSignupRepository;
-//
-//    @Autowired
-//    private EventRepository eventRepository;
-//    
-//    @Autowired
-//    private MemberRepository memberRepository;
-//    
-//    public EventSignupDTO createEventSignup(EventSignupDTO eventSignupDTO) {
-//        EventSignup eventSignup = new EventSignup();
-//        
-//        Event event = eventRepository.findById(eventSignupDTO.getEventId())
-//                                      .orElseThrow(() -> new IllegalArgumentException("Event not found"));
-//        
-//        Member member = memberRepository.findById(eventSignupDTO.getMemId())
-//                                        .orElseThrow(() -> new IllegalArgumentException("Member not found"));
-//        
-//        eventSignup.setEvent(event);
-//        eventSignup.setMember(member);
-//        eventSignup.setSignupTime(eventSignupDTO.getSignupTime());
-//        eventSignup.setVoteCount(eventSignupDTO.getVoteCount());
-//        eventSignup.setWork(eventSignupDTO.getWork());
-//        eventSignup.setWorkDescription(eventSignupDTO.getWorkDescription());
-//        eventSignup.setWorkTitle(eventSignupDTO.getWorkTitle());
-//        eventSignup.setWorkType(eventSignupDTO.getWorkType());
-//        eventSignup.setWorkUploadTime(eventSignupDTO.getWorkUploadTime());
-//        
-//        eventSignupRepository.save(eventSignup);
-//        
-//        return eventSignupDTO;
-//    }
-//
-//    public EventSignupDTO getEventSignupDTO(Integer signupId) {
-//        EventSignup eventSignup = eventSignupRepository.findById(signupId).orElse(null);
-//        return eventSignup != null ? new EventSignupDTO(eventSignup) : null;
-//    }
-//
-//    public List<EventSignupDTO> getAllEventSignups() {
-//        return eventSignupRepository.findAll().stream()
-//                .map(EventSignupDTO::new)
-//                .collect(Collectors.toList());
-//    }
-//
-//    public EventSignupDTO updateEventSignup(EventSignupDTO eventSignupDTO) {
-//        EventSignup eventSignup = eventSignupRepository.findById(eventSignupDTO.getSignupId()).orElse(null);
-//        if (eventSignup != null) {
-//            eventSignup.setMember(eventSignup.getMember());
-//            eventSignup.setEvent(eventSignup.getEvent());
-//            eventSignup.setSignupTime(eventSignupDTO.getSignupTime());
-//            eventSignup.setWork(eventSignupDTO.getWork());
-//            eventSignup.setWorkType(eventSignupDTO.getWorkType());
-//            eventSignup.setWorkTitle(eventSignupDTO.getWorkTitle());
-//            eventSignup.setWorkDescription(eventSignupDTO.getWorkDescription());
-//            eventSignup.setWorkUploadTime(eventSignupDTO.getWorkUploadTime());
-//            eventSignup.setVoteCount(eventSignupDTO.getVoteCount());
-//            EventSignup updatedEventSignup = eventSignupRepository.save(eventSignup);
-//            return new EventSignupDTO(updatedEventSignup);
-//        }
-//        return null;
-//    }
-//
-//    public void deleteEventSignup(Integer signupId) {
-//        eventSignupRepository.deleteById(signupId);
-//    }
-//}
+package com.playcentric.service.event;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.playcentric.model.event.EventSignup;
+import com.playcentric.model.event.EventSignupRepository;
+
+import jakarta.transaction.Transactional;
+
+@Service
+@Transactional
+public class EventSignupService {
+
+    @Autowired
+    private EventSignupRepository eventSignupRepository;
+
+    /**
+     * 創建新的報名
+     * @param eventSignup 新的報名數據
+     * @return 創建成功的報名數據
+     */
+    public EventSignup createSignup(EventSignup eventSignup) {
+        eventSignup.setSignupTime(LocalDateTime.now()); // 設置當前時間為報名時間
+        eventSignup.setVoteCount(0); // 初始化投票數
+        eventSignup.setEventSignupStatus(1); // 假設1代表已報名狀態
+        return eventSignupRepository.save(eventSignup); // 保存報名到資料庫
+    }
+
+    /**
+     * 獲取指定ID的報名詳情
+     * @param signupId 報名ID
+     * @return 指定ID的報名數據
+     */
+    public EventSignup getSignupById(Integer signupId) {
+        return eventSignupRepository.findById(signupId)
+        		// 若不存在，拋出異常
+                .orElseThrow(() -> new RuntimeException("報名記錄不存在")); 
+    }
+
+    /**
+     * 獲取所有報名的列表
+     * @return 所有報名的列表
+     */
+    public List<EventSignup> getAllSignups() {
+    	// 獲取所有報名
+        return eventSignupRepository.findAll(); 
+    }
+
+    /**
+     * 根據活動ID獲取報名
+     * @param eventId 活動ID
+     * @return 指定活動的所有報名
+     */
+    public List<EventSignup> getSignupsByEventId(Integer eventId) {
+        return eventSignupRepository.findByEvent_EventId(eventId);
+    }
+
+    /**
+     * 根據會員ID獲取報名
+     * @param memberId 會員ID
+     * @return 指定會員的所有報名
+     */
+    public List<EventSignup> getSignupsByMemberId(Integer memberId) {
+        return eventSignupRepository.findByMember_MemId(memberId);
+    }
+
+    /**
+     * 更新報名信息
+     * @param eventSignup 更新的報名數據
+     * @return 更新後的報名數據
+     */
+    public EventSignup updateSignup(EventSignup eventSignup) {
+        if (!eventSignupRepository.existsById(eventSignup.getSignupId())) {
+        	// 若不存在，拋出異常
+            throw new RuntimeException("報名記錄不存在"); 
+        }
+        // 保存更新到資料庫
+        return eventSignupRepository.save(eventSignup); 
+    }
+
+    /**
+     * 刪除報名
+     * @param signupId 報名ID
+     */
+    public void deleteSignup(Integer signupId) {
+    	// 根據ID刪除報名
+        eventSignupRepository.deleteById(signupId); 
+    }
+}
