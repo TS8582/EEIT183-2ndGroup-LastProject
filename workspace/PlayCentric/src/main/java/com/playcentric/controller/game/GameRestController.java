@@ -81,7 +81,6 @@ public class GameRestController {
 	                                            @RequestParam Integer maxPrice,
 	                                            @RequestParam List<Integer> typeId) {
 	    Pageable pgb = PageRequest.of(pg, 9);
-	    
 	    // 根據條件查詢遊戲
 	    List<Game> gamePage = gService.findByPriceList(minPrice, maxPrice).stream()
 	            .filter(game -> game.getGameTypeLibs().stream()
@@ -89,7 +88,7 @@ public class GameRestController {
 	                    .collect(Collectors.toSet())
 	                    .containsAll(typeId))
 	            .collect(Collectors.toList());
-	    
+	    System.out.println(gService.findByPriceList(minPrice, maxPrice));
 	    // 如果查詢結果為空，返回空的分頁結果
 	    if (gamePage.isEmpty()) {
 	        return new PageImpl<>(Collections.emptyList(), pgb, 0);

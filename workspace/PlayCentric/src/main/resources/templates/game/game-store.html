@@ -136,6 +136,9 @@
                 else if (typeId.length > 0 && minPrice.value !== '' && maxPrice.value !== '') {
                     typeAndPriceFilter();
                 }
+                else if (minPrice.value !== '' && maxPrice.value !== '' && typeId.length === 0) {
+                    pricefilter();
+                }
                 else {
                     nofilter();
                 }
@@ -143,6 +146,7 @@
         });
 
         function typefilter(typeIds) {
+            pgnum = 0;
             spin.classList.remove('hidden');
             axios.get('/PlayCentric/game/getGamePageByType', {
                 params: {
@@ -209,6 +213,7 @@
         }
 
         function pricefilter(minPrice, maxPrice) {
+            pgnum = 0;
             spin.classList.remove('hidden');
             axios.get('/PlayCentric/game/getGamePageByPrice', {
                 params: {
@@ -261,8 +266,8 @@
         }
 
         function typeAndPriceFilter() {
+            pgnum = 0;
             spin.classList.remove('hidden');
-            scrolltrigger = false;
             if (pgnum < totalPages - 1) {
                 axios.get('/PlayCentric/game/getGamePageByPriceAndType', {
                     params: {
@@ -281,13 +286,12 @@
                     }
                 })
                     .then(res => {
+                        main.innerHTML = '';
                         res.data.content.forEach(elm => htmlmaker(elm));
-                        scrolltrigger = true;
                         spin.classList.add('hidden');
                     })
                     .catch(err => {
                         spin.classList.add('hidden');
-                        scrolltrigger = true;
                         console.error(err);
                     });
             } else {
@@ -342,7 +346,14 @@
                 } else {
                     pricefilter(minPrice.value, maxPrice.value);
                 }
-            } else {
+            }
+            if (minPrice.value === '' && maxPrice.value === '') {
+                if (typeId.length > 0) {
+                    pgnum = 0;
+                    typefilter(typeId);
+                }
+            }
+            else {
                 nofilter();
             }
         }
