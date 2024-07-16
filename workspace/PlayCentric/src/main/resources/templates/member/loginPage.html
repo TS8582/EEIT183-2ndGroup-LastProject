@@ -188,12 +188,6 @@
 
         e.preventDefault()
 
-        if (!isPwdEqu()) {
-          $('#passwordCheckBlock').show();
-          doAlert('請確認密碼!');
-          return;
-        }
-
         const formdataObject = new FormData(this);
 
         axios.post(loginUrl, formdataObject)
@@ -212,6 +206,12 @@
       $('#registForm').submit(function (e) {
 
         e.preventDefault()
+
+        if (!isPwdEqu()) {
+          $('#passwordCheckBlock').show();
+          doAlert('請確認密碼!');
+          return;
+        }
 
         const formdataObject = new FormData(this);
         formdataObject.set('role',0)
