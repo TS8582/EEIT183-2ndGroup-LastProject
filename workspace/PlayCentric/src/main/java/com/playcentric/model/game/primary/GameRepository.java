@@ -1,5 +1,6 @@
 package com.playcentric.model.game.primary;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -13,6 +14,9 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
 	
 	Page<Game> findByIsShow(Boolean isShow,Pageable pgb);
 	
+	List<Game> findByIsShow(Boolean isShow);
+	
 	Page<Game> findByPriceBetween(Integer minPrice,Integer maxPrice,Pageable pgb);
 	
+	List<Game> findByPriceBetween(Integer minPrice,Integer maxPrice);
 }
