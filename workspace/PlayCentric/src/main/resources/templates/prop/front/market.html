@@ -92,7 +92,7 @@
                 <div class="col-8" id="inventoryPropsContainer">
                   <!-- 道具圖片會在這裡生成 -->
                 </div>
-                <div class="col-4">
+                <div class="col-4" id="invPropInfo">
                   完整商品資訊
                 </div>
               </div>
@@ -306,7 +306,9 @@
     // 生成倉庫道具圖片
     function generateInventoryPropImages(inventoryProps) {
       const container = document.getElementById('inventoryPropsContainer');
+      const invPropInfoContainer = document.getElementById('invPropInfo');
       container.innerHTML = ''; // 清空容器
+      invPropInfoContainer.innerHTML = ''; // 清空商品資訊容器
 
       let rowDiv = null;
 
@@ -341,6 +343,14 @@
           img.classList.add('selected');
           focusProp = item;
           console.log(focusProp);
+
+          // 更新商品資訊
+          invPropInfoContainer.innerHTML = `
+            <img src="http://localhost:8080/PlayCentric/prop/image?id=${item.prop.propImageId}" class="img-fluid rounded-4" alt="${item.prop.propName}" style="width: 11vw;">
+            <br>
+            <h5 class="fs-2">${item.prop.propName}</h5>
+            <p  class="fs-4">描述: ${item.prop.propDescription}</p>
+          `;
         });
 
         const quantityDiv = document.createElement('div');
@@ -352,6 +362,7 @@
         rowDiv.appendChild(colDiv);
       });
     }
+
     // 生成道具項目
     function generatePropItems(props) {
       const propsContainer = $(".isotope-container");
@@ -403,7 +414,7 @@
         window.alert('請選擇要販賣的物品')
       }
     });
-    sellPrice
+
     // 販賣物品(java)方法
     function sellProp(focusProp, memId) {
       axios({
@@ -419,8 +430,6 @@
         .then(response => {
           console.log(document.getElementById('sellNum').value + '販賣數量')
           console.log(document.getElementById('sellPrice').value + '販賣價格')
-
-
           console.log(response.data);
           window.alert("已成功將商品委託拍賣!")
           generateInventoryItems(memId, selectedGameId);
