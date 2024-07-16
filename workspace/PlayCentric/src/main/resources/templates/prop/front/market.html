@@ -98,7 +98,8 @@
               </div>
             </div>
             <div class="modal-footer">
-              <input type="text" id="sellNum" name="" placeholder="請輸入數量" class="m-0">
+              <input type="text" id="sellNum" name="" placeholder="請輸入數量" class="m-0" required>
+              <input type="text" id="sellPrice" name="" placeholder="請輸入價格" class="m-0" required>
               <button type="button" id="sellBtn" class="btn btn-dark">販售</button>
               <button type="button" class="btn btn-dark" data-bs-dismiss="modal">
                 ❌
@@ -131,7 +132,7 @@
     // 加載所有遊戲
     const propTypesMap = {};
     const inventoryBtn = document.getElementById('inventoryBtn');
-    let memId = document.getElementById('memberId')?.textContent.trim() || null;
+    const memId = document.getElementById('memberId')?.textContent.trim() || null;
     let selectedGameId;
     let inventoryProps; //倉庫裡的所有道具
     let focusProp; //倉庫被點擊的道具
@@ -298,6 +299,7 @@
         })
         .catch((error) => {
           console.error('獲取倉庫資訊時出錯:', error);
+          window.alert("請先登入");
         });
     }
 
@@ -390,25 +392,43 @@
       if (focusProp) {
         console.log('販售按鈕被點擊');
         console.log(focusProp);
+        console.log("會員ID看這邊" + memId)
         if (focusProp.propQuantity < document.getElementById('sellNum').value) {
           window.alert('數量不足')
         } else {
           console.log(document.getElementById('sellNum').value);
-          axios({
-            method: 'post',
-            url: requestUrl,
-            data: {
-              id: requestUrl
-            }
-          })
+          sellProp(focusProp, memId);
         }
-
-
-
       } else {
         window.alert('請選擇要販賣的物品')
       }
     });
+    sellPrice
+    // 販賣物品(java)方法
+    function sellProp(focusProp, memId) {
+      axios({
+        method: 'post',
+        url: 'http://localhost:8080/PlayCentric/prop/propSellorderSave',
+        params: {
+          amount: document.getElementById('sellPrice').value,
+          propId: focusProp.prop.propId,
+          quantity: document.getElementById('sellNum').value,
+          memId: memId,
+        }
+      })
+        .then(response => {
+          console.log(document.getElementById('sellNum').value + '販賣數量')
+          console.log(document.getElementById('sellPrice').value + '販賣價格')
+
+
+          console.log(response.data);
+          window.alert("已成功將商品委託拍賣!")
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
   </script>
 </body>
 

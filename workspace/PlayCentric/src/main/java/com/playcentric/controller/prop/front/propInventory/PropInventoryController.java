@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -37,7 +38,7 @@ public class PropInventoryController {
 
 	
 	//販賣物品
-	@GetMapping("prop/propSellorderSave")
+	@PostMapping("prop/propSellorderSave")
 	@ResponseBody
 	public String savePropSellOrder(@RequestParam("amount") int amount,@RequestParam("propId") int propId,@RequestParam("quantity") int quantity,@RequestParam("memId") int memId  ) {
 		
