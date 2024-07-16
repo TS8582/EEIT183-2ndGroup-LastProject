@@ -134,11 +134,11 @@ public class GameController {
 			gameDiscount.setGameDiscountId(discountId);
 			List<GameDiscount> gameDiscounts = new ArrayList<>();
 			gameDiscounts.add(gameDiscount);
-			game.setGameDiscounts(gameDiscounts);
+			newGame.setGameDiscounts(gameDiscounts);
 			discountSet.setGameDiscounts(gameDiscounts);
 			Double oldRate = Double.parseDouble(gameDiscount.getDiscountRate().toString());
 			int rate = (int) (oldRate * 100);
-			game.setRate(rate);
+			newGame.setRate(rate);
 		}
 		//重新存入帶有圖片與優惠的遊戲
 		gService.save(newGame);
@@ -257,5 +257,13 @@ public class GameController {
 		model.addAttribute("allType",allType);
 		model.addAttribute("games",games);
 		return "game/game-store";
+	}
+	
+
+	@GetMapping("/game/test")
+	public String test(Model model) {
+		Game game = gService.findById(62);
+		model.addAttribute("game",game);
+		return "ttt";
 	}
 }
