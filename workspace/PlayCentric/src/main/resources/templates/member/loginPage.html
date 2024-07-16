@@ -105,6 +105,9 @@
                 <label for="password-confirm" class="input-group-text">確認密碼*</label>
                 <input type="password" class="form-control" id="password-confirm">
               </div>
+              <div id="passwordCheckBlock" class="form-text text-danger" style="display: none;">
+                與密碼輸入不一致，請重新檢查
+              </div>
               <div class="input-group mb-1">
                 <label for="email" class="input-group-text">Email*</label>
                 <input type="email" class="form-control" id="email" name="email" required>
@@ -164,10 +167,32 @@
         doAlert(errMsg);
       }
 
+      //自動確認密碼是否相同
+      $('#registForm #password-confirm').blur(function(){
+        checkPwdAndBlock();
+        $('#registForm input[type=password]').keyup(checkPwdAndBlock)
+        $('#registForm input[type=password]').keypress(checkPwdAndBlock)
+      })
+
+      function checkPwdAndBlock() {
+        if (isPwdEqu()) {
+          $('#passwordCheckBlock').hide();
+          $('#registForm [type=submit]').removeClass('disabled');
+        } else {
+          $('#passwordCheckBlock').show();
+          $('#registForm [type=submit]').addClass('disabled');
+        }
+      }
 
       $('#login-form').submit(function (e) {
 
         e.preventDefault()
+
+        if (!isPwdEqu()) {
+          $('#passwordCheckBlock').show();
+          doAlert('請確認密碼!');
+          return;
+        }
 
         const formdataObject = new FormData(this);
 
@@ -209,6 +234,12 @@
         loginTab.show();
       })
 
+
+      function isPwdEqu() {
+        let psw = $('#registForm #password').val();
+        let pswCon = $('#registForm #password-confirm').val();
+        return psw === pswCon;
+      }
     })
   </script>
 </body>
