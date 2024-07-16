@@ -33,7 +33,6 @@ public class GameRestController {
 		Pageable pgb = PageRequest.of(pg, 9);
 		Page<Game> findGames = gService.findShowInStore(pgb);
 		for (Game game : findGames) {
-			System.out.println(game);
 			GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
 			if (nowDiscount != null) {
 				Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
@@ -87,10 +86,11 @@ public class GameRestController {
 	
 	//價格+分類篩選遊戲
 	@GetMapping("/game/getGamePageByPriceAndType")
-	public Page<Game> getGamePageByPriceAndType(@RequestParam Integer pg,
-	                                            @RequestParam Integer minPrice,
-	                                            @RequestParam Integer maxPrice,
-	                                            @RequestParam List<Integer> typeId) {
+	public Page<Game> getGamePageByPriceAndType(
+			@RequestParam Integer pg,
+			@RequestParam Integer minPrice,
+			@RequestParam Integer maxPrice,
+			@RequestParam List<Integer> typeId) {
 	    Pageable pgb = PageRequest.of(pg, 9);
 	    // 根據條件查詢遊戲
 	    List<Game> gamePage = gService.findByPriceList(minPrice, maxPrice).stream()
@@ -99,7 +99,6 @@ public class GameRestController {
 	                    .collect(Collectors.toSet())
 	                    .containsAll(typeId))
 	            .collect(Collectors.toList());
-	    System.out.println(gService.findByPriceList(minPrice, maxPrice));
 	    // 如果查詢結果為空，返回空的分頁結果
 	    if (gamePage.isEmpty()) {
 	        return new PageImpl<>(Collections.emptyList(), pgb, 0);
