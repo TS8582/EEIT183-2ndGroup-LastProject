@@ -28,6 +28,21 @@ public class GameService {
 		return gRepo.findByIsShow(true,pgb);
 	}
 	
+	//展示遊戲回傳list
+	public List<Game> findByIsShow() {
+		return gRepo.findByIsShow(true);
+	}
+	
+	//價格找遊戲回傳list
+	public List<Game> findByPriceList(Integer minPrice,Integer maxPrice) {
+		return gRepo.findByPriceBetween(minPrice, maxPrice);
+	}
+	
+	//價格找遊戲
+	public Page<Game> findByPriceBetween(Integer minPrice,Integer maxPrice,Pageable pgb) {
+		return gRepo.findByPriceBetween(minPrice, maxPrice, pgb);
+	}
+	
 	//新增遊戲
 	public Game save(Game game) {
 		return gRepo.save(game); 
