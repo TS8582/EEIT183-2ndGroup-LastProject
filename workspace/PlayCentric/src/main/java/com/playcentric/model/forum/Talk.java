@@ -42,7 +42,7 @@ public class Talk {
 	
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "memId")
+	@JoinColumn(name = "memId", nullable = true)
 	private Member member;
 	
 	@Column(insertable = false, updatable = false)

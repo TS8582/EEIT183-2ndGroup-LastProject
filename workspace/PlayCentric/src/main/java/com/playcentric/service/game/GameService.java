@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.playcentric.model.game.primary.Game;
@@ -21,8 +24,8 @@ public class GameService {
 	private GameDiscountRepository gdRepo;
 	
 	//商店展示的遊戲
-	public List<Game> findShowInStore() {
-		return gRepo.findByIsShow(true);
+	public Page<Game> findShowInStore(Pageable pgb) {
+		return gRepo.findByIsShow(true,pgb);
 	}
 	
 	//新增遊戲
@@ -50,7 +53,6 @@ public class GameService {
 		origin.setGameName(game.getGameName());
 		origin.setGameTypeLibs(game.getGameTypeLibs());
 		origin.setImageLibs(game.getImageLibs());
-		origin.setIsFirstRelease(game.getIsFirstRelease());
 		origin.setIsShow(game.getIsShow());
 		origin.setPrice(game.getPrice());
 		origin.setPublisher(game.getPublisher());

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,17 +39,7 @@ public class MemberController {
 	@Autowired
 	private ImageLibService imageLibService;
 	
-	@GetMapping("/home")
-	public String home() {
-		return "member/home";
-	}
-	
 
-	@GetMapping("/regist")
-	public String registPage() {
-		return "member/registMember";
-	}
-	
 	@PostMapping("/regist")
 	@ResponseBody
 	public String registMemberTest(@ModelAttribute Member member,@RequestParam("photoFile") MultipartFile photoFile) throws IOException {
@@ -77,6 +68,12 @@ public class MemberController {
 		return "註冊失敗!";
 	}
 
+	@GetMapping("/showLoginErr{err}")
+	public String showLoginErr(@PathVariable String err, Model model) {
+		model.addAttribute("errMsg", err);
+		return "member/loginPage";
+	}
+
 	@GetMapping("/login")
 	public String loginPage(Model model) {
 		if (model.getAttribute("loginMember")!=null) {
@@ -88,6 +85,10 @@ public class MemberController {
 	@PostMapping("/login")
 	@ResponseBody
 	public String loginPost(@RequestParam String account,@RequestParam String password, Model model, RedirectAttributes redirectAttributes) {
+		if (model.getAttribute("loginMember")!=null) {
+			redirectAttributes.addFlashAttribute("loginMsg","已登入，請先登出!");
+			return "redirect:/";
+		}
 		Member loginMember = memberService.checkLogin(account, password);
 		if (loginMember==null) {
 			// model.addAttribute("errorMsg", "登入失敗");
@@ -98,6 +99,17 @@ public class MemberController {
 		// redirectAttributes.addFlashAttribute("okMsg", "登入成功");
 		return "登入成功!";
 	}
+
+	@GetMapping("/loginSuccess")
+	public String loginSeccess(RedirectAttributes redirectAttributes, Model model) {
+		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		if (loginMember != null) {
+			String loginName = loginMember.getNickname();
+			redirectAttributes.addFlashAttribute("loginOK",loginName+"登入成功!");
+		}
+		return "redirect:/";
+	}
+	
 	
 	@GetMapping("/logout")
 	public String logout(SessionStatus status, RedirectAttributes redirectAttributes) {
@@ -168,6 +180,25 @@ public class MemberController {
 	@ResponseBody
 	public String deleteMem(@RequestParam("memId") Integer memId){
 		return memberService.deleteMemById(memId)? "刪除成功":"刪除失敗";
+	}
+
+	@GetMapping("/memInfo")
+	public String memInfoPage(Model model, RedirectAttributes redirectAttributes) {
+		if (model.getAttribute("loginMember")==null) {
+			redirectAttributes.addFlashAttribute("errorMsg","請先登入會員!");
+			return "redirect:login";
+		}
+		return "member/memInfoPage";
+	}
+	
+	@GetMapping("/getMemInfo")
+	@ResponseBody
+	public Member getMemInfo(Model model) {
+		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		if (loginMember!=null) {
+			return memberService.findById(loginMember.getMemId());
+		}
+		return null;
 	}
 	
 	

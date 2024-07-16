@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW" xmlms:th="http://www.thymeleaf.org/">
+<html lang="zh-Hant-TW" xmlns:th="http://www.thymeleaf.org/">
 
 <head>
     <meta charset="UTF-8">
@@ -9,73 +9,249 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>PlayCentric-遊戲商店</title>
     <style>
-
+        body {
+            background-image: url('/PlayCentric/images/bg1.jpg');
+        }
     </style>
+    <title>PlayCentric-遊戲商店</title>
 </head>
 
-<body class="h-screen">
-    <!-- 頂部導航欄 -->
-
-    <div class="flex flex-col h-5/6">
-
+<body class="h-screen bg-gray-500">
+    <div class="spin hidden">
+        <div class="flex justify-center items-center h-4/5 w-full fixed ">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 shadow-md border-lime-500"></div>
+        </div>
+    </div>
+    <div class="flex flex-col h-auto container mx-auto">
         <!-- 篩選欄 -->
-        <div class="flex justify-center h-auto my-2">
+        <div class="flex justify-center h-auto my-2 text-white">
+
+
+
             <div class="w-full lg:w-1/2 h-auto border-2 flex flex-col rounded-md justify-center items-center">
                 <!-- 以價格篩選 -->
+
                 <div class="flex flex-col items-center justify-center p-2 w-full">
+                    <span>依名稱搜尋</span>
+                    <input type="text" id="gameName" placeholder="請輸入名稱" class="text-input w-1/3 text-black">
                     <span class="block text-lg">依價格篩選</span>
                     <label for="minPrice">最低價格： </label>
-                    <input type="text" name="minPrice" id="minPrice" class="text-input w-1/3" maxlength="5">
+                    <input type="text" placeholder="最低價格" name="minPrice" id="minPrice"
+                        class="text-input w-1/3 text-black" maxlength="5">
                     <label for="maxPrice">最高價格： </label>
-                    <input type="text" name="maxPrice" id="maxPrice" class="text-input w-1/3" maxlength="5">
+                    <input type="text" name="maxPrice" id="maxPrice" class="text-input w-1/3 text-black"
+                        placeholder="最高價格" maxlength="5">
                 </div>
-
                 <!-- 以分類篩選 -->
                 <span class="block text-lg">依分類篩選</span>
                 <!-- 取所有分類 -->
                 <div class="p-2 flex flex-wrap">
                     <th:block th:each="type:${allType}">
-                        <div class="text-sm mybtn mybtn-tag">
+                        <div class="text-sm mybtn-tag">
                             <span th:text="${type.gameTypeName}"></span>
                             <input class="hidden" type="checkbox" name="typeId" th:value="${type.gameTypeId}">
                         </div>
                     </th:block>
                 </div>
-
             </div>
         </div>
 
+        <main class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 h-full container mt-2">
+            <input id="pages" type="hidden" th:value="${games.totalPages}">
+            <th:block th:each="game:${games.content}">
 
-        <main class="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-3 h-full container mt-2">
-            <div class="h-96 shadow-sm border-2 col-span-3 md:col-span-2 lg:col-span-1 rounded-lg">
+                <div
+                    class="h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500">
+                    <div class="py-2 h-64 flex justify-center rounded-md">
+                        <img th:if="${!game.imageLibs.empty}" class="w-auto h-full rounded-md"
+                            th:src="@{/imagesLib/image{id}(id=${game.ImageLibs[0].imageId})}" alt="">
+                    </div>
+                    <div class="h-1/3 flex text-black flex-col items-center p-2">
+                        <div class="flex justify-center">
+                            <span class="text-xl p-2 rounded-md select-none" th:text="${game.gameName}"></span>
+                        </div>
+                        <div class="flex justify-center my-2 space-x-3">
+                            <span th:if="${game.rate}" class="price-tag font-semibold"
+                                th:text="'-' + ${100 -  game.rate} + '%'"></span>
+                            <!-- 沒優惠顯示的價格 -->
+                            <span th:if="${game.rate == null}" class="price-tag text-black font-semibold"
+                                th:text=" '$' + ${game.price}"></span>
+                            <!-- 有優惠顯示的價格 -->
+                            <span th:if="${game.rate}" class="price-tag font-semibold"
+                                th:text=" '$' + ${game.price * game.rate / 100}"></span>
+                        </div>
+                        <div class="flex justify-center">
+                            <span class="border border-red-300 mybtn mybtn-green">加入購物車</span>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
 
-            </div>
-            <div class="h-96 shadow-sm border-2 col-span-3 md:col-span-2 lg:col-span-1 rounded-lg">
 
-            </div>
-            <div class="h-96 shadow-sm border-2 col-span-3 md:col-span-2 lg:col-span-1 rounded-lg">
-
-            </div>
         </main>
-
 
     </div>
 
-
+    <script th:src="@{/js/axios.min.js}"></script>
     <script>
-        // const lefttoggle = document.querySelector('.left-toggle');
-        // const aside = document.querySelector('.aside');
+        let pgnum = 0;
+        let totalPages = document.querySelector('#pages').value;
+        const minPrice = document.querySelector('#minPrice');
+        const maxPrice = document.querySelector('#maxPrice');
+        let tagselected = document.querySelectorAll('.tag-selected');
+        const main = document.querySelector('main');
+        const spin = document.querySelector('.spin');
+        const typeselector = document.querySelectorAll('input[name="typeId"]');
+        let scrolltrigger = true;
+        //滑到底部載入事件
+        window.addEventListener('scroll', function () {
+            // 計算視窗的高度
+            var windowHeight = window.innerHeight;
+            // 計算網頁內容的高度
+            var documentHeight = document.documentElement.scrollHeight;
+            // 計算已經滾動過的距離
+            var scrollTop = window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0);
 
-        // lefttoggle.addEventListener('click', e => {
-        //     aside.classList.toggle('-left-48');
-        //     aside.classList.toggle('left-0');
-        // })
+            // 判斷是否已經滾動到底部
+            if (windowHeight + scrollTop >= documentHeight) {
+                if (scrolltrigger) {
+                    nofilterplus();
+                }
 
 
+            }
+        });
+
+
+        minPrice.addEventListener('input', nofilter);
+        maxPrice.addEventListener('input', nofilter);
+
+
+
+        function nofilter() {
+            if ((minPrice.value == '' && maxPrice.value == '') && tagselected.length == 0) {
+                pgnum = 0;
+                main.innerHTML = '';
+                spin.classList.remove('hidden');
+                scrolltrigger = false;
+                axios.get('/PlayCentric/game/getGamePage', {
+                    params: {
+                        pg: pgnum
+                    }
+                })
+                    .then(res => {
+                        totalPages = res.data.totalPages;
+                        const data = res.data.content;
+                        console.log(data);
+                        data.forEach(elm => {
+                            htmlmaker(elm);
+                        });
+                        scrolltrigger = true;
+                        spin.classList.add('hidden');
+                    })
+                    .catch(err => {
+                        spin.classList.add('hidden');
+                        console.error(err);
+                        scrolltrigger = true;
+                    })
+            }
+
+        }
+
+        function nofilterplus() {
+            spin.classList.remove('hidden');
+            scrolltrigger = false;
+            if (pgnum < (totalPages - 1)) {
+                axios.get('/PlayCentric/game/getGamePage', {
+                    params: {
+                        pg: pgnum + 1
+                    }
+                })
+                    .then(res => {
+                        totalPages = res.data.totalPages;
+                        const data = res.data.content;
+                        console.log(data);
+                        data.forEach(elm => {
+                            htmlmaker(elm);
+                        });
+                        pgnum += 1;
+                        scrolltrigger = true;
+                        spin.classList.add('hidden');
+                    })
+                    .catch(err => {
+                        spin.classList.add('hidden');
+                        scrolltrigger = true;
+                        console.error(err);
+                    })
+            }
+            else {
+                spin.classList.add('hidden');
+            }
+        }
+
+        function htmlmaker(game) {
+
+            // 建立完整的 HTML 字串
+            let html =
+                `<div class="h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500">
+            <div class="py-2 h-64 flex justify-center rounded-md">`;
+
+            // 添加圖片部分
+            if (game.imageLibs.length > 0) {
+                html += `<img class="w-auto h-full rounded-md"
+                    src="/PlayCentric/imagesLib/image${game.imageLibs[0].imageId}" alt="">`;
+            }
+
+            // 添加遊戲名稱和價格部分
+            html +=
+                `</div>
+            <div class="h-1/3 flex text-black flex-col items-center p-2">
+                <div class="flex justify-center">
+                    <span class="text-xl p-2 rounded-md select-none">${game.gameName}</span>
+                </div>
+                <div class="flex justify-center my-2 space-x-3">`;
+
+            // 判斷是否有折扣
+            if (game.rate != null) {
+                html +=
+                    `<span class="price-tag font-semibold">-${100 - game.rate}%</span>
+                  <span class="price-tag font-semibold">NT$${Math.round(game.price * game.rate / 100)}</span>`;
+            } else {
+                html += `<span class="price-tag text-black font-semibold">NT$${game.price}</span>`;
+            }
+
+            // 添加加入購物車按鈕部分
+            html +=
+                `</div>
+            <div class="flex justify-center">
+                <span class="border border-red-300 mybtn mybtn-green">加入購物車</span>
+            </div>
+        </div>
+    </div>`;
+
+            // 將完整的 HTML 插入到 main 元素中
+            main.innerHTML += html;
+        }
+
+
+        // 分類標籤事件
+        const typeTag = document.querySelectorAll('.mybtn-tag');
+        typeTag.forEach(tag => {
+            tag.addEventListener('click', e => {
+                if (tag.classList.contains('mybtn-tag')) {
+                    tag.classList.remove('mybtn-tag');
+                    tag.classList.add('tag-selected');
+                    tag.querySelector('input').checked = true;
+                }
+                else {
+                    tag.classList.add('mybtn-tag');
+                    tag.classList.remove('tag-selected');
+                    tag.querySelector('input').checked = false;
+                }
+            })
+        });
     </script>
-
 </body>
 
 </html>

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.playcentric.model.ImageLibRepository;
 import com.playcentric.model.member.GoogleLogin;
 import com.playcentric.model.member.GoogleLoginRepository;
 import com.playcentric.model.member.Member;
@@ -23,6 +24,9 @@ public class MemberService {
 	
 	@Autowired
 	private GoogleLoginRepository googleRepository;
+
+	@Autowired
+	private ImageLibRepository imageLibRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -39,7 +43,7 @@ public class MemberService {
 		if (optional.isPresent()) {
 			Member member = optional.get();
 			member.setGoogeId(memGoogle.getGoogleId());
-			googleRepository.save(memGoogle);
+			member.setGoogleLogin(memGoogle);
 			return memberRepository.save(member);
 		}
 		return null;
@@ -81,7 +85,13 @@ public class MemberService {
 		originMem.setMemName(member.getMemName());
 		originMem.setNickname(member.getNickname());
 		originMem.setPhone(member.getPhone());
-		originMem.setPhoto(member.getPhoto());
+		if (member.getPhoto()!=null) {
+			Integer originPhoto = originMem.getPhoto();
+			if (originPhoto != null) {
+				imageLibRepository.deleteById(originPhoto);
+			}
+			originMem.setPhoto(member.getPhoto());
+		}
 		originMem.setRole(member.getRole());
 		return memberRepository.save(originMem);
 	}
