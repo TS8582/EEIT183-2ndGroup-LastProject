@@ -39,17 +39,7 @@ public class MemberController {
 	@Autowired
 	private ImageLibService imageLibService;
 	
-	@GetMapping("/home")
-	public String home() {
-		return "member/home";
-	}
-	
 
-	@GetMapping("/regist")
-	public String registPage() {
-		return "member/registMember";
-	}
-	
 	@PostMapping("/regist")
 	@ResponseBody
 	public String registMemberTest(@ModelAttribute Member member,@RequestParam("photoFile") MultipartFile photoFile) throws IOException {

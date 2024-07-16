@@ -1,14 +1,259 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>PlayCentric-個人資訊</title>
-</head>
-<body>
-    <div th:replace="~{member/memInfoAside}"></div>
 
-    <div class="p-0">
-        這裡是會員資料顯示區
+<head>
+  <title>PlayCentric-個人資訊</title>
+  <style>
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    .h-35px {
+      height: 35px;
+    }
+
+    .cursor-pointer {
+      cursor: pointer;
+    }
+
+    .h-0 {
+      height: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div th:replace="~{member/memInfoAside}"></div>
+
+  <div class="p-0">
+    <div class="container">
+      <div class="text-center mt-3"><span class="h1">個人資訊</span><span id="role" class="text-small text-secondary"
+          style="display: none;">管理員</span></div>
+      <form id="memInfo" class="row" action="#">
+        <div class="col-10 pe-0">
+          <div class="row">
+            <label for="nickname" class="col-form-label col-1 px-0 text-end">暱稱:</label>
+            <div class="col-2">
+              <input type="text" readonly class="form-control-plaintext px-2" id="nickname" name="nickname" value="">
+            </div>
+            <label for="account" class="col-form-label col-1 px-0 text-end">帳號:</label>
+            <div class="col-2">
+              <input type="text" readonly class="form-control-plaintext px-2" id="account" name="account" value="">
+            </div>
+          </div>
+          <div class="row">
+            <div class="btn btn-outline-warning btn-sm col-4 align-self-center ms-4 mt-2 text-dark">修改密碼</div>
+          </div>
+          <div class="row mt-2">
+            <label for="email" class="col-form-label col-1 px-0 text-end">Email:</label>
+            <div class="col-5">
+              <input type="text" readonly class="form-control-plaintext px-2" id="email" name="email" value="">
+            </div>
+          </div>
+          <div
+            class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0 ms-2 me-5">
+            <span class="px-3 text-secondary bg-light user-select-none">以上必填</span>
+          </div>
+          <div class="row">
+            <label for="memName" class="col-form-label col-1 px-0 text-end">姓名:</label>
+            <div class="col-2">
+              <input type="text" readonly class="form-control-plaintext px-2" id="memName" name="memName" value="">
+            </div>
+            <label for="gender" class="col-form-label col-1 px-0 text-end">性別:</label>
+            <div class="col-2">
+              <select id="gender" name="gender" readonly class="form-control-plaintext"
+                aria-label="Default select example">
+                <option value="0" selected>選擇性別</option>
+                <option value="1">男</option>
+                <option value="2">女</option>
+              </select>
+            </div>
+            <label for="birthday" class="col-form-label col-1 px-0 text-end">生日:</label>
+            <div class="col-3">
+              <input type="date" readonly class="form-control-plaintext px-2" id="birthday" name="birthday" value="">
+            </div>
+          </div>
+          <div class="row mt-2">
+            <label for="address" class="col-form-label col-2 px-0 text-center">聯絡地址:</label>
+            <div class="col-8">
+              <input type="text" readonly class="form-control-plaintext px-2" id="address" name="address" value="">
+            </div>
+          </div>
+          <div
+            class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0 ms-2 me-5">
+            <span class="px-3 text-secondary bg-light user-select-none">其他登入方式</span>
+          </div>
+          <div class="row">
+            <div id="google-account" class="col-4 d-flex mb-3 justify-content-center">
+              <a class="btn p-3 border rounded-0" th:href="@{/member/google-login}">
+                <img class="h-35px" th:src="@{/images/googleLogo.png}" alt="">
+                <span>綁定Google帳號</span></a>
+            </div>
+            <div id="facebook-account" class="col-3 d-flex mb-3 justify-content-center">
+              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/google-login}">
+                <img class="h-35px" th:src="@{/images/FBlogo.webp}" alt="">
+                <span>綁定FB帳號</span></a>
+            </div>
+            <div id="twitter-account" class="col-4 d-flex mb-3 justify-content-center">
+              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/google-login}">
+                <img class="h-35px" th:src="@{/images/twitter-logo.webp}" alt="">
+                <span>綁定twitter帳號</span></a>
+            </div>
+          </div>
+
+        </div>
+        <div class="photo-div ps-0 col-2 cursor-pointer">
+          <img class="w-100" src="http://localhost:8080/PlayCentric/imagesLib/image144">
+          <input type="file" name="photoFile" id="photoFile" style="display: none;">
+        </div>
+        <div id="edit-btn-group" class="row my-2 justify-content-center" style="display: none;">
+          <input type="submit" class="btn btn-outline-warning col-2 text-black" value="保存修改">
+          <div id="cancel-btn" class="btn btn-outline-danger col-1 ms-2">取消</div>
+        </div>
+      </form>
     </div>
-    
+  </div>
+
+  <script>
+    $(function () {
+      const findMemUrl = "http://localhost:8080/PlayCentric/member/getMember"
+      const updateMemUrl = "http://localhost:8080/PlayCentric/member/update";
+      const memId = Number.parseInt('[[${session.loginMember.memId}]]');
+      let memInfo = {};
+
+
+      getMemInfo();
+
+
+      $('#memInfo').submit(function (e) {
+        e.preventDefault();
+
+        const formdataObject = new FormData(this);
+        formdataObject.set('memId', memInfo.memId);
+        formdataObject.set('role', memInfo.role);
+
+        axios.post(updateMemUrl, formdataObject)
+          .then(res => {
+            console.log(res);
+            if (res.data == '更新成功!') {
+              getMemInfo();
+            }
+            doAlert(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      })
+
+      $('.photo-div').on('click', 'img', function () {
+        $('#photoFile').click();
+      })
+
+      $('#photoFile').change(function () {
+        const file = this.files[0]
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            // 設定圖片的 src 屬性為讀取的數據 URL
+            $('.photo-div>img').attr('src', e.target.result);
+          };
+          // 讀取文件為數據 URL
+          reader.readAsDataURL(file);
+          editOrNot();
+        }
+      })
+
+      $('[readonly]').mouseover(function () {
+        $(this).addClass('border').addClass('rounded-2').mouseout(function () {
+          $(this).removeClass('border').removeClass('rounded-2');
+        });
+      })
+
+      $('#cancel-btn').click(function () {
+        $('#memInfo')[0].reset();
+        showMemInfo(memInfo);
+      })
+
+      $('[readonly]').click(onFocus)
+      $('[readonly]').focus(onFocus)
+
+      function onFocus() {
+        $(this).removeAttr('readonly').removeClass('form-control-plaintext').addClass('form-control').blur(function () {
+          $(this).addClass('form-control-plaintext').removeClass('form-control').attr('readonly', true)
+        })
+      }
+
+      $(document).on('keydown', function (e) {
+        if (e.key === "Escape") {  // 檢查是否按下了 Esc 鍵
+          $('input:focus').blur();  // 使當前聚焦的輸入框失去焦點
+        }
+      });
+
+      $('#memInfo input').change(editOrNot)
+      $('#memInfo select').change(editOrNot)
+
+      function getMemInfo() {
+        axios({
+          method: 'get',
+          url: findMemUrl,
+          params: { memId }
+        })
+          .then(res => {
+            console.log(res);
+            showMemInfo(res.data);
+            memInfo = res.data;
+          })
+          .catch(err => console.log(err))
+      }
+
+      function showMemInfo(data) {
+        $('#memInfo #memId').val(data.memId);
+        $('#memInfo #nickname').val(data.nickname);
+        $('#memInfo #account').val(data.account);
+        $('#memInfo #email').val(data.email);
+        $('#memInfo #memName').val(data.memName ? data.memName : '');
+        $('#memInfo #gender').val(data.gender ? data.gender : 0);
+        $('#memInfo #birthday').val(data.birthday ? data.birthday : '');
+        $('#memInfo #phone').val(data.phone ? data.phone : '');
+        $('#memInfo #address').val(data.address ? data.address : '');
+        if (data.role == 1) {
+          $('#role').show();
+        }
+        if (data.googeId) {
+          $('#memInfo #google-account').removeClass('col-4').addClass('col-3');
+          $('#memInfo #google-account span').text('已綁定✔️');
+          $('#memInfo #google-account .btn').addClass('disabled');
+        }
+        $('#memInfo .photo-div img').attr('src', data.photoUrl)
+
+        $('#edit-btn-group').hide();
+      }
+
+      function editOrNot() {
+        console.log(memInfo);
+        const formDataOj = new FormData($('#memInfo')[0]);
+        for (const [key, value] of formDataOj) {
+          if (memInfo.hasOwnProperty(key)) {
+            if (memInfo[key].toString() === value) {
+              console.log(`${key} 的值匹配: ${memInfo[key]}`);
+            } else {
+              console.log(`${key} 的值不匹配: JSON 值為 ${memInfo[key]}，表單值為 ${value}`);
+              $('#edit-btn-group').show();
+              return;
+            }
+          }
+        }
+        if ($('#photoFile')[0].files.length > 0) {
+          $('#edit-btn-group').show();
+          return;
+        }
+        $('#edit-btn-group').hide();
+      }
+    })
+  </script>
 </body>
+
 </html>

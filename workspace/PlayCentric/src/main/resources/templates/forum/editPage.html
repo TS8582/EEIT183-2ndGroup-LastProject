@@ -6,29 +6,154 @@
   <link rel="stylesheet" th:href="@{/css/output.css}">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
   <title>編輯頁面</title>
+
+  <style>
+    .forumPhoto {
+      height: 50px;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      height: 100vh;
+      background-image: url("[[@{/images/loginBG.jpg}]]");
+      background-size: cover;
+      /* 確保圖片覆蓋整個容器 */
+      background-position: center;
+      /* 確保圖片居中 */
+      background-repeat: no-repeat;
+      /* 防止圖片重複 */
+    }
+
+    .wrap {
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    form {
+
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="file"],
+    .form-group textarea {
+      width: calc(100% - 10px);
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+    }
+
+    .form-group .t1 {
+      display: inline-block;
+      width: 100px;
+      text-align: right;
+      margin-right: 10px;
+    }
+
+    .form-group .st1 {
+      display: flex;
+    }
+
+    .form-group .st1 label {
+      margin-right: 10px;
+    }
+
+    .form-group .st1 textarea {
+      flex-grow: 1;
+    }
+
+    .form-group input[type="submit"] {
+      display: block;
+      width: 97%;
+      padding: 10px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .form-group input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    table {
+      width: 100%;
+      margin: 5px;
+    }
+
+    .container {
+      padding-top: 20px;
+      margin: 10px;
+    }
+  </style>
 </head>
 
-<body>
-  <div th:replace="~{/layout/backen_nav}"> </div>
+<body class="h-screen flex flex-col w-screen">
+  <div th:replace="~{/layout/backen_nav}"></div>
+  <div th:replace="~{forum/layout/backnavbar}"> </div>
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-6">
-        <h1 class="text-3xl">編輯頁面</h1>
-
-        <div class="card">
-          <div class="card-body">
-
-            <form th:action="@{/forum/editPost}" th:method="PUT" th:object="${forum}">
-
-              <input th:field="*{forumId}" type="hidden" />
-              <!--              <input name="_method" value="PUT" type="hidden">  -->
-
-              <textarea rows="5" class="form-control" th:field="*{textsIntro}"></textarea>
-              <input type="submit" class="btn btn-outline-primary" value="送出" />
-            </form>
-          </div>
-        </div>
-      </div>
+    <div class="wrap">
+      <form th:action="@{/editForum}" method="post" enctype="multipart/form-data"
+        onsubmit="return redirectToHomePage()">
+        <table>
+          <h2>討論串</h2>
+          <tr class="form-group">
+            <td>討論串照片:</td>
+            <td><input type="file" name="textsPhoto" th:value="${forumBean.textsPhoto}" required></td>
+            <td><img class="textsPhoto" th:src="@{${forumBean.textsPhoto}}" alt=""></td>
+          </tr>
+          <tr class="form-group">
+            <td>討論串Id:</td>
+            <td><input type="text" name="forumId" th:value="${forumBean.forumId}" readonly></td>
+          </tr>
+          <tr class="form-group">
+            <td>討論串標題:</td>
+            <td><input type="text" name="forumName" th:value="${forumBean.forumName}" required></td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <div class="form-group st1">
+                <label for="comment1">介紹:</label>
+                <textarea name="textsIntro" id="comment1" cols="40" rows="5" th:text="${forumBean.textsIntro}"
+                  required></textarea>
+              </div>
+            </td>
+          </tr>
+          <tr class="form-group">
+            <td colspan="3"><input type="submit" value="確定"></td>
+          </tr>
+        </table>
+      </form>
     </div>
   </div>
 
