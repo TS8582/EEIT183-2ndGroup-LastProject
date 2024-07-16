@@ -37,10 +37,10 @@
                     <input type="text" id="gameName" placeholder="請輸入名稱" class="text-input w-1/3 text-black">
                     <span class="block text-lg">依價格篩選</span>
                     <label for="minPrice">最低價格： </label>
-                    <input type="text" placeholder="最低價格" name="minPrice" id="minPrice"
+                    <input type="number" placeholder="最低價格" name="minPrice" id="minPrice"
                         class="text-input w-1/3 text-black" maxlength="5">
                     <label for="maxPrice">最高價格： </label>
-                    <input type="text" name="maxPrice" id="maxPrice" class="text-input w-1/3 text-black"
+                    <input type="number" name="maxPrice" id="maxPrice" class="text-input w-1/3 text-black"
                         placeholder="最高價格" maxlength="5">
                 </div>
                 <!-- 以分類篩選 -->
@@ -99,82 +99,96 @@
         let totalPages = document.querySelector('#pages').value;
         const minPrice = document.querySelector('#minPrice');
         const maxPrice = document.querySelector('#maxPrice');
-        let tagselected = document.querySelectorAll('.tag-selected');
+        let typeId = [];
         const main = document.querySelector('main');
         const spin = document.querySelector('.spin');
         const typeselector = document.querySelectorAll('input[name="typeId"]');
         let scrolltrigger = true;
-        //滑到底部載入事件
+
+        // 滑到底部載入事件
         window.addEventListener('scroll', function () {
-            // 計算視窗的高度
             var windowHeight = window.innerHeight;
-            // 計算網頁內容的高度
             var documentHeight = document.documentElement.scrollHeight;
-            // 計算已經滾動過的距離
             var scrollTop = window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0);
 
-            // 判斷是否已經滾動到底部
-            if (windowHeight + scrollTop >= documentHeight) {
-                if (scrolltrigger) {
+            if (windowHeight + scrollTop >= documentHeight && scrolltrigger) {
+                if (typeId.length === 0 && minPrice.value === '' && maxPrice.value === '') {
                     nofilterplus();
                 }
-
-
+                if (typeId.length !== 0 && minPrice.value === '' && maxPrice.value === '') {
+                    typefilterplus();
+                }
             }
         });
 
+        typeselector.forEach(typecheck => {
+            typecheck.addEventListener('change', e => {
+                if (typecheck.checked) {
+                    typeId.push(typecheck.value);
+                } else {
+                    typeId = typeId.filter(item => item !== typecheck.value);
+                }
+                if (typeId.length > 0) {
+                    pgnum = 0;
+                    typefilter(typeId);
+                } else {
+                    nofilter();
+                }
+            });
+        });
 
-        minPrice.addEventListener('input', nofilter);
-        maxPrice.addEventListener('input', nofilter);
-
-
-
-        function nofilter() {
-            if ((minPrice.value == '' && maxPrice.value == '') && tagselected.length == 0) {
-                pgnum = 0;
-                main.innerHTML = '';
-                spin.classList.remove('hidden');
-                scrolltrigger = false;
-                axios.get('/PlayCentric/game/getGamePage', {
-                    params: {
-                        pg: pgnum
-                    }
-                })
-                    .then(res => {
-                        totalPages = res.data.totalPages;
-                        const data = res.data.content;
-                        console.log(data);
-                        data.forEach(elm => {
-                            htmlmaker(elm);
+        function typefilter(typeIds) {
+            spin.classList.remove('hidden');
+            axios.get('/PlayCentric/game/getGamePageByType', {
+                params: {
+                    pg: pgnum,
+                    typeId: typeIds
+                },
+                paramsSerializer: function (params) {
+                    return Object.keys(params).map(key => {
+                        if (Array.isArray(params[key])) {
+                            return params[key].map(val => `${key}=${val}`).join('&');
+                        }
+                        return `${key}=${params[key]}`;
+                    }).join('&');
+                }
+            })
+                .then(response => {
+                    main.innerHTML = '';
+                    if (response.data.totalPages > 0) {
+                        response.data.content.forEach(game => {
+                            htmlmaker(game);
                         });
-                        scrolltrigger = true;
-                        spin.classList.add('hidden');
-                    })
-                    .catch(err => {
-                        spin.classList.add('hidden');
-                        console.error(err);
-                        scrolltrigger = true;
-                    })
-            }
-
+                    }
+                    totalPages = response.data.totalPages;
+                    spin.classList.add('hidden');
+                })
+                .catch(error => {
+                    spin.classList.add('hidden');
+                    console.error('Error fetching data:', error);
+                });
         }
 
-        function nofilterplus() {
+        function typefilterplus() {
             spin.classList.remove('hidden');
             scrolltrigger = false;
             if (pgnum < (totalPages - 1)) {
-                axios.get('/PlayCentric/game/getGamePage', {
+                axios.get('/PlayCentric/game/getGamePageByType', {
                     params: {
-                        pg: pgnum + 1
+                        pg: pgnum + 1,
+                        typeId: typeId
+                    },
+                    paramsSerializer: function (params) {
+                        return Object.keys(params).map(key => {
+                            if (Array.isArray(params[key])) {
+                                return params[key].map(val => `${key}=${val}`).join('&');
+                            }
+                            return `${key}=${params[key]}`;
+                        }).join('&');
                     }
                 })
                     .then(res => {
-                        totalPages = res.data.totalPages;
-                        const data = res.data.content;
-                        console.log(data);
-                        data.forEach(elm => {
-                            htmlmaker(elm);
-                        });
+                        res.data.content.forEach(elm => htmlmaker(elm));
                         pgnum += 1;
                         scrolltrigger = true;
                         spin.classList.add('hidden');
@@ -183,74 +197,105 @@
                         spin.classList.add('hidden');
                         scrolltrigger = true;
                         console.error(err);
-                    })
+                    });
+            } else {
+                spin.classList.add('hidden');
             }
-            else {
+        }
+
+        minPrice.addEventListener('input', nofilter);
+        maxPrice.addEventListener('input', nofilter);
+
+        function nofilter() {
+            if (minPrice.value === '' && maxPrice.value === '' && typeId.length === 0) {
+                pgnum = 0;
+                main.innerHTML = '';
+                spin.classList.remove('hidden');
+                scrolltrigger = false;
+                axios.get('/PlayCentric/game/getGamePage', { params: { pg: pgnum } })
+                    .then(res => {
+                        totalPages = res.data.totalPages;
+                        res.data.content.forEach(elm => htmlmaker(elm));
+                        scrolltrigger = true;
+                        spin.classList.add('hidden');
+                    })
+                    .catch(err => {
+                        spin.classList.add('hidden');
+                        console.error(err);
+                        scrolltrigger = true;
+                    });
+            }
+        }
+
+        function nofilterplus() {
+            spin.classList.remove('hidden');
+            scrolltrigger = false;
+            if (pgnum < (totalPages - 1)) {
+                axios.get('/PlayCentric/game/getGamePage', { params: { pg: pgnum + 1 } })
+                    .then(res => {
+                        totalPages = res.data.totalPages;
+                        res.data.content.forEach(elm => htmlmaker(elm));
+                        pgnum += 1;
+                        scrolltrigger = true;
+                        spin.classList.add('hidden');
+                    })
+                    .catch(err => {
+                        spin.classList.add('hidden');
+                        scrolltrigger = true;
+                        console.error(err);
+                    });
+            } else {
                 spin.classList.add('hidden');
             }
         }
 
         function htmlmaker(game) {
-
-            // 建立完整的 HTML 字串
-            let html =
-                `<div class="h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500">
-            <div class="py-2 h-64 flex justify-center rounded-md">`;
-
-            // 添加圖片部分
+            let html = `<div class="h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500">
+    <div class="py-2 h-64 flex justify-center rounded-md">`;
             if (game.imageLibs.length > 0) {
-                html += `<img class="w-auto h-full rounded-md"
-                    src="/PlayCentric/imagesLib/image${game.imageLibs[0].imageId}" alt="">`;
+                html += `<img class="w-auto h-full rounded-md" src="/PlayCentric/imagesLib/image${game.imageLibs[0].imageId}" alt="">`;
             }
-
-            // 添加遊戲名稱和價格部分
-            html +=
-                `</div>
-            <div class="h-1/3 flex text-black flex-col items-center p-2">
-                <div class="flex justify-center">
-                    <span class="text-xl p-2 rounded-md select-none">${game.gameName}</span>
-                </div>
-                <div class="flex justify-center my-2 space-x-3">`;
-
-            // 判斷是否有折扣
+            html += `</div>
+    <div class="h-1/3 flex text-black flex-col items-center p-2">
+        <div class="flex justify-center">
+            <span class="text-xl p-2 rounded-md select-none">${game.gameName}</span>
+        </div>
+        <div class="flex justify-center my-2 space-x-3">`;
             if (game.rate != null) {
-                html +=
-                    `<span class="price-tag font-semibold">-${100 - game.rate}%</span>
-                  <span class="price-tag font-semibold">NT$${Math.round(game.price * game.rate / 100)}</span>`;
+                html += `<span class="price-tag font-semibold">-${100 - game.rate}%</span>
+        <span class="price-tag font-semibold">NT$${Math.round(game.price * game.rate / 100)}</span>`;
             } else {
                 html += `<span class="price-tag text-black font-semibold">NT$${game.price}</span>`;
             }
-
-            // 添加加入購物車按鈕部分
-            html +=
-                `</div>
-            <div class="flex justify-center">
-                <span class="border border-red-300 mybtn mybtn-green">加入購物車</span>
-            </div>
+            html += `</div>
+        <div class="flex justify-center">
+            <span class="border border-red-300 mybtn mybtn-green">加入購物車</span>
         </div>
-    </div>`;
-
-            // 將完整的 HTML 插入到 main 元素中
+    </div>
+</div>`;
             main.innerHTML += html;
         }
 
-
-        // 分類標籤事件
         const typeTag = document.querySelectorAll('.mybtn-tag');
         typeTag.forEach(tag => {
             tag.addEventListener('click', e => {
+                const checkbox = tag.querySelector('input');
                 if (tag.classList.contains('mybtn-tag')) {
                     tag.classList.remove('mybtn-tag');
                     tag.classList.add('tag-selected');
-                    tag.querySelector('input').checked = true;
-                }
-                else {
+                    checkbox.checked = true;
+                    typeId.push(checkbox.value);
+                } else {
                     tag.classList.add('mybtn-tag');
                     tag.classList.remove('tag-selected');
-                    tag.querySelector('input').checked = false;
+                    checkbox.checked = false;
+                    typeId = typeId.filter(item => item !== checkbox.value);
                 }
-            })
+                checkbox.dispatchEvent(new Event('change'));
+            });
         });
+
+
     </script>
 </body>
 

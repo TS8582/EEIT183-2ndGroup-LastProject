@@ -13,5 +13,6 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
 	
 	Page<Game> findByIsShow(Boolean isShow,Pageable pgb);
 	
+	Page<Game> findByPriceBetween(Integer minPrice,Integer maxPrice,Pageable pgb);
 	
 }
