@@ -34,11 +34,7 @@ public class GoogleOAuth2Controller {
 	private final String scope = "https://www.googleapis.com/auth/userinfo.eamil";
 
 	@GetMapping("/google-login")
-	public String googleLogin(Model model, RedirectAttributes redirectAttributes) {
-		if (model != null && model.getAttribute("loginMember") != null) {
-			redirectAttributes.addFlashAttribute("loginMsg", "已登入，請先登出!");
-			return "redirect:/";
-		}
+	public String googleLogin() {
 		String authUrl = "https://accounts.google.com/o/oauth2/v2/auth?"
 				+ "client_id=" + googleOAuth2Config.getClientId()
 				+ "&response_type=code"
@@ -52,7 +48,7 @@ public class GoogleOAuth2Controller {
 	public String googleCallback(@RequestParam(required = false) String code, Model model,
 			RedirectAttributes redirectAttributes) {
 		if (code == null) {
-			String authUrl = googleLogin(null, null);
+			String authUrl = googleLogin();
 			authUrl = authUrl.substring(0, authUrl.lastIndexOf("openid%20email%20profile"))
 					+ scope;
 			return authUrl;
