@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.playcentric.model.ImageLib;
+import com.playcentric.model.ImageLibRepository;
+import com.playcentric.model.playfellow.ImageLibPfmemberAssociation;
 import com.playcentric.model.playfellow.PfGame;
 import com.playcentric.model.playfellow.PfGameDTO;
 import com.playcentric.model.playfellow.PfGameRepository;
@@ -137,4 +140,10 @@ public class PfGameService {
 		return pfGameDTO;
 	}
 
+//pfOrder用的
+	public Optional<PfGame> findByGameId(Integer gameId) {
+        return pfGameRepository.findById(gameId);
+    }
+	
+	
 }
