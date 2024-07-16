@@ -2,6 +2,7 @@ package com.playcentric.controller.prop.front.propInventory;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.playcentric.model.prop.MemberPropInventory.MemberPropInventory;
 import com.playcentric.model.prop.MemberPropInventory.MemberPropInventoryForFrontDto;
 import com.playcentric.model.prop.sellOrder.PropSellOrder;
 import com.playcentric.service.prop.MemberPropInventoryService.MemberPropInventoryService;
@@ -27,6 +29,8 @@ public class PropInventoryController {
 	
 	@Autowired
 	PropSellOrderService propSellOrderService;
+
+	private Optional<MemberPropInventory> memberPropById;
 	
 	
 	//根據會員id讀取倉庫資料
@@ -55,7 +59,7 @@ public class PropInventoryController {
 		propSellOrder.setSaleTime(now);
 		propSellOrder.setSellerMemId(memId);
 		propSellOrderService.SavePropSellOrder(propSellOrder);
-		
+		memberPropById = memberPropInventoryService.findMemberPropByIdAndUpdateQuantity(memId, propId,quantity);
 		return "成功委託販賣!";
 	}
 
