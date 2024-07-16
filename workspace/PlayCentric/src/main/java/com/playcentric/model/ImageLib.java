@@ -36,7 +36,8 @@ public class ImageLib {
 	@JsonIgnore
 	@ManyToMany(mappedBy = "imageLibs")
 	private List<Game> games;
-
+	
+	@JsonIgnore
 	@OneToOne(mappedBy = "imageLib")
 	private Props props;
 

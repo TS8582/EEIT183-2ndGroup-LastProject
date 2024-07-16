@@ -18,18 +18,30 @@
 </head>
 
 <body class="h-screen bg-gray-500">
-    <!-- 頂部導航欄 -->
+    <div class="spin hidden">
+        <div class="flex justify-center items-center h-4/5 w-full fixed ">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 shadow-md border-lime-500"></div>
+        </div>
+    </div>
     <div class="flex flex-col h-auto container mx-auto">
         <!-- 篩選欄 -->
         <div class="flex justify-center h-auto my-2 text-white">
+
+
+
             <div class="w-full lg:w-1/2 h-auto border-2 flex flex-col rounded-md justify-center items-center">
                 <!-- 以價格篩選 -->
+
                 <div class="flex flex-col items-center justify-center p-2 w-full">
+                    <span>依名稱搜尋</span>
+                    <input type="text" id="gameName" placeholder="請輸入名稱" class="text-input w-1/3 text-black">
                     <span class="block text-lg">依價格篩選</span>
                     <label for="minPrice">最低價格： </label>
-                    <input type="text" name="minPrice" id="minPrice" class="text-input w-1/3" maxlength="5">
+                    <input type="text" placeholder="最低價格" name="minPrice" id="minPrice"
+                        class="text-input w-1/3 text-black" maxlength="5">
                     <label for="maxPrice">最高價格： </label>
-                    <input type="text" name="maxPrice" id="maxPrice" class="text-input w-1/3" maxlength="5">
+                    <input type="text" name="maxPrice" id="maxPrice" class="text-input w-1/3 text-black"
+                        placeholder="最高價格" maxlength="5">
                 </div>
                 <!-- 以分類篩選 -->
                 <span class="block text-lg">依分類篩選</span>
@@ -84,9 +96,15 @@
     <script th:src="@{/js/axios.min.js}"></script>
     <script>
         let pgnum = 0;
-        const totalPages = document.querySelector('#pages').value;
-
-
+        let totalPages = document.querySelector('#pages').value;
+        const minPrice = document.querySelector('#minPrice');
+        const maxPrice = document.querySelector('#maxPrice');
+        let tagselected = document.querySelectorAll('.tag-selected');
+        const main = document.querySelector('main');
+        const spin = document.querySelector('.spin');
+        const typeselector = document.querySelectorAll('input[name="typeId"]');
+        let scrolltrigger = true;
+        //滑到底部載入事件
         window.addEventListener('scroll', function () {
             // 計算視窗的高度
             var windowHeight = window.innerHeight;
@@ -97,32 +115,82 @@
 
             // 判斷是否已經滾動到底部
             if (windowHeight + scrollTop >= documentHeight) {
-
-                if (pgnum < (totalPages - 1)) {
-                    axios.get('/PlayCentric/game/getGamePage', {
-                        params: {
-                            pg: pgnum + 1
-                        }
-                    })
-                        .then(res => {
-                            const data = res.data.content;
-                            console.log(data);
-                            data.forEach(elm => {
-                                htmlmaker(elm);
-                            });
-                            pgnum += 1;
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        })
+                if (scrolltrigger) {
+                    nofilterplus();
                 }
 
 
             }
         });
 
+
+        minPrice.addEventListener('input', nofilter);
+        maxPrice.addEventListener('input', nofilter);
+
+
+
+        function nofilter() {
+            if ((minPrice.value == '' && maxPrice.value == '') && tagselected.length == 0) {
+                pgnum = 0;
+                main.innerHTML = '';
+                spin.classList.remove('hidden');
+                scrolltrigger = false;
+                axios.get('/PlayCentric/game/getGamePage', {
+                    params: {
+                        pg: pgnum
+                    }
+                })
+                    .then(res => {
+                        totalPages = res.data.totalPages;
+                        const data = res.data.content;
+                        console.log(data);
+                        data.forEach(elm => {
+                            htmlmaker(elm);
+                        });
+                        scrolltrigger = true;
+                        spin.classList.add('hidden');
+                    })
+                    .catch(err => {
+                        spin.classList.add('hidden');
+                        console.error(err);
+                        scrolltrigger = true;
+                    })
+            }
+
+        }
+
+        function nofilterplus() {
+            spin.classList.remove('hidden');
+            scrolltrigger = false;
+            if (pgnum < (totalPages - 1)) {
+                axios.get('/PlayCentric/game/getGamePage', {
+                    params: {
+                        pg: pgnum + 1
+                    }
+                })
+                    .then(res => {
+                        totalPages = res.data.totalPages;
+                        const data = res.data.content;
+                        console.log(data);
+                        data.forEach(elm => {
+                            htmlmaker(elm);
+                        });
+                        pgnum += 1;
+                        scrolltrigger = true;
+                        spin.classList.add('hidden');
+                    })
+                    .catch(err => {
+                        spin.classList.add('hidden');
+                        scrolltrigger = true;
+                        console.error(err);
+                    })
+            }
+            else {
+                spin.classList.add('hidden');
+            }
+        }
+
         function htmlmaker(game) {
-            const main = document.querySelector('main');
 
             // 建立完整的 HTML 字串
             let html =
