@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.playcentric.model.forum.Forum;
 import com.playcentric.model.forum.ForumRepository;
+import com.playcentric.model.forum.Texts;
 import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.game.primary.GameRepository;
 
