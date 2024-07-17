@@ -41,7 +41,7 @@ public class EventSignup {
     
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-//    @Temporal(TemporalType.TIMESTAMP)
+ 
     private LocalDateTime signupTime;
     
     private Integer workType;

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活動報名管理</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="h-screen flex flex-col w-screen">
+    <div th:replace="~{layout/backen_nav}"></div>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">活動報名管理</h1>
+        
+        <!-- 報名列表 -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>報名ID</th>
+                    <th>會員名稱</th>
+                    <th>活動名稱</th>
+                    <th>報名時間</th>
+                    <th>作品標題</th>
+                    <th>狀態</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="signup : ${signups}">
+                    <td th:text="${signup.signupId}"></td>
+                    <td th:text="${signup.member.memName}"></td>
+                    <td th:text="${signup.event.eventName}"></td>
+                    <td th:text="${#temporals.format(signup.signupTime, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${signup.workTitle}"></td>
+                    <td th:text="${signup.eventSignupStatus == 1 ? '已報名' : '待審核'}"></td>
+                    <td>
+                        <button class="btn btn-sm btn-info" th:onclick="'viewSignupDetails(' + ${signup.signupId} + ')'">查看</button>
+                        <button class="btn btn-sm btn-warning" th:onclick="'editSignup(' + ${signup.signupId} + ')'">編輯</button>
+                        <button class="btn btn-sm btn-danger" th:onclick="'deleteSignup(' + ${signup.signupId} + ')'">刪除</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 報名詳情模態框 -->
+        <div class="modal fade" id="signupDetailsModal" tabindex="-1" role="dialog" aria-labelledby="signupDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="signupDetailsModalLabel">報名詳情</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="signupDetailsContent">
+                        <!-- 報名詳情將在這裡動態填充 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 編輯報名模態框 -->
+        <div class="modal fade" id="editSignupModal" tabindex="-1" role="dialog" aria-labelledby="editSignupModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editSignupModalLabel">編輯報名</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editSignupForm">
+                            <input type="hidden" id="editSignupId" name="signupId">
+                            <div class="form-group">
+                                <label for="editWorkTitle">作品標題</label>
+                                <input type="text" class="form-control" id="editWorkTitle" name="workTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editWorkDescription">作品描述</label>
+                                <textarea class="form-control" id="editWorkDescription" name="workDescription" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="editEventSignupStatus">狀態</label>
+                                <select class="form-control" id="editEventSignupStatus" name="eventSignupStatus">
+                                    <option value="1">已報名</option>
+                                    <option value="0">待審核</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">保存更改</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function viewSignupDetails(signupId) {
+            // 發送AJAX請求獲取報名詳情
+            $.get('/eventSignup/api/' + signupId, function(data) {
+                let detailsHtml = `
+                    <p><strong>報名ID:</strong> ${data.signupId}</p>
+                    <p><strong>會員名稱:</strong> ${data.member.memName}</p>
+                    <p><strong>活動名稱:</strong> ${data.event.eventName}</p>
+                    <p><strong>報名時間:</strong> ${new Date(data.signupTime).toLocaleString()}</p>
+                    <p><strong>作品標題:</strong> ${data.workTitle}</p>
+                    <p><strong>作品描述:</strong> ${data.workDescription}</p>
+                    <p><strong>狀態:</strong> ${data.eventSignupStatus == 1 ? '已報名' : '待審核'}</p>
+                `;
+                $('#signupDetailsContent').html(detailsHtml);
+                $('#signupDetailsModal').modal('show');
+            });
+        }
+
+        function editSignup(signupId) {
+            // 發送AJAX請求獲取報名信息
+            $.get('/eventSignup/api/' + signupId, function(data) {
+                $('#editSignupId').val(data.signupId);
+                $('#editWorkTitle').val(data.workTitle);
+                $('#editWorkDescription').val(data.workDescription);
+                $('#editEventSignupStatus').val(data.eventSignupStatus);
+                $('#editSignupModal').modal('show');
+            });
+        }
+
+        $('#editSignupForm').submit(function(e) {
+            e.preventDefault();
+            let formData = $(this).serialize();
+            $.ajax({
+                url: '/eventSignup/api/' + $('#editSignupId').val(),
+                type: 'PUT',
+                data: formData,
+                success: function(response) {
+                    alert('報名信息已更新');
+                    $('#editSignupModal').modal('hide');
+                    location.reload(); // 重新加載頁面以顯示更新後的數據
+                },
+                error: function() {
+                    alert('更新失敗，請稍後再試');
+                }
+            });
+        });
+
+        function deleteSignup(signupId) {
+            if (confirm('確定要刪除這條報名記錄嗎？')) {
+                $.ajax({
+                    url: '/eventSignup/api/' + signupId,
+                    type: 'DELETE',
+                    success: function() {
+                        alert('報名記錄已刪除');
+                        location.reload(); // 重新加載頁面以更新列表
+                    },
+                    error: function() {
+                        alert('刪除失敗，請稍後再試');
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

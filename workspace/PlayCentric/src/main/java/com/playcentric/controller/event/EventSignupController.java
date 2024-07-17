@@ -39,6 +39,13 @@ public class EventSignupController {
 
     @Autowired
     private ImageLibService imageLibService;
+    
+    @GetMapping("/manage")
+    public String manageSignups(Model model) {
+        List<EventSignup> signups = eventSignupService.getAllSignups();
+        model.addAttribute("signups", signups);
+        return "event/event-signup-management";
+    }
 
     /**
      * 處理創建新報名的POST請求。
