@@ -48,55 +48,55 @@ public class ForumController {
 	}
 
 	// 新增跳轉頁面
-	@GetMapping("/forum/insertForum2")
-	public String insertForum2() {
-		return "/forum/addForumPage.html";
-
-	}
+//	@GetMapping("/forum/insertForum2")
+//	public String insertForum2() {
+//		return "/forum/addForumPage.html";
+//
+//	}
 
 	// 新增要改富文本的新增圖片要轉base64 未成功
-	@PostMapping("/addForumData2")
-	public String addForumData2(@RequestParam("forumPhoto") MultipartFile forumPhoto,
-			@RequestParam("forumName") String forumName,
-			@RequestParam("textsIntro") String textsIntro,
-			@RequestParam("csrfmiddlewaretoken") String csrfToken, Model model)
-			throws IllegalStateException, IOException {
+//	@PostMapping("/addForumData2")
+//	public String addForumData2(@RequestParam("forumPhoto") MultipartFile forumPhoto,
+//			@RequestParam("forumName") String forumName,
+//			@RequestParam("textsIntro") String textsIntro,
+//			@RequestParam("csrfmiddlewaretoken") String csrfToken, Model model)
+//			throws IllegalStateException, IOException {
 
 		// 實現 CSRF token 驗證，如果需要
 		// validateCsrfToken(csrfToken);
 
 		// 確認文件不為空且類型為圖片
-		if (forumPhoto != null && forumPhoto.getContentType().startsWith("image")) {
-			// 讀取文件內容
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
-			int bytesRead;
-			try (InputStream fileContent = forumPhoto.getInputStream()) {
-				while ((bytesRead = fileContent.read(buffer)) != -1) {
-					outputStream.write(buffer, 0, bytesRead);
-				}
-			}
-
-			byte[] imageBytes = outputStream.toByteArray();
-			String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+//		if (forumPhoto != null && forumPhoto.getContentType().startsWith("image")) {
+//			// 讀取文件內容
+//			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//			byte[] buffer = new byte[1024];
+//			int bytesRead;
+//			try (InputStream fileContent = forumPhoto.getInputStream()) {
+//				while ((bytesRead = fileContent.read(buffer)) != -1) {
+//					outputStream.write(buffer, 0, bytesRead);
+//				}
+//			}
+//
+//			byte[] imageBytes = outputStream.toByteArray();
+//			String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
 			// 創建主题對象
-			Forum forum1 = new Forum();
-			forum1.setTextsPhoto(imageBytes); // 這裡保存原始的圖片字節數據
-			forum1.setForumName(forumName);
-			forum1.setTextsIntro(textsIntro);
-
-			forumService.insertForum(forum1);
-
-			model.addAttribute("insertOK", "成功");
+//			Forum forum1 = new Forum();
+//			forum1.setTextsPhoto(imageBytes); // 這裡保存原始的圖片字節數據
+//			forum1.setForumName(forumName);
+//			forum1.setTextsIntro(textsIntro);
+//
+//			forumService.insertForum(forum1);
+//
+//			model.addAttribute("insertOK", "成功");
 
 			// 返回 JSON 響應
-			return String.format("{\"type\":\"%s\", \"data\":\"%s\"}", forumPhoto.getContentType(), base64Image);
-		} else {
-			// 返回錯誤信息
-			return "{\"error\": \"Invalid file type\"}";
-		}
-	}
+//			return String.format("{\"type\":\"%s\", \"data\":\"%s\"}", forumPhoto.getContentType(), base64Image);
+//		} else {
+//			// 返回錯誤信息
+//			return "{\"error\": \"Invalid file type\"}";
+//		}
+//	}
 
 	// 顯示主頁
 	@GetMapping("/findAllForum")
