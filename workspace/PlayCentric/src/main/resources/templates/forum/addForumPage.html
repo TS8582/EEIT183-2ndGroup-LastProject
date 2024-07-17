@@ -5,6 +5,116 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
   <title>新增訊息</title>
+
+  <style>
+    .forumPhoto {
+      height: 50px;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      height: 100vh;
+      background-image: url("[[@{/images/loginBG.jpg}]]");
+      background-size: cover;
+      /* 確保圖片覆蓋整個容器 */
+      background-position: center;
+      /* 確保圖片居中 */
+      background-repeat: no-repeat;
+      /* 防止圖片重複 */
+    }
+
+    .wrap {
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    form {
+
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="file"],
+    .form-group textarea {
+      width: calc(100% - 10px);
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+    }
+
+    .form-group .t1 {
+      display: inline-block;
+      width: 100px;
+      text-align: right;
+      margin-right: 10px;
+    }
+
+    .form-group .st1 {
+      display: flex;
+    }
+
+    .form-group .st1 label {
+      margin-right: 10px;
+    }
+
+    .form-group .st1 textarea {
+      flex-grow: 1;
+    }
+
+    .form-group input[type="submit"] {
+      display: block;
+      width: 97%;
+      padding: 10px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .form-group input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    table {
+      width: 100%;
+      margin: 5px;
+    }
+
+    .container {
+      padding-top: 20px;
+      margin: 10px;
+    }
+  </style>
 </head>
 
 <body>
@@ -13,7 +123,7 @@
   <div th:replace="~{forum/layout/backnavbar}"> </div>
   <div class="container" style="width: 75%; margin: 0 auto;">
     <div class="wrap">
-      <form method="post" th:action="@{/insertforumData2}" enctype="multipart/form-data">
+      <form method="post" th:action="@{/addForumData}" enctype="multipart/form-data">
         <h2>新增討論串</h2>
         <div class="form-group">
           <label>主題照片:</label> <input class="textsPhoto" type="file" name="textsPhoto">

@@ -59,12 +59,11 @@
 				<div class="row entry-container">
 					<div th:each="texts : ${page.content}" class="col-md-4 my-4 ">
 						<div class="position-relative rounded-3 m-2 px-3 pt-1 bg-light">
-							<!-- <img style="width: 100%;"
-								th:src="@{/photos/showPhotos2(postId=${texts.postId})}"
-								alt="cloth" class="img-fluid  justify-content: space-between;"> -->
+							<img style="width: 100%;" th:src="@{/photos/showPhotos2(textsId=${texts.textsId})}"
+								alt="cloth" class="img-fluid  justify-content: space-between;">
 							<h3 class="secondary-font text-primary" th:text="${texts.title}"></h3>
 
-							<span th:utext="${texts.postContent}" class="blog-read text-area"></span>
+							<span th:utext="${texts.textsContent}" class="blog-read text-area"></span>
 
 						</div>
 						<div>
@@ -96,7 +95,7 @@
 			<!-- 上一頁 -->
 			<th:block th:switch="${page.number != 0}">
 				<li th:case="${true}" class="page-item"><a class="page-link"
-						th:href="@{/post/page(p=${page.number})}">上一頁</a></li>
+						th:href="@{/texts/page(p=${page.number})}">上一頁</a></li>
 				<li th:case="${false}" class="page-item disabled"><span class="page-link">上一頁</span></li>
 			</th:block>
 
@@ -110,7 +109,7 @@
 			<!-- 下一頁 -->
 			<th:block th:switch="${page.number + 1 == page.totalPages}">
 				<li th:case="${false}" class="page-item"><a class="page-link"
-						th:href="@{/post/page(p=${page.number + 2})}">下一頁</a></li>
+						th:href="@{/texts/page(p=${page.number + 2})}">下一頁</a></li>
 				<li th:case="${true}" class="page-item disabled"><span class="page-link">下一頁</span></li>
 			</th:block>
 		</ul>
@@ -159,7 +158,7 @@
 		function loadThatPage(pageId) {
 			console.log('有按到' + pageId);
 
-			/*  axios.get('http://localhost:8081/competnion/post/api/page', {
+			/*  axios.get('http://localhost:8081/competnion/texts/api/page', {
 					params: {
 						p: pageId
 					}
