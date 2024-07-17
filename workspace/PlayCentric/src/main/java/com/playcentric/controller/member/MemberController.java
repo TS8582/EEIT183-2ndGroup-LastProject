@@ -91,7 +91,7 @@ public class MemberController {
 	public String loginPost(@RequestParam String account, @RequestParam String password, Model model,
 			RedirectAttributes redirectAttributes) {
 		if (model.getAttribute("loginMember") != null) {
-			redirectAttributes.addFlashAttribute("loginMsg", "已登入，請先登出!");
+			redirectAttributes.addFlashAttribute("redirectMsg", "已登入，請先登出!");
 			return "redirect:/";
 		}
 		Member loginMember = memberService.checkLogin(account, password);
@@ -110,7 +110,7 @@ public class MemberController {
 		LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
 		if (loginMember != null) {
 			String loginName = loginMember.getNickname();
-			redirectAttributes.addFlashAttribute("loginOK", loginName + "登入成功!");
+			redirectAttributes.addFlashAttribute("redirectMsg", loginName + "登入成功!");
 		}
 		return "redirect:/";
 	}
@@ -194,7 +194,7 @@ public class MemberController {
 	@GetMapping("/memInfo")
 	public String memInfoPage(Model model, RedirectAttributes redirectAttributes) {
 		if (model.getAttribute("loginMember") == null) {
-			redirectAttributes.addFlashAttribute("errorMsg", "請先登入會員!");
+			redirectAttributes.addFlashAttribute("redirectMsg", "請先登入會員!");
 			return "redirect:login";
 		}
 		return "member/memInfoPage";
@@ -237,25 +237,44 @@ public class MemberController {
 			message.setText("更改密碼請點擊網址:"+changePwdUrl+"\r\n(不是本人請忽略)");
 
 			mailSender.send(message);
-			return "寄信成功";
+			return "信件已發送";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "寄信失敗";
+		return "寄信失敗，請重試";
 	}
 
 	@GetMapping("/changePassword/{token}")
-	public String changePasswordPage(@PathVariable String token, Model model) {
+	public String changePasswordPage(@PathVariable String token, Model model, RedirectAttributes redirectAttributes) {
 		Member member = memberService.findByPwdToken(token);
+		if (member == null) {
+			redirectAttributes.addFlashAttribute("redirectMsg","網址已過期!");
+			return "redirect:/";
+		}
 		model.addAttribute("loginMember", new LoginMemDto(member));
+		model.addAttribute("token", token);
 		return "member/changePasswordPage";
 	}
 
 	@PostMapping("/changePassword")
 	@ResponseBody
-	public String changePassword(@RequestParam String newPwd) {
-		return "修改失敗";
+	public String changePassword(@RequestParam String password,@RequestParam String token, SessionStatus status) {
+		try {
+			memberService.changePassword(password, token);
+			status.setComplete();
+			return "修改完成!";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "修改失敗!";
 	}
+
+	@GetMapping("/changePwdOK")
+	public String getMethodName(RedirectAttributes redirectAttributes) {
+		redirectAttributes.addFlashAttribute("redirectMsg","請重新登入");
+		return "redirect:login";
+	}
+	
 	
 
 	private boolean hasInfo(Member member) {

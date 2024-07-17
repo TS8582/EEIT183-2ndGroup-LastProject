@@ -161,10 +161,10 @@
       const loginUrl = "http://localhost:8080/PlayCentric/member/login"
       const registUrl = "http://localhost:8080/PlayCentric/member/regist";
       var loginTab = new bootstrap.Tab(document.querySelector('#login-tab'));
-      const errMsg = '[[${errorMsg}]]'
+      const redirectMsg = '[[${redirectMsg}]]'
 
-      if (errMsg && errMsg.trim() != "") {
-        doAlert(errMsg);
+      if (redirectMsg && redirectMsg.trim() != "") {
+        doAlert(redirectMsg);
       }
 
       //自動確認密碼是否相同
@@ -195,7 +195,9 @@
             console.log(res);
             doAlert(res.data);
             if (res.data == '登入成功!') {
-              window.location.href = "/PlayCentric/member/loginSuccess";
+              setTimeout(() => {
+                window.location.href = "/PlayCentric/member/loginSuccess";
+              }, 1000);
             }
           })
           .catch(err => {

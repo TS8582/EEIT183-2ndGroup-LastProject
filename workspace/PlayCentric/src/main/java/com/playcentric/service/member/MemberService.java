@@ -174,4 +174,12 @@ public class MemberService {
 		}
 		return null;
 	}
+
+	public Member changePassword(String password, String token){
+		Member member = memberRepository.findByPasswordToken(token);
+		String encodedPwd = passwordEncoder.encode(password);
+		member.setPassword(encodedPwd);
+		member.setPasswordToken(null);
+		return memberRepository.save(member);
+	}
 }
