@@ -80,8 +80,21 @@ public class GameRestController {
 			@RequestParam Integer maxPrice
 			) {
 		Pageable pgb = PageRequest.of(pg, 9);
-		Page<Game> game = gService.findByPriceBetween(minPrice, maxPrice, pgb);
-		return game;
+		List<Game> gamelist = gService.findByPriceList(minPrice, maxPrice).stream()
+				.filter(game -> {
+					Integer discountedPrice;
+	                // 过滤折扣后价格在指定范围内的游戏
+					if (game.getRate() != null) {
+						discountedPrice = game.getPrice() * game.getRate() / 100;
+					}
+					else {
+						discountedPrice = game.getPrice();
+					}
+	                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
+	            })
+	            .collect(Collectors.toList());
+
+		return new PageImpl<>(gamelist,pgb, gamelist.size());
 	}
 	
 	//價格+分類篩選遊戲
