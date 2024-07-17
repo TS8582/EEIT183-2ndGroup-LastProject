@@ -203,11 +203,11 @@ public class GameController {
 						gameDiscount.setGameDiscountId(discountId);
 						List<GameDiscount> gameDiscounts = new ArrayList<>();
 						gameDiscounts.add(gameDiscount);
-						game.setGameDiscounts(gameDiscounts);
+						myGame.setGameDiscounts(gameDiscounts);
 						discountSet.setGameDiscounts(gameDiscounts);
 						Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
 						int rate = (int) (oldRate * 100);
-						game.setRate(rate);
+						myGame.setRate(rate);
 					}
 				}
 				else {
@@ -217,7 +217,7 @@ public class GameController {
 					gameDiscount.setGameDiscountId(discountId);
 					List<GameDiscount> gameDiscounts = new ArrayList<>();
 					gameDiscounts.add(gameDiscount);
-					game.setGameDiscounts(gameDiscounts);
+					myGame.setGameDiscounts(gameDiscounts);
 					discountSet.setGameDiscounts(gameDiscounts);
 				}
 			}
@@ -252,6 +252,8 @@ public class GameController {
 				Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
 				int rate = (int) (oldRate * 100);
 				game.setRate(rate);
+				Integer discountedPrice = game.getPrice() * game.getRate() / 100;
+				game.setDiscountedPrice(discountedPrice);
 			}
 		}
 		model.addAttribute("allType",allType);
@@ -259,11 +261,4 @@ public class GameController {
 		return "game/game-store";
 	}
 	
-
-	@GetMapping("/game/test")
-	public String test(Model model) {
-		Game game = gService.findById(62);
-		model.addAttribute("game",game);
-		return "ttt";
-	}
 }

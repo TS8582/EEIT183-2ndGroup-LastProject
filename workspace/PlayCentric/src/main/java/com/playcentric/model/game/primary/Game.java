@@ -67,5 +67,8 @@ public class Game {
 	@JsonProperty
 	@Transient
 	private Integer rate;
+	@JsonProperty
+	@Transient
+	private Integer discountedPrice;
 	
 }

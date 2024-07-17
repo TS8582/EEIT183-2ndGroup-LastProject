@@ -38,6 +38,8 @@ public class GameRestController {
 				Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
 				int rate = (int) (oldRate * 100);
 				game.setRate(rate);
+				Integer discountedPrice = game.getPrice() * game.getRate() / 100;
+				game.setDiscountedPrice(discountedPrice);
 			}
 		}
 		return findGames;
@@ -58,6 +60,18 @@ public class GameRestController {
 	    if (gamePage.isEmpty()) {
 	        return new PageImpl<>(Collections.emptyList(), pgb, 0);
 	    }
+	    else {
+			for (Game game2 : gamePage) {
+				GameDiscount nowDiscount = gService.findNowDiscount(game2.getGameId());
+				if (nowDiscount != null) {
+					Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
+					int rate = (int) (oldRate * 100);
+					game2.setRate(rate);
+					Integer discountedPrice = game2.getPrice() * game2.getRate() / 100;
+					game2.setDiscountedPrice(discountedPrice);
+				}
+			}
+		}
 	    
 	    // 計算分頁索引
 	    int start = (int) pgb.getOffset();
@@ -80,12 +94,19 @@ public class GameRestController {
 			@RequestParam Integer maxPrice
 			) {
 		Pageable pgb = PageRequest.of(pg, 9);
-		List<Game> gamelist = gService.findByPriceList(minPrice, maxPrice).stream()
+		List<Game> gamelist = gService.findAll().stream()
 				.filter(game -> {
+					GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
+					if (nowDiscount != null) {
+						Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
+						int rate = (int) (oldRate * 100);
+						game.setRate(rate);
+					}
 					Integer discountedPrice;
 	                // 过滤折扣后价格在指定范围内的游戏
 					if (game.getRate() != null) {
 						discountedPrice = game.getPrice() * game.getRate() / 100;
+						game.setDiscountedPrice(discountedPrice);
 					}
 					else {
 						discountedPrice = game.getPrice();
@@ -93,6 +114,9 @@ public class GameRestController {
 	                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
 	            })
 	            .collect(Collectors.toList());
+		for (Game game2 : gamelist) {
+			System.out.println(game2.getRate());
+		}
 		// 計算分頁索引
 	    int start = (int) pgb.getOffset();
 	    int end = Math.min(start + pgb.getPageSize(), gamelist.size());
@@ -114,11 +138,31 @@ public class GameRestController {
 			@RequestParam List<Integer> typeId) {
 	    Pageable pgb = PageRequest.of(pg, 9);
 	    // 根據條件查詢遊戲
-	    List<Game> gamePage = gService.findByPriceList(minPrice, maxPrice).stream()
+	    List<Game> gamePage = gService.findAll().stream()
 	            .filter(game -> game.getGameTypeLibs().stream()
 	                    .map(GameTypeLib::getGameTypeId)
 	                    .collect(Collectors.toSet())
 	                    .containsAll(typeId))
+	            .filter(game -> {
+	            	Integer discountedPrice;
+					GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
+					if (nowDiscount != null) {
+						Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
+						int rate = (int) (oldRate * 100);
+						game.setRate(rate);
+						discountedPrice = game.getPrice() * game.getRate() / 100;
+						game.setDiscountedPrice(discountedPrice);
+					}
+	                // 过滤折扣后价格在指定范围内的游戏
+					if (game.getRate() != null) {
+						discountedPrice = game.getPrice() * game.getRate() / 100;
+						game.setDiscountedPrice(discountedPrice);
+					}
+					else {
+						discountedPrice = game.getPrice();
+					}
+	                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
+	            })
 	            .collect(Collectors.toList());
 	    // 如果查詢結果為空，返回空的分頁結果
 	    if (gamePage.isEmpty()) {
