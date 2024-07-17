@@ -36,6 +36,10 @@
       text-align: center;
       margin-top: 5px;
     }
+
+    .hidden-description {
+      display: none;
+    }
   </style>
 </head>
 
@@ -115,6 +119,24 @@
     <!-- 商品項目將在這裡動態生成 -->
   </div>
 
+  <!-- 拍賣場Modal -->
+  <div class="modal fade" id="marketModal" tabindex="-1" aria-labelledby="marketModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="marketModalLabel">道具詳情</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="marketModalBody">
+          <!-- Modal body content -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script th:src="@{/js/prop/template/jquery-1.11.0.min.js}"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
@@ -371,13 +393,13 @@
         const itemClassId = prop.propTypeId ? prop.propTypeId : "unknown";
         console.log(`Item classId is: ${itemClassId}`);
         const item = $(`
-  <div class="item ${itemClassId}" style="margin-bottom:28rem; width:12vw; position: relative;">
-    <a href="#" class="card" style="text-decoration: none; color: inherit;">
+  <div class="item ${itemClassId} card" style="margin-bottom:28rem; width:12vw; position: relative; text-decoration: none; color: inherit;">
       <div style="position: relative;">
         <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw;">
       </div>
       <div class="card-body p-0">
         <div class="card-text">
+          <p class="hidden-description">${prop.propDescription}</p>
           <h3 class="card-title pt-0 m-0">${prop.propName}</h3>
           <h3 class="secondary-font text-primary">平均NT$:${prop.propPrice}</h3>
           <div class="d-flex flex-wrap mt-3">
@@ -385,7 +407,6 @@
           </div>
         </div>
       </div>
-    </a>
   </div>
 `);
 
@@ -440,6 +461,29 @@
         });
     }
 
+    // 監控拍賣場的按鈕
+    document.addEventListener('DOMContentLoaded', function () {
+      const propsContainer = document.querySelector('.isotope-container');
+
+      propsContainer.addEventListener('click', function (event) {
+        const itemDiv = event.target.closest('.item');
+        if (itemDiv) {
+          event.preventDefault(); // 防止默認行為，例如<a>的導航
+          const propImage = itemDiv.querySelector('img').src;
+          const propName = itemDiv.querySelector('.card-title').textContent;
+          const propDescription = itemDiv.querySelector('.hidden-description').textContent; // 获取隐藏的描述内容
+          const modalBody = document.getElementById('marketModalBody');
+          modalBody.innerHTML = `
+            <h5 class="fs-2">${propName}</h5>
+            <img src="${propImage}" class="img-fluid rounded-4" alt="${propName}" style="width: 11vw;">
+            <p class="fs-4">描述: ${propDescription}</p>
+          `;
+
+          const modal = new bootstrap.Modal(document.getElementById('marketModal'));
+          modal.show();
+        }
+      });
+    });
   </script>
 </body>
 

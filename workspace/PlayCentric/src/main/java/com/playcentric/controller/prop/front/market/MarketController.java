@@ -14,4 +14,8 @@ public class MarketController {
 	public String showMarketPage() {
 		return "prop/front/market";
 	}
+	
+	//根據propId找賣單
+	
+	
 }
