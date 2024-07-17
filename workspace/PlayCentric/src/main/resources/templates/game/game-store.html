@@ -187,21 +187,25 @@
 
         async function handlePriceFilter() {
             pgnum = 0; // 重置 pgnum 變數
-            main.innerHTML = ''; // 清空主要內容區域
+            // 清空主要內容區域
             try {
                 if (typeId.length > 0 && minPrice.value === '' && maxPrice.value === '') {
+                    main.innerHTML = '';
                     scrolltrigger = false;
                     await typefilter();
                     scrolltrigger = true;
                 } else if (typeId.length > 0 && minPrice.value !== '' && maxPrice.value !== '') {
+                    main.innerHTML = '';
                     scrolltrigger = false;
                     await typeAndPriceFilter();
                     scrolltrigger = true;
                 } else if (minPrice.value !== '' && maxPrice.value !== '' && typeId.length === 0) {
+                    main.innerHTML = '';
                     scrolltrigger = false;
                     await pricefilter();
                     scrolltrigger = true;
                 } else if (minPrice.value == '' && maxPrice.value == '' && typeId.length === 0) {
+                    main.innerHTML = '';
                     scrolltrigger = false;
                     await nofilter();
                     scrolltrigger = true;
@@ -220,24 +224,30 @@
                     .filter(input => input.checked)
                     .map(input => parseInt(input.value));
                 pgnum = 0; // 重置 pgnum 變數
-                main.innerHTML = ''; // 清空主要內容區域
                 try {
                     if (typeId.length > 0 && minPrice.value === '' && maxPrice.value === '') {
+                        main.innerHTML = '';
                         scrolltrigger = false;
                         await typefilter();
                         scrolltrigger = true;
                     } else if (typeId.length > 0 && minPrice.value !== '' && maxPrice.value !== '') {
+                        main.innerHTML = '';
                         scrolltrigger = false;
                         await typeAndPriceFilter();
                         scrolltrigger = true;
                     } else if (minPrice.value !== '' && maxPrice.value !== '' && typeId.length === 0) {
+                        main.innerHTML = '';
                         scrolltrigger = false;
                         await pricefilter();
                         scrolltrigger = true;
-                    } else {
+                    } else if (minPrice.value == '' && maxPrice.value == '' && typeId.length === 0) {
+                        main.innerHTML = '';
                         scrolltrigger = false;
                         await nofilter();
                         scrolltrigger = true;
+                    }
+                    else {
+
                     }
                 } catch (error) {
                     console.error('Error fetching data:', error);

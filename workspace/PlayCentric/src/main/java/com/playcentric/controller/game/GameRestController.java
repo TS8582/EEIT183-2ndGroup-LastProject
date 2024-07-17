@@ -93,8 +93,16 @@ public class GameRestController {
 	                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
 	            })
 	            .collect(Collectors.toList());
+		// 計算分頁索引
+	    int start = (int) pgb.getOffset();
+	    int end = Math.min(start + pgb.getPageSize(), gamelist.size());
 
-		return new PageImpl<>(gamelist,pgb, gamelist.size());
+	    if (start <= end) {
+	        List<Game> subList = gamelist.subList(start, end);
+	        return new PageImpl<>(subList, pgb, gamelist.size());
+	    } else {
+	        return new PageImpl<>(Collections.emptyList(), pgb, gamelist.size());
+	    }
 	}
 	
 	//價格+分類篩選遊戲
