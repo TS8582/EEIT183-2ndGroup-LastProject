@@ -201,10 +201,13 @@
                     scrolltrigger = false;
                     await pricefilter();
                     scrolltrigger = true;
-                } else {
+                } else if (minPrice.value == '' && maxPrice.value == '' && typeId.length === 0) {
                     scrolltrigger = false;
                     await nofilter();
                     scrolltrigger = true;
+                }
+                else {
+
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
