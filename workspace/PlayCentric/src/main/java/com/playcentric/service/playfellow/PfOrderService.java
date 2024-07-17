@@ -18,4 +18,8 @@ public class PfOrderService {
 		List<PfOrder> pfOrders = pfOrderRepository.findAll();
 		return pfOrders;
 	}
+	
+	public PfOrder savePfOrder(PfOrder pfOrder) {
+		return pfOrderRepository.save(pfOrder);
+	}
 }

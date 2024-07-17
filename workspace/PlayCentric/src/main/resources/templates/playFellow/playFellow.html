@@ -62,10 +62,16 @@
 					<div class="swiper-slide py-5">
 						<div class="row banner-content align-items-center">
 							<div class="img-wrapper col-md-5">
-								<!-- <a id="addPfMember" th:if="${session.loginMember != null}"
+								 <a id="addPfMember" th:if="${session.loginMember != null}"
 									th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}"> <img
 										src="images/playFellow/pftop2.png" class="img-fluid">
-								</a> -->
+								</a> 
+								
+								<a  id="loginAlert" th:if="${session.loginMember == null}"
+									href="javascript:void(0);" onclick="alertAndRedirect();"><img
+										src="images/playFellow/pftop2.png" class="img-fluid">
+									
+								</a>
 							</div>
 							<div class="content-wrapper col-md-7 p-5 mb-5">
 								<div class="secondary-font text-primary text-uppercase mb-4">PlayCentric</div>
@@ -329,9 +335,21 @@
 					<div class="secondary-font text-primary text-uppercase mb-3 fs-4">遊戲伴遊招募</div>
 					<h2 class="banner-title display-1 fw-normal">PlayCentric
 						快來加入我們!</h2>
-					<a th:href="@{/playFellow/memId/6}"
-						class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
-						點此申請 </a>
+						
+						
+						<a id="addPfMember" th:if="${session.loginMember != null}"
+									th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+								點此申請</a> 
+								
+								<a  id="addPfMember" th:if="${session.loginMember == null}"
+									href="javascript:void(0);" onclick="alertAndRedirect();" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+									
+								點此申請</a>
+						
+						
+						
+						
+					
 				</div>
 
 			</div>

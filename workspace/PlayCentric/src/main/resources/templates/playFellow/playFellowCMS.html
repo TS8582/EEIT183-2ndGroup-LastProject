@@ -185,6 +185,9 @@ html, body {
 										<th>訂單編號</th>
 										<th>伴遊遊戲編號</th>
 										<th>下訂會員</th>
+										<th>單數</th>
+										<th>總金額</th>
+										
 										<th>交易序號</th>
 										<th>付款時間</th>
 										<th>創建時間</th>
@@ -198,6 +201,9 @@ html, body {
 										<td th:text="${order.pfOrderId}"></td>
 										<td th:text="${order.pfGame.pfGameId}"></td>
 										<td th:text="${order.member.memId}"></td>
+										<td th:text="${order.quantity}"></td>
+										<td th:text="${order.totalAmount}"></td>
+										
 										<td th:text="${order.transactionID}"></td>
 										<td
 											th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>

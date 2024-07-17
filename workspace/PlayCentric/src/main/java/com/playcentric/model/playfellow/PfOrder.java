@@ -38,6 +38,10 @@ public class PfOrder {
 	@JoinColumn(name = "memId")
 	private Member member;//會員編號(下訂者)
 	
+	private Integer quantity;//每單數量	
+	private Integer totalAmount;//總金額
+	
+	
 	@DateTimeFormat(pattern= "yyyy-MM-dd HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date added;//創建時間
