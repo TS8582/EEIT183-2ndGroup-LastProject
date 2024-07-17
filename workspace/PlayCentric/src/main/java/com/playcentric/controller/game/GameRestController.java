@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +33,6 @@ public class GameRestController {
 		Pageable pgb = PageRequest.of(pg, 9);
 		Page<Game> findGames = gService.findShowInStore(pgb);
 		for (Game game : findGames) {
-			System.out.println(game);
 			GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
 			if (nowDiscount != null) {
 				Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
@@ -54,12 +55,21 @@ public class GameRestController {
 	                    .containsAll(typeId))
 	            .collect(Collectors.toList());
 	    
+	    if (gamePage.isEmpty()) {
+	        return new PageImpl<>(Collections.emptyList(), pgb, 0);
+	    }
+	    
+	    // 計算分頁索引
 	    int start = (int) pgb.getOffset();
-	    int end = Math.min((start + pgb.getPageSize()), gamePage.size());
-	    List<Game> subList = gamePage.subList(start, end);
-
-	    Page<Game> game = new PageImpl<>(subList, pgb, gamePage.size());
-	    return game;
+	    int end = Math.min(start + pgb.getPageSize(), gamePage.size());
+	    
+	    // 檢查分頁索引是否超出遊戲列表範圍
+	    if (start <= end) {
+	        List<Game> subList = gamePage.subList(start, end);
+	        return new PageImpl<>(subList, pgb, gamePage.size());
+	    } else {
+	        return new PageImpl<>(Collections.emptyList(), pgb, gamePage.size());
+	    }
 	}
 	
 	//價格找遊戲
@@ -70,16 +80,38 @@ public class GameRestController {
 			@RequestParam Integer maxPrice
 			) {
 		Pageable pgb = PageRequest.of(pg, 9);
-		Page<Game> game = gService.findByPriceBetween(minPrice, maxPrice, pgb);
-		return game;
+		List<Game> gamelist = gService.findByPriceList(minPrice, maxPrice).stream()
+				.filter(game -> {
+					Integer discountedPrice;
+	                // 过滤折扣后价格在指定范围内的游戏
+					if (game.getRate() != null) {
+						discountedPrice = game.getPrice() * game.getRate() / 100;
+					}
+					else {
+						discountedPrice = game.getPrice();
+					}
+	                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
+	            })
+	            .collect(Collectors.toList());
+		// 計算分頁索引
+	    int start = (int) pgb.getOffset();
+	    int end = Math.min(start + pgb.getPageSize(), gamelist.size());
+
+	    if (start <= end) {
+	        List<Game> subList = gamelist.subList(start, end);
+	        return new PageImpl<>(subList, pgb, gamelist.size());
+	    } else {
+	        return new PageImpl<>(Collections.emptyList(), pgb, gamelist.size());
+	    }
 	}
 	
 	//價格+分類篩選遊戲
 	@GetMapping("/game/getGamePageByPriceAndType")
-	public Page<Game> getGamePageByPriceAndType(@RequestParam Integer pg,
-	                                            @RequestParam Integer minPrice,
-	                                            @RequestParam Integer maxPrice,
-	                                            @RequestParam List<Integer> typeId) {
+	public Page<Game> getGamePageByPriceAndType(
+			@RequestParam Integer pg,
+			@RequestParam Integer minPrice,
+			@RequestParam Integer maxPrice,
+			@RequestParam List<Integer> typeId) {
 	    Pageable pgb = PageRequest.of(pg, 9);
 	    // 根據條件查詢遊戲
 	    List<Game> gamePage = gService.findByPriceList(minPrice, maxPrice).stream()
@@ -88,7 +120,6 @@ public class GameRestController {
 	                    .collect(Collectors.toSet())
 	                    .containsAll(typeId))
 	            .collect(Collectors.toList());
-	    System.out.println(gService.findByPriceList(minPrice, maxPrice));
 	    // 如果查詢結果為空，返回空的分頁結果
 	    if (gamePage.isEmpty()) {
 	        return new PageImpl<>(Collections.emptyList(), pgb, 0);

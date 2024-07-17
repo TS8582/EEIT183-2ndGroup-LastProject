@@ -35,7 +35,9 @@
         }
 
         .container {
-            background-color: white;
+            background-color: rgb(252, 243, 232);
+            border-radius: 15px 15px 15px 15px;
+            padding: 70px !important;
         }
 
         .description {
@@ -44,13 +46,17 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
+        table {
+            border: 2px solid gray !important;
+        }
     </style>
 </head>
 
 <body class="h-screen flex flex-col w-screen">
     <div th:replace="~{/layout/backen_nav}"></div>
 
-    <div th:replace="~{/forum/layout/navbar}"></div>
+    <div th:replace="~{forum/layout/backnavbar}"> </div>
 
     <div>
         <section id="Wishlist" class="py-5 my-5">

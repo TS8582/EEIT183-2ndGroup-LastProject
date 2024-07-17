@@ -159,28 +159,78 @@
         layoutMode: 'masonry'
       });
 
-      $(document).ready(function () {
-        //active button
-        $('.filter-button').click(function () {
-          $('.filter-button').removeClass('active');
-          $(this).addClass('active');
-        });
-      });
+	  $(document).ready(function () {
+	     // 初始化 Isotope
+	     var $container = $('.isotope-container').isotope({
+	       itemSelector: '.item',
+	       layoutMode: 'fitRows'
+	     });
 
-      // Filter items on button click
-      $('.filter-button').click(function () {
-        var filterValue = $(this).attr('data-filter');
-        if (filterValue === '*') {
-          // Show all items
-          $container.isotope({ filter: '*' });
-        } else {
-          // Show filtered items
-          $container.isotope({ filter: filterValue });
-        }
-      });
+	     // 過濾按鈕的點擊事件
+	     $('.filter-button').click(function () {
+	       // 切換 active 樣式
+	       $('.filter-button').removeClass('active');
+	       $(this).addClass('active');
+
+	       // 過濾項目
+	       var filterValue = $(this).attr('data-filter');
+	       if (filterValue === '*') {
+	         // 顯示所有項目
+	         $container.isotope({ filter: '*' });
+	       } else {
+	         // 顯示過濾後的項目
+	         $container.isotope({ filter: filterValue });
+	       }
+	     });
+	   });
 
     });
 
   }); // End of a document
+  
+  $(document).ready(function () {
+  			// 初始化 Swiper
+  			var swiper = new Swiper('.main-swiper', {
+  				loop: true,
+  				autoplay: {
+  					delay: 2000,
+  				},
+  				pagination: {
+  					el: '.swiper-pagination',
+  					clickable: true,
+  				},
+  				navigation: {
+  					nextEl: '.swiper-button-next',
+  					prevEl: '.swiper-button-prev',
+  				},
+  			});
+
+  			// 初始化 Isotope for PlayFellow
+  			var $playfellowContainer = $('#playfellow-container').isotope({
+  				itemSelector: '.item',
+  				layoutMode: 'fitRows'
+  			});
+
+  			// 過濾按鈕的點擊事件 for PlayFellow
+  			$('.filter-button').click(function () {
+  				// 切換 active 樣式
+  				$('.filter-button').removeClass('active');
+  				$(this).addClass('active');
+
+  				// 過濾項目
+  				var filterValue = $(this).attr('data-filter');
+  				if (filterValue === '*') {
+  					// 顯示所有項目
+  					$playfellowContainer.isotope({
+  						filter: '*'
+  					});
+  				} else {
+  					// 顯示過濾後的項目
+  					$playfellowContainer.isotope({
+  						filter: filterValue
+  					});
+  				}
+  			});
+  		});
 
 })(jQuery);

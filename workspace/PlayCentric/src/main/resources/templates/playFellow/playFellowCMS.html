@@ -58,6 +58,7 @@ html, body {
 .status-closed {
 	color: #6C757D !important;
 }
+
 .hidden-button {
 	position: absolute;
 	right: 10px;
@@ -67,8 +68,6 @@ html, body {
 	pointer-events: none;
 }
 
-
-
 .dataTables_filter {
 	position: relative;
 }
@@ -77,23 +76,18 @@ html, body {
 	opacity: 1;
 	pointer-events: auto;
 }
+
 #review {
-    background-color: transparent;
-    color: #666; 
-    padding: 5px 10px; 
-    transition: background-color 0.3s;
-    bottom:10px;
-    }
-    
-    	
-
-
-#review:hover {
-    background-color: #013220; 
+	background-color: transparent;
+	color: #666;
+	padding: 5px 10px;
+	transition: background-color 0.3s;
+	bottom: 10px;
 }
 
-
-
+#review:hover {
+	background-color: #013220;
+}
 </style>
 
 
@@ -106,15 +100,16 @@ html, body {
 		<div th:replace="~{/layout/aside}"></div>
 		<main class="w-100 p-3">
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
-				<li class="nav-item" role="presentation">
+				<li class="nav-item" role="presentation" style="margin-right: 10px;">
 					<button class="nav-link text-secondary" id="home-tab"
 						data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button"
 						role="tab" aria-controls="home-tab-pane" aria-selected="true">伴遊者列表</button>
-
-					<!-- 隱藏button -->
-<!-- 					<div class="hidden-buttons"> -->
-<!-- 						<button class="btn btn-secondary btn-sm">審查伴遊身分</button> -->
-<!-- 					</div> -->
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link text-secondary" id="profile-tab"
+						data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
+						type="button" role="tab" aria-controls="profile-tab-pane"
+						aria-selected="false">交易明細</button>
 				</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
@@ -188,19 +183,48 @@ html, body {
 								<thead class="thead-light small">
 									<tr>
 										<th>訂單編號</th>
-										<th>伴遊暱稱</th>
+										<th>伴遊遊戲編號</th>
 										<th>下訂會員</th>
+										<th>單數</th>
+										<th>總金額</th>
+										
 										<th>交易序號</th>
-										<th>購買數量</th>
-										<th>購買金額</th>
-										<th>下訂時間</th>
+										<th>付款時間</th>
+										<th>創建時間</th>
 										<th>狀態</th>
+										<th>操作</th>
 									</tr>
 								</thead>
 								<tbody>
 									<!-- 訂單資料 -->
+									<tr th:each="order : ${PfOrder}" class="small">
+										<td th:text="${order.pfOrderId}"></td>
+										<td th:text="${order.pfGame.pfGameId}"></td>
+										<td th:text="${order.member.memId}"></td>
+										<td th:text="${order.quantity}"></td>
+										<td th:text="${order.totalAmount}"></td>
+										
+										<td th:text="${order.transactionID}"></td>
+										<td
+											th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										<td
+											th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										<td
+											th:text="${order.paymentStatus == 1 ? '交易中' : 
+						(order.paymentStatus == 2 ? '交易完成' : '交易失敗或取消')}"
+											th:classappend="${order.paymentStatus == 1 ? 'status-pending' : 
+								(order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}">
+										</td>
+										<td><a
+											th:href="@{/playFellow/updateOrder/{pfOrderId}(pfOrderId=${order.pfOrderId})}">
+												<i class="fas fa-file-invoice fa-2x"
+												style="color: rgb(60, 150, 128);"></i>
+										</a> <i class="fas fa-trash-alt delete-icon fa-2x"
+											th:attr="data-pf-order-id=${order.pfOrderId}"></i></td>
+									</tr>
 								</tbody>
 							</table>
+
 						</div>
 					</div>
 				</div>
@@ -226,11 +250,11 @@ html, body {
 				</div>
 			</div>
 		</main>
-		
+
 
 	</div>
-	
-<a class="text-sm text-gray plus-btn mybtn" id="review">REVIEW</a>
+
+	<a class="text-sm text-gray plus-btn mybtn" id="review">REVIEW</a>
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -243,8 +267,8 @@ html, body {
 	<script th:src="@{/js/layout/nav.js}"></script>
 
 	<script>
-	
-	
+
+
 		$(document).on('click', '#review', function () {
 			window.location.href = '/PlayCentric/playFellow/reviewpfMember';
 		})
@@ -311,7 +335,7 @@ html, body {
 						"last": "末頁",
 						"next": "下一頁",
 						"previous": "上一頁"
-						
+
 					}
 				}
 			});

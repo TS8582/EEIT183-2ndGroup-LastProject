@@ -70,26 +70,29 @@ public class PlayFellowMemberRestController {
 
 	@PostMapping("/playFellow/add") // 按下新增
 	public ResponseEntity<Map<String, Object>> addPlayFellowMember(@ModelAttribute("members") Member member,
-			@ModelAttribute("playFellowMember") PlayFellowMember playFellowMember) {
+	        @ModelAttribute("playFellowMember") PlayFellowMember playFellowMember) {
 
-		playFellowMember.setMember(member);
+	    playFellowMember.setMember(member);
 
-		Member existingMember = memberRepository.findById(member.getMemId()).orElse(null);
-		if (existingMember != null) {
-			existingMember.setGender(member.getGender());
-			existingMember.setBirthday(member.getBirthday());
-			memberRepository.save(existingMember); // 更新 Member 的 gender 和 birthday
-		}
+	    Optional<Member> optionalMember = memberRepository.findById(member.getMemId());
+	    if (optionalMember.isPresent()) {
+	        Member existingMember = optionalMember.get();
+	        existingMember.setGender(member.getGender());
+	        existingMember.setBirthday(member.getBirthday());
+	        memberRepository.save(existingMember); // 更新 Member 的 gender 和 birthday
+	    }
 
-		PlayFellowMember savedPlayFellowMember = playFellowMemberService.addPlayFellowMember(playFellowMember);
+	    PlayFellowMember savedPlayFellowMember = playFellowMemberService.addPlayFellowMember(playFellowMember);
 
-		// 把playFellowId的編號丟到前面去
-		Map<String, Object> response = new HashMap<>();
-		response.put("playFellowId", savedPlayFellowMember.getPlayFellowId());
-		response.put("message", "新增成功");
+	    // 把playFellowId的編號丟到前面去
+	    Map<String, Object> response = new HashMap<String, Object>();
+	    response.put("playFellowId", savedPlayFellowMember.getPlayFellowId());
+	    response.put("message", "新增成功");
 
-		return ResponseEntity.ok(response);
+	    return ResponseEntity.ok(response);
 	}
+
+
 
 	@PostMapping("/playFellow/Images/add")
 	public String addImageFile(@RequestParam("file") MultipartFile[] file,
