@@ -8,6 +8,7 @@ public interface PropSellOrderRepository extends JpaRepository<PropSellOrder, In
 	@Query("SELECT o FROM PropSellOrder o WHERE o.memberPropInventory.props.game.gameId = :gameId")
     List<PropSellOrder> findAllByGameId(@Param("gameId") int gameId);
 	
-
+    @Query("SELECT o FROM PropSellOrder o WHERE o.propId = :propId AND o.orderStatus = 0")
+    List<PropSellOrder> findAllByPropId(@Param("propId") int propId);
 }
 
