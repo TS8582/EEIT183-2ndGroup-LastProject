@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,6 +58,7 @@ public class PageController {
 	public String viewPlayFellowCart(@RequestParam("pfGameId") Integer pfGameId, Model model) {
 		Optional<PfGame> optionalPfGame = pfGameService.findByGameId(pfGameId);
 
+
 		if (optionalPfGame.isPresent()) {
 			PfGame pfGame = optionalPfGame.get();
 
@@ -70,10 +73,41 @@ public class PageController {
 //			model.addAttribute("gameName",pfGame.getGame().getGameName());
 //			model.addAttribute("amount",pfGame.getAmount());
 
+			System.out.print(pfGameId);
 		}
 		return "playFellow/playFellowCart";
-	}
 
+	}
+	
+	
+	@GetMapping("/api/playFellow/playFellowCart")
+	@ResponseBody
+	public ResponseEntity<PfGameDTO> viewPlayFellowCart(@RequestParam("pfGameId") Integer pfGameId) {
+	    Optional<PfGame> optionalPfGame = pfGameService.findByGameId(pfGameId);
+	    
+	    if (optionalPfGame.isPresent()) {
+	        PfGame pfGame = optionalPfGame.get();
+
+	        PlayFellowMember playFellowMember = pfGame.getPlayFellowMember();
+	        for (ImageLibPfmemberAssociation association : playFellowMember.getImageLibAssociations()) {
+	            ImageLib imageLib = association.getImageLib();
+	            String base64Image = Base64.getEncoder().encodeToString(imageLib.getImageFile());
+	            imageLib.setBase64Image(base64Image);
+	        }
+	        System.out.print(pfGameId);
+	        
+	        PfGameDTO pfGameDTO = new PfGameDTO();
+	        return ResponseEntity.ok(pfGameDTO);
+	    } else {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	    }
+	}
+	
+	
+
+	
+	
+	
 	@GetMapping("/playFellow")
 	public String getMethodName(Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();

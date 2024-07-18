@@ -22,44 +22,39 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/css/playfellow/playFellow.css}">
 
 	<style>
-		
-
-		.offcanvas.show~.content {
-			transform: translateX(250px);
-			transition: transform 0.3s ease-in-out;
-		}
-
 		.swiper-container {
-			width: 100%;
-			padding: 20px 50px;
-		}
+		       width: 100%;
+		       padding: 20px 50px;
+		       overflow: hidden; /* Hide overflow content */
+		   }
 
-		.swiper-slide {
-			display: flex;
-			justify-content: center;
-		}
+		   .swiper-slide {
+		       display: flex;
+		       justify-content: center;
+		       max-width: 100%; /* Ensure slides do not exceed container width */
+		   }
 
-		#playFellowCard {
-			width: 100%;
-			max-width: 800px;
-			height: 250px;
-			background-color: #595570;
-			margin-bottom: 0;
-			color: white;
-		}
+		   #playFellowCard {
+		       width: 100%;
+		       max-width: 800px;
+		       height: 250px;
+		       background-color: #595570;
+		       margin-bottom: 0;
+		       color: white;
+		   }
 
-		#playFellowCard .card-body {
-			padding: 10px;
-		}
+		   #playFellowCard .card-body {
+		       padding: 10px;
+		   }
 
-		#playFellowCard .row.g-0 {
-			margin-right: 0;
-			margin-left: 0;
-		}
+		   #playFellowCard .row.g-0 {
+		       margin-right: 0;
+		       margin-left: 0;
+		   }
 
-		#playFellowCard .img-fluid {
-			height: 100%;
-		}
+		   #playFellowCard .img-fluid {
+		       height: 100%;
+		   }
 	</style>
 </head>
 
@@ -122,60 +117,71 @@
 		</div>
 	</section>
 
-
-
-
-
+	
+	
 	<!-- 	創建時間lastest 5 top -->
+	<section class="container mt-3" style="background-color: #FFFFFF;">
+	    <h4 class="fw-normal">伴遊新星🌟</h4>
+	    <div class="swiper-container">
+	        <div class="swiper-wrapper">
+	            <div class="swiper-slide" th:each="members : ${TopFiveReviewSuccessMembers}">
+	                <div class="card mb-3" id="playFellowCard" data-bs-toggle="modal" data-bs-target="#memberModal"
+	                     th:data-bs-memberId="${members.pfGames[0].pfGameId}">
+	                    <div class="row g-0 h-100">
+	                        <div th:if="${members.imageLibAssociations.size() > 0}" class="col-md-4 h-100">
+	                            <img class="img-fluid rounded-start h-100 playFellowImg-size"
+	                                 th:src="'data:image/jpeg;base64,' + ${members.imageLibAssociations[0].imageLib.base64Image}"
+	                                 style="object-fit: cover;" />
+	                        </div>
+	                        <div class="col-md-8 h-100">
+	                            <div class="card-body h-100">
+	                                <span class="row">
+	                                    <h5 class="card-title" th:text="${members.pfnickname}"></h5>
+	                                    <span class="card-title pt-2 m-0">
+	                                        <span th:if="${members.member.gender == 1}" style="color: blue;">♂️</span>
+	                                        <span th:if="${members.member.gender == 2}" style="color: pink;">♀️</span>
+	                                    </span>
+	                                </span>
+	                                <p class="card-text" th:text="${members.pfdescription}"></p>
+	                                <p class="card-text">
+	                                    <small class="text-body-secondary" th:text="${members.pfcreatedTime}"></small>
+	                                </p>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</section>
 
-	<div class="container mt-3" style="background-color: #FFFFFF; ">
-			<h4 class="fw-normal">伴遊新星🌟</h4>
-		<div class="swiper-container">
-			<div class="swiper-wrapper">
-				<div class="swiper-slide" th:each="members : ${TopFiveReviewSuccessMembers}" >
-					<div class="card mb-3" id="playFellowCard">
-						<div class="row g-0 h-100">
-
-
-							<div th:if="${members.imageLibAssociations.size() > 0}" class="col-md-4 h-100">
-								<img class="img-fluid rounded-start h-100 playFellowImg-size"
-									 th:src="'data:image/jpeg;base64,' + ${members.imageLibAssociations[0].imageLib.base64Image}"
-									 style="object-fit: cover;" />
-							</div>
-
-
-
-							<div class="col-md-8 h-100">
-								<div class="card-body h-100">
-									<span class="row">
-										<h5 class="card-title" th:text="${members.pfnickname}"></h5>
-										<span class="card-title pt-2 m-0">
-											<span th:if="${members.member.gender == 1}" style="color: blue;">♂️</span>
-											<span th:if="${members.member.gender == 2}" style="color: pink;">♀️</span>
-										</span>
-									</span>
-
-									<p class="card-text" th:text="${members.pfdescription}"></p>
-									<p class="card-text">
-										<small class="text-body-secondary" th:text="${members.pfcreatedTime}"></small>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div>
+	
+	
+	
+	<!-- Modal -->
+	<div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
+	    <div class="modal-dialog modal-lg">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="memberModalLabel">伴遊詳細資料</h5>
+	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body">
+	                <!-- Modal content will be loaded here via JavaScript -->
+	                <div id="modal-content-container"></div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+	            </div>
+	        </div>
+	    </div>
 	</div>
 
 
 
-
-
-
-
-
+	
+	
+	
 
 	<section id="clothing" class="overflow-hidden" style="margin-top: 50px;">
 		<div class="container pb-1">
@@ -187,7 +193,7 @@
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
 							class="bi bi-list" viewBox="0 0 20 20">
 							<path fill-rule="evenodd"
-								d="M2.5 12.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5z" />
+								d="M2.5 12.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5.5 0 0 1-.5-.5zm0-5a.5.5.5 0 0 1 .5-.5h10a.5.5.5 0 0 1 0 1h-10a.5.5.5 0 0 1-.5-.5z" />
 						</svg>
 					</button>
 				</div>
@@ -338,14 +344,6 @@
 		</div>
 	</section>
 
-
-
-
-
-
-
-
-
 	<section id="foodies" style="margin-top: 10px;">
 		<div class="container my-1 py-0">
 			<div class="section-header d-md-flex justify-content-between align-items-center">
@@ -358,8 +356,6 @@
 					</p>
 				</div>
 			</div>
-
-
 
 			<div id="playfellow-container" class="isotope-container row">
 				<!-- 				CS2        	-->
@@ -462,13 +458,6 @@
 				</div>
 				<!-- Repeat other items here -->
 			</div>
-
-
-
-
-
-
-
 		</div>
 	</section>
 
@@ -492,10 +481,6 @@
 
 						點此申請</a>
 
-
-
-
-
 				</div>
 
 			</div>
@@ -513,7 +498,6 @@
 			</div>
 		</div>
 	</div>
-
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
 	<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
@@ -540,6 +524,60 @@
 				prevEl: '.swiper-button-prev',
 			},
 		});
+		
+		
+		
+		
+		
+		
+		
+		document.addEventListener('DOMContentLoaded', function () {
+		    const memberModal = new bootstrap.Modal(document.getElementById('memberModal'));
+		    document.querySelectorAll('#playFellowCard').forEach(card => {
+		        card.addEventListener('click', function () {
+		            const pfGameId = this.getAttribute('data-bs-memberId');
+		            // Load member details via AJAX
+		            axios.get(`/PlayCentric/api/playFellow/playFellowCart?pfGameId=${pfGameId}`)
+		                .then(response => {
+		                    const data = response.data;
+		                    let modalContent = `
+		                        <h5>${data.pfnickname}</h5>
+		                        <p>遊戲名稱: ${data.gameName}</p>
+		                        <p>價格: $${data.amount} ${data.pricingCategory}</p>
+		                        <div class="carousel slide" id="modalCarousel" data-bs-ride="carousel">
+		                            <div class="carousel-inner">
+		                    `;
+		                    data.imageBase64List.forEach((image, index) => {
+		                        modalContent += `
+		                            <div class="carousel-item ${index === 0 ? 'active' : ''}">
+		                                <img src="data:image/jpeg;base64,${image}" class="d-block w-100">
+		                            </div>
+		                        `;
+		                    });
+		                    modalContent += `
+		                            </div>
+		                            <a class="carousel-control-prev" href="#modalCarousel" role="button" data-bs-slide="prev">
+		                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		                                <span class="visually-hidden">Previous</span>
+		                            </a>
+		                            <a class="carousel-control-next" href="#modalCarousel" role="button" data-bs-slide="next">
+		                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+		                                <span class="visually-hidden">Next</span>
+		                            </a>
+		                        </div>
+		                    `;
+
+		                    document.getElementById('modal-content-container').innerHTML = modalContent;
+		                    memberModal.show();
+		                })
+		                .catch(error => {
+		                    console.error(error);
+		                });
+		        });
+		    });
+		});
+
+
 	</script>
 
 
