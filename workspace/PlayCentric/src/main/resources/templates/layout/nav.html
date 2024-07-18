@@ -114,7 +114,7 @@
 					<li th:case="null" class="nav-item"><a th:href="@{/member/login}"
 							class="btn btn-sm btn-primary me-3 fs-4">登入/註冊</a></li>
 					<li th:case="*" class="nav-item dropdown"><a class="d-flex nav-link fs-4" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false"> <img class="rounded-circle h35px w35px"
+							data-bs-toggle="dropdown" aria-expanded="false"> <img id="login-member-photo" class="rounded-circle h35px w35px"
 								th:src="${session.loginMember.photo}"> <span class="mx-1 text-light"
 								th:text="${session.loginMember.nickname}"></span>
 						</a>
