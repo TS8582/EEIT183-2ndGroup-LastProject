@@ -46,7 +46,7 @@ public class Game {
 	private LocalDateTime releaseAt = LocalDateTime.now();
 	private String developer;
 	private String publisher;
-	private String gameFilePath;
+	private byte[] gameFile;
 	private Integer totalReviews = 0;
 	private Integer totalScore = 0;
 	private Boolean isShow = Boolean.TRUE;
@@ -67,5 +67,8 @@ public class Game {
 	@JsonProperty
 	@Transient
 	private Integer rate;
+	@JsonProperty
+	@Transient
+	private Integer discountedPrice;
 	
 }

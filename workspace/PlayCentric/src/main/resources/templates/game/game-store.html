@@ -91,8 +91,10 @@
                 <div
                     class="fade-in h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500">
                     <div class="py-2 h-64 flex justify-center rounded-md">
-                        <img th:if="${!game.imageLibs.empty}" class="w-auto h-full rounded-md"
-                            th:src="@{/imagesLib/image{id}(id=${game.ImageLibs[0].imageId})}" alt="">
+                        <a th:href="@{}">
+                            <img th:if="${!game.imageLibs.empty}" class="w-auto h-full rounded-md"
+                                th:src="@{/imagesLib/image{id}(id=${game.ImageLibs[0].imageId})}" alt="">
+                        </a>
                     </div>
                     <div class="h-1/3 flex text-black flex-col items-center p-2">
                         <div class="flex justify-center">
@@ -106,7 +108,7 @@
                                 th:text=" '$' + ${game.price}"></span>
                             <!-- 有優惠顯示的價格 -->
                             <span th:if="${game.rate}" class="price-tag font-semibold"
-                                th:text=" '$' + ${game.price * game.rate / 100}"></span>
+                                th:text=" '$' + ${game.discountedPrice}"></span>
                         </div>
                         <div class="flex justify-center">
                             <span class="border border-red-300 mybtn mybtn-green">加入購物車</span>
@@ -522,6 +524,7 @@
             // 遊戲價格
             let gamePrice = document.createElement('div');
             gamePrice.classList.add('flex', 'justify-center', 'my-2', 'space-x-3');
+            console.log(game.rate);
             if (game.rate != null) {
                 let discountSpan = document.createElement('span');
                 discountSpan.classList.add('price-tag', 'font-semibold');
@@ -530,7 +533,7 @@
 
                 let discountedPriceSpan = document.createElement('span');
                 discountedPriceSpan.classList.add('price-tag', 'font-semibold');
-                discountedPriceSpan.textContent = `NT$${Math.round(game.price * game.rate / 100)}`;
+                discountedPriceSpan.textContent = `NT$${game.discountedPrice}`;
                 gamePrice.appendChild(discountedPriceSpan);
             } else {
                 let priceSpan = document.createElement('span');
