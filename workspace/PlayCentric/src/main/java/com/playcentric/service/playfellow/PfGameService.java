@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.ImageLibRepository;
+import com.playcentric.model.game.primary.Game;
+import com.playcentric.model.game.primary.GameRepository;
+import com.playcentric.model.playfellow.GameToPfGameDTO;
 import com.playcentric.model.playfellow.ImageLibPfmemberAssociation;
 import com.playcentric.model.playfellow.PfGame;
 import com.playcentric.model.playfellow.PfGameDTO;
@@ -24,6 +27,9 @@ public class PfGameService {
 
 	@Autowired
 	private PfGameRepository pfGameRepository;
+
+	@Autowired
+	private GameRepository gameRepository;
 
 	public PfGameDTO addPfGame(PfGame pfGame) {
 		PfGame savedPfGame = pfGameRepository.save(pfGame);
@@ -64,6 +70,7 @@ public class PfGameService {
 		return pfGameDTOs;
 	}
 
+	//這個只有審核通過 沒分性別
 	public List<PfGame> getAllPlayFellowMembersByGameId(Integer gameId) {
 		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
 
@@ -76,6 +83,23 @@ public class PfGameService {
 
 		return reviewSusscessPfmem;
 	}
+	
+	//這個是性別的((別再寫死
+	public List<PfGame> getAllPlayFellowMembersByGameIdAndMale(Integer gameId,Short gender) {
+		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
+		
+		List<PfGame> filteredPfGameMember = new ArrayList<>();
+		for (PfGame pfGame : pfGames) {
+			if (pfGame.getPlayFellowMember() != null 
+					&& pfGame.getPlayFellowMember().getPfstatus() == 3 
+					&& pfGame.getPlayFellowMember().getMember().getGender() == gender) {
+				filteredPfGameMember.add(pfGame);
+			}
+		}
+		return filteredPfGameMember;
+	}
+	
+	
 
 	@Transactional
 	public void deletePfGame(Integer pfGameId) {
@@ -142,8 +166,22 @@ public class PfGameService {
 
 //pfOrder用的
 	public Optional<PfGame> findByGameId(Integer gameId) {
-        return pfGameRepository.findById(gameId);
+		return pfGameRepository.findById(gameId);
+	}
+
+	public List<Game> findAllGame() {
+		return gameRepository.findAll();
+	}
+
+	
+	
+	
+	public Game getGameById(Integer gameId) {
+        Optional<Game> optionalGame = gameRepository.findById(gameId);
+        if (optionalGame.isPresent()) {
+            return optionalGame.get();
+        }
+        return null;
     }
-	
-	
+
 }
