@@ -1,5 +1,6 @@
 package com.playcentric.service.playfellow;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.playcentric.model.ImageLib;
+import com.playcentric.model.ImageLibRepository;
+import com.playcentric.model.game.primary.Game;
+import com.playcentric.model.game.primary.GameRepository;
+import com.playcentric.model.playfellow.GameToPfGameDTO;
+import com.playcentric.model.playfellow.ImageLibPfmemberAssociation;
 import com.playcentric.model.playfellow.PfGame;
 import com.playcentric.model.playfellow.PfGameDTO;
 import com.playcentric.model.playfellow.PfGameRepository;
@@ -21,26 +28,78 @@ public class PfGameService {
 	@Autowired
 	private PfGameRepository pfGameRepository;
 
+	@Autowired
+	private GameRepository gameRepository;
+
 	public PfGameDTO addPfGame(PfGame pfGame) {
 		PfGame savedPfGame = pfGameRepository.save(pfGame);
 		return convertToDTO(savedPfGame);
 	}
 
+	public List<PfGame> getAllReviewSuccessPlayFellowMembers() {
+		List<PfGame> pfGames = pfGameRepository.findAll();
+
+		List<PfGame> reviewSuccessPfmem = new ArrayList<>();
+		for (PfGame pfGame : pfGames) {
+			if (pfGame.getPlayFellowMember() != null && pfGame.getPlayFellowMember().getPfstatus() == 3) {
+				reviewSuccessPfmem.add(pfGame);
+			}
+		}
+		return reviewSuccessPfmem;
+	}
+
 	public List<PfGameDTO> findAllPfGame() {
 		List<PfGame> pfGames = pfGameRepository.findAll();
-		return pfGames.stream().map(this::convertToDTO).collect(Collectors.toList());
+		List<PfGameDTO> pfGameDTOs = new ArrayList<PfGameDTO>();
+
+		for (PfGame pfGame : pfGames) {
+			PfGameDTO dto = convertToDTO(pfGame);
+			pfGameDTOs.add(dto);
+		}
+
+		return pfGameDTOs;
 	}
 
 	public List<PfGameDTO> findByPlayFellowId(Integer playFellowId) {
 		List<PfGame> pfGames = pfGameRepository.findByPlayFellowMemberPlayFellowId(playFellowId);
-		return pfGames.stream().map(this::convertToDTO).collect(Collectors.toList());
+		List<PfGameDTO> pfGameDTOs = new ArrayList<>();
+		for (PfGame pfGame : pfGames) {
+			PfGameDTO pfGameDTO = convertToDTO(pfGame);
+			pfGameDTOs.add(pfGameDTO);
+		}
+		return pfGameDTOs;
 	}
 
+	//這個只有審核通過 沒分性別
 	public List<PfGame> getAllPlayFellowMembersByGameId(Integer gameId) {
-        List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
-        System.out.println("Number of games found: " + pfGames.size());
-        return pfGames;
-    }
+		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
+
+		List<PfGame> reviewSusscessPfmem = new ArrayList<>();
+		for (PfGame pfGame : pfGames) {
+			if (pfGame.getPlayFellowMember() != null && pfGame.getPlayFellowMember().getPfstatus() == 3) {
+				reviewSusscessPfmem.add(pfGame);
+			}
+		}
+
+		return reviewSusscessPfmem;
+	}
+	
+	//這個是性別的((別再寫死
+	public List<PfGame> getAllPlayFellowMembersByGameIdAndMale(Integer gameId,Short gender) {
+		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
+		
+		List<PfGame> filteredPfGameMember = new ArrayList<>();
+		for (PfGame pfGame : pfGames) {
+			if (pfGame.getPlayFellowMember() != null 
+					&& pfGame.getPlayFellowMember().getPfstatus() == 3 
+					&& pfGame.getPlayFellowMember().getMember().getGender() == gender) {
+				filteredPfGameMember.add(pfGame);
+			}
+		}
+		return filteredPfGameMember;
+	}
+	
+	
 
 	@Transactional
 	public void deletePfGame(Integer pfGameId) {
@@ -70,24 +129,59 @@ public class PfGameService {
 	}
 
 	public PfGameDTO convertToDTO(PfGame pfGame) {
-		PfGameDTO dto = new PfGameDTO();
-		dto.setPfGameId(pfGame.getPfGameId());
-		dto.setPlayFellowId(
-				pfGame.getPlayFellowMember() != null ? pfGame.getPlayFellowMember().getPlayFellowId() : null);
-		dto.setGameId(pfGame.getGame() != null ? pfGame.getGame().getGameId() : null);
-		dto.setGameName(pfGame.getGame() != null ? pfGame.getGame().getGameName() : null);
-		dto.setPricingCategory(pfGame.getPricingCategory());
-		dto.setAmount(pfGame.getAmount());
-		dto.setPfGameStatus(pfGame.getPfGameStatus());
-		dto.setPfNickname(pfGame.getPlayFellowMember() != null ? pfGame.getPlayFellowMember().getPfnickname() : null);
+		PfGameDTO pfGameDTO = new PfGameDTO();
+		pfGameDTO.setPfGameId(pfGame.getPfGameId());
+
+		if (pfGame.getPlayFellowMember() != null) {
+			pfGameDTO.setPlayFellowId(pfGame.getPlayFellowMember().getPlayFellowId());
+			pfGameDTO.setPfNickname(pfGame.getPlayFellowMember().getPfnickname());
+		} else {
+			pfGameDTO.setPlayFellowId(null);
+			pfGameDTO.setPfNickname(null);
+		}
+
+		if (pfGame.getGame() != null) {
+			pfGameDTO.setGameId(pfGame.getGame().getGameId());
+			pfGameDTO.setGameName(pfGame.getGame().getGameName());
+		} else {
+			pfGameDTO.setGameId(null);
+			pfGameDTO.setGameName(null);
+		}
+
+		pfGameDTO.setPricingCategory(pfGame.getPricingCategory());
+		pfGameDTO.setAmount(pfGame.getAmount());
+		pfGameDTO.setPfGameStatus(pfGame.getPfGameStatus());
 
 		if (pfGame.getPlayFellowMember() != null && pfGame.getPlayFellowMember().getImageLibAssociations() != null
 				&& !pfGame.getPlayFellowMember().getImageLibAssociations().isEmpty()) {
+
 			byte[] imageBytes = pfGame.getPlayFellowMember().getImageLibAssociations().get(0).getImageLib()
 					.getImageFile();
 			String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-			dto.setBase64Image(base64Image);
+			pfGameDTO.setBase64Image(base64Image);
 		}
-		return dto;
+
+		return pfGameDTO;
 	}
+
+//pfOrder用的
+	public Optional<PfGame> findByGameId(Integer gameId) {
+		return pfGameRepository.findById(gameId);
+	}
+
+	public List<Game> findAllGame() {
+		return gameRepository.findAll();
+	}
+
+	
+	
+	
+	public Game getGameById(Integer gameId) {
+        Optional<Game> optionalGame = gameRepository.findById(gameId);
+        if (optionalGame.isPresent()) {
+            return optionalGame.get();
+        }
+        return null;
+    }
+
 }

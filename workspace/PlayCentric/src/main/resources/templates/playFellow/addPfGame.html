@@ -5,8 +5,8 @@
 <div th:replace="~{layout/backen_nav}"></div>
 
 <title>新增伴遊者遊戲</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" -->
+<!-- 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
 body {
@@ -101,12 +101,15 @@ body {
 								th:value="${pfGame.pfGameStatus}" />
 						</div>
 					</div>
+					  
 					<div class="form-group row">
 						<div class="col-sm-12 d-flex justify-content-between">
 							<button type="button" class="btn btn-success"
 								onclick="submitPfGameForm()">新增</button>
+								
 							<button type="button" class="btn btn-primary ml-auto"
-								onclick="backToCms()">遞交審核</button>
+                                th:if="${pfGame.playFellowMember.pfstatus != 3}"
+                                onclick="backToCms()">遞交審核</button>
 						</div>
 					</div>
 				</form>
@@ -208,7 +211,7 @@ body {
 
         function backToCms() {
             alert('您的申請須經後台管理人員審核，請耐心等候!');
-            window.location.href = '/PlayCentric/playFellow/cms';
+            window.location.href = '/PlayCentric/playFellow';
         }
     </script>
 </body>

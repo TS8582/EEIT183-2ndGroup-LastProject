@@ -56,10 +56,10 @@
         <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
         <script th:src="@{/js/utils/doAlertJQ.js}"></script>
         <script>
-            const loginMsg = '[[${loginMsg}]]'
+            const redirectMsg = '[[${redirectMsg}]]'
 
-            if (loginMsg && loginMsg.trim() != "") {
-                doAlert(loginMsg);
+            if (redirectMsg && redirectMsg.trim() != "") {
+                doAlert(redirectMsg);
             }
         </script>
 </body>

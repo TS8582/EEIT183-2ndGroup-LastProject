@@ -45,13 +45,16 @@
             </div>
           </div>
           <div class="row">
-            <div class="btn btn-outline-warning btn-sm col-4 align-self-center ms-4 mt-2 text-dark">修改密碼</div>
+            <div id="change-pwd-btn" class="btn btn-outline-warning btn-sm col-4 align-self-center ms-4 mt-2 text-dark">
+              修改密碼</div>
           </div>
           <div class="row mt-2">
             <label for="email" class="col-form-label col-1 px-0 text-end">Email:</label>
             <div class="col-5">
               <input type="text" readonly class="form-control-plaintext px-2" id="email" name="email" value="">
             </div>
+            <div id="verify-email-btn" class="btn btn-outline-warning btn-sm col-2 align-self-center text-dark" style="display: none;">
+              驗證Email</div>
           </div>
           <div
             class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0 ms-2 me-5">
@@ -105,8 +108,8 @@
           </div>
 
         </div>
-        <div class="photo-div ps-0 col-2 cursor-pointer">
-          <img class="w-100" src="http://localhost:8080/PlayCentric/imagesLib/image144">
+        <div class="photo-div ps-0 col-2">
+          <img class="w-100 cursor-pointer" src="http://localhost:8080/PlayCentric/imagesLib/image144">
           <input type="file" name="photoFile" id="photoFile" style="display: none;">
         </div>
         <div id="edit-btn-group" class="row my-2 justify-content-center" style="display: none;">
@@ -119,14 +122,59 @@
 
   <script>
     $(function () {
-      const findMemUrl = "http://localhost:8080/PlayCentric/member/getMember"
+      const findMemUrl = "http://localhost:8080/PlayCentric/member/getMember";
       const updateMemUrl = "http://localhost:8080/PlayCentric/member/update";
+      const changePwdUrl = "http://localhost:8080/PlayCentric/member/sendPtUrl";
+      const verifiyEmailUrl = "http://localhost:8080/PlayCentric/member/sendVerUrl";
       const memId = Number.parseInt('[[${session.loginMember.memId}]]');
+      const redirectMsg = '[[${redirectMsg}]]';
       let memInfo = {};
+
+      if (redirectMsg && redirectMsg.trim() != "") {
+        doAlert(redirectMsg);
+      }
 
 
       getMemInfo();
 
+
+      $('#verify-email-btn').click(function(){
+        if (memInfo.emailVerified) {
+          doAlert('信箱已驗證')
+          return;
+        }
+        axios({
+          method: 'post',
+          url: verifiyEmailUrl,
+          params: { email: memInfo.email }
+        })
+          .then(res => {
+            console.log(res);
+            doAlert(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      })
+
+      $('#change-pwd-btn').click(function () {
+        if (!memInfo.emailVerified) {
+          doAlert('請先驗證信箱');
+          return;
+        }
+        axios({
+          method: 'post',
+          url: changePwdUrl,
+          params: { email: memInfo.email }
+        })
+          .then(res => {
+            console.log(res);
+            doAlert(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      })
 
       $('#memInfo').submit(function (e) {
         e.preventDefault();
@@ -214,6 +262,10 @@
         $('#memInfo #nickname').val(data.nickname);
         $('#memInfo #account').val(data.account);
         $('#memInfo #email').val(data.email);
+        $('#verify-email-btn').hide();
+        if (!data.emailVerified) {
+          $('#verify-email-btn').show();
+        }
         $('#memInfo #memName').val(data.memName ? data.memName : '');
         $('#memInfo #gender').val(data.gender ? data.gender : 0);
         $('#memInfo #birthday').val(data.birthday ? data.birthday : '');
@@ -228,6 +280,7 @@
           $('#memInfo #google-account .btn').addClass('disabled');
         }
         $('#memInfo .photo-div img').attr('src', data.photoUrl)
+        $('img#login-member-photo').attr('src', data.photoUrl)
 
         $('#edit-btn-group').hide();
       }
@@ -236,7 +289,7 @@
         console.log(memInfo);
         const formDataOj = new FormData($('#memInfo')[0]);
         for (const [key, value] of formDataOj) {
-          if (memInfo.hasOwnProperty(key)) {
+          if (memInfo.hasOwnProperty(key) && memInfo[key] != null) {
             if (memInfo[key].toString() === value) {
               console.log(`${key} 的值匹配: ${memInfo[key]}`);
             } else {

@@ -76,6 +76,11 @@ public class Member {
     private Short gender;
     private Short status;
     private Integer points;
+    @JsonIgnore
+    private String passwordToken;
+    private Boolean emailVerified;
+    @JsonIgnore
+    private String emailVerifyToken;
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

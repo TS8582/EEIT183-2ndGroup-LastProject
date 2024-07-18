@@ -8,6 +8,32 @@
   <title>PlayCentric論壇</title>
   <script src="https://kit.fontawesome.com/a498fa36dc.js" crossorigin="anonymous"></script>
   <style>
+    /* 新增動畫效果 */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animated-section {
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    .animated-table {
+      animation: fadeIn 1.5s ease-in-out forwards;
+    }
+
+    @font-face {
+      font-family: 'oxxo';
+      src: url("[[@{/css/forum/jf-openhuninn-2.0.ttf}]]");
+    }
+
     .spaced-column {
       padding-right: 20px;
     }
@@ -21,41 +47,142 @@
     }
 
     #title1 {
-      padding-right: 50px;
+      width: 70%;
     }
 
-    #d1 {
-      width: 500px;
-    }
 
     #th1 {
-      width: 45%;
+      margin-left: 50px !important;
+      width: 50%;
+    }
+
+    tr {
+      font-family: oxxo, serif;
+      display: grid;
+      grid-template-columns: 41% 50%;
+      grid-template-rows: repeat(2, 50%);
+      width: 68%;
+      border: 6px outset #000 !important;
+      background-image: url("[[@{/images/forumbackground1.jpg}]]");
+      background-size: cover;
+      /* 確保圖片覆蓋整個容器 */
+      background-position: center;
+      /* 確保圖片居中 */
+      background-repeat: no-repeat;
+      /* 防止圖片重複 */
+    }
+
+    table {
+      width: 100fr !important;
+      margin-right: 5%;
+      margin-left: 15%;
+      padding: 30%;
+
+    }
+
+    body {
+      overflow: hidden;
+      background-image: url("[[@{/images/loginBG.jpg}]]");
+      background-size: cover;
+      /* 確保圖片覆蓋整個容器 */
+      background-position: center;
+      /* 確保圖片居中 */
+      background-repeat: no-repeat;
+      /* 防止圖片重複 */
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      display: flex;
+      justify-content: flex-start;
+      font-weight: bold !important;
+      color: white !important;
+    }
+
+    td,
+    td>div,
+    th {
+      border: none !important;
+    }
+
+    .bgn {
+      background: none !important;
+    }
+
+    a>p,
+    .txt1 {
+      font-weight: bold !important;
+      font-size: x-large !important;
+      color: white !important;
+      margin: 20px !important;
+    }
+
+    .maxheight {
+      overflow-wrap: break-word !important;
+      word-wrap: break-word !important;
+      max-width: 1000px !important;
+      display: block !important;
+    }
+
+    .p1:hover {
+      color: aqua !important;
+    }
+
+    .row {
+      margin-left: 50px;
+    }
+
+    .d1 {
+      margin-top: 20px !important;
+      max-height: 80vh;
+      /* 這裡你可以根據需要調整高度 */
+      overflow: auto;
+      background-color: rgb(255, 255, 255, 0.9);
+      border-style: none;
+    }
+
+    /* 保持圖片比例 */
+    .card-image img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    section#Wishlist .table {
+      max-height: 100%;
+      overflow-y: auto;
+      /* 垂直滾動 */
+    }
+
+    .d2 {
+      height: 80% !important;
+      margin-bottom: 30px !important;
     }
   </style>
 </head>
 
-<body class="h-screen flex flex-col w-screen">
+<body class="h-screen flex flex-col w-screen overflow-hidden">
   <div th:replace="~{/layout/nav}"></div>
 
-
-  <div th:replace="~{forum/layout/navbar}"></div>
-
-  <div>
-    <section id="Wishlist" class="py-5 my-5">
+  <div class="d2">
+    <section id="Wishlist" class="py-3 mx-5 d1 overflow-auto animated-section">
       <div class="container">
         <div class="row">
-          <table class="table">
+          <table class="table animated-table">
             <thead>
               <tr>
-                <th scope="col" id="th1" class="card-title text-uppercase">標題</th>
-                <th scope="col" id="title1" class="card-title text-uppercase spaced-column">簡介</th>
-                <th scope="col" class="card-title text-uppercase spaced-column"></th>
+                <th scope="col" id="th1" class="card-title text-uppercase bgn">
+                  <h2>標題</h2>
+                </th>
+                <th scope="col" id="title1" class="card-title text-uppercase bgn">
+                  <h2>簡介</h2>
+                </th>
               </tr>
             </thead>
             <tbody class="table table-striped table-hover">
               <tr th:each="forumBean : ${arrayList}">
-                <td class="py-4">
-                  <div class="cart-info d-flex flex-wrap align-items-center">
+                <td class="bgn">
+                  <div class="cart-info d-flex flex-wrap align-items-center bgn">
                     <div class="col-lg-3">
                       <div class="card-image">
                         <a th:href="@{/texts/findTextsByForumId(forumId=${forumBean.forumId})}"
@@ -66,31 +193,26 @@
                       </div>
                     </div>
                     <div class="col-lg-9">
-                      <div class="card-detail ps-3">
+                      <div class="card-detail ps-3 bgn">
                         <h5 class="card-title">
                           <a th:href="@{/texts/findTextsByForumId(forumId=${forumBean.forumId})}"
                             class="text-decoration-none">
-                            <p th:text="${forumBean.forumName}"></p>
+                            <p th:text="${forumBean.forumName}" class="p1"></p>
                           </a>
                         </h5>
                       </div>
                     </div>
                   </div>
                 </td>
-                <td class="py-4 align-middle spaced-column">
-                  <div class="total-price">
+                <td class="bgn">
+                  <div class="cart-info d-flex flex-wrap align-items-center bgn maxheight">
                     <a th:href="@{/texts/findTextsByForumId(forumId=${forumBean.forumId})}"
                       class="text-decoration-none">
                       <span class="secondary-font fw-medium  text-area">
-                        <p th:utext="${forumBean.textsIntro}"></p>
+                        <p th:utext="${forumBean.textsIntro}" class="txt1 p1"></p>
 
                       </span>
                     </a>
-                  </div>
-                </td>
-                <td class="py-4 align-middle spaced-column">
-                  <div class="total-price">
-                    <span class="secondary-font fw-medium"></span>
                   </div>
                 </td>
               </tr>
@@ -102,6 +224,25 @@
   <!-- <div class="footer">
     <div th:replace="~{layout/footer}"></div>
   </div> -->
+  <script>
+    // 同步 section 滾動事件到 body
+    document.addEventListener('DOMContentLoaded', function () {
+      var section = document.getElementById('Wishlist');
+
+      section.addEventListener('scroll', function () {
+        document.body.scrollTop = section.scrollTop;
+        document.documentElement.scrollTop = section.scrollTop;
+      });
+
+      document.body.addEventListener('scroll', function () {
+        section.scrollTop = document.body.scrollTop;
+      });
+
+      document.documentElement.addEventListener('scroll', function () {
+        section.scrollTop = document.documentElement.scrollTop;
+      });
+    });
+  </script>
 
 
 </body>

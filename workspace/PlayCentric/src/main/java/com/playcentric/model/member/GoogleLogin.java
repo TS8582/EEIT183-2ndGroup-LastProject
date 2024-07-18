@@ -19,4 +19,5 @@ public class GoogleLogin {
     private String name;
     private String photo;
     private String email;
+    private Boolean verifiedEmail;
 }

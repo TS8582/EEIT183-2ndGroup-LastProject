@@ -2,222 +2,215 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>伴遊者詳細資訊</title>
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-	integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
-	crossorigin="anonymous">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<style>
-body {
-	background-color: #e9ecef;
-	font-family: 'Roboto', sans-serif;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伴遊者詳細資訊</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            background-color: #e9ecef;
+            font-family: 'Roboto', sans-serif;
+        }
 
-.card {
-	border: none;
-	border-radius: 10px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-.card-header {
-	background-color: #17a2b8;
-	color: #000000;
-	border-radius: 10px 10px 0 0;
-}
+        .card-header {
+            background-color: #17a2b8;
+            color: #000000;
+            border-radius: 10px 10px 0 0;
+        }
 
-.card-footer {
-	background-color: #f8f9fa;
-	border-top: none;
-	border-radius: 0 0 10px 10px;
-}
+        .card-footer {
+            background-color: #f8f9fa;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
 
-.form-control {
-	border-radius: 5px;
-}
+        .form-control {
+            border-radius: 5px;
+        }
 
-.btn-primary {
-	background-color: #56a8ff;
-	border-color: #ffffff00;
-}
+        .btn-primary {
+            background-color: #56a8ff;
+            border-color: #ffffff00;
+        }
 
-.btn-primary:hover {
-	background-color: #0069d9;
-	border-color: #0062cc;
-}
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
 
-.status-pending {
-	color: orange;
-}
+        .status-pending {
+            color: orange;
+        }
 
-.status-failed {
-	color: red;
-}
+        .status-failed {
+            color: red;
+        }
 
-.status-open {
-	color: green;
-}
+        .status-open {
+            color: green;
+        }
 
-.status-closed {
-	color: gray;
-}
+        .status-closed {
+            color: gray;
+        }
 
-.list-group-item {
-	border: none;
-	cursor: pointer;
-	background-color: transparent;
-}
+        .list-group-item {
+            border: none;
+            cursor: pointer;
+            background-color: transparent;
+        }
 
-.theme.active {
-	color: #000000;
-	font-weight: bold;
-	background-color: transparent !important;
-}
+        .theme.active {
+            color: #000000;
+            font-weight: bold;
+            background-color: transparent !important;
+        }
 
-.content {
-	display: none;
-}
+        .content {
+            display: none;
+        }
 
-.content.active {
-	display: block;
-}
-</style>
+        .content.active {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
-	<div class="container my-5">
-		<div class="row">
-			<div class="col-md-4">
-				<ul class="list-group">
-					<li class="list-group-item theme" data-content="content1"
-						th:text="${pfnickname} + '基本資料'"></li>
-					<li class="list-group-item theme" data-content="content2"
-						th:text="${pfnickname} + '伴遊者照片'"></li>
-				</ul>
-			</div>
-			<h5 class="text-center" id="nicknameDetail"></h5>
-			<div class="col-md-8">
-				<div id="content1" class="content">
-					<h2 class="font-weight-bold">伴遊者基本資料</h2>
-					<div class="card mb-3">
-						<div class="card-body">
-							<form id="memberForm">
-								<div class="card-group mb-3">
-									<div class="card mb-3">
-										<div class="col-md-6">
-											<div class="form-group">
-												<label for="playFellowId"
-													class="font-weight-bold col-form-label-sm">伴遊者編號</label> <span
-													class="form-control-plaintext" id="playFellowId"
-													th:text="${playFellowId}"></span> <input type="hidden"
-													name="playFellowId" id="playFellowIdInput"
-													th:value="${playFellowId}">
-											</div>
-										</div>
-									</div>
+<!--     <div th:replace="~{layout/nav.html}"></div> -->
 
-									<div class="card mb-3">
-										<div class="col-md-6">
-											<div class="form-group">
-												<label for="pfstatus"
-													class="font-weight-bold col-form-label-sm">狀態</label> <br>
-												<span class="form-control-plaintext fs-6"
-													th:text="${pfstatus == 1 ? '待審核' : pfstatus == 2 ? '審核不成功' : pfstatus == 3 ? '開啟' : '關閉'}"
-													th:class="${pfstatus == 1 ? 'status-pending' : pfstatus == 2 ? 'status-failed' : pfstatus == 3 ? 'status-open' : 'status-closed'}"></span>
-												<input type="hidden" name="pfstatus" id="pfstatus"
-													th:value="${pfstatus}">
-											</div>
-										</div>
-									</div>
-								</div>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-4">
+                <ul class="list-group">
+                    <li class="list-group-item theme" data-content="content1" th:text="${pfnickname} + '基本資料'"></li>
+                    <li class="list-group-item theme" data-content="content2" th:text="${pfnickname} + '伴遊者照片'"></li>
+                </ul>
+            </div>
+            <h5 class="text-center" id="nicknameDetail"></h5>
+            <div class="col-md-8">
+                <div id="content1" class="content">
+                    <h2 class="font-weight-bold">伴遊者基本資料</h2>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <form id="memberForm">
+                                <div class="card-group mb-3">
+                                    <div class="card mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="playFellowId"
+                                                    class="font-weight-bold col-form-label-sm">伴遊者編號</label> <span
+                                                    class="form-control-plaintext" id="playFellowId"
+                                                    th:text="${playFellowId}"></span> <input type="hidden"
+                                                    name="playFellowId" id="playFellowIdInput"
+                                                    th:value="${playFellowId}">
+                                            </div>
+                                        </div>
+                                    </div>
 
-								<div class="card mb-3">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="pfnickname" class="font-weight-bold">伴遊者暱稱</label>
-											<input type="text" class="form-control" id="pfnickname"
-												name="pfnickname" th:value="${pfnickname}">
-										</div>
-										<div id="nicknameError" style="color: red; font-size: 13px;"></div>
-									</div>
-								</div>
+                                    <div class="card mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="pfstatus"
+                                                    class="font-weight-bold col-form-label-sm">狀態</label> <br>
+                                                <span class="form-control-plaintext fs-6"
+                                                    th:text="${pfstatus == 1 ? '待審核' : pfstatus == 2 ? '審核不成功' : pfstatus == 3 ? '開啟' : '關閉'}"
+                                                    th:class="${pfstatus == 1 ? 'status-pending' : pfstatus == 2 ? 'status-failed' : pfstatus == 3 ? 'status-open' : 'status-closed'}"></span>
+                                                <input type="hidden" name="pfstatus" id="pfstatus"
+                                                    th:value="${pfstatus}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-								<div class="card mb-3">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="pfdescription" class="font-weight-bold">自我描述</label>
-											<textarea class="form-control" id="pfdescription"
-												name="pfdescription" rows="6" th:text="${pfdescription}"></textarea>
-										</div>
-									</div>
-								</div>
+                                <div class="card mb-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="pfnickname" class="font-weight-bold">伴遊者暱稱</label>
+                                            <input type="text" class="form-control" id="pfnickname" name="pfnickname"
+                                                th:value="${pfnickname}">
+                                        </div>
+                                        <div id="nicknameError" style="color: red; font-size: 13px;"></div>
+                                    </div>
+                                </div>
 
-								<div class="card mb-3 d-flex justify-content-center">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="pfcreatedTime" class="font-weight-bold ">創建時間</label>
-											<input type="text" class="form-control" id="pfcreatedTime"
-												th:value="${pfcreatedTime}" readonly>
-										</div>
-									</div>
-								</div>
+                                <div class="card mb-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="pfdescription" class="font-weight-bold">自我描述</label>
+                                            <textarea class="form-control" id="pfdescription" name="pfdescription"
+                                                rows="6" th:text="${pfdescription}"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
 
-								<div class="card-footer text-right">
-									<button type="button" class="btn btn-info float-left"
-										id="backtoCms">伴遊遊戲</button>
-									<button type="submit" class="btn btn-primary" id="saveBtn">更新</button>
-								</div>
-							</form>
-							<div id="successMessage" class="text-success mt-3"
-								style="display: none;">更新成功！</div>
-						</div>
-					</div>
-				</div>
+                                <div class="card mb-3 d-flex justify-content-center">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="pfcreatedTime" class="font-weight-bold ">創建時間</label>
+                                            <input type="text" class="form-control" id="pfcreatedTime"
+                                                th:value="${pfcreatedTime}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
 
-				<div id="content2" class="content">
-					<h2 class="font-weight-bold">伴遊者照片</h2>
-					<div id="photo_output" class="mt-3"></div>
+                                <div class="card-footer text-right">
+                                    <button type="button" class="btn btn-info float-left" id="backtoCms">伴遊遊戲</button>
+                                    <button type="submit" class="btn btn-primary" id="saveBtn">更新</button>
+                                </div>
+                            </form>
+                            <div id="successMessage" class="text-success mt-3" style="display: none;">更新成功！</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="content2" class="content">
+                    <h2 class="font-weight-bold">伴遊者照片</h2>
+                    <div id="photo_output" class="mt-3"></div>
 
 
 
-					<br> <br>
+                    <br> <br>
 
 
 
-					<div class="card-body">
-						<form id="uploadForm" enctype="multipart/form-data">
-							<input type="hidden" name="playFellowId"
-								id="uploadPlayFellowIdInput" th:value="${playFellowId}">
+                    <div class="card-body">
+                        <form id="uploadForm" enctype="multipart/form-data">
+                            <input type="hidden" name="playFellowId" id="uploadPlayFellowIdInput"
+                                th:value="${playFellowId}">
 
-							<div class="form-group" id="addBtn2" style="display: none;">
-								<label for="file">新增圖片</label> <input type="file"
-									class="form-control-file" id="file" name="file" multiple
-									required>
-							</div>
-							<div id="message" class="mt-3"></div>
+                            <div class="form-group" id="addBtn2" style="display: none;">
+                                <label for="file">新增圖片</label> <input type="file" class="form-control-file" id="file"
+                                    name="file" multiple required>
+                            </div>
+                            <div id="message" class="mt-3"></div>
 
-							<button type="button" class="btn btn-success" id="editBtn">新增照片</button>
-							<button type="submit" class="btn btn-success" id="addBtn"
-								style="display: none;">上傳</button>
-							<button type="button" class="btn btn-primary" id="backCmsBtn">回前頁</button>
-						</form>
+                            <button type="button" class="btn btn-success" id="editBtn">新增照片</button>
+                            <button type="submit" class="btn btn-success" id="addBtn" style="display: none;">上傳</button>
+                            <button type="button" class="btn btn-primary" id="backCmsBtn">回前頁</button>
+                        </form>
 
-					</div>
-				</div>
+                    </div>
+                </div>
 
 
 
 
 
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 
-	<script>
+    <script>
 
         document.addEventListener('DOMContentLoaded', function () {
             const themes = document.querySelectorAll('.theme');
@@ -317,7 +310,7 @@ body {
                         nicknameError.textContent = '伴遊暱稱檢查錯誤，請稍後再試！';
                         saveBtn.disabled = true;
                     });
-                
+
             });
 
             // 照片: 按了按鈕才有確認送出按鈕
@@ -349,7 +342,7 @@ body {
                         console.error(err);
                         document.getElementById('photo_output').innerText = '獲取圖片失敗';
                     });
-                
+
                 const backtoCms = document.getElementById('backtoCms');
                 backtoCms.addEventListener('click', function () {
                     window.location.href = `/PlayCentric/playFellow/pfGame/${playFellowId}`;
