@@ -118,3 +118,11 @@
 .remove-img:hover {
     @apply bg-opacity-50
 }
+
+.prev {
+    @apply absolute bg-slate-700 bg-opacity-70 top-0 text-white left-0 text-2xl select-none cursor-pointer
+}
+
+.next {
+    @apply absolute bg-slate-700 bg-opacity-70 top-0 text-white right-0 text-2xl select-none cursor-pointer
+}

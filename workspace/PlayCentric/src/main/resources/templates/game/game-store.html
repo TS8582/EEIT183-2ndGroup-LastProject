@@ -84,21 +84,23 @@
             </div>
         </div>
 
-        <main class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 h-full container mt-2">
+        <main class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 h-full container mt-2">
             <input id="pages" type="hidden" th:value="${games.totalPages}">
             <th:block th:each="game:${games.content}">
 
                 <div
                     class="fade-in h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500">
                     <div class="py-2 h-64 flex justify-center rounded-md">
-                        <a href="#">
+                        <a th:href="@{/game/showGame(gameId=${game.gameId})}">
                             <img th:if="${!game.imageLibs.empty}" class="w-auto h-full rounded-md"
                                 th:src="@{/imagesLib/image{id}(id=${game.ImageLibs[0].imageId})}" alt="">
                         </a>
                     </div>
                     <div class="h-1/3 flex text-black flex-col items-center p-2">
                         <div class="flex justify-center">
-                            <span class="text-xl p-2 rounded-md select-none" th:text="${game.gameName}"></span>
+                            <a th:href="@{/game/showGame(gameId=${game.gameId})}">
+                                <span class="text-xl p-2 rounded-md select-none" th:text="${game.gameName}"></span>
+                            </a>
                         </div>
                         <div class="flex justify-center my-2 space-x-3">
                             <span th:if="${game.rate}" class="price-tag font-semibold"
@@ -119,6 +121,9 @@
 
 
         </main>
+
+
+        <div class="mt-5"></div>
 
     </div>
 
@@ -506,7 +511,10 @@
                 img.classList.add('w-auto', 'h-full', 'rounded-md');
                 img.src = `/PlayCentric/imagesLib/image${game.imageLibs[0].imageId}`;
                 img.alt = '';
-                imageContainer.appendChild(img);
+                let imglink = document.createElement('a');
+                imglink.href = `/PlayCentric/game/showGame?gameId=${game.gameId}`;
+                imglink.appendChild(img);
+                imageContainer.appendChild(imglink);
             }
 
             // 遊戲信息區域
@@ -519,7 +527,10 @@
             let titleSpan = document.createElement('span');
             titleSpan.classList.add('text-xl', 'p-2', 'rounded-md', 'select-none');
             titleSpan.textContent = game.gameName;
-            gameTitle.appendChild(titleSpan);
+            let namelink = document.createElement('a');
+            namelink.href = `/PlayCentric/game/showGame?gameId=${game.gameId}`;
+            namelink.appendChild(titleSpan);
+            gameTitle.appendChild(namelink);
 
             // 遊戲價格
             let gamePrice = document.createElement('div');

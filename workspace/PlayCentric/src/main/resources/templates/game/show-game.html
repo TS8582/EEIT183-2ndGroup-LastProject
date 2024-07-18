@@ -4,11 +4,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <div th:replace="~{/layout/nav}"></div>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <style>
+        .lunbo {
+            position: relative;
+            width: 100%;
+            height: 24rem;
+            overflow: hidden;
+        }
+
+        .gamephoto {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            z-index: 1;
+        }
+
+        .gamephoto.active {
+            left: 0;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .gamephoto.prev {
+            transform: translateX(-100%);
+        }
+
+        .gamephoto.next {
+            transform: translateX(100%);
+        }
+
+        .prev,
+        .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 0.5rem;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        .prev {
+            left: 1rem;
+        }
+
+        .next {
+            right: 1rem;
+        }
+    </style>
+    <title th:text="${game.gameName}"></title>
 </head>
 
-<body>
+<body class="bg-gray-100 w-screen">
+    <div class="opacity-0 hidden"></div>
+    <div class="opacity-100 hidden"></div>
 
+    <main class="container w-full grid grid-cols-1 lg:grid-cols-2">
+
+        <div class="col-span-1 m-3 h-full">
+            <div class="lunbo">
+                <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
+                    <img th:if="${st.index == 0}" class="gamephoto active"
+                        th:src="@{/imagesLib/image{id}(id=${photo.imageId})}" alt="">
+                    <img th:if="${st.index != 0}" class="gamephoto"
+                        th:src="@{/imagesLib/image{id}(id=${photo.imageId})}" alt="">
+                </th:block>
+                <div class="prev">
+                    ＜
+                </div>
+                <div class="next">
+                    ＞
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-1 m-3">
+            <div class="grid grid-cols-2 lg:grid-cols-1">
+                <div class="col-span-1 mt-0 lg:mt-5 ms-2 space-y-2">
+                    <div class="gameName text-3xl">
+                        <span th:text="${game.gameName}"></span>
+                    </div>
+                    <div class="developer font-semibold">
+                        <span th:text="'開發者：' + ${game.developer}"></span>
+                    </div>
+                    <div class="publisher font-semibold">
+                        <span th:text="'發行商：' + ${game.publisher}"></span>
+                    </div>
+                </div>
+                <div class="col-span-1">
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const prev = document.querySelector('.prev');
+        const next = document.querySelector('.next');
+        const lunbo = document.querySelector('.lunbo');
+        const photos = document.querySelectorAll('.gamephoto');
+        let currentIndex = 0;
+
+        prev.addEventListener('click', () => changePhoto('prev'));
+        next.addEventListener('click', () => changePhoto('next'));
+
+        setInterval(() => changePhoto('next'), 5000);
+
+        function changePhoto(direction) {
+            photos[currentIndex].classList.remove('active');
+
+            if (direction === 'next') {
+                currentIndex = (currentIndex + 1) % photos.length;
+            } else {
+                currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+            }
+
+            photos[currentIndex].classList.add('active');
+        }
+    </script>
 </body>
 
 </html>

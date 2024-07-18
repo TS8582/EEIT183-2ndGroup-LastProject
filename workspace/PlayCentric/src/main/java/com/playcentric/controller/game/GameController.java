@@ -98,7 +98,8 @@ public class GameController {
 	@PostMapping("/game/insertGame")
 	public String insertGame(@ModelAttribute Game game, @RequestParam List<Integer> typeId,
 			@RequestParam("photos") MultipartFile[] photos, @RequestParam BigDecimal discountRate,
-			@RequestParam Integer discountId) throws IOException {
+			@RequestParam Integer discountId,
+			@RequestParam MultipartFile gameFiles) throws IOException {
 		// 設定遊戲分類
 		List<GameTypeLib> types = new ArrayList<>();
 		for (Integer id : typeId) {
@@ -136,11 +137,9 @@ public class GameController {
 			gameDiscounts.add(gameDiscount);
 			newGame.setGameDiscounts(gameDiscounts);
 			discountSet.setGameDiscounts(gameDiscounts);
-			Double oldRate = Double.parseDouble(gameDiscount.getDiscountRate().toString());
-			int rate = (int) (oldRate * 100);
-			newGame.setRate(rate);
 		}
 		//重新存入帶有圖片與優惠的遊戲
+		newGame.setGameFile(gameFiles.getBytes());
 		gService.save(newGame);
 		return "redirect:/back/game";
 	}
@@ -260,5 +259,13 @@ public class GameController {
 		model.addAttribute("games",games);
 		return "game/game-store";
 	}
+	
+	@GetMapping("/game/showGame")
+	public String showGame(@RequestParam Integer gameId,Model model) {
+		Game game = gService.findById(gameId);
+		model.addAttribute("game",game);
+		return "game/show-game";
+	}
+	
 	
 }
