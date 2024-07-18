@@ -1,9 +1,11 @@
 package com.playcentric.controller.playfellow;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -86,24 +88,25 @@ public class PageController {
 			}
 		}
 
+        List<PlayFellowMember> lastest5playFellowMembers= playFellowMemberService.getTopFiveReviewSuccessPlayFellowMembers();
+        model.addAttribute("TopFiveReviewSuccessMembers", lastest5playFellowMembers);
+
+
+
 		Integer gameId1 = 1;
 		Integer gameId2 = 2;
 		List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(gameId1);
 		List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(gameId2);
-		List<PfGame> reviewSuccessPfGame = pfGameService.getAllReviewSuccessPlayFellowMembers();
 		List<Game> findGameName = pfGameService.findAllGame();
-		model.addAttribute("findGameIdAndName", findGameName);
 
+		model.addAttribute("findGameIdAndName", findGameName);
 		model.addAttribute("PfGame", pfGames);
 		model.addAttribute("PfGame2", pfGames2);
 		model.addAttribute("PlayFellowMember", playFellowMembers);
-		model.addAttribute("ReviewSuccessPfGame", reviewSuccessPfGame);
 
 		return "playFellow/playFellow";
 	}
 
-	
-	
 	@PostMapping("/playFellow/{gameId}")
 	public String showGameMember(@PathVariable("gameId") Integer gameId, Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
@@ -117,22 +120,24 @@ public class PageController {
 				}
 			}
 		}
-		
-	    Game game = pfGameService.getGameById(gameId);
-        model.addAttribute("game", game);
 
+		Game game = pfGameService.getGameById(gameId);
+		model.addAttribute("game", game);
 
-		
-		
 		List<Game> findGameName = pfGameService.findAllGame();
 		model.addAttribute("findGameIdAndName", findGameName);
-		
+
 		List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(gameId);
 		model.addAttribute("PfGame", pfGames);
+
+		List<PfGame> pfGamesMales = pfGameService.getAllPlayFellowMembersByGameIdAndMale(gameId);
+		model.addAttribute("Males", pfGamesMales);
+
+		List<PfGame> pfGamesFemales = pfGameService.getAllPlayFellowMembersByGameIdAndFemale(gameId);
+		model.addAttribute("Females", pfGamesFemales);
+
 		return "playFellow/showGameMember";
 	}
-	
-	
 
 	@ResponseBody
 	@PostMapping("playFellow/addPfOrder")

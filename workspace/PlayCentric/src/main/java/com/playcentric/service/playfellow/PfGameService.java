@@ -70,7 +70,7 @@ public class PfGameService {
 		return pfGameDTOs;
 	}
 
-	//這個只有審核通過 沒分性別
+	// 這個只有審核通過 沒分性別
 	public List<PfGame> getAllPlayFellowMembersByGameId(Integer gameId) {
 		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
 
@@ -83,23 +83,30 @@ public class PfGameService {
 
 		return reviewSusscessPfmem;
 	}
-	
-	//這個是性別的((別再寫死
-	public List<PfGame> getAllPlayFellowMembersByGameIdAndMale(Integer gameId,Short gender) {
+
+	public List<PfGame> getAllPlayFellowMembersByGameIdAndMale(Integer gameId) {
 		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
-		
-		List<PfGame> filteredPfGameMember = new ArrayList<>();
+		List<PfGame> reviewSuccessPfmem = new ArrayList<>();
 		for (PfGame pfGame : pfGames) {
-			if (pfGame.getPlayFellowMember() != null 
-					&& pfGame.getPlayFellowMember().getPfstatus() == 3 
-					&& pfGame.getPlayFellowMember().getMember().getGender() == gender) {
-				filteredPfGameMember.add(pfGame);
+			if (pfGame.getPlayFellowMember() != null && pfGame.getPlayFellowMember().getPfstatus() == 3
+					&& pfGame.getPlayFellowMember().getMember().getGender() == 1) {
+				reviewSuccessPfmem.add(pfGame);
 			}
 		}
-		return filteredPfGameMember;
+		return reviewSuccessPfmem;
 	}
-	
-	
+
+	public List<PfGame> getAllPlayFellowMembersByGameIdAndFemale(Integer gameId) {
+		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
+		List<PfGame> reviewSuccessPfmem = new ArrayList<>();
+		for (PfGame pfGame : pfGames) {
+			if (pfGame.getPlayFellowMember() != null && pfGame.getPlayFellowMember().getPfstatus() == 3
+					&& pfGame.getPlayFellowMember().getMember().getGender() == 2) {
+				reviewSuccessPfmem.add(pfGame);
+			}
+		}
+		return reviewSuccessPfmem;
+	}
 
 	@Transactional
 	public void deletePfGame(Integer pfGameId) {
@@ -173,15 +180,15 @@ public class PfGameService {
 		return gameRepository.findAll();
 	}
 
-	
-	
-	
 	public Game getGameById(Integer gameId) {
-        Optional<Game> optionalGame = gameRepository.findById(gameId);
-        if (optionalGame.isPresent()) {
-            return optionalGame.get();
-        }
-        return null;
-    }
+		Optional<Game> optionalGame = gameRepository.findById(gameId);
+		if (optionalGame.isPresent()) {
+			return optionalGame.get();
+		}
+		return null;
+	}
+	
+	
+	
 
 }
