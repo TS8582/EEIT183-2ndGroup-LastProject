@@ -125,5 +125,39 @@ public class PropSellOrderService {
 
         return dtos;
     }
+    
+ // 購買道具(扣除賣單數量及確認訂單狀態)
+    public String buyProp(int buyQuantity, int propId) {
+        // 從 propSellOrderRepo 中查找所有指定 propId 的 PropSellOrder 對象
+        List<PropSellOrder> orders = propSellOrderRepo.findAllByPropId(propId);
+        // 排序
+        orders.sort(Comparator.comparingDouble(PropSellOrder::getAmount).thenComparing(PropSellOrder::getSaleTime));
+        
+        for (PropSellOrder order : orders) {
+            int orderQuantity = order.getQuantity();
+            
+            if (buyQuantity <= 0) {
+                break;
+            }
+            
+            if (orderQuantity <= buyQuantity) {
+                // 如果賣單的數量小於等於購買數量，完全扣除賣單數量
+                buyQuantity -= orderQuantity;
+                order.setQuantity(0); // 賣單數量變為0
+    			order.setOrderStatus((byte) 1);
+    			propSellOrderRepo.save(order);
+                
+            } else {
+                // 如果賣單的數量大於購買數量，部分扣除賣單數量
+                order.setQuantity(orderQuantity - buyQuantity);
+                buyQuantity = 0; // 購買數量變為0，購買完成
+            }
+            
+            // 保存更新後的賣單
+            propSellOrderRepo.save(order);
+        }
+
+		return "購買完成(賣單)";
+    }
 
 }

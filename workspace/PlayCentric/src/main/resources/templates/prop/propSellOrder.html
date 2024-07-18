@@ -1,101 +1,97 @@
 <!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/output.css}" />
+    <title>遊戲道具交易後台拍賣場總覽</title>
+    <style>
+      .marketTbody tr {
+        margin-top: 0px;
+        text-align: center;
+        padding: 0;
+        border: 1px;
+      }
 
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" th:href="@{/css/output.css}">
-<title>遊戲道具交易後台拍賣場總覽</title>
-<style>
-.marketTbody tr {
-	margin-top: 0px;
-	text-align: center;
-	padding: 0;
-	border: 1px;
-}
+      .navbar-table td a {
+        color: black;
+        font-weight: bold;
+        font-size: 1.4rem;
+      }
 
-.navbar-table td a {
-	color: black;
-	font-weight: bold;
-	font-size: 1.4rem;
-}
+      #propSellOrderForm {
+        max-width: 21rem;
+        margin: auto;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
 
-#propSellOrderForm {
-	max-width: 21rem;
-	margin: auto;
-	padding: 1rem;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	background-color: #f9f9f9;
-	border-radius: 5px;
-	border: 1px solid #ccc;
-}
+      #selGameSub {
+        background-color: black;
+        color: white;
+        border-radius: 5px;
+        padding: 0.2rem 0.3rem;
+        font-size: 1rem;
+        font-weight: bold;
+      }
 
-#selGameSub {
-	background-color: black;
-	color: white;
-	border-radius: 5px;
-	padding: 0.2rem 0.3rem;
-	font-size: 1rem;
-	font-weight: bold;
-}
+      #selGameSub:hover {
+        background-color: rgba(97, 92, 92, 0.749);
+      }
+    </style>
+  </head>
 
-#selGameSub:hover {
-	background-color: rgba(97, 92, 92, 0.749);
-}
-</style>
-</head>
-
-<body class="h-screen flex flex-col w-screen">
-	<div th:replace="~{prop/propNavbar}"></div>
-	<div class="flex flex-1 w-full h-auto">
-		<div th:replace="~{/layout/aside}"></div>
-		<div class="w-full p-5 h-auto">
-			<table class="table table-bordered navbar-table">
-				<tbody class="marketTbody">
-					<tr>
-						<td><a th:href="@{/prop/propSheet}">道具總覽</a></td>
-						<td><a th:href="@{/prop/propSellOrder}">拍賣場</a></td>
-						<td><a th:href="@{/prop/propTradeRecord}">成交紀錄</a></td>
-					</tr>
-				</tbody>
-			</table>
-			<header class="">
-				<div id="gameList">
-					<form id="propSellOrderForm">
-						<label for="SelectGame">遊戲選單:</label> <select id="SelectGame"></select>
-						<button id="selGameSub">送出</button>
-					</form>
-					<br />
-				</div>
-			</header>
-			<!-- 表格 -->
-			<main class="">
-				<table id="propSellOrderTable" class="display">
-					<thead>
-						<tr>
-							<th>委託單編號</th>
-							<th>名稱</th>
-							<th class="text-start">圖片</th>
-							<th>數量</th>
-							<th>金額</th>
-							<th>委託時間</th>
-							<th>到期時間</th>
-							<th>賣家編號</th>
-							<th>委託單狀態</th>
-						</tr>
-					</thead>
-					<tbody>
-						<!-- 這裡的行會動態生成 -->
-					</tbody>
-				</table>
-			</main>
-
-		</div>
-
-	</div>
-	<script th:src="@{/js/prop/propSheet.js}"></script>
-	<script th:src="@{/js/prop/propSellOrder.js}"></script>
-</body>
-
+  <body class="h-screen flex flex-col w-screen">
+    <div th:replace="~{prop/propNavbar}"></div>
+    <div class="flex flex-1 w-full h-auto">
+      <div class="w-full p-5 h-auto">
+        <table class="table table-bordered navbar-table">
+          <tbody class="marketTbody">
+            <tr>
+              <td><a th:href="@{/prop/propSheet}">道具總覽</a></td>
+              <td><a th:href="@{/prop/propSellOrder}">拍賣場</a></td>
+              <td><a th:href="@{/prop/propTradeRecord}">成交紀錄</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <header class="">
+          <div id="gameList">
+            <form id="propSellOrderForm">
+              <label for="SelectGame">遊戲選單:</label>
+              <select id="SelectGame"></select>
+              <button id="selGameSub">送出</button>
+            </form>
+            <br />
+          </div>
+        </header>
+        <!-- 表格 -->
+        <main class="">
+          <table id="propSellOrderTable" class="display">
+            <thead>
+              <tr>
+                <th>委託單編號</th>
+                <th>名稱</th>
+                <th class="text-start">圖片</th>
+                <th>數量</th>
+                <th>金額</th>
+                <th>委託時間</th>
+                <th>到期時間</th>
+                <th>賣家編號</th>
+                <th>委託單狀態</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 這裡的行會動態生成 -->
+            </tbody>
+          </table>
+        </main>
+      </div>
+    </div>
+    <script th:src="@{/js/prop/propSheet.js}"></script>
+    <script th:src="@{/js/prop/propSellOrder.js}"></script>
+  </body>
 </html>

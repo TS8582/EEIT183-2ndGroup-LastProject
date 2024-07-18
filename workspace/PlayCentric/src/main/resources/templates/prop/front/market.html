@@ -651,6 +651,20 @@
             console.error("獲取賣單商品資訊錯誤:", error);
           });
       }
+
+      function buyProp(buyQuantityInput, propId, memId, totalPriceElement) {
+        axios({
+          method: "post",
+          url: "http://localhost:8080/PlayCentric/prop/front/buyProp",
+          params: {
+            quantity: buyQuantityInput,
+            propId: propId,
+            memId: memId,
+            paymentId: 1,
+            price: totalPriceElement,
+          },
+        });
+      }
     </script>
   </body>
 </html>

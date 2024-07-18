@@ -19,24 +19,23 @@ import lombok.Setter;
 @Entity
 @Table(name = "memberPropInventory")
 public class MemberPropInventory {
-	
-    @EmbeddedId
-    private MemberPropInventoryId id;
+
+	@EmbeddedId
+	private MemberPropInventoryId id;
 
 //    FK props
-    @ManyToOne
-    @MapsId("propId")
-    @JoinColumn(name = "propId")
-    private Props props;
-	
+	@ManyToOne
+	@MapsId("propId")
+	@JoinColumn(name = "propId")
+	private Props props;
+
 //    FK Member
-    @ManyToOne
-    @MapsId("memId")
-    @JoinColumn(name = "memId")
-    private Member member;
-    
-    
-    private int propQuantity;
+	@ManyToOne
+	@MapsId("memId")
+	@JoinColumn(name = "memId")
+	private Member member;
+
+	private int propQuantity;
 
 	public MemberPropInventory(MemberPropInventoryId id, Props props, int propQuantity) {
 		super();
@@ -44,8 +43,5 @@ public class MemberPropInventory {
 		this.props = props;
 		this.propQuantity = propQuantity;
 	}
-    
-    
-    
-    
+
 }
