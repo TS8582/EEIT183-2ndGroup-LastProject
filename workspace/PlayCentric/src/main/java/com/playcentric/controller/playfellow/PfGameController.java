@@ -7,6 +7,8 @@ import com.playcentric.model.playfellow.PfGameDTO;
 import com.playcentric.model.playfellow.PlayFellowMember;
 import com.playcentric.model.playfellow.PlayFellowMemberRepository;
 import com.playcentric.service.playfellow.PfGameService;
+import com.playcentric.service.playfellow.PlayFellowMemberService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,10 @@ public class PfGameController {
 
 	@Autowired
 	PfGameService pfGameService;
+	
+	@Autowired
+	PlayFellowMemberService playFellowMemberService;
+	
 	@Autowired
 	PlayFellowMemberRepository playFellowMemberRepository;
 	@Autowired
@@ -31,17 +37,19 @@ public class PfGameController {
 
 	@GetMapping("/playFellow/pfGame/{playFellowId}")
 	public String pfGamePage(@PathVariable Integer playFellowId, Model model) {
-		PfGame pfGame = new PfGame();
-		PlayFellowMember playFellowMember = new PlayFellowMember();
-		playFellowMember.setPlayFellowId(playFellowId);
-		pfGame.setPlayFellowMember(playFellowMember);
+		
+	    PlayFellowMember playFellowMember = playFellowMemberService.getPlayFellowMemberById(playFellowId);
 
-		List<Game> games = gameRepository.findAll();
-		model.addAttribute("games", games);
+	    PfGame pfGame = new PfGame();
+	    pfGame.setPlayFellowMember(playFellowMember);
+	    
+	    List<Game> games = gameRepository.findAll();
+	    model.addAttribute("games", games);
+	    model.addAttribute("pfGame", pfGame);
 
-		model.addAttribute("pfGame", pfGame);
-		return "/playFellow/addPfGame"; // 返回視圖名稱
+	    return "playFellow/addPfGame"; 
 	}
+	
 
 	@PostMapping("/playFellow/pfGame/save")
 	public ResponseEntity<PfGameDTO> saveOrUpdatePfGame(@RequestBody PfGame pfGame) {
