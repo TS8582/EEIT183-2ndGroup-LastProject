@@ -215,7 +215,7 @@
             <!-- Modal body content -->
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-dark">購買</button>
+            <button type="button" class="btn btn-dark" id="buyBtn">購買</button>
             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">
               ❌
             </button>
@@ -247,6 +247,9 @@
       let selectedGameId;
       let inventoryProps; //倉庫裡的所有道具
       let focusProp; //倉庫被點擊的道具
+      let buyTotalPrice; //購買總金額
+      let buyTotalQuantity; //購買數量
+      let buyPropId; //購買道具Id
 
       $(document).ready(function () {
         loadGames();
@@ -573,6 +576,7 @@
 
             // 執行根據propId找尋資料庫賣單並回傳價格區間及數量
             findSellOrderbyPropId(propId);
+            buyPropId = propId;
 
             modalBody.innerHTML = `
                         <h5 class="fs-2">${propName}</h5>
@@ -643,6 +647,8 @@
                 );
                 totalPrice += orderQuantity * order.amount;
                 remainingQuantity -= orderQuantity;
+                buyTotalPrice = totalPrice;
+                buyTotalQuantity = orderQuantity;
               }
               totalPriceElement.textContent = `總價為: NT$ ${totalPrice}`;
             });
@@ -652,19 +658,32 @@
           });
       }
 
-      function buyProp(buyQuantityInput, propId, memId, totalPriceElement) {
+      function buyProp(buyTotalQuantity, propId, memId, buyTotalPrice) {
         axios({
           method: "post",
           url: "http://localhost:8080/PlayCentric/prop/front/buyProp",
           params: {
-            quantity: buyQuantityInput,
+            quantity: buyTotalQuantity,
             propId: propId,
             memId: memId,
             paymentId: 1,
-            price: totalPriceElement,
+            price: buyTotalPrice,
           },
-        });
+        })
+          .then((res) => {
+            window.alert("交易成功");
+          })
+          .catch((error) => {
+            window.alert("Error: " + error);
+          });
       }
+
+      // 監控購買按鈕
+      document.getElementById("buyBtn").addEventListener("click", function () {
+        //
+        // if會員錢包金額<buyTotalPrice window.alert餘額不足且不執行下面。
+        buyProp(buyQuantity.value, buyPropId, memId, 1, buyTotalPrice);
+      });
     </script>
   </body>
 </html>
