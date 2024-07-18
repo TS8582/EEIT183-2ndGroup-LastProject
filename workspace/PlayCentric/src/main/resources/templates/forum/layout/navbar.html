@@ -5,28 +5,64 @@
     <meta charset="UTF-8">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
     <title></title>
+    <style>
+        nav label {
+            border: 6px inset rgb(52, 0, 148);
+            margin-right: 10px;
+            display: inline-block;
+            /* 確保label內的內容看起來像按鈕 */
+            transition: transform 0.1s ease, color 0.1s ease;
+            /* 添加平滑過渡效果 */
 
+        }
+
+        nav label:hover {
+            border: 6px outset rgb(255, 201, 24);
+            background-color: gold;
+            transform: scale(0.88);
+            /* 模擬按下的效果 */
+            color: black;
+            /* 當鼠標移上去時變成黑色 */
+
+        }
+
+        nav label:active {
+            border-style: inset;
+            /* 讓按下時有按下去的感覺 */
+            background-color: rgb(245, 40, 40);
+            /* 按下時變色 */
+        }
+
+        nav .transcolor {
+            color: white !important;
+            /* 平時字體顏色為白色 */
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        nav .transcolor:hover {
+            color: black !important;
+            /* 當鼠標移上去時變成黑色 */
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .n1 {
+            background-color: rgb(121, 85, 252);
+            margin: 0;
+            padding: 10px;
+        }
+    </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav class="navbar navbar-expand-lg n1">
         <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/findAllTheme}">討論區</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link" th:href="@{/forum/insertTheme2}">新增主題</a>
-                    <a class="nav-link active" aria-current="page" th:href="@{/post/page}">文章</a>
-                    <a class="nav-link" th:href="@{/post/insertPost2}">新增文章</a>
-                    <a class="nav-link" th:href="@{/findAllTheme2}">後台主題</a>
-                    <a class="nav-link" th:href="@{/findAllPost}">後台文章</a>
-                    <a class="nav-link" th:href="@{/findAllmessage}">後台留言</a>
-                </div>
+            <div class="navbar-nav">
+                <label>
+                    <a class="nav-link text-success-emphasis transcolor" th:href="@{/post/insertPost2}">新增文章</a>
+                </label>
             </div>
+        </div>
         </div>
     </nav>
 

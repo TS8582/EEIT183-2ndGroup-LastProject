@@ -13,23 +13,23 @@
     .collapse {
       visibility: visible !important;
     }
-    
+
     .page-item {
       cursor: pointer;
-      
+
       &.active {
         cursor: default;
       }
     }
-    
+
     .bg-manager-blue {
       background-color: #d0dbff !important;
     }
-    
+
     .h35px {
       height: 35px;
     }
-    
+
     .w35px {
       width: 35px;
     }
@@ -39,7 +39,7 @@
 
 <body class="h-screen w-screen flex flex-col">
   <div th:replace="~{layout/backen_nav}"></div>
-  
+
   <div class="flex flex-1">
 
     <!-- <div th:replace="~{/layout/aside}"></div> -->
@@ -87,6 +87,9 @@
               <div class="input-group mb-1 password">
                 <label for="password-confirm" class="input-group-text">確認密碼*</label>
                 <input type="password" class="form-control" id="password-confirm">
+              </div>
+              <div id="passwordCheckBlock" class="form-text text-danger" style="display: none;">
+                與密碼輸入不一致，請重新檢查
               </div>
               <div class="input-group mb-1">
                 <label for="email" class="input-group-text">Email*</label>
@@ -200,6 +203,13 @@
           })
       })
 
+      //自動確認密碼是否相同
+      $('#memInfo #password-confirm').blur(function () {
+        checkPwdAndBlock();
+        $('#memInfo input[type=password]').keyup(checkPwdAndBlock)
+        $('#memInfo input[type=password]').keypress(checkPwdAndBlock)
+      })
+
       $('#modalForm').submit(function (e) {
 
         e.preventDefault()
@@ -209,6 +219,11 @@
         formdataObject.set('role', isMng ? 1 : 0)
 
         if ($('#memId').val() == '') {
+          if (!isPwdEqu()) {
+            $('#passwordCheckBlock').show();
+            doAlert('請確認密碼!');
+            return;
+          }
           axios.post(registUrl, formdataObject)
             .then(res => {
               console.log(res);
@@ -273,17 +288,33 @@
         $('#memInfo #account').val(data.account);
         $('#memInfo #email').val(data.email);
         $('#memInfo #memName').val(data.memName ? data.memName : '');
-        $('#memInfo #gender').val(data.gender? data.gender:0);
+        $('#memInfo #gender').val(data.gender ? data.gender : 0);
         $('#memInfo #birthday').val(data.birthday ? data.birthday : '');
         $('#memInfo #phone').val(data.phone ? data.phone : '');
         $('#memInfo #address').val(data.address ? data.address : '');
-        $('#memInfo #role').prop('checked', data.role==1 ? true : false);
+        $('#memInfo #role').prop('checked', data.role == 1 ? true : false);
 
         memInfoModal.show();
       }
 
       function closeModal() {
         $('#memInfo').modal('hide');
+      }
+
+      function checkPwdAndBlock() {
+        if (isPwdEqu()) {
+          $('#passwordCheckBlock').hide();
+          $('#memInfo [type=submit]').removeClass('disabled');
+        } else {
+          $('#passwordCheckBlock').show();
+          $('#memInfo [type=submit]').addClass('disabled');
+        }
+      }
+
+      function isPwdEqu() {
+        let psw = $('#memInfo #password').val();
+        let pswCon = $('#memInfo #password-confirm').val();
+        return psw === pswCon;
       }
 
       function htmlMaker(data) {
