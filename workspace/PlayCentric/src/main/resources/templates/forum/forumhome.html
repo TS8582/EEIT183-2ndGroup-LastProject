@@ -8,6 +8,27 @@
   <title>PlayCentric論壇</title>
   <script src="https://kit.fontawesome.com/a498fa36dc.js" crossorigin="anonymous"></script>
   <style>
+    /* 新增動畫效果 */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animated-section {
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    .animated-table {
+      animation: fadeIn 1.5s ease-in-out forwards;
+    }
+
     @font-face {
       font-family: 'oxxo';
       src: url("[[@{/css/forum/jf-openhuninn-2.0.ttf}]]");
@@ -60,6 +81,7 @@
     }
 
     body {
+      overflow: hidden;
       background-image: url("[[@{/images/loginBG.jpg}]]");
       background-size: cover;
       /* 確保圖片覆蓋整個容器 */
@@ -112,11 +134,24 @@
     }
 
     .d1 {
-      height: 100% !important;
-      padding-bottom: 80px !important;
+      margin-top: 20px !important;
+      max-height: 80vh;
+      /* 這裡你可以根據需要調整高度 */
+      overflow: auto;
       background-color: rgb(255, 255, 255, 0.9);
-      border-radius: 15px 15px 15px 15px;
       border-style: none;
+    }
+
+    /* 保持圖片比例 */
+    .card-image img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    section#Wishlist .table {
+      max-height: 100%;
+      overflow-y: auto;
+      /* 垂直滾動 */
     }
 
     .d2 {
@@ -126,14 +161,14 @@
   </style>
 </head>
 
-<body class="h-screen flex flex-col w-screen">
+<body class="h-screen flex flex-col w-screen overflow-hidden">
   <div th:replace="~{/layout/nav}"></div>
 
   <div class="d2">
-    <section id="Wishlist" class="py-3 mx-5 d1">
+    <section id="Wishlist" class="py-3 mx-5 d1 overflow-auto animated-section">
       <div class="container">
         <div class="row">
-          <table class="table">
+          <table class="table animated-table">
             <thead>
               <tr>
                 <th scope="col" id="th1" class="card-title text-uppercase bgn">
@@ -189,6 +224,25 @@
   <!-- <div class="footer">
     <div th:replace="~{layout/footer}"></div>
   </div> -->
+  <script>
+    // 同步 section 滾動事件到 body
+    document.addEventListener('DOMContentLoaded', function () {
+      var section = document.getElementById('Wishlist');
+
+      section.addEventListener('scroll', function () {
+        document.body.scrollTop = section.scrollTop;
+        document.documentElement.scrollTop = section.scrollTop;
+      });
+
+      document.body.addEventListener('scroll', function () {
+        section.scrollTop = document.body.scrollTop;
+      });
+
+      document.documentElement.addEventListener('scroll', function () {
+        section.scrollTop = document.documentElement.scrollTop;
+      });
+    });
+  </script>
 
 
 </body>

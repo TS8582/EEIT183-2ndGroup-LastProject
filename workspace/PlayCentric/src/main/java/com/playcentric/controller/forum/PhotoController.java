@@ -33,7 +33,7 @@ public class PhotoController {
 	@GetMapping("/photo/showPhoto2")
 	public ResponseEntity<byte[]> showPhoto2(@RequestParam("textsId") Integer textsId) {
 		try {
-			// 根据 postId 查询对应的图片数据或路径
+			// 根据 forumId 查询对应的图片数据或路径
 			ForumPhoto forumPhoto = photoService.getPhotoDataByTextsId(textsId);
 
 			if (forumPhoto != null && forumPhoto.getPhotoFile() != null) {

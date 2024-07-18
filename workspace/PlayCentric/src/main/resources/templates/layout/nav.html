@@ -107,14 +107,14 @@
 							role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							討論區 </a>
 						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="forumDropdown">
-							<li><a class="dropdown-item fs-5" href="#">討論區一</a></li>
-							<li><a class="dropdown-item fs-5" href="#">討論區二</a></li>
+							<li><a class="dropdown-item fs-5" th:href="@{/findAllForum}">討論串</a></li>
+							<li><a class="dropdown-item fs-5" th:href="@{/texts/page}">文章總覽</a></li>
 						</ul>
 					</li>
 					<li th:case="null" class="nav-item"><a th:href="@{/member/login}"
 							class="btn btn-sm btn-primary me-3 fs-4">登入/註冊</a></li>
 					<li th:case="*" class="nav-item dropdown"><a class="d-flex nav-link fs-4" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false"> <img class="rounded-circle h35px w35px"
+							data-bs-toggle="dropdown" aria-expanded="false"> <img id="login-member-photo" class="rounded-circle h35px w35px"
 								th:src="${session.loginMember.photo}"> <span class="mx-1 text-light"
 								th:text="${session.loginMember.nickname}"></span>
 						</a>
