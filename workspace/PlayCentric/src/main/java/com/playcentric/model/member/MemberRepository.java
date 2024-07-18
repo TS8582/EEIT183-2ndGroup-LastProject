@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 
 
+
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 	Member findByAccount(String account);
@@ -16,6 +17,8 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	Member findByAccountAndStatus(String account,Short status);
 
 	Member findByPasswordToken(String passwordToken);
+
+	Member findByEmailVerifyToken(String emailVerifyToken);
 	
 	Member findByEmail(String email);
 
