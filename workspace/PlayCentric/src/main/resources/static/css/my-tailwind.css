@@ -120,9 +120,17 @@
 }
 
 .prev {
-    @apply absolute bg-slate-700 bg-opacity-70 top-0 text-white left-0 text-2xl select-none cursor-pointer
+    @apply absolute bg-slate-700 bg-opacity-70 top-1/2 text-white left-3 text-2xl select-none cursor-pointer z-50
 }
 
 .next {
-    @apply absolute bg-slate-700 bg-opacity-70 top-0 text-white right-0 text-2xl select-none cursor-pointer
+    @apply absolute bg-slate-700 bg-opacity-70 top-1/2 text-white right-3 text-2xl select-none cursor-pointer z-50
+}
+
+.prev:hover {
+    @apply bg-opacity-30
+}
+
+.next:hover {
+    @apply bg-opacity-30
 }
