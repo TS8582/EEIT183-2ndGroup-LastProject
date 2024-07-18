@@ -234,7 +234,7 @@ public class MemberController {
 			message.setFrom("owen0414chen@gmail.com");
 			message.setTo(email);
 			message.setSubject("PlayCentric會員 "+member.getAccount()+" 更改密碼");
-			message.setText("更改密碼請點擊網址:"+changePwdUrl+"\r\n(不是本人請忽略)");
+			message.setText("更改密碼請點擊網址:"+changePwdUrl+"\r\n(若不是本人請忽略)");
 
 			mailSender.send(message);
 			return "信件已發送";
@@ -273,6 +273,52 @@ public class MemberController {
 	public String getMethodName(RedirectAttributes redirectAttributes) {
 		redirectAttributes.addFlashAttribute("redirectMsg","請重新登入");
 		return "redirect:login";
+	}
+
+	@PostMapping("/sendVerUrl")
+	@ResponseBody
+	public String sendVerEmail(Model model,@RequestParam String email) {
+
+		//生成Token
+		String token = UUID.randomUUID().toString();
+		String changePwdUrl = "http://localhost:8080/PlayCentric/member/verifyEmail/"+token;
+		
+		//判斷登入帳號
+		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		if (loginMember == null) {
+			return "錯誤，請重新登入";
+		}
+		Member member = memberService.verifyEmail(loginMember.getMemId(), token);
+
+		if (member == null) {
+			return "錯誤，請重新登入";
+		}
+		//寄信
+		try {
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setFrom("owen0414chen@gmail.com");
+			message.setTo(email);
+			message.setSubject("PlayCentric會員 "+member.getAccount()+" 驗證Email");
+			message.setText("點擊網址驗證email:"+changePwdUrl+"\r\n(若不是本人請忽略)");
+
+			mailSender.send(message);
+			return "信件已發送";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "寄信失敗，請重試";
+	}
+
+	@GetMapping("/verifyEmail/{token}")
+	public String verifyEmail(@PathVariable String token, Model model, RedirectAttributes redirectAttributes) {
+		Member member = memberService.verifyEmail(token);
+		if (member == null) {
+			redirectAttributes.addFlashAttribute("redirectMsg","網址已過期!");
+			return "redirect:/";
+		}
+		redirectAttributes.addFlashAttribute("redirectMsg","Email驗證成功!");
+		model.addAttribute("loginMember", new LoginMemDto(member));
+		return "redirect:/";
 	}
 	
 	

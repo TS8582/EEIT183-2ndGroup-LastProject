@@ -32,6 +32,13 @@ public class MemberService {
 	private PasswordEncoder passwordEncoder;
 	
 	
+	public void setGoogleVerified(String googleId, Boolean verified){
+		Optional<GoogleLogin> optional = googleRepository.findById(googleId);
+		if (optional.isPresent()) {
+			GoogleLogin googleLogin = optional.get();
+			googleLogin.setVerifiedEmail(verified);
+		}
+	}
 	
 	public Member memAddGoogle(GoogleLogin memGoogle){
 		Integer memberId = memberRepository.findByEmail(memGoogle.getEmail()).getMemId();
@@ -81,7 +88,11 @@ public class MemberService {
 		originMem.setAccount(member.getAccount());
 		originMem.setAddress(member.getAddress());
 		originMem.setBirthday(member.getBirthday());
-		originMem.setEmail(member.getEmail());
+		if (!originMem.getEmail().equals(member.getEmail())) {
+			originMem.setEmailVerified(false);
+			originMem.setEmailVerifyToken(null);
+			originMem.setEmail(member.getEmail());
+		}
 		originMem.setGender(member.getGender());
 		originMem.setMemName(member.getMemName());
 		originMem.setNickname(member.getNickname());
@@ -108,6 +119,26 @@ public class MemberService {
 			}
 		}
 		return false;
+	}
+
+	public Member verifyEmail(Integer memId, String token){
+		Optional<Member> optional = memberRepository.findById(memId);
+		if (optional.isPresent()) {
+			Member member = optional.get();
+			member.setEmailVerifyToken(token);
+			return memberRepository.save(member);
+		}
+		return null;
+	}
+
+	public Member verifyEmail(String token){
+		Member member = memberRepository.findByEmailVerifyToken(token);
+		if (member == null) {
+			return null;
+		}
+		member.setEmailVerified(true);
+		member.setEmailVerifyToken(null);
+		return memberRepository.save(member);
 	}
 
 	public Page<Member> findByKeyword(String keyword,Integer pageNum){
