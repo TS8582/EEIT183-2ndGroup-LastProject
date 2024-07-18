@@ -45,7 +45,8 @@
             </div>
           </div>
           <div class="row">
-            <div class="btn btn-outline-warning btn-sm col-4 align-self-center ms-4 mt-2 text-dark">修改密碼</div>
+            <div id="change-pwd-btn" class="btn btn-outline-warning btn-sm col-4 align-self-center ms-4 mt-2 text-dark">
+              修改密碼</div>
           </div>
           <div class="row mt-2">
             <label for="email" class="col-form-label col-1 px-0 text-end">Email:</label>
@@ -105,8 +106,8 @@
           </div>
 
         </div>
-        <div class="photo-div ps-0 col-2 cursor-pointer">
-          <img class="w-100" src="http://localhost:8080/PlayCentric/imagesLib/image144">
+        <div class="photo-div ps-0 col-2">
+          <img class="w-100 cursor-pointer" src="http://localhost:8080/PlayCentric/imagesLib/image144">
           <input type="file" name="photoFile" id="photoFile" style="display: none;">
         </div>
         <div id="edit-btn-group" class="row my-2 justify-content-center" style="display: none;">
@@ -119,14 +120,30 @@
 
   <script>
     $(function () {
-      const findMemUrl = "http://localhost:8080/PlayCentric/member/getMember"
+      const findMemUrl = "http://localhost:8080/PlayCentric/member/getMember";
       const updateMemUrl = "http://localhost:8080/PlayCentric/member/update";
+      const changePwdUrl = "http://localhost:8080/PlayCentric/member/sendPtUrl";
       const memId = Number.parseInt('[[${session.loginMember.memId}]]');
       let memInfo = {};
 
 
       getMemInfo();
 
+
+      $('#change-pwd-btn').click(function () {
+        axios({
+          method: 'post',
+          url: changePwdUrl,
+          params: { email: memInfo.email }
+        })
+          .then(res => {
+            console.log(res);
+            doAlert(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      })
 
       $('#memInfo').submit(function (e) {
         e.preventDefault();
@@ -236,7 +253,7 @@
         console.log(memInfo);
         const formDataOj = new FormData($('#memInfo')[0]);
         for (const [key, value] of formDataOj) {
-          if (memInfo.hasOwnProperty(key)) {
+          if (memInfo.hasOwnProperty(key) && memInfo[key] != null) {
             if (memInfo[key].toString() === value) {
               console.log(`${key} 的值匹配: ${memInfo[key]}`);
             } else {

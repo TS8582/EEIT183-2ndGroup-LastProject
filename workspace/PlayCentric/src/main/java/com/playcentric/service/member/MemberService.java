@@ -59,6 +59,7 @@ public class MemberService {
 		newMember.setNickname(memGoogle.getName());
 		newMember.setMemName(memGoogle.getName());
 		newMember.setEmail(memGoogle.getEmail());
+		newMember.setGoogleLogin(memGoogle);
 		return addMember(newMember);
 	}
 	
@@ -133,7 +134,7 @@ public class MemberService {
 	}
 	
 	public Member checkLogin(String account, String password) {
-		Member member = memberRepository.findByAccount(account);
+		Member member = memberRepository.findByAccountAndStatus(account,(short)0);
 		if (member==null) {
 			return member;
 		}
@@ -155,9 +156,31 @@ public class MemberService {
 		return memberRepository.findByGoogeId(googleId);
 	}
 
+	public Member findByPwdToken(String token){
+		return memberRepository.findByPasswordToken(token);
+	}
+
 	public Member memberLogin(Member member){
 		member.setLastLogin(new Date());
 		System.err.println("更新登入時間");
+		return memberRepository.save(member);
+	}
+
+	public Member changePassword(Integer memId, String token){
+		Optional<Member> optional = memberRepository.findById(memId);
+		if (optional.isPresent()) {
+			Member member = optional.get();
+			member.setPasswordToken(token);
+			return memberRepository.save(member);
+		}
+		return null;
+	}
+
+	public Member changePassword(String password, String token){
+		Member member = memberRepository.findByPasswordToken(token);
+		String encodedPwd = passwordEncoder.encode(password);
+		member.setPassword(encodedPwd);
+		member.setPasswordToken(null);
 		return memberRepository.save(member);
 	}
 }
