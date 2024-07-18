@@ -91,15 +91,14 @@
 									加入伴遊
 								</a>
 							</li>
-
-
 						</ul>
-					</li>
-					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle fs-4" href="#" id="eventDropdown"
-							role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							活動 </a>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle fs-4" href="#" id="eventDropdown" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							活動
+						</a>
 						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="eventDropdown">
-							<li><a class="dropdown-item fs-5" href="#">活動一</a></li>
+							<li><a class="dropdown-item fs-5" th:href="@{/events/public/list}">活動列表</a></li>
 							<li><a class="dropdown-item fs-5" href="#">活動二</a></li>
 						</ul>
 					</li>
@@ -114,9 +113,9 @@
 					<li th:case="null" class="nav-item"><a th:href="@{/member/login}"
 							class="btn btn-sm btn-primary me-3 fs-4">登入/註冊</a></li>
 					<li th:case="*" class="nav-item dropdown"><a class="d-flex nav-link fs-4" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false"> <img id="login-member-photo" class="rounded-circle h35px w35px"
-								th:src="${session.loginMember.photo}"> <span class="mx-1 text-light"
-								th:text="${session.loginMember.nickname}"></span>
+							data-bs-toggle="dropdown" aria-expanded="false"> <img id="login-member-photo"
+								class="rounded-circle h35px w35px" th:src="${session.loginMember.photo}"> <span
+								class="mx-1 text-light" th:text="${session.loginMember.nickname}"></span>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
 							<li><a class="dropdown-item fs-5" th:href="@{/member/memInfo}">個人資訊</a></li>

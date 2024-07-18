@@ -23,15 +23,14 @@
 					<div class="col">
 						<button class="btn btn-primary mr-2" onclick="openCreateEventForm()">新增活動</button>
 					</div>
-					<!-- 搜尋活動表單 -->
-					<div class="col d-flex justify-content-end mb-3">
-						<form class="form-inline" onsubmit="searchEvents(); return false;">
-							<input class="form-control me-2" type="search" placeholder="輸入活動名稱" aria-label="Search"
-								id="searchEventInput" onkeypress="handleEnter(event)">
-							<button class="btn btn-outline-success" type="button" onclick="searchEvents()">查詢</button>
-						</form>
-					</div>
-				</div>
+                    <!-- 搜尋活動表單 -->
+                    <div class="col d-flex justify-content-end mb-3">
+                        <form class="form-inline" onsubmit="searchEvents(); return false;">
+                            <input class="form-control me-2" type="search" placeholder="輸入活動名稱" aria-label="Search" id="searchEventInput" oninput="searchEvents()">
+                            <button class="btn btn-outline-success" type="button" onclick="searchEvents()">查詢</button>
+                        </form>
+                    </div>
+                </div>
 				<!-- 活動列表表格 -->
 				<table class="table">
 					<thead>
@@ -242,21 +241,20 @@
 			$('#deleteEventBtn').hide();  // 隱藏刪除按鈕
 		};
 
-		// 模糊查詢活動功能
-		function searchEvents() {
-			const searchValue = document.getElementById("searchEventInput").value.toLowerCase();
-			const eventList = document.getElementById("eventList");
-			const rows = eventList.getElementsByTagName("tr");
-
-			for (let i = 0; i < rows.length; i++) {
-				let eventName = rows[i].getElementsByTagName("td")[0].textContent.toLowerCase();
-				if (eventName.includes(searchValue)) {
-					rows[i].style.display = "";
-				} else {
-					rows[i].style.display = "none";
-				}
-			}
-		}
+        // 搜尋活動
+        function searchEvents() {
+            let searchQuery = document.getElementById("searchEventInput").value.toLowerCase();
+            let rows = document.getElementById("eventList").getElementsByTagName("tr");
+            for (let i = 0; i < rows.length; i++) {
+                let cells = rows[i].getElementsByTagName("td");
+                let eventName = cells[0].textContent.toLowerCase();
+                if (eventName.includes(searchQuery)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
 
 		// Enter就可以搜尋
 		function handleEnter(event) {

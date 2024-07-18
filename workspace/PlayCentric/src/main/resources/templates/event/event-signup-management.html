@@ -1,17 +1,30 @@
 <!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>活動報名管理</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- 導航欄模板 -->
+    <div th:replace="~{layout/backen_nav}"></div>
+    <!-- 引入 Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body class="h-screen flex flex-col w-screen">
-    <div th:replace="~{layout/backen_nav}"></div>
-
-    <div class="container mt-5">
-        <h1 class="mb-4">活動報名管理</h1>
-        
+    <div class="flex flex-1">
+        <!-- 側邊欄模板 -->
+        <div th:replace="~{/layout/aside}"></div>
+        <div class="w-full flex justify-center">
+            <div>
+                <h1>活動報名管理</h1>
+                <div class="row mb-3">
+                    <!-- 搜尋報名表單 -->
+                    <div class="col d-flex justify-content-end mb-3">
+                        <form class="form-inline" onsubmit="searchSignups(); return false;">
+                            <input class="form-control me-2" type="search" placeholder="輸入報名名稱" aria-label="Search" id="searchSignupInput" onkeypress="handleEnter(event)">
+                            <button class="btn btn-outline-success" type="button" onclick="searchSignups()">查詢</button>
+                        </form>
+                    </div>
+                </div>
         <!-- 報名列表 -->
         <table class="table table-striped">
             <thead>

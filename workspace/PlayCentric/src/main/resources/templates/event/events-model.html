@@ -1,20 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
 <head>
 	<meta charset="UTF-8">
 	<title>活動管理</title>
-	<!-- 引入導航欄模板 -->
+		<!-- 導航欄模板 -->
 	<div th:replace="~{layout/backen_nav}"></div>
-	<!-- 引入 Bootstrap CSS -->
+		<!-- 引入 Bootstrap CSS -->
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 
 <body class="h-screen flex flex-col w-screen">
 
 	<div class="flex flex-1">
-		<!-- 引入側邊欄模板 -->
+<!-- 側邊欄模板 -->
 		<div th:replace="~{/layout/aside}"></div>
 		<div class="w-full flex justify-center">
 			<div>
-				<!-- 活動管理標題 -->
 				<h1>活動管理</h1>
 				<div class="row mb-3">
 					<!-- 新增活動按鈕 -->
@@ -48,19 +50,25 @@
 							<tr>
 								<td>[[${event.eventName}]]</td>
 								<td>[[${event.eventDescription}]]</td>
-								<td><span th:text="${event} ?  ${#dates.format(event.eventStartTime, 'yyyy年MM月dd日')}"></span>
+								<td><span
+										th:text="${event} ?  ${#dates.format(event.eventStartTime, 'yyyy年MM月dd日')}"></span>
 								</td>
-								<td><span th:text="${event} ?  ${#dates.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
+								<td><span
+										th:text="${event} ?  ${#dates.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
 								</td>
-								<td><span th:text="${event} ?  ${#dates.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
+								<td><span
+										th:text="${event} ?  ${#dates.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
 								</td>
-								<td><span th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"></span>
+								<td><span
+										th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"></span>
 								</td>
 								<td class="d-flex">
-									<button class="btn btn-info btn-sm edit-btn me-2" th:eventId="${event.eventId}">編輯</button>
+									<button class="btn btn-info btn-sm edit-btn me-2"
+										th:eventId="${event.eventId}">編輯</button>
 									<form method="post" th:action="@{/events/delete}">
 										<input name="eventId" th:value="${event.eventId}" type="hidden" />
-										<input type="submit" value="刪除" onclick="return confirm('確定刪除嗎?')" class="btn btn-outline-danger btn-sm">
+										<input type="submit" value="刪除" onclick="return confirm('確定刪除嗎?')"
+											class="btn btn-outline-danger btn-sm">
 									</form>
 								</td>
 							</tr>
@@ -69,8 +77,11 @@
 				</table>
 			</div>
 
+
+
 			<!-- 互動視窗（用於創建、編輯和查詢活動） -->
-			<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+			<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel"
+				aria-hidden="true">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -82,22 +93,35 @@
 						<!-- 表單用於創建、編輯和查詢活動 -->
 						<form id="eventForm" method="post" th:action="@{/events/addPost}">
 							<div class="modal-body">
+
 								<div class="form-group">
-									<label for="eventName">活動名稱</label> <input type="text" class="form-control" id="eventName" name="eventName" required>
+									<label for="eventName">活動名稱</label> <input type="text" class="form-control"
+										id="eventName" name="eventName" required>
 								</div>
+
 								<div class="form-group">
 									<label for="eventDescription">活動描述</label>
-									<textarea class="form-control" id="eventDescription" name="eventDescription" rows="3"></textarea>
+									<textarea class="form-control" id="eventDescription" name="eventDescription"
+										rows="3"></textarea>
 								</div>
+
 								<div class="form-group">
-									<label for="eventStartTime">開始時間</label> <input type="datetime-local" class="form-control datetime" id="eventStartTime" name="eventStartTime" required>
+									<label for="eventStartTime">開始時間</label> <input type="datetime-local"
+										class="form-control datetime" id="eventStartTime" name="eventStartTime"
+										required>
 								</div>
+
 								<div class="form-group">
-									<label for="eventEndTime">結束時間</label> <input type="datetime-local" class="form-control datetime" id="eventEndTime" name="eventEndTime" required>
+									<label for="eventEndTime">結束時間</label> <input type="datetime-local"
+										class="form-control datetime" id="eventEndTime" name="eventEndTime" required>
 								</div>
+
 								<div class="form-group">
-									<label for="eventSignupDeadLine">報名截止時間</label> <input type="datetime-local" class="form-control datetime" id="eventSignupDeadLine" name="eventSignupDeadLine" required>
+									<label for="eventSignupDeadLine">報名截止時間</label> <input type="datetime-local"
+										class="form-control datetime" id="eventSignupDeadLine"
+										name="eventSignupDeadLine" required>
 								</div>
+
 								<div class="form-group">
 									<label for="eventStatus">活動狀態</label>
 									<select class="form-control" id="eventStatus" name="eventStatus" required>
@@ -106,6 +130,7 @@
 										<option value="2">已結束</option>
 									</select>
 								</div>
+
 								<input type="hidden" id="eventId" name="eventId">
 							</div>
 							<div class="modal-footer">
@@ -119,13 +144,12 @@
 
 		</div>
 
-		<!-- 引入 jQuery 和 Bootstrap JavaScript -->
+		<!-- jQuery 和 Bootstrap JavaScript -->
 		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 		<script th:src="@{/js/axios.min.js}"></script>
 
-		<!-- 顯示錯誤訊息 -->
 		<div id="errMsg" th:if="${errMsg}">[[${errMsg}]]</div>
 	</div>
 
@@ -140,12 +164,12 @@
 			$('#errMsg').hide();
 			alert($('#errMsg').text())
 		}
-
+		
 		// 編輯按鈕點擊事件處理
 		$('#eventList').on('click', '.edit-btn', function () {
 			showEventInfo($(this).attr('eventId'))
 		})
-
+		
 		// 顯示活動詳情
 		function showEventInfo(eventId) {
 			axios({
@@ -158,60 +182,103 @@
 				})
 				.catch(err => console.log(err))
 		}
-
+		
 		// 顯示編輯活動的互動視窗
 		function showUpdateModal(data) {
-			$('#eventForm').attr('action', updateEventUrl); // 設定表單的提交 URL
-			$('#eventModal .modal-title').text('編輯活動資訊'); // 設定互動視窗標題
-			$('#eventModal #eventId').val(data.eventId); // 設定活動 ID
-			$('#eventModal #eventName').val(data.eventName ? data.eventName : ''); // 設定活動名稱
-			$('#eventModal #eventDescription').val(data.eventDescription ? data.eventDescription : ''); // 設定活動描述
-			$('#eventModal #eventStartTime').val(data.eventStartTime ? formatDateTime(data.eventStartTime) : ''); // 設定開始時間
-			$('#eventModal #eventEndTime').val(data.eventEndTime ? formatDateTime(data.eventEndTime) : ''); // 設定結束時間
-			$('#eventModal #eventSignupDeadLine').val(data.eventSignupDeadLine ? formatDateTime(data.eventSignupDeadLine) : ''); // 設定報名截止時間
-			$('#eventModal #eventStatus').val(data.eventStatus); // 設定活動狀態
-			$('#eventModal').modal('show'); // 顯示互動視窗
+			$('#eventForm').attr('action', updateEventUrl);
+			$('#eventModal .modal-title').text('編輯活動資訊');
+			$('#eventModal #eventId').val(data.eventId);
+			$('#eventModal #eventName').val(data.eventName ? data.eventName : '');
+			$('#eventModal #eventDescription').val(data.eventDescription ? data.eventDescription : '');
+			$('#eventModal #eventStartTime').val(data.eventStartTime ? data.eventStartTime : '');
+			$('#eventModal #eventEndTime').val(data.eventEndTime ? data.eventEndTime : '');
+			// 設置活動狀態
+			$('#eventModal #eventSignupDeadLine').val(data.eventSignupDeadLine ? data.eventSignupDeadLine : '');
+
+			$('#eventModal #eventStatus').val(data.eventStatus ? data.eventStatus : '0'); // 預設為未開始
+
+			$('#eventModal').modal('show');
 		}
 
-		// 顯示新增活動的互動視窗
-		function openCreateEventForm() {
-			$('#eventForm').attr('action', createEventUrl); // 設定表單的提交 URL
-			$('#eventModal .modal-title').text('新增活動'); // 設定互動視窗標題
-			$('#eventModal #eventId').val(''); // 清空活動 ID
-			$('#eventModal #eventName').val(''); // 清空活動名稱
-			$('#eventModal #eventDescription').val(''); // 清空活動描述
-			$('#eventModal #eventStartTime').val(''); // 清空開始時間
-			$('#eventModal #eventEndTime').val(''); // 清空結束時間
-			$('#eventModal #eventSignupDeadLine').val(''); // 清空報名截止時間
-			$('#eventModal #eventStatus').val('0'); // 預設活動狀態為 "未開始"
-			$('#eventModal').modal('show'); // 顯示互動視窗
-		}
 
-		// 格式化日期時間為 YYYY-MM-DDTHH:mm:ss
-		function formatDateTime(dateTime) {
-			const date = new Date(dateTime);
-			const year = date.getFullYear();
-			const month = String(date.getMonth() + 1).padStart(2, '0');
-			const day = String(date.getDate()).padStart(2, '0');
-			const hours = String(date.getHours()).padStart(2, '0');
-			const minutes = String(date.getMinutes()).padStart(2, '0');
-			const seconds = String(date.getSeconds()).padStart(2, '0');
-			return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-		}
+		$('#eventForm').submit(function (event) {
+			event.preventDefault(); // 防止默認提交行為
 
-		// 查詢活動
+			const startTime = new Date($('#eventStartTime').val());
+			const endTime = new Date($('#eventEndTime').val());
+			const signupDeadline = new Date($('#eventSignupDeadLine').val());
+
+			// 驗證邏輯
+			if (endTime <= startTime) {
+				alert("結束時間必須在開始時間之後");
+				return false;
+			}
+
+			if (signupDeadline >= endTime) {
+				alert("報名截止時間必須在結束時間之前");
+				return false;
+			}
+
+			// 格式化日期並提交表單
+			$('#eventForm .datetime').attr('type', 'datetime');
+			$('#eventForm .datetime').each(function (indx, ele) {
+				$(this).val($(this).val().replace('T', ' '));
+			});
+
+			this.submit(); // 提交表單
+		});
+
+
+		// 刪除按鈕
+		$('#eventList').on('click', '.delete-btn', function () {
+		})
+
+		let openCreateEventForm = function () {
+			$('#eventForm').attr('action', createEventUrl);
+			$('#eventForm .datetime').attr('type', 'datetime-local');
+			$('#eventModal').modal('show');
+			$('#eventForm').trigger('reset');
+			$('#eventId').val('');
+			$('#deleteEventBtn').hide();  // 隱藏刪除按鈕
+		};
+
+		// 模糊查詢活動功能
 		function searchEvents() {
-			const searchEventInput = document.getElementById("searchEventInput");
-			const searchEventValue = searchEventInput.value;
-			window.location.href = `http://localhost:8080/PlayCentric/events/search?keyword=${searchEventValue}`;
+			const searchValue = document.getElementById("searchEventInput").value.toLowerCase();
+			const eventList = document.getElementById("eventList");
+			const rows = eventList.getElementsByTagName("tr");
+
+			for (let i = 0; i < rows.length; i++) {
+				let eventName = rows[i].getElementsByTagName("td")[0].textContent.toLowerCase();
+				if (eventName.includes(searchValue)) {
+					rows[i].style.display = "";
+				} else {
+					rows[i].style.display = "none";
+				}
+			}
 		}
 
-		// 處理輸入框的 Enter 鍵事件
+		// Enter就可以搜尋
 		function handleEnter(event) {
 			if (event.key === 'Enter') {
+				event.preventDefault();
 				searchEvents();
 			}
 		}
+
+
+		// 關閉互動視窗
+		$(document).ready(function () {
+			$('.btn-secondary').on('click', function () {
+				console.log('關閉按鈕被點擊');
+				$('#eventModal').modal('hide');
+			});
+		});
 	</script>
 </body>
+
 </html>
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+
