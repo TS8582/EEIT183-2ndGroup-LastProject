@@ -24,6 +24,7 @@ public class ImageLibService {
 		return imageLibRepository.save(imageLib);
 	}
 
+
 	// 查詢全部圖片
 	public List<ImageLib> findAllImage(){
 		return imageLibRepository.findAll();

@@ -59,7 +59,7 @@ public class MemberService {
 	public Member addGoogleMem(GoogleLogin memGoogle) {
 		Member newMember = new Member();
 		String password = "login by google";
-		memGoogle = googleRepository.save(memGoogle);
+		// memGoogle = googleRepository.save(memGoogle);
 		newMember.setGoogeId(memGoogle.getGoogleId());
 		newMember.setAccount(memGoogle.getEmail());
 		newMember.setPassword(password);

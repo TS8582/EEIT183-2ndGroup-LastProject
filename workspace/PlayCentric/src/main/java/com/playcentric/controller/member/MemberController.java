@@ -154,7 +154,7 @@ public class MemberController {
 
 	@PostMapping("/update")
 	@ResponseBody
-	public String updateMemberTest(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile)
+	public String updateMemberTest(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model)
 			throws IOException {
 		try {
 			Member originMem = memberService.findById(member.getMemId());
@@ -178,6 +178,10 @@ public class MemberController {
 				member.setPhoto(imageId);
 			}
 			memberService.updateMember(member, originMem);
+			LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+			if (loginMember!=null && member.getMemId()==loginMember.getMemId()) {
+				model.addAttribute("loginMember",new LoginMemDto(member));
+			}
 			return "更新成功!";
 		} catch (Exception e) {
 			e.printStackTrace();

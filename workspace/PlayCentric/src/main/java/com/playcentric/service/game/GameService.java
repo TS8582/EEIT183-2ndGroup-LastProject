@@ -64,7 +64,7 @@ public class GameService {
 		origin.setDescription(game.getDescription());
 		origin.setDeveloper(game.getDeveloper());
 		origin.setGameDiscounts(game.getGameDiscounts());
-		origin.setGameFilePath(game.getGameFilePath());
+		origin.setGameFile(game.getGameFile());
 		origin.setGameName(game.getGameName());
 		origin.setGameTypeLibs(game.getGameTypeLibs());
 		origin.setImageLibs(game.getImageLibs());
