@@ -59,6 +59,7 @@ public class MemberService {
 		newMember.setNickname(memGoogle.getName());
 		newMember.setMemName(memGoogle.getName());
 		newMember.setEmail(memGoogle.getEmail());
+		newMember.setGoogleLogin(memGoogle);
 		return addMember(newMember);
 	}
 	
