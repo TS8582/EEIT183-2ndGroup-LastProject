@@ -534,28 +534,34 @@
 
       // 販賣物品(java)方法
       function sellProp(focusProp, memId) {
-        axios({
-          method: "post",
-          url: "http://localhost:8080/PlayCentric/prop/propSellorderSave",
-          params: {
-            amount: document.getElementById("sellPrice").value,
-            propId: focusProp.prop.propId,
-            quantity: document.getElementById("sellNum").value,
-            memId: memId,
-          },
-        })
-          .then((response) => {
-            console.log(document.getElementById("sellNum").value + "販賣數量");
-            console.log(
-              document.getElementById("sellPrice").value + "販賣價格"
-            );
-            console.log(response.data);
-            window.alert("已成功將商品委託拍賣!");
-            generateInventoryItems(memId, selectedGameId);
+        if (window.confirm("確定將商品委託拍賣?")) {
+          window.alert("已成功將商品委託拍賣!");
+          axios({
+            method: "post",
+            url: "http://localhost:8080/PlayCentric/prop/propSellorderSave",
+            params: {
+              amount: document.getElementById("sellPrice").value,
+              propId: focusProp.prop.propId,
+              quantity: document.getElementById("sellNum").value,
+              memId: memId,
+            },
           })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+            .then((response) => {
+              console.log(
+                document.getElementById("sellNum").value + " 販賣數量"
+              );
+              console.log(
+                document.getElementById("sellPrice").value + " 販賣價格"
+              );
+              console.log(response.data);
+              generateInventoryItems(memId, selectedGameId); // 移到这里确保在成功回调后调用
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        } else {
+          // 啥也不幹
+        }
       }
 
       // 監控賣單按鈕
@@ -658,24 +664,35 @@
           });
       }
 
-      function buyProp(buyTotalQuantity, propId, memId, buyTotalPrice) {
-        axios({
-          method: "post",
-          url: "http://localhost:8080/PlayCentric/prop/front/buyProp",
-          params: {
-            quantity: buyTotalQuantity,
-            propId: propId,
-            memId: memId,
-            paymentId: 1,
-            price: buyTotalPrice,
-          },
-        })
-          .then((res) => {
-            window.alert("交易成功");
+      function buyProp(
+        buyTotalQuantity,
+        propId,
+        memId,
+        paymentId,
+        buyTotalPrice
+      ) {
+        if (window.confirm("確定購買商品?")) {
+          axios({
+            method: "post",
+            url: "http://localhost:8080/PlayCentric/prop/front/buyProp",
+            params: {
+              quantity: buyTotalQuantity,
+              propId: propId,
+              memId: memId,
+              paymentId: paymentId,
+              price: buyTotalPrice,
+            },
           })
-          .catch((error) => {
-            window.alert("Error: " + error);
-          });
+            .then((res) => {
+              window.alert("交易成功");
+              findSellOrderbyPropId(propId); // 修正這裡的參數名稱
+            })
+            .catch((error) => {
+              window.alert("Error: " + error);
+            });
+        } else {
+          // 使用者取消了操作，不執行任何動作
+        }
       }
 
       // 監控購買按鈕

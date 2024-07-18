@@ -18,15 +18,19 @@ import com.playcentric.model.prop.sellOrder.PropSellOrder;
 import com.playcentric.model.prop.sellOrder.PropSellOrderDto;
 import com.playcentric.model.prop.sellOrder.PropSellOrderForMarketDto;
 import com.playcentric.model.prop.sellOrder.PropSellOrderRepository;
-
+import com.playcentric.model.member.Member;
+import com.playcentric.model.member.MemberRepository;
 import com.playcentric.model.prop.MemberPropInventory.MemberPropInventoryDto;
 
 @Service
 public class PropSellOrderService {
-
+	
 	@Autowired
 	PropSellOrderRepository propSellOrderRepo;
-
+	
+	@Autowired
+	MemberRepository memberRepo;
+	// 根據gameId找所有賣單
 	public List<PropSellOrderDto> findAllByGameId(int id) {
 		List<PropSellOrder> propSellOrders = propSellOrderRepo.findAllByGameId(id);
 		return propSellOrders.stream().map(this::convertToDto).collect(Collectors.toList());
@@ -65,9 +69,23 @@ public class PropSellOrderService {
 		propSellOrderDto.setPropId(order.getOrderId());
 		propSellOrderDto.setQuantity(order.getQuantity());
 		propSellOrderDto.setSellerMemId(order.getSellerMemId());
+		Optional<Member> optional = memberRepo.findById(order.getSellerMemId());
+		if (optional.isPresent()) {
+		    Member member = optional.get();
+		    propSellOrderDto.setSellerName(member.getMemName()); // 假設 Member 有 getName() 方法
+		} else {
+		    System.out.println("未找到賣家");
+		}
+
 		return propSellOrderDto;
 	}
 
+	
+	
+	
+	
+	
+	
 	// 變更賣單數量
 	public void updateSellOrderQuantity(int orderId, int buyQuantity) {
 		Optional<PropSellOrder> optionalOrder = propSellOrderRepo.findById(orderId);

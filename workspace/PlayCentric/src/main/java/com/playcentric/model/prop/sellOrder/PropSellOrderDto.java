@@ -14,6 +14,7 @@ public class PropSellOrderDto {
     private int orderId;
     private int propId;
     private int sellerMemId;
+    private String sellerName;
     private MemberPropInventoryDto memberPropInventoryDto;
     private int amount;
     private int quantity;

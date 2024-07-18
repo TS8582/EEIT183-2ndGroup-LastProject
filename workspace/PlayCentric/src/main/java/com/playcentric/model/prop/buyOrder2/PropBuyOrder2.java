@@ -1,11 +1,10 @@
 package com.playcentric.model.prop.buyOrder2;
+
 import java.time.LocalDateTime;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+
+import com.playcentric.model.prop.Props;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,5 +37,8 @@ public class PropBuyOrder2 {
 
     @Column(name = "price")
     private Integer price;
-
+    
+    @ManyToOne
+    @JoinColumn(name = "propId", referencedColumnName = "propId")
+    private Props props;
 }

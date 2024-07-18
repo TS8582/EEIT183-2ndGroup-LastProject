@@ -81,7 +81,7 @@ public class PropBuyOrderController {
 		memberPropInventoryService.findMemberPropByIdAndPlusQuantity(memId, propId, quantity);
 
 		// 3.新增買單
-        propBuyOrderService2.savePropBuyOrder(memId, quantity, paymentId, price);
+        propBuyOrderService2.savePropBuyOrder(memId, quantity, paymentId, price,propId);
 		
         // 4.扣除點數
 		return "購買完成";
