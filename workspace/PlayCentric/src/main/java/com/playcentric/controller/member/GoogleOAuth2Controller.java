@@ -87,18 +87,21 @@ public class GoogleOAuth2Controller {
 			// System.err.println(payloadResponse);
 			// 取得該帳號email
 			JsonNode userInfo = new ObjectMapper().readTree(payloadResponse);
+			System.err.println(userInfo);
 			String userEmail = userInfo.get("email").asText();
 			String googleId = userInfo.get("id").asText();
+			boolean verified = userInfo.get("verified_email").asBoolean();
 
 			LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
 			boolean hasGoogle = memberService.checkGoogleExist(googleId);
 			boolean hasEmail = memberService.checkEmailExist(userEmail);
 			// 檢查是否已經有此帳號
 			Member member = null;
-			if (hasGoogle) {  //利用google帳號登入
+			if (hasGoogle) { // 利用google帳號登入
 				System.err.println("利用google登入");
+				memberService.setGoogleVerified(googleId, verified);
 				member = memberService.findByGoogleId(googleId);
-			} else {		//利用google帳號註冊
+			} else { // 利用google帳號註冊
 				GoogleLogin memGoogle = new GoogleLogin();
 				String googlePhoto = userInfo.get("picture").asText();
 				String googleName = userInfo.get("name").asText();
@@ -106,18 +109,19 @@ public class GoogleOAuth2Controller {
 				memGoogle.setEmail(userEmail);
 				memGoogle.setName(googleName);
 				memGoogle.setPhoto(googlePhoto);
+				memGoogle.setVerifiedEmail(verified);
 				if (loginMember != null) {
 					if (hasEmail) {
 						System.err.println("此信箱已被註冊!");
-						redirectAttributes.addFlashAttribute("errorMsg", "此信箱已被註冊!");
+						redirectAttributes.addFlashAttribute("redirectMsg", "此信箱已被註冊!");
 						// 此處要改成使用者綁定頁面
-						return "redirect:/member/home";
+						return "redirect:/member/memInfo";
 					}
 					member = memberService.memAddGoogle(loginMember.getMemId(), memGoogle);
 					System.err.println("Google綁定成功!");
-					redirectAttributes.addFlashAttribute("okMsg", "Google綁定成功!");
+					redirectAttributes.addFlashAttribute("redirectMsg", "Google綁定成功!");
 					// 此處要改成使用者綁定頁面
-					return "redirect:/member/home";
+					return "redirect:/member/memInfo";
 				} else if (hasEmail) {
 					System.err.println("利用google登入已註冊帳號");
 					member = memberService.memAddGoogle(memGoogle);
@@ -126,13 +130,16 @@ public class GoogleOAuth2Controller {
 					member = memberService.addGoogleMem(memGoogle);
 				}
 			}
+			if (userEmail.equals(member.getEmail())) {
+				member.setEmailVerified(verified);
+			}
 			loginMember = new LoginMemDto(memberService.memberLogin(member));
 			model.addAttribute("loginMember", loginMember);
 			return "redirect:/member/loginSuccess";
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("errorMsg", "登入失敗!");
+			redirectAttributes.addFlashAttribute("redirectMsg", "登入失敗!");
 			return "redirect:/member/login";
 		}
 	}

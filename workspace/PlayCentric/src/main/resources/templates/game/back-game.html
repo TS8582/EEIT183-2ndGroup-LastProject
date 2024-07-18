@@ -9,21 +9,21 @@
     <title>PlayCentric-後台管理-公告</title>
 </head>
 
-<body class="h-screen flex flex-col w-screen">
+<body class="h-screen flex flex-col">
     <!-- 頂部導航欄 -->
 
-    <div class="flex flex-1">
+    <div class="flex flex-1 h-1/2">
         <!-- 側邊欄 -->
         <!-- <div th:replace="~{/layout/aside}"></div> -->
 
         <!-- 主要內容區域 -->
-        <main class="w-full h-auto">
-            <div class="w-full h-auto flex flex-col justify-center px-8">
+        <main class="w-full h-4/5">
+            <div class="w-full h-full flex flex-col justify-center px-8">
                 <input class="mb-4 p-2 border border-gray-300 rounded-md" type="text" id="search" placeholder="搜尋...">
                 <div class="mb-2">
                     <a class="mybtn mybtn-sky" th:href="@{/game/getSetDiscount}">新增優惠活動</a>
                 </div>
-                <div class="w-full h-3/5 overflow-y-auto noscrollbar shadow" id="table">
+                <div class="h-4/5 overflow-scroll noscrollbar shadow" id="table">
                     <table class="w-full border-collapse">
                         <thead class="sticky sticky-top bg-black text-white">
                             <tr>
@@ -43,7 +43,7 @@
                                         <a href="#" th:text="${game.gameName}" class="text-center"></a>
                                     </td>
                                     <td th:text="${game.price}" class="text-center border p-3 price"></td>
-                                    <td th:text="${#dates.format(game.releaseAt,'yyyy-MM-dd HH:mm:ss')}"
+                                    <td th:text="${#temporals.format(game.releaseAt,'yyyy-MM-dd HH:mm:ss')}"
                                         class="text-center border p-3 releaseAt"></td>
                                     <td th:text="${game.developer}" class="text-center border p-3 developer"></td>
                                     <td th:text="${game.publisher}" class="text-center border p-3 publisher"></td>

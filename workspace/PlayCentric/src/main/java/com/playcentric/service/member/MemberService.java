@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.playcentric.model.ImageLibRepository;
 import com.playcentric.model.member.GoogleLogin;
 import com.playcentric.model.member.GoogleLoginRepository;
 import com.playcentric.model.member.Member;
@@ -23,11 +24,21 @@ public class MemberService {
 	
 	@Autowired
 	private GoogleLoginRepository googleRepository;
+
+	@Autowired
+	private ImageLibRepository imageLibRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	
+	public void setGoogleVerified(String googleId, Boolean verified){
+		Optional<GoogleLogin> optional = googleRepository.findById(googleId);
+		if (optional.isPresent()) {
+			GoogleLogin googleLogin = optional.get();
+			googleLogin.setVerifiedEmail(verified);
+		}
+	}
 	
 	public Member memAddGoogle(GoogleLogin memGoogle){
 		Integer memberId = memberRepository.findByEmail(memGoogle.getEmail()).getMemId();
@@ -48,13 +59,14 @@ public class MemberService {
 	public Member addGoogleMem(GoogleLogin memGoogle) {
 		Member newMember = new Member();
 		String password = "login by google";
-		memGoogle = googleRepository.save(memGoogle);
+		// memGoogle = googleRepository.save(memGoogle);
 		newMember.setGoogeId(memGoogle.getGoogleId());
 		newMember.setAccount(memGoogle.getEmail());
 		newMember.setPassword(password);
 		newMember.setNickname(memGoogle.getName());
 		newMember.setMemName(memGoogle.getName());
 		newMember.setEmail(memGoogle.getEmail());
+		newMember.setGoogleLogin(memGoogle);
 		return addMember(newMember);
 	}
 	
@@ -76,12 +88,22 @@ public class MemberService {
 		originMem.setAccount(member.getAccount());
 		originMem.setAddress(member.getAddress());
 		originMem.setBirthday(member.getBirthday());
-		originMem.setEmail(member.getEmail());
+		if (!originMem.getEmail().equals(member.getEmail())) {
+			originMem.setEmailVerified(false);
+			originMem.setEmailVerifyToken(null);
+			originMem.setEmail(member.getEmail());
+		}
 		originMem.setGender(member.getGender());
 		originMem.setMemName(member.getMemName());
 		originMem.setNickname(member.getNickname());
 		originMem.setPhone(member.getPhone());
-		originMem.setPhoto(member.getPhoto());
+		if (member.getPhoto()!=null) {
+			Integer originPhoto = originMem.getPhoto();
+			if (originPhoto != null) {
+				imageLibRepository.deleteById(originPhoto);
+			}
+			originMem.setPhoto(member.getPhoto());
+		}
 		originMem.setRole(member.getRole());
 		return memberRepository.save(originMem);
 	}
@@ -97,6 +119,26 @@ public class MemberService {
 			}
 		}
 		return false;
+	}
+
+	public Member verifyEmail(Integer memId, String token){
+		Optional<Member> optional = memberRepository.findById(memId);
+		if (optional.isPresent()) {
+			Member member = optional.get();
+			member.setEmailVerifyToken(token);
+			return memberRepository.save(member);
+		}
+		return null;
+	}
+
+	public Member verifyEmail(String token){
+		Member member = memberRepository.findByEmailVerifyToken(token);
+		if (member == null) {
+			return null;
+		}
+		member.setEmailVerified(true);
+		member.setEmailVerifyToken(null);
+		return memberRepository.save(member);
 	}
 
 	public Page<Member> findByKeyword(String keyword,Integer pageNum){
@@ -123,7 +165,7 @@ public class MemberService {
 	}
 	
 	public Member checkLogin(String account, String password) {
-		Member member = memberRepository.findByAccount(account);
+		Member member = memberRepository.findByAccountAndStatus(account,(short)0);
 		if (member==null) {
 			return member;
 		}
@@ -145,9 +187,31 @@ public class MemberService {
 		return memberRepository.findByGoogeId(googleId);
 	}
 
+	public Member findByPwdToken(String token){
+		return memberRepository.findByPasswordToken(token);
+	}
+
 	public Member memberLogin(Member member){
 		member.setLastLogin(new Date());
 		System.err.println("更新登入時間");
+		return memberRepository.save(member);
+	}
+
+	public Member changePassword(Integer memId, String token){
+		Optional<Member> optional = memberRepository.findById(memId);
+		if (optional.isPresent()) {
+			Member member = optional.get();
+			member.setPasswordToken(token);
+			return memberRepository.save(member);
+		}
+		return null;
+	}
+
+	public Member changePassword(String password, String token){
+		Member member = memberRepository.findByPasswordToken(token);
+		String encodedPwd = passwordEncoder.encode(password);
+		member.setPassword(encodedPwd);
+		member.setPasswordToken(null);
 		return memberRepository.save(member);
 	}
 }

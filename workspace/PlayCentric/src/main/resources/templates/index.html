@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{css/output.css}">
-    <link rel="stylesheet" th:href="@{/css/utils/doAlertJS.css}">
     <title>PlayCentric Home</title>
 </head>
 
@@ -54,12 +53,13 @@
 
         <script th:src="@{/js/axios.min.js}"></script>
         <script th:src="@{/js/announcement/index-anno.js}"></script>
-        <script th:src="@{/js/utils/doAlertJS.js}"></script>
+        <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+        <script th:src="@{/js/utils/doAlertJQ.js}"></script>
         <script>
-            const loginOK = '[[${loginOK}]]'
+            const redirectMsg = '[[${redirectMsg}]]'
 
-            if (loginOK && loginOK.trim() != "") {
-                doAlert(loginOK);
+            if (redirectMsg && redirectMsg.trim() != "") {
+                doAlert(redirectMsg);
             }
         </script>
 </body>

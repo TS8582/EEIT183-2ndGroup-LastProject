@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-  <script th:src="@{/js/bootstrap.bundle.js}"></script>
+  <!-- <script th:src="@{/js/bootstrap.bundle.js}"></script> -->
   <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
   <script th:src="@{/js/axios.min.js}"></script>
   <script th:src="@{/js/utils/doAlertJQ.js}"></script>
-  <title>登入頁面</title>
+  <title>PlayCentric-登入頁面</title>
   <style>
     html,
     body {
@@ -77,7 +77,7 @@
               </div>
             </form>
             <div class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0">
-              <span class="px-3 text-secondary bg-white">或者</span>
+              <span class="px-3 text-secondary bg-white user-select-none">或者</span>
             </div>
             <div class="d-flex mb-3 justify-content-center">
               <a class="btn p-3 border rounded-0" th:href="@{/member/google-login}">
@@ -104,6 +104,9 @@
               <div class="input-group mb-1 password">
                 <label for="password-confirm" class="input-group-text">確認密碼*</label>
                 <input type="password" class="form-control" id="password-confirm">
+              </div>
+              <div id="passwordCheckBlock" class="form-text text-danger" style="display: none;">
+                與密碼輸入不一致，請重新檢查
               </div>
               <div class="input-group mb-1">
                 <label for="email" class="input-group-text">Email*</label>
@@ -158,12 +161,28 @@
       const loginUrl = "http://localhost:8080/PlayCentric/member/login"
       const registUrl = "http://localhost:8080/PlayCentric/member/regist";
       var loginTab = new bootstrap.Tab(document.querySelector('#login-tab'));
-      const errMsg = '[[${errorMsg}]]'
+      const redirectMsg = '[[${redirectMsg}]]'
 
-      if (errMsg && errMsg.trim() != "") {
-        doAlert(errMsg);
+      if (redirectMsg && redirectMsg.trim() != "") {
+        doAlert(redirectMsg);
       }
 
+      //自動確認密碼是否相同
+      $('#registForm #password-confirm').blur(function(){
+        checkPwdAndBlock();
+        $('#registForm input[type=password]').keyup(checkPwdAndBlock)
+        $('#registForm input[type=password]').keypress(checkPwdAndBlock)
+      })
+
+      function checkPwdAndBlock() {
+        if (isPwdEqu()) {
+          $('#passwordCheckBlock').hide();
+          $('#registForm [type=submit]').removeClass('disabled');
+        } else {
+          $('#passwordCheckBlock').show();
+          $('#registForm [type=submit]').addClass('disabled');
+        }
+      }
 
       $('#login-form').submit(function (e) {
 
@@ -176,7 +195,9 @@
             console.log(res);
             doAlert(res.data);
             if (res.data == '登入成功!') {
-              window.location.href = "/PlayCentric/member/loginSuccess";
+              setTimeout(() => {
+                window.location.href = "/PlayCentric/member/loginSuccess";
+              }, 1000);
             }
           })
           .catch(err => {
@@ -187,6 +208,12 @@
       $('#registForm').submit(function (e) {
 
         e.preventDefault()
+
+        if (!isPwdEqu()) {
+          $('#passwordCheckBlock').show();
+          doAlert('請確認密碼!');
+          return;
+        }
 
         const formdataObject = new FormData(this);
         formdataObject.set('role',0)
@@ -209,6 +236,12 @@
         loginTab.show();
       })
 
+
+      function isPwdEqu() {
+        let psw = $('#registForm #password').val();
+        let pswCon = $('#registForm #password-confirm').val();
+        return psw === pswCon;
+      }
     })
   </script>
 </body>

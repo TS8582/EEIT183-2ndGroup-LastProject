@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +29,8 @@ import com.playcentric.service.ImageLibService;
 import com.playcentric.service.game.GameDiscountSetService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
+
+import jakarta.websocket.server.PathParam;
 
 @Controller
 public class GameController {
@@ -127,8 +134,11 @@ public class GameController {
 			gameDiscount.setGameDiscountId(discountId);
 			List<GameDiscount> gameDiscounts = new ArrayList<>();
 			gameDiscounts.add(gameDiscount);
-			game.setGameDiscounts(gameDiscounts);
+			newGame.setGameDiscounts(gameDiscounts);
 			discountSet.setGameDiscounts(gameDiscounts);
+			Double oldRate = Double.parseDouble(gameDiscount.getDiscountRate().toString());
+			int rate = (int) (oldRate * 100);
+			newGame.setRate(rate);
 		}
 		//重新存入帶有圖片與優惠的遊戲
 		gService.save(newGame);
@@ -181,17 +191,33 @@ public class GameController {
 			}
 			myGame.setImageLibs(imgs);
 			if (discountId != 0 && discountRate.compareTo(BigDecimal.ZERO) != 0) {
-				if (gService.findNowDiscount(myGame.getGameId()).getGameDiscountId() != discountId) {
-					//取得優惠活動
-					GameDiscountSet discountSet = gdsService.findById(discountId);
-					//新增遊戲優惠
+				GameDiscount nowDiscount = gService.findNowDiscount(myGame.getGameId());
+				GameDiscountSet discountSet = gdsService.findById(discountId);
+				if (nowDiscount != null) {
+					if (nowDiscount.getGameDiscountId() != discountId) {
+						//取得優惠活動
+						//新增遊戲優惠
+						GameDiscount gameDiscount = new GameDiscount();
+						gameDiscount.setDiscountRate(discountRate);
+						gameDiscount.setGameId(myGame.getGameId());
+						gameDiscount.setGameDiscountId(discountId);
+						List<GameDiscount> gameDiscounts = new ArrayList<>();
+						gameDiscounts.add(gameDiscount);
+						myGame.setGameDiscounts(gameDiscounts);
+						discountSet.setGameDiscounts(gameDiscounts);
+						Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
+						int rate = (int) (oldRate * 100);
+						myGame.setRate(rate);
+					}
+				}
+				else {
 					GameDiscount gameDiscount = new GameDiscount();
 					gameDiscount.setDiscountRate(discountRate);
 					gameDiscount.setGameId(myGame.getGameId());
 					gameDiscount.setGameDiscountId(discountId);
 					List<GameDiscount> gameDiscounts = new ArrayList<>();
 					gameDiscounts.add(gameDiscount);
-					game.setGameDiscounts(gameDiscounts);
+					myGame.setGameDiscounts(gameDiscounts);
 					discountSet.setGameDiscounts(gameDiscounts);
 				}
 			}
@@ -217,10 +243,22 @@ public class GameController {
 	//遊戲商店頁面
 	@GetMapping("/game/gameStore")
 	public String gameStore(Model model) {
-		List<Game> games = gService.findShowInStore();
+		PageRequest pgb = PageRequest.of(0, 9);
+		Page<Game> games = gService.findShowInStore(pgb);
 		List<GameTypeLib> allType = gtService.findAll();
+		for (Game game : games) {
+			GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
+			if (nowDiscount != null) {
+				Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
+				int rate = (int) (oldRate * 100);
+				game.setRate(rate);
+				Integer discountedPrice = game.getPrice() * game.getRate() / 100;
+				game.setDiscountedPrice(discountedPrice);
+			}
+		}
 		model.addAttribute("allType",allType);
 		model.addAttribute("games",games);
 		return "game/game-store";
 	}
+	
 }
