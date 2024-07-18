@@ -258,6 +258,14 @@ public class GameController {
 	@GetMapping("/game/showGame")
 	public String showGame(@RequestParam Integer gameId,Model model) {
 		Game game = gService.findById(gameId);
+		GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
+		if (nowDiscount != null) {
+			Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
+			int rate = (int) (oldRate * 100);
+			game.setRate(rate);
+			Integer discountedPrice = game.getPrice() * game.getRate() / 100;
+			game.setDiscountedPrice(discountedPrice);
+		}
 		model.addAttribute("game",game);
 		return "game/show-game";
 	}

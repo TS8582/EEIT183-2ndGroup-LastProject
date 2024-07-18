@@ -6,39 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div th:replace="~{/layout/nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <style>
-        .lunbo {
-            position: relative;
-            width: 100%;
-            height: 24rem;
-            overflow: hidden;
-        }
-
-        /* .gamephoto {
-            position: absolute;
-            top: 0;
-            left: 100%;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-            z-index: 1;
-        } */
-
-        .gamephoto.active {
-            left: 0;
-            transform: translateX(0);
-            z-index: 20;
-        }
-
-        .gamephoto.prev {
-            transform: translateX(-100%);
-        }
-
-        .gamephoto.next {
-            transform: translateX(100%);
-        }
-    </style>
     <title th:text="${game.gameName}"></title>
 </head>
 
@@ -46,51 +13,93 @@
     <div class="opacity-0 hidden"></div>
     <div class="opacity-100 hidden"></div>
 
-    <main class="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
+    <main class="container">
 
-        <div class="col-span-1 m-3 h-full">
-            <div id="carouselExampleIndicators" class="carousel slide  bg-gray-300" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    <!-- 動態生成指示器 -->
-                    <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
-                        <button type="button"
-                            th:attr="data-bs-target='#carouselExampleIndicators', data-bs-slide-to=${st.index}"
-                            th:class="${st.index == 0} ? 'active' : ''" aria-current="true"
-                            aria-label="Slide ${st.index + 1}"></button>
-                    </th:block>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 w-full">
+            <!-- 圖片輪播 -->
+            <div class="sm:col-span-1 lg:col-span-2 m-3 h-full">
+                <div id="carouselExampleIndicators" class="carousel slide  bg-gray-300 rounded-md"
+                    data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <!-- 動態生成指示器 -->
+                        <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
+                            <button type="button"
+                                th:attr="data-bs-target='#carouselExampleIndicators', data-bs-slide-to=${st.index}"
+                                th:class="${st.index == 0} ? 'active' : ''" aria-current="true"
+                                aria-label="Slide ${st.index + 1}"></button>
+                        </th:block>
+                    </div>
+                    <div class="carousel-inner">
+                        <!-- 動態生成輪播項目 -->
+                        <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
+                            <div th:class="${st.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                                <img class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto"
+                                    th:src="@{/imagesLib/image{id}(id=${photo.imageId})}" alt="">
+                            </div>
+                        </th:block>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
-                <div class="carousel-inner">
-                    <!-- 動態生成輪播項目 -->
-                    <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
-                        <div th:class="${st.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                            <img class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto"
-                                th:src="@{/imagesLib/image{id}(id=${photo.imageId})}" alt="">
-                        </div>
-                    </th:block>
+            </div>
+
+            <div class="col-span-1 my-3 mx-1 border-2 border-black px-4 py-2 rounded-md">
+                <div class="space-y-2 sm:text-center lg:text-start">
+                    <h1 class="text-5xl font-bold gameName" th:text="${game.gameName}"></h1>
+                    <div class="font-semibold text-xl developer" th:text="'開發者：' + ${game.developer}"></div>
+                    <div class="font-semibold text-xl publisher" th:text="'發行商：' + ${game.publisher}"></div>
+                    <div class="font-semibold text-xl releaseAt"
+                        th:text="發布日期： + ${#temporals.format(game.releaseAt,'yyyy年MM月dd日')}">
+                    </div>
+                    <div class="flex flex-wrap items-center sm:justify-center lg:justify-start">
+                        <span class="font-semibold text-xl">遊戲分類：</span>
+                        <th:block th:each="type:${game.gameTypeLibs}">
+                            <span class="mybtn-tag" th:text="${type.gameTypeName}"></span>
+                        </th:block>
+                    </div>
+                    <div
+                        th:class="${game.rate} ? 'flex sm:justify-center lg:justify-start my-2 space-x-1' : 'flex my-2 sm:justify-center lg:justify-start'">
+                        <!-- 顯示優惠 -->
+                        <span th:if="${game.rate}" class="price-tag font-semibold"
+                            th:text="'-' + ${100 -  game.rate} + '%'"></span>
+                        <span></span>
+                        <!-- 沒優惠顯示的價格 -->
+                        <span th:if="${game.rate == null}" class="price-tag text-black font-semibold"
+                            th:text=" 'NT$' + ${game.price}"></span>
+                        <!-- 有優惠顯示的價格 -->
+                        <span th:if="${game.rate}" class="price-tag font-semibold"
+                            th:text=" 'NT$' + ${game.discountedPrice}"></span>
+                    </div>
+                    <div class="flex sm:justify-center lg:justify-start">
+                        <span class="mybtn mybtn-green ">加入購物車</span>
+                    </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
         </div>
 
-        <div class="col-span-1 m-3">
-            <div class="grid grid-cols-2 lg:grid-cols-1 gap-4">
-                <div class="space-y-2">
-                    <h1 class="text-3xl font-bold gameName" th:text="${game.gameName}"></h1>
-                    <div class="font-semibold developer" th:text="'開發者：' + ${game.developer}"></div>
-                    <div class="font-semibold publisher" th:text="'發行商：' + ${game.publisher}"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 w-full">
+            <div class="sm:col-span-1 lg:col-span-2 m-3 h-full">
+                <div class="sm:col-span-1 lg:col-span-2 m-3 border-2 border-black p-2">
+
                 </div>
-                <div></div>
             </div>
+
+            <div class="col-span-1 my-3 mx-1 border-2 border-black px-4 py-2 rounded-md">
+
+
+            </div>
+
         </div>
+
+
 
     </main>
 

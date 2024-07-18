@@ -35,7 +35,7 @@
 }
 
 .mybtn-green {
-    @apply text-white py-2 px-3 cursor-pointer bg-lime-600 rounded-md
+    @apply text-white py-2 px-3 cursor-pointer bg-lime-600 rounded-md border border-gray-600
 }
 
 .mybtn-danger {
@@ -59,7 +59,7 @@
 }
 
 .price-tag {
-    @apply p-2 border-red-300 border bg-slate-300 rounded-md text-lime-800 select-none
+    @apply p-2 border-gray-600 border bg-sky-100 rounded-md text-green-600 select-none
 }
 
 .mybtn:hover {
