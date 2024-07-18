@@ -46,7 +46,7 @@ public class Game {
 	private LocalDateTime releaseAt = LocalDateTime.now();
 	private String developer;
 	private String publisher;
-	private String gameFilePath;
+//	private String gameFilePath;
 	private Integer totalReviews = 0;
 	private Integer totalScore = 0;
 	private Boolean isShow = Boolean.TRUE;
