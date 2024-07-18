@@ -7,6 +7,8 @@ import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.playcentric.model.forum.Forum;
+import com.playcentric.model.forum.Texts;
 import com.playcentric.service.forum.ForumService;
 
 @Controller
@@ -62,10 +65,10 @@ public class ForumController {
 //			@RequestParam("csrfmiddlewaretoken") String csrfToken, Model model)
 //			throws IllegalStateException, IOException {
 
-		// 實現 CSRF token 驗證，如果需要
-		// validateCsrfToken(csrfToken);
+	// 實現 CSRF token 驗證，如果需要
+	// validateCsrfToken(csrfToken);
 
-		// 確認文件不為空且類型為圖片
+	// 確認文件不為空且類型為圖片
 //		if (forumPhoto != null && forumPhoto.getContentType().startsWith("image")) {
 //			// 讀取文件內容
 //			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -80,7 +83,7 @@ public class ForumController {
 //			byte[] imageBytes = outputStream.toByteArray();
 //			String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
-			// 創建主题對象
+	// 創建主题對象
 //			Forum forum1 = new Forum();
 //			forum1.setTextsPhoto(imageBytes); // 這裡保存原始的圖片字節數據
 //			forum1.setForumName(forumName);
@@ -90,7 +93,7 @@ public class ForumController {
 //
 //			model.addAttribute("insertOK", "成功");
 
-			// 返回 JSON 響應
+	// 返回 JSON 響應
 //			return String.format("{\"type\":\"%s\", \"data\":\"%s\"}", forumPhoto.getContentType(), base64Image);
 //		} else {
 //			// 返回錯誤信息
@@ -174,4 +177,5 @@ public class ForumController {
 		// body, headers , http status code
 		return new ResponseEntity<byte[]>(photoFile, headers, HttpStatus.OK);
 	}
+
 }
