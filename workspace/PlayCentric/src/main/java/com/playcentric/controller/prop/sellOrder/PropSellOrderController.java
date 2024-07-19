@@ -33,5 +33,12 @@ public class PropSellOrderController {
 	public PropSellOrderDto findSellOrderById(@RequestParam("orderId") int orderId) {
 		return propSellOrderService.findByOrderId(orderId);
 	}
-
+	
+	// 根據gameId及memId找賣單
+	@GetMapping("/prop/findpropSellOrderBygameIdAndmemId")
+	@ResponseBody
+	public List<PropSellOrderDto> findpropSellOrderBygameIdAndmemId(@RequestParam("gameId") int gameId,@RequestParam("memId") int memId) {
+		
+		return null;
+	}
 }

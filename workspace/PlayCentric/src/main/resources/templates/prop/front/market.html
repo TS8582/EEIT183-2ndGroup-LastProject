@@ -93,7 +93,7 @@
             <div class="modal-body">
               <div class="row">
                 <div class="col-8" id="inventoryPropsContainer">
-                  <!-- 道具圖片會在這裡生成 -->
+                  <!-- 倉庫道具會在這裡生成 -->
                 </div>
                 <div class="col-4" id="invPropInfo">完整商品資訊</div>
               </div>
@@ -321,7 +321,10 @@
           const inventory = res.data.filter(
             (item) => item.prop.gameId == selectedGameId
           );
-          generateInventoryPropImages(inventory); // 調用生成倉庫道具圖片的函數
+          // 調用生成倉庫道具資料及圖片的函數
+          generateInventoryPropImages(inventory);
+          // 調用生成倉庫賣單資料及圖片的函數
+          findInventorySellOrder(memId, selectedGameId)
         })
         .catch((error) => {
           console.error("獲取倉庫資訊時出錯:", error);
@@ -372,7 +375,7 @@
           focusProp = item;
           console.log(focusProp);
 
-          // 更新商品資訊
+          // 更新倉庫道具資訊
           invPropInfoContainer.innerHTML = `
                         <img src="http://localhost:8080/PlayCentric/prop/image?id=${item.prop.propImageId}" class="img-fluid rounded-4" alt="${item.prop.propName}" style="width: 11vw;">
                         <br>
@@ -388,10 +391,13 @@
         colDiv.appendChild(img);
         colDiv.appendChild(quantityDiv); // 將數量 div 添加到 colDiv 中
         rowDiv.appendChild(colDiv);
+
+
+
       });
     }
 
-    // 生成道具項目
+    // 生成商品道具項目
     function generatePropItems(props) {
       const propsContainer = $(".isotope-container");
       propsContainer.empty();
@@ -614,6 +620,27 @@
       // if會員錢包金額<buyTotalPrice window.alert餘額不足且不執行下面。
       buyProp(buyQuantity.value, buyPropId, memId, 1, buyTotalPrice);
     });
+
+    // 根據memId及gameId找所有賣單的方法
+    function findInventorySellOrder(memId, gameId) {
+      axios({
+        method: 'get',
+        url: 'http://localhost:8080/PlayCentric/prop/front/market/selloders',
+        params: {
+          memId: memId,
+          gameId: gameId,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.error("搜尋倉庫賣單錯誤:", error);
+        })
+    }
+
+    // 生成倉庫賣單
+
   </script>
 </body>
 

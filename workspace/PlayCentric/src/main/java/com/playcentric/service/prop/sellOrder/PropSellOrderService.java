@@ -30,6 +30,13 @@ public class PropSellOrderService {
 		List<PropSellOrder> propSellOrders = propSellOrderRepo.findAllByGameId(id);
 		return propSellOrders.stream().map(this::convertToDto).collect(Collectors.toList());
 	}
+	
+	//根據gameId及memId及status為0(販售中)的賣單
+	public List<PropSellOrderDto>  findAllByGameIdAndMemIdAndOrderStatus(int memId , int gameId){
+		List<PropSellOrder> propSellOrders=propSellOrderRepo.findAllByGameIdAndMemIdAndOrderStatus(memId,gameId);
+		return propSellOrders.stream().map(this::convertToDto).collect(Collectors.toList());
+	}
+	
 
 	private PropSellOrderDto convertToDto(PropSellOrder order) {
 		PropSellOrderDto propSellOrderDto = new PropSellOrderDto();
@@ -67,7 +74,7 @@ public class PropSellOrderService {
 		Optional<Member> optional = memberRepo.findById(order.getSellerMemId());
 		if (optional.isPresent()) {
 		    Member member = optional.get();
-		    propSellOrderDto.setSellerName(member.getMemName()); // 假設 Member 有 getName() 方法
+		    propSellOrderDto.setSellerName(member.getAccount()); // 假設 Member 有 getName() 方法
 		} else {
 		    System.out.println("未找到賣家");
 		}
@@ -75,11 +82,6 @@ public class PropSellOrderService {
 		return propSellOrderDto;
 	}
 
-	
-	
-	
-	
-	
 	
 	// 變更賣單數量
 	public void updateSellOrderQuantity(int orderId, int buyQuantity) {

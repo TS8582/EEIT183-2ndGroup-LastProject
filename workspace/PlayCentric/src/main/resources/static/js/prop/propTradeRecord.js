@@ -84,7 +84,7 @@ async function fetchMemberNameById(memId) {
         params: { memId: memId },
       }
     );
-    const memName = res.data.memName; // 假設會員名稱字段為 memName
+    const memName = res.data.account; // 假設會員名稱字段為 memName
     return memName;
   } catch (err) {
     console.error("獲取會員名稱時出錯:", err);
