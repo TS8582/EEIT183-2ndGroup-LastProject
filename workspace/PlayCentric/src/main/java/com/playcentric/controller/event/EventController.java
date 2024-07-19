@@ -1,6 +1,7 @@
 package com.playcentric.controller.event;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -130,9 +131,17 @@ public class EventController {
      */
     @GetMapping("/public/list")
     public String publicEventList(Model model) {
-        List<Event> events = eventService.getAllEvents();
-        model.addAttribute("events", events);
-        return "event/event-list"; // 返回公開活動列表頁面
+        List<Event> allEvents = eventService.getAllEvents();
+        List<Event> ongoingEvents = allEvents.stream()
+                .filter(e -> e.getEventStatus() == 1)
+                .collect(Collectors.toList());
+        List<Event> completedEvents = allEvents.stream()
+                .filter(e -> e.getEventStatus() == 2)
+                .collect(Collectors.toList());
+        
+        model.addAttribute("ongoingEvents", ongoingEvents);
+        model.addAttribute("completedEvents", completedEvents);
+        return "event/event-list";
     }
 
     /**

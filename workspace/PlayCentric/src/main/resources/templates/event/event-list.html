@@ -6,21 +6,32 @@
     <title>活動列表</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-
 <body class="h-screen flex flex-col w-screen">
-  <div th:replace="~{/layout/nav}"></div>
-
-<body>
+    <div th:replace="~{/layout/nav}"></div>
     <div class="container mt-5">
-        <h1 class="mb-4">活動列表</h1>
+        <h1 class="mb-4">進行中的活動</h1>
         <div class="row">
-            <div class="col-md-4 mb-4" th:each="event : ${events}">
+            <div class="col-md-4 mb-4" th:each="event : ${ongoingEvents}">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${event.eventName}">活動名稱</h5>
                         <p class="card-text" th:text="${#strings.abbreviate(event.eventDescription, 100)}">活動描述...</p>
                         <p class="card-text"><small class="text-muted" th:text="'開始時間: ' + ${#temporals.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')}">開始時間</small></p>
                         <a th:href="@{'/events/public/detail/' + ${event.eventId}}" class="btn btn-primary">查看詳情</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h1 class="mb-4 mt-5">已結束的活動</h1>
+        <div class="row">
+            <div class="col-md-4 mb-4" th:each="event : ${completedEvents}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${event.eventName}">活動名稱</h5>
+                        <p class="card-text" th:text="${#strings.abbreviate(event.eventDescription, 100)}">活動描述...</p>
+                        <p class="card-text"><small class="text-muted" th:text="'結束時間: ' + ${#temporals.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}">結束時間</small></p>
+                        <a th:href="@{'/events/public/detail/' + ${event.eventId}}" class="btn btn-secondary">查看結果</a>
                     </div>
                 </div>
             </div>
