@@ -60,6 +60,7 @@ public class PfGameService {
 		return pfGameDTOs;
 	}
 
+	
 	public List<PfGameDTO> findByPlayFellowId(Integer playFellowId) {
 		List<PfGame> pfGames = pfGameRepository.findByPlayFellowMemberPlayFellowId(playFellowId);
 		List<PfGameDTO> pfGameDTOs = new ArrayList<>();
@@ -69,6 +70,8 @@ public class PfGameService {
 		}
 		return pfGameDTOs;
 	}
+	
+	
 
 	// 這個只有審核通過 沒分性別
 	public List<PfGame> getAllPlayFellowMembersByGameId(Integer gameId) {

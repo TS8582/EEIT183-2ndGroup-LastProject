@@ -22,10 +22,15 @@ import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.game.primary.GameDiscount;
 import com.playcentric.model.game.primary.GameDiscountSet;
 import com.playcentric.model.game.primary.GameTypeLib;
+import com.playcentric.model.game.secondary.GameCarts;
+import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.ImageLibService;
+import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameDiscountSetService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class GameController {
@@ -38,6 +43,8 @@ public class GameController {
 	private GameDiscountSetService gdsService;
 	@Autowired
 	private ImageLibService iService;
+	@Autowired
+	private GameCartService gcService;
 
 	// 遊戲管理後台
 	@GetMapping("/back/game")
@@ -236,19 +243,21 @@ public class GameController {
 	
 	//遊戲商店頁面
 	@GetMapping("/game/gameStore")
-	public String gameStore(Model model) {
+	public String gameStore(Model model,HttpSession session) {
 		PageRequest pgb = PageRequest.of(0, 9);
 		Page<Game> games = gService.findShowInStore(pgb);
 		List<GameTypeLib> allType = gtService.findAll();
 		for (Game game : games) {
-			GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
-			if (nowDiscount != null) {
-				Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
-				int rate = (int) (oldRate * 100);
-				game.setRate(rate);
-				Integer discountedPrice = game.getPrice() * game.getRate() / 100;
-				game.setDiscountedPrice(discountedPrice);
+			gService.setRateAndDiscountPrice(game);
+		}
+		LoginMemDto loginMem = (LoginMemDto) session.getAttribute("loginMember");
+		if (loginMem != null) {
+			List<Integer> cartIds = new ArrayList<>();
+			List<GameCarts> carts = gcService.findByMemId(loginMem.getMemId());
+			for (GameCarts gameCarts : carts) {
+				cartIds.add(gameCarts.getGameId());
 			}
+			model.addAttribute("cartIds",cartIds);
 		}
 		model.addAttribute("allType",allType);
 		model.addAttribute("games",games);
@@ -256,17 +265,20 @@ public class GameController {
 	}
 	
 	@GetMapping("/game/showGame")
-	public String showGame(@RequestParam Integer gameId,Model model) {
+	public String showGame(@RequestParam Integer gameId,
+			Model model,HttpSession session) {
 		Game game = gService.findById(gameId);
-		GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
-		if (nowDiscount != null) {
-			Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
-			int rate = (int) (oldRate * 100);
-			game.setRate(rate);
-			Integer discountedPrice = game.getPrice() * game.getRate() / 100;
-			game.setDiscountedPrice(discountedPrice);
-		}
+		gService.setRateAndDiscountPrice(game);
 		model.addAttribute("game",game);
+		LoginMemDto loginMem = (LoginMemDto) session.getAttribute("loginMember");
+		if (loginMem != null) {
+			List<Integer> cartIds = new ArrayList<>();
+			List<GameCarts> carts = gcService.findByMemId(loginMem.getMemId());
+			for (GameCarts gameCarts : carts) {
+				cartIds.add(gameCarts.getGameId());
+			}
+			model.addAttribute("cartIds",cartIds);
+		}
 		return "game/show-game";
 	}
 	
