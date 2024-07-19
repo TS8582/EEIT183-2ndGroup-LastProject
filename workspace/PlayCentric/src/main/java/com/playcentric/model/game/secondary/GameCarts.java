@@ -30,13 +30,13 @@ public class GameCarts {
 	private Integer gameId;
 	@Id
 	private Integer memId;
-	private Integer amount;
+	private Integer amount = 1;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "memId")
+	@JoinColumn(name = "memId",insertable = false, updatable = false)
 	private Member member;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gameId")
+	@JoinColumn(name = "gameId",insertable = false, updatable = false)
 	private Game game;
 }

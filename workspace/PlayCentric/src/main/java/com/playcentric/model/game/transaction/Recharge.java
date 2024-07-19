@@ -26,18 +26,16 @@ public class Recharge {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer rechargeId;
-	@Column(insertable=false, updatable=false)
 	private Integer memId;
-	@Column(insertable=false, updatable=false)
 	private Integer paymentId;
 	private Integer amount;
 	private LocalDateTime rechargeAt;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "memId")
+	@JoinColumn(name = "memId",insertable=false, updatable=false)
 	private Member member;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "paymentId")
+	@JoinColumn(name = "paymentId",insertable=false, updatable=false)
 	private Payment payment;
 }

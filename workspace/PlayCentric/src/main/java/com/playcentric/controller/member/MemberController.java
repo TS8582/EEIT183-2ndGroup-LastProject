@@ -79,8 +79,9 @@ public class MemberController {
 	}
 
 	@GetMapping("/login")
-	public String loginPage(Model model) {
+	public String loginPage(Model model, RedirectAttributes redirectAttributes) {
 		if (model.getAttribute("loginMember") != null) {
+			redirectAttributes.addFlashAttribute("redirectMsg","已經登入!");
 			return "redirect:/";
 		}
 		return "member/loginPage";
