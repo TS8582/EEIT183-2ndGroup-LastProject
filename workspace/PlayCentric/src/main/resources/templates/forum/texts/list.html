@@ -105,7 +105,7 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container">
-                        <form method="texts" th:action="@{/findAllTexts}">
+                        <form method="post" th:action="@{/findAllTexts}">
                             <table id="myTable" class="display cell-border stripe nowrap">
                                 <thead>
                                     <tr>
@@ -130,8 +130,10 @@
                                         <td th:text="${texts.doneTime}"></td>
                                         <td th:text="${texts.updatedTime}"></td>
                                         <td th:text="${texts.hideTexts} ? '是' : '否'"></td>
-                                        <td><a th:href="@{/texts/edit(textsId=${texts.textsId})}">修改</a></td>
-                                        <td><a class="delete" th:href="@{/texts/delete(textsId=${texts.textsId})}"
+                                        <td><a class="btn btn-edit"
+                                                th:href="@{/texts/edit(textsId=${texts.textsId})}">修改</a></td>
+                                        <td><a class="btn btn-delete"
+                                                th:href="@{/texts/delete(textsId=${texts.textsId})}"
                                                 onclick="return confirm('你確定要刪除這個主題嗎？');">刪除</a></td>
                                     </tr>
                                 </tbody>

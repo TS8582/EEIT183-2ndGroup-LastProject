@@ -58,16 +58,18 @@ public class TextsController {
 	// 處理文章發布與圖片上傳
 	@PostMapping("/texts/publish")
 	public String publish(@RequestParam("textsContent") String textsContent, @RequestParam("title") String title,
-			@RequestParam("files") MultipartFile[] files, @RequestParam("forumId") Integer forumId, HttpSession session,
+			@RequestParam("files") MultipartFile[] files, @RequestParam("forumId") Integer forumId, @RequestParam("memId") Integer memId, HttpSession session,
 			Model model) throws IOException {
 
 		Forum forum = forumService.findById(forumId);
+		Member member = memberService.findById(memId);
 
 		// 建立一個新的文章物件
 		Texts texts = new Texts();
 		texts.setTitle(title);
 		texts.setTextsContent(textsContent); // 設置文章內容
 		texts.setForum(forum);
+		texts.setMember(member);
 
 		// 如果有上傳的圖片，處理圖片上傳
 		if (files != null && files.length > 0) {
@@ -163,8 +165,8 @@ public class TextsController {
 	}
 
 	// 編輯文章
-	@GetMapping("/texts/edit")
-	public String showEditForm(@RequestParam("textsId") int textsId, Model model) {
+	@GetMapping("/texts/update")
+	public String showEditForum(@RequestParam("textsId") int textsId, Model model) {
 		Texts texts = textsService.findById(textsId);
 		if (texts != null) {
 			model.addAttribute("texts", texts);
@@ -177,7 +179,7 @@ public class TextsController {
 	@PutMapping("/texts/edit")
 	public String editTexts(@ModelAttribute Texts texts) {
 		textsService.update(texts);
-		return "redirect:/texts/page"; // Ajax分頁(前台)
+		return "redirect:/findAllTexts"; // 後台
 	}
 
 	// 刪除文章

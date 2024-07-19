@@ -1,10 +1,112 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="BIG5">
-<title>Insert title here</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org/">
 
+<head>
+    <meta charset="UTF-8">
+    <title>新增文章</title>
+    <script th:src="@{/tinymce/js/tinymce/tinymce.min.js}"></script>
+    <script th:src="@{/tinymce/langs/zh_TW.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <style>
+        label {
+            margin-bottom: 15px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="~{layout/nav}"></div>
+    <!-- Navbar -->
+
+
+    <div class="container" style="width: 75%; margin: 0 auto;">
+        <h1>新增文章</h1>
+        <br>
+        <form id="postForm" th:action="@{/texts/publish}" method="post" enctype="multipart/form-data">
+
+            <label>會員Id:</label>
+            <input type="text" name="memId" required>
+            <br>
+            <label for="title">文章標題：</label>
+            <input type="text" id="title" name="title">
+            <br>
+            <label for="forumId">主題類型：</label>
+            <select id="forumId" name="forumId">
+                <option value="" disabled selected>請選擇</option>
+                <!-- Iterate over 'arrayList' to populate options -->
+                <option th:each="forum : ${arrayList}" th:value="${forum.forumId}" th:text="${forum.forumName}">
+                </option>
+            </select>
+            <textarea id="textsContent" name="textsContent"></textarea>
+
+            <label for="files">選擇圖片：</label><br>
+            <input type="file" id="files" name="files" multiple><br>
+            <br>
+
+            <button type="submit">上傳</button>
+        </form>
+    </div>
+    <script>
+        tinymce.init({
+            selector: '#textsContent',
+            height: 500,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'fullscreen',
+                'media', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks | ' +
+                'bold italic backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+            language_url: '/static/langs/zh_TW.js',
+            language: 'zh_TW',
+            images_upload_url: '/PlayCentric/photos/uploadPost', // 替換為後端處理圖片上傳的 URL
+            images_upload_base_path: '/uploads',
+            images_upload_handler: function (blobInfo, success, failure) {
+                var formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:8081/comPETnion/photos/uploadPost', // 替換為後端處理圖片上傳的 URL
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (!data || typeof data.location !== 'string') {
+                            failure('Invalid response from server');
+                        } else {
+                            success(data.location);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        failure('Image upload failed. Status: ' + xhr.status);
+                    }
+                });
+            }
+        });
+
+        // 下拉式選擇類型主題
+        $(document).ready(function () {
+            $.ajax({
+                url: '/findAllforumInTexts', // 修改为你实际的后端接口路径
+                method: 'GET',
+                success: function (data) {
+                    data.forEach(function (forum) {
+                        $('#forumId').append('<option value="' + forum.forumId + '">' + forum.forumName + '</option>');
+                        console.log(data)
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching forums:', error);
+                    console.log(123)
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>

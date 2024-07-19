@@ -22,19 +22,18 @@
         rel="stylesheet">
 
     <style>
-
+        /* 調整 placeholder 的顏色 */
+        ::placeholder {
+            color: rgba(0, 0, 0, 0.329) !important;
+        }
     </style>
 </head>
 
 <body>
-    <div id="main-nav" th:replace="~{layout/nav}"></div>
-    <div id="forum-nav" th:replace="~{forum/layout/navbar}"></div>
+    <div id="navbar1" th:replace="~{layout/nav}"></div>
 
-
-
-
-    <div id="content-wrapper">
-        <section class="py-5">
+    <div>
+        <section class="py-3">
             <div class="container">
                 <div class="mt-5">
                     <h1 class="page-title">文章名稱</h1>
@@ -50,32 +49,13 @@
 
         </section>
 
-
+        <br>
+        <br>
 
         <div class="container" with="10px">
-
-            <h1>留言</h1>
-
             <div class="card">
                 <div class="card-header">
-                    新訊息
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">請輸入新訊息</h5>
-                    <form th:action="@{/talk/addByTextsId}" method="post">
-                        <textarea class="form-control" name="talkContent" required></textarea>
-                        <input type="hidden" name="textsId" th:value="${textsId}" />
-                        <br>
-                        <input type="submit" class="btn btn-primary" value="送出">
-                    </form>
-                </div>
-            </div>
-
-            <br>
-
-            <div class="card">
-                <div class="card-header">
-                    所有留言
+                    交流區
                 </div>
                 <div class="card-body">
                     <ul class="list-group">
@@ -84,6 +64,12 @@
                             <p th:text="${talk.talkContent}">留言內容</p>
                         </li>
                     </ul>
+                    <br>
+                    <form th:action="@{/talk/addByTextsId}" method="post" id="talkForm">
+                        <textarea id="myTextarea" class="form-control" name="talkContent" placeholder="寫下你的看法吧~"
+                            required></textarea>
+                        <input type="hidden" name="textsId" th:value="${textsId}" />
+                    </form>
                 </div>
             </div>
         </div>
@@ -106,23 +92,15 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const mainNav = document.getElementById('main-nav');
-            const forumNav = document.getElementById('forum-nav');
-            let lastScrollTop = 0;
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const textarea = document.getElementById('myTextarea');
+            const form = document.getElementById('talkForm');
 
-            window.addEventListener('scroll', function () {
-                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-                if (scrollTop > lastScrollTop) {
-                    // 向下滾動
-                    forumNav.style.top = '0';
-                } else {
-                    // 向上滾動
-                    forumNav.style.top = mainNav.offsetHeight + 'px';
+            textarea.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); // 阻止默認的換行行為
+                    form.submit(); // 提交表單
                 }
-
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
             });
         });
     </script>
