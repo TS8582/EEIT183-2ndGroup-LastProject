@@ -10,13 +10,15 @@
 </head>
 
 <body class="bg-gray-100">
-    <div class="hidden memId" th:text="${session.loginMember.memId}"></div>
     <div class="container mx-auto my-10">
         <div class="flex shadow-md my-10">
             <div class="w-full bg-white px-10 py-10 rounded-md">
                 <div class="flex justify-between border-b pb-8">
                     <h1 class="font-semibold text-2xl">購物車</h1>
-                    <h2 class="font-semibold text-2xl" th:text="${#lists.size(games)} + 款遊戲"></h2>
+                    <div class="font-semibold text-2xl">
+                        <span class="gamecount" th:text="${#lists.size(games)}"></span>
+                        <span>款遊戲</span>
+                    </div>
                 </div>
 
                 <div th:if="${games == null}">
@@ -46,9 +48,14 @@
                                     class="text-lg text-red-600 bg-gray-300 max-w-max p-1 rounded-md font-semibold border border-black select-none cursor-pointer mybtn remove">移除</span>
                             </div>
                         </div>
-                        <div class="w-1/5 text-end font-semibold text-lg">
-                            <span class="">NT$</span>
-                            <span class="price" th:text="${game.price}"></span>
+                        <div class="w-1/5 text-end font-semibold text-lg flex flex-col">
+                            <span class="text-green-600 me-2" th:if="${game.rate}"
+                                th:text="'-' + ${100 - game.rate} + '%'"></span>
+                            <div>
+                                <span th:class="${game.rate} ? 'text-green-600'">NT$</span>
+                                <span th:class="${game.discountedPrice} ? 'price text-green-600' : 'price'"
+                                    th:text="${game.discountedPrice} ? ${game.discountedPrice} : ${game.price}"></span>
+                            </div>
                         </div>
                     </div>
                 </th:block>
@@ -60,8 +67,11 @@
                         <span class="text-end total"></span>
                     </div>
                 </div>
-                <div class="flex items-center justify-end text-2xl mt-5">
-                    <span class="mybtn mybtn-green">結帳</span>
+                <div class="text-2xl mt-5">
+                    <div class="flex items-centert">
+                        <a th:href="@{/game/gameStore}" class="mybtn mybtn-sky me-auto">返回商店</a>
+                        <a class="mybtn mybtn-green ms-auto">結帳</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,7 +82,9 @@
     <script>
         const total = document.querySelector('.total');
         const price = document.querySelectorAll('.price');
+        const gamecount = document.querySelector('.gamecount');
         let totalPrice = 0;
+        let totalGame = parseInt(gamecount.innerHTML.trim());
         price.forEach(elm => {
             totalPrice += parseInt(elm.innerHTML);
         });
@@ -81,17 +93,20 @@
         const remove = document.querySelectorAll('.remove');
         remove.forEach(elm => {
             elm.addEventListener('click', e => {
+                const thisprice = parseInt(elm.closest('.game').querySelector('.price').innerHTML.trim());
+                totalGame -= 1;
+                gamecount.innerHTML = totalGame;
+                totalPrice -= thisprice;
+                total.innerHTML = totalPrice;
                 const gameId = parseInt(elm.closest('.game').querySelector('.gameId').innerHTML.trim());
                 console.log(gameId);
-                const memId = parseInt(document.querySelector('.memId').innerHTML.trim());
                 axios.get('/PlayCentric/gamecart/remove', {
                     params: {
-                        gameId: gameId,
-                        memId: memId
+                        gameId: gameId
                     }
                 })
                     .then(res => {
-                        console.log('成功移除');
+                        elm.closest('.game').remove();
                     })
                     .catch(err => {
                         console.error(err);

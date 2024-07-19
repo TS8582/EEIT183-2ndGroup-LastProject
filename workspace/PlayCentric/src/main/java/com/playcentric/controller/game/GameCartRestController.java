@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.playcentric.model.game.secondary.GameCarts;
 import com.playcentric.model.member.LoginMemDto;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/gamecart")
+@SessionAttributes("loginMember")
 public class GameCartRestController {
 	
 	@Autowired
@@ -48,8 +51,8 @@ public class GameCartRestController {
 	@GetMapping("/remove")
 	public void removeGameCart(
 			@RequestParam Integer gameId,
-			@RequestParam Integer memId){
-		gcService.remove(gameId, memId);
+			@ModelAttribute("loginMember") LoginMemDto loginMember){
+		gcService.remove(gameId,loginMember.getMemId());
 	}
 	
 	

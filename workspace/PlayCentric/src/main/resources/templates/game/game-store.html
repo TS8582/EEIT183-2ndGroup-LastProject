@@ -53,13 +53,8 @@
         </div>
     </div>
     <div class="px-0 py-2 lg:px-15 text-end w-full fixed">
-        <!-- 進入購物車用表單 -->
-        <form class="hidden" th:action="@{/gamecart/get}" method="post">
-            <input th:value="${session.loginMember} ? ${session.loginMember.memId}" type="text" name="memId"
-                id="meminput" />
-        </form>
         <!-- 購物車按鈕 -->
-        <span th:if="${session.loginMember}" class="mybtn mybtn-green mx-5 showcarts">購物車</span>
+        <a th:if="${session.loginMember}" th:href="@{/gamecart/get}" class="mybtn mybtn-green mx-5 showcarts">購物車</a>
     </div>
     <div class="flex flex-col h-auto container mx-auto">
         <!-- 篩選欄 -->
@@ -129,7 +124,7 @@
                             <a th:if="${session.loginMember == null}" th:href="@{/member/login}"
                                 class="mybtn mybtn-green">加入購物車</a>
                             <span th:if="${session.loginMember} ? ${#lists.contains(cartIds,game.gameId)}" href="#"
-                                class="mybtn mybtn-green">下載</span>
+                                class="mybtn-disabled">已加入購物車</span>
                             <span th:if="${session.loginMember} ? ${!#lists.contains(cartIds,game.gameId)}"
                                 class="mybtn mybtn-green cart">加入購物車</span>
                             <div class="hidden memId" th:text="${session.loginMember} ? ${session.loginMember.memId}">
