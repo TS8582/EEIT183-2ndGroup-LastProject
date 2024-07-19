@@ -134,9 +134,9 @@
 				<h2 class="display-6 fw-normal" th:text="${game.gameName}"></h2>
 				<div class="mb-4 mb-md-0">
 					<p class="m-0">
-						<button class="filter-button me-4" data-filter=".cat" th:text="${game.gameName}"></button>
-						<button class="filter-button me-4" data-filter=".dog">男生</button>
-						<button class="filter-button me-4" data-filter=".bird">女生</button>
+						<button class="filter-button me-4" data-filter="*" th:text="${game.gameName}" >綜表</button>
+						<button class="filter-button me-4" data-filter=".male">男生</button>
+						<button class="filter-button me-4" data-filter=".female">女生</button>
 					</p>
 				</div>
 			</div>
@@ -145,7 +145,70 @@
 
 			<div id="playfellow-container" class="isotope-container row"  >
 				<!-- 				CS2        	-->
-				<div class="item cat col-md-3 col-lg-2 my-4" th:each="pfgame : ${PfGame}">
+				
+				
+				
+				
+				
+<!-- 				male -->
+				<div class="item male col-md-3 col-lg-2 my-4" th:each="pfgame : ${Males}">
+					<div class="card position-relative"
+						style="background-color: #FFFFFF;">
+						<!-- Carousel -->
+						<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide"
+							data-bs-ride="carousel">
+							<div class="carousel-inner">
+								<div
+									th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
+									th:classappend="${stat.index == 0} ? ' active' : ''"
+									class="carousel-item">
+									<img class=" rounded-1 img-fluid playFellowImg-size"
+										th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
+										alt="Image" />
+								</div>
+							</div>
+						</div>
+						<!-- End of Carousel -->
+
+						<div class="card-body pl-1">
+							<span class="card-title pt-2 m-0"
+								th:text="${pfgame.playFellowMember.pfnickname}"></span> <span
+								class="card-title pt-2 m-0"> <span
+								th:if="${pfgame.playFellowMember.member.gender == 1}"
+								style="color: blue;">♂️</span> <span
+								th:if="${pfgame.playFellowMember.member.gender == 2}"
+								style="color: pink;">♀️</span></span>
+
+							<div class="card-text">
+								<div class="card-body pt-0">
+									<div class="marquee-container">
+										<p class="card-text marquee"
+											th:text="${pfgame.playFellowMember.pfdescription}"></p>
+									</div>
+								</div>
+
+								<h6 class="secondary-font text-primary pt-0"
+									th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
+								<div class="d-flex flex-wrap mt-3">
+									<form action="/PlayCentric/playFellow/playFellowCart"
+										method="GET">
+										<input type="hidden" name="pfGameId"
+											th:value="${pfgame.pfGameId}" />
+										<button type="submit"
+											class="btn btn-outline-shop me-1 px-1 pt-1 pb-1">
+											<h6 class="text-uppercase m-0">購買</h6>
+										</button>
+									</form>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				
+				
+<!-- 				Females -->
+				<div class="item female col-md-3 col-lg-2 my-4" th:each="pfgame : ${Females}">
 					<div class="card position-relative"
 						style="background-color: #FFFFFF;">
 						<!-- Carousel -->
