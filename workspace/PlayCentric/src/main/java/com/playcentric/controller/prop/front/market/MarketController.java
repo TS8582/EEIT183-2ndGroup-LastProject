@@ -36,5 +36,7 @@ public class MarketController {
 	public List<PropSellOrderDto> findAllByGameIdAndMemIdAndOrderStatus(@RequestParam("memId") Integer memId,
 			@RequestParam("gameId") Integer gameId) {
 		return propSellOrderService.findAllByGameIdAndMemIdAndOrderStatus(memId, gameId);
-	}
+	
+	}	
+
 }

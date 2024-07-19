@@ -68,7 +68,7 @@ public class PropSellOrderService {
 		MemberPropInventoryDto memberPropInventoryDto = new MemberPropInventoryDto(order.getMemberPropInventory());
 		propSellOrderDto.setMemberPropInventoryDto(memberPropInventoryDto);
 		propSellOrderDto.setOrderId(order.getOrderId());
-		propSellOrderDto.setPropId(order.getOrderId());
+		propSellOrderDto.setPropId(order.getPropId());
 		propSellOrderDto.setQuantity(order.getQuantity());
 		propSellOrderDto.setSellerMemId(order.getSellerMemId());
 		Optional<Member> optional = memberRepo.findById(order.getSellerMemId());

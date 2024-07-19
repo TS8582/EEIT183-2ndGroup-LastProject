@@ -37,6 +37,13 @@
       margin-top: 5px;
     }
 
+    .expiry-time {
+      background-color: darkgrey;
+      color: white;
+      text-align: center;
+      margin-top: 5px;
+    }
+
     .hidden-description {
       display: none;
     }
@@ -93,9 +100,16 @@
             <div class="modal-body">
               <div class="row">
                 <div class="col-8" id="inventoryPropsContainer">
+                  <h4>倉庫道具</h4>
                   <!-- 倉庫道具會在這裡生成 -->
                 </div>
                 <div class="col-4" id="invPropInfo">完整商品資訊</div>
+              </div>
+              <div class="row mt-4">
+                <div class="col-8 border border-dark p-3 mb-4" id="inventorySellOrdersContainer">
+                  <h4>待售物品</h4>
+                  <!-- 待售物品會在這裡生成 -->
+                </div>
               </div>
             </div>
             <div class="modal-footer">
@@ -391,9 +405,6 @@
         colDiv.appendChild(img);
         colDiv.appendChild(quantityDiv); // 將數量 div 添加到 colDiv 中
         rowDiv.appendChild(colDiv);
-
-
-
       });
     }
 
@@ -622,17 +633,18 @@
     });
 
     // 根據memId及gameId找所有賣單的方法
-    function findInventorySellOrder(memId, gameId) {
+    function findInventorySellOrder(memId, selectedGameId) {
       axios({
         method: 'get',
         url: 'http://localhost:8080/PlayCentric/prop/front/market/selloders',
         params: {
           memId: memId,
-          gameId: gameId,
+          gameId: selectedGameId,
         },
       })
         .then((res) => {
-          console.log(res);
+          const inventorySellOrders = res.data;
+          generateInventorySellOrderImages(inventorySellOrders);
         })
         .catch((error) => {
           console.error("搜尋倉庫賣單錯誤:", error);
@@ -640,7 +652,92 @@
     }
 
     // 生成倉庫賣單
+    function generateInventorySellOrderImages(inventorySellOrders) {
+      const container = document.getElementById("inventorySellOrdersContainer");
+      container.innerHTML = ""; // 清空容器
 
+      let rowDiv = null;
+
+      inventorySellOrders.forEach((item, index) => {
+        // 這裡需要改為item來包含prop和propQuantity
+        if (item.propQuantity <= 0) {
+          return; // 如果數量 <= 0，就跳過這個 item
+        }
+
+        if (index % 6 === 0) {
+          // 每6個道具生成一個新的row
+          rowDiv = document.createElement("div");
+          rowDiv.className = "row mb-3";
+          container.appendChild(rowDiv);
+        }
+
+        const colDiv = document.createElement("div");
+        colDiv.className = "col-3 mb-3";
+
+        // 添加 propId 到 item 物件中
+        console.log(`Order Item: ${JSON.stringify(item)}`);
+
+        // 用 propId 發出一個新的請求來獲取詳細的 prop 資料
+        axios({
+          method: 'get',
+          url: 'http://localhost:8080/PlayCentric/prop/findById',
+          params: { id: item.propId },
+        }).then((res) => {
+          const prop = res.data;
+          console.log(`Prop details: ${JSON.stringify(prop)}`);
+
+          const img = document.createElement("img");
+          img.src = `http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}`;
+          img.alt = prop.propName;
+          img.className = "img-fluid";
+          img.style.width = "3vw";
+
+          // 添加點擊事件監聽器
+          img.addEventListener("click", function () {
+            console.log(`Clicked item propId: ${item.propId}`);
+            // 先移除其他圖片的選中樣式
+            const allImages = container.getElementsByTagName("img");
+            for (let i = 0; i < allImages.length; i++) {
+              allImages[i].classList.remove("selected");
+            }
+            // 為當前點擊的圖片添加選中樣式
+            img.classList.add("selected");
+            focusProp = item;
+            console.log(focusProp);
+
+            // 更新商品資訊
+            invPropInfoContainer.innerHTML = `
+                          <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw;">
+                          <br>
+                          <h5 class="fs-2">${prop.propName}</h5>
+                          <p class="fs-4">描述: ${prop.propDescription}</p>
+                      `;
+          });
+
+          const quantityDiv = document.createElement("div");
+          quantityDiv.textContent = `數量: ${item.quantity}`;
+          quantityDiv.className = "quantity";
+
+          const expiryDiv = document.createElement("div");
+          expiryDiv.textContent = `到期時間: ${item.expiryTime}`;
+          expiryDiv.className = "expiry-time";
+
+          const unitPriceDiv = document.createElement("div"); // 修正這一行，之前用的是 priceDiv
+
+          unitPriceDiv.innerHTML = `單價:<br>${item.amount / item.quantity}`;
+          unitPriceDiv.className = "unit-price";
+          colDiv.appendChild(img);
+          colDiv.appendChild(unitPriceDiv); // 將單價 div 添加到 colDiv 中
+          colDiv.appendChild(quantityDiv); // 將數量 div 添加到 colDiv 中
+          colDiv.appendChild(expiryDiv); // 將到期時間 div 添加到 colDiv 中
+          rowDiv.appendChild(colDiv);
+
+        }).catch((error) => {
+          console.error("獲取道具詳細資訊時出錯:", error);
+        });
+
+      });
+    }
   </script>
 </body>
 
