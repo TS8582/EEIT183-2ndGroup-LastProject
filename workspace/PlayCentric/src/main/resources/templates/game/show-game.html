@@ -18,7 +18,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 w-full">
             <!-- 圖片輪播 -->
             <div class="sm:col-span-1 lg:col-span-2 m-3 h-full">
-                <div id="carouselExampleIndicators" class="carousel slide  bg-gray-300 rounded-md"
+                <div id="carouselExampleIndicators" class="carousel slide  bg-gray-500 rounded-md"
                     data-bs-ride="carousel">
                     <div class="carousel-indicators">
                         <!-- 動態生成指示器 -->
@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <div class="col-span-1 my-3 mx-1 border-2 border-black px-4 py-2 rounded-md">
+            <div class="col-span-1 my-3 mx-1 border-2 border-gray-500 px-4 py-2 rounded-md">
                 <div class="space-y-2 sm:text-center lg:text-start">
                     <h1 class="text-5xl font-bold gameName" th:text="${game.gameName}"></h1>
                     <div class="font-semibold text-xl developer" th:text="'開發者：' + ${game.developer}"></div>
@@ -79,7 +79,8 @@
                             th:text=" 'NT$' + ${game.discountedPrice}"></span>
                     </div>
                     <div class="flex sm:justify-center lg:justify-start">
-                        <span class="mybtn mybtn-green ">加入購物車</span>
+                        <a th:if="${loginMember == null}" th:href="@{/member/login}" class="mybtn mybtn-green">加入購物車</a>
+                        <a th:if="${loginMember}" href="#" class="mybtn mybtn-green">加入購物車</a>
                     </div>
                 </div>
             </div>
@@ -87,8 +88,9 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 w-full">
             <div class="sm:col-span-1 lg:col-span-2 m-3 h-full">
-                <div class="sm:col-span-1 lg:col-span-2 m-3 border-2 border-black p-2">
-
+                <div class="sm:col-span-1 lg:col-span-2 border-2 border-black p-10 space-y-4 rounded-md">
+                    <h1 class="text-3xl font-bold">遊戲介紹</h1>
+                    <p class="text-justify font-semibold text-lg" th:text="${game.description}"></p>
                 </div>
             </div>
 
