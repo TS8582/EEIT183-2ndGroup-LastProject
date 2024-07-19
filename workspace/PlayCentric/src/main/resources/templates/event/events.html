@@ -49,14 +49,11 @@
 							<tr>
 								<td>[[${event.eventName}]]</td>
 								<td>[[${event.eventDescription}]]</td>
-								<td><span
-										th:text="${event} ?  ${#dates.format(event.eventStartTime, 'yyyy年MM月dd日')}"></span>
+								<td><span th:text="${event} ? ${#temporals.format(event.eventStartTime, 'yyyy年MM月dd日')}"></span>
 								</td>
-								<td><span
-										th:text="${event} ?  ${#dates.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
+								<td><span th:text="${event} ? ${#temporals.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
 								</td>
-								<td><span
-										th:text="${event} ?  ${#dates.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
+								<td><span th:text="${event} ? ${#temporals.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
 								</td>
 								<td><span
 										th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"></span>
