@@ -22,6 +22,44 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/css/playfellow/playFellow.css}">
 
 	<style>
+		
+
+		.offcanvas.show~.content {
+			transform: translateX(250px);
+			transition: transform 0.3s ease-in-out;
+		}
+
+		.swiper-container {
+			width: 100%;
+			padding: 20px 50px;
+		}
+
+		.swiper-slide {
+			display: flex;
+			justify-content: center;
+		}
+
+		#playFellowCard {
+			width: 100%;
+			max-width: 800px;
+			height: 250px;
+			background-color: #595570;
+			margin-bottom: 0;
+			color: white;
+		}
+
+		#playFellowCard .card-body {
+			padding: 10px;
+		}
+
+		#playFellowCard .row.g-0 {
+			margin-right: 0;
+			margin-left: 0;
+		}
+
+		#playFellowCard .img-fluid {
+			height: 100%;
+		}
 	</style>
 </head>
 
@@ -49,7 +87,7 @@
 					<div class="swiper-slide py-5">
 						<div class="row banner-content align-items-center">
 							<div class="img-wrapper col-md-5">
-								<img src="images/playFellow/pftop.png" class="img-fluid">
+								<img src="images/playFellow/summer.png" class="img-fluid">
 							</div>
 							<div class="content-wrapper col-md-7 p-5 mb-5">
 								<div class="secondary-font text-primary text-uppercase mb-4">遊戲有你有我</div>
@@ -62,16 +100,12 @@
 					<div class="swiper-slide py-5">
 						<div class="row banner-content align-items-center">
 							<div class="img-wrapper col-md-5">
-								 <a id="addPfMember" th:if="${session.loginMember != null}"
-									th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}"> <img
-										src="images/playFellow/pftop2.png" class="img-fluid">
-								</a> 
-								
-								<a  id="loginAlert" th:if="${session.loginMember == null}"
+								<a id="addPfMember" th:if="${session.loginMember != null}"
+									th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}">
+									<img src="images/playFellow/pftop2.png" class="img-fluid">
+								</a> <a id="loginAlert" th:if="${session.loginMember == null}"
 									href="javascript:void(0);" onclick="alertAndRedirect();"><img
-										src="images/playFellow/pftop2.png" class="img-fluid">
-									
-								</a>
+										src="images/playFellow/pftop2.png" class="img-fluid"> </a>
 							</div>
 							<div class="content-wrapper col-md-7 p-5 mb-5">
 								<div class="secondary-font text-primary text-uppercase mb-4">PlayCentric</div>
@@ -83,9 +117,7 @@
 					</div>
 
 				</div>
-				<div class="swiper-pagination mb-5"></div>
-				<div class="swiper-button-prev" style="display: none;"></div>
-				<div class="swiper-button-next" style="display: none;"></div>
+
 			</div>
 		</div>
 	</section>
@@ -93,116 +125,219 @@
 
 
 
-	<section id="clothing" class="overflow-hidden" style="margin-top: 100px;">
-		<div class="container pb-3">
-			<div class="section-header d-md-flex justify-content-between align-items-center mb-3">
-				<h3 class=" fw-normal">Counter-Strike 2</h3>
-			</div>
 
-			<!-- 放置CS2 -->
-			<div class="products-carousel swiper">
-				<div class="isotope-container row">
-					<div th:each="pfgame : ${PfGame}" class="item col-md-3 col-lg-2 my-4">
-						<div class="card position-relative" style="background-color: #FFFFFF;">
-							<!-- Carousel -->
-							<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide" data-bs-ride="carousel">
-								<div class="carousel-inner">
-									<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
-										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
-										<img class=" rounded-1 img-fluid playFellowImg-size"
-											th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
-											alt="Image" />
-									</div>
+	<!-- 	創建時間lastest 5 top -->
+
+	<div class="container mt-3" style="background-color: #FFFFFF; ">
+			<h4 class="fw-normal">伴遊新星🌟</h4>
+		<div class="swiper-container">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide" th:each="members : ${TopFiveReviewSuccessMembers}" >
+					<div class="card mb-3" id="playFellowCard">
+						<div class="row g-0 h-100">
+
+
+							<div th:if="${members.imageLibAssociations.size() > 0}" class="col-md-4 h-100">
+								<img class="img-fluid rounded-start h-100 playFellowImg-size"
+									 th:src="'data:image/jpeg;base64,' + ${members.imageLibAssociations[0].imageLib.base64Image}"
+									 style="object-fit: cover;" />
+							</div>
+
+
+
+							<div class="col-md-8 h-100">
+								<div class="card-body h-100">
+									<span class="row">
+										<h5 class="card-title" th:text="${members.pfnickname}"></h5>
+										<span class="card-title pt-2 m-0">
+											<span th:if="${members.member.gender == 1}" style="color: blue;">♂️</span>
+											<span th:if="${members.member.gender == 2}" style="color: pink;">♀️</span>
+										</span>
+									</span>
+
+									<p class="card-text" th:text="${members.pfdescription}"></p>
+									<p class="card-text">
+										<small class="text-body-secondary" th:text="${members.pfcreatedTime}"></small>
+									</p>
 								</div>
 							</div>
-							<!-- End of Carousel -->
+						</div>
+					</div>
+				</div>
+			</div>
 
-							<div class="card-body p-0">
-								<a href="#"> <span class="card-title pt-2 m-0"
-										th:text="${pfgame.playFellowMember.pfnickname}"></span>
-								</a>
-								<div class="card-text">
-									<div class="card-body pt-0">
-										<div class="marquee-container">
-											<p class="card-text marquee"
-												th:text="${pfgame.playFellowMember.pfdescription}"></p>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+	<section id="clothing" class="overflow-hidden" style="margin-top: 50px;">
+		<div class="container pb-1">
+			<div class="row">
+				<!-- 側邊欄圖標 -->
+				<div class="col-1">
+					<button class="btn btn-gray" type="button" data-bs-toggle="offcanvas"
+						data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+							class="bi bi-list" viewBox="0 0 20 20">
+							<path fill-rule="evenodd"
+								d="M2.5 12.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5z" />
+						</svg>
+					</button>
+				</div>
+
+				<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSidebar"
+					aria-labelledby="offcanvasSidebarLabel">
+					<div class="offcanvas-header">
+						<h5 class="offcanvas-title" id="offcanvasSidebarLabel">更多遊戲伴遊</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+					</div>
+					<div class="offcanvas-body">
+						<ul class="list-group">
+							<ul>
+								<li><a th:href="@{/playFellow}">回伴遊首頁</a></li>
+							</ul>
+							<ul>
+								<li>遊戲類別</li>
+
+								<li th:each="games : ${findGameIdAndName}" class="list-group-item">
+									<form th:action="@{/playFellow/{gameId}(gameId=${games.gameId})}" method="post">
+										<button type="submit" class="btn btn-link" th:text="${games.gameName}"></button>
+									</form>
+								</li>
+							</ul>
+					</div>
+				</div>
+
+				<!-- 主內容區 -->
+				<div class="col">
+					<!-- Counter-Strike 2 Section -->
+					<div class="section-header d-md-flex justify-content-between align-items-center mb-3">
+						<h3 class="fw-normal">Counter-Strike 2</h3>
+					</div>
+					<!-- 放置CS2 -->
+					<div class="products-carousel swiper">
+						<div class="isotope-container row">
+							<div th:each="pfgame : ${PfGame}" class="item col-md-3 col-lg-2 my-4">
+								<div class="card position-relative" style="background-color: #FFFFFF;">
+									<!-- Carousel -->
+									<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide"
+										data-bs-ride="carousel">
+										<div class="carousel-inner">
+											<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
+												th:classappend="${stat.index == 0} ? ' active' : ''"
+												class="carousel-item">
+												<img class="rounded-1 img-fluid playFellowImg-size"
+													th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
+													alt="Image" />
+											</div>
 										</div>
 									</div>
-
-									<h6 class="secondary-font text-primary pt-0"
-										th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
-									<div class="d-flex flex-wrap mt-3">
-										<form action="/PlayCentric/playFellow/playFellowCart" method="GET">
-											<input type="hidden" name="pfGameId" th:value="${pfgame.pfGameId}" />
-											<button type="submit" class="btn btn-outline-shop me-1 px-1 pt-1 pb-1">
-												<h6 class="text-uppercase m-0">購買</h6>
-											</button>
-										</form>
+									<!-- End of Carousel -->
+									<div class="card-body p-0">
+										<a href="#">
+											<span class="card-title pt-2 m-0"
+												th:text="${pfgame.playFellowMember.pfnickname}">
+											</span>
+											<span class="card-title pt-2 m-0"> <span
+													th:if="${pfgame.playFellowMember.member.gender == 1}"
+													style="color: blue;">♂️</span>
+												<span th:if="${pfgame.playFellowMember.member.gender == 2}"
+													style="color: pink;">♀️</span>
+											</span>
+										</a>
+										<div class="card-text">
+											<div class="card-body pt-0">
+												<div class="marquee-container">
+													<p class="card-text marquee"
+														th:text="${pfgame.playFellowMember.pfdescription}"></p>
+												</div>
+											</div>
+											<h6 class="secondary-font text-primary pt-0"
+												th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
+											<div class="d-flex flex-wrap mt-3">
+												<form action="/PlayCentric/playFellow/playFellowCart" method="GET">
+													<input type="hidden" name="pfGameId"
+														th:value="${pfgame.pfGameId}" />
+													<button type="submit"
+														class="btn btn-outline-shop me-1 px-1 pt-1 pb-1">
+														<h6 class="text-uppercase m-0">購買</h6>
+													</button>
+												</form>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
+						</div>
+					</div>
 
+					<!-- 遊戲王 Section -->
+					<div class="section-header d-md-flex justify-content-between align-items-center mb-3">
+						<h3 class="fw-normal">遊戲王</h3>
+					</div>
+					<!-- 放置遊戲王 -->
+					<div class="products-carousel swiper">
+						<div class="isotope-container row">
+							<div th:each="pfgame : ${PfGame2}" class="item col-md-3 col-lg-2 my-4">
+								<div class="card position-relative" style="background-color: #FFFFFF;">
+									<!-- Carousel -->
+									<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide"
+										data-bs-ride="carousel">
+										<div class="carousel-inner">
+											<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
+												th:classappend="${stat.index == 0} ? ' active' : ''"
+												class="carousel-item">
+												<img class="rounded-1 img-fluid playFellowImg-size"
+													th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
+													alt="Image" />
+											</div>
+										</div>
+									</div>
+									<!-- End of Carousel -->
+									<div class="card-body p-0">
+										<a href="#"> <span class="card-title pt-2 m-0"
+												th:text="${pfgame.playFellowMember.pfnickname}"></span>
+											<span class="card-title pt-2 m-0"> <span
+													th:if="${pfgame.playFellowMember.member.gender == 1}"
+													style="color: blue;">♂️</span> <span
+													th:if="${pfgame.playFellowMember.member.gender == 2}"
+													style="color: pink;">♀️</span></span>
+										</a>
+										<div class="card-text">
+											<div class="marquee-container">
+												<p class="card-text marquee"
+													th:text="${pfgame.playFellowMember.pfdescription}"></p>
+											</div>
+											<h6 class="secondary-font text-primary pt-0"
+												th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
+											<div class="d-flex flex-wrap mt-3">
+												<form action="/PlayCentric/playFellow/playFellowCart" method="GET">
+													<input type="hidden" name="pfGameId"
+														th:value="${pfgame.pfGameId}" />
+													<button type="submit"
+														class="btn btn-outline-shop me-1 px-1 pt-1 pb-1">
+														<h6 class="text-uppercase m-0">購買</h6>
+													</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="container pb-3">
-			<div class="section-header d-md-flex justify-content-between align-items-center mb-3">
-				<h3 class=" fw-normal">遊戲王</h3>
-			</div>
-
-			<!-- 放置遊戲王 -->
-			<div class="products-carousel swiper">
-				<div class="isotope-container row">
-					<div th:each="pfgame : ${PfGame2}" class="item col-md-3 col-lg-2 my-4">
-						<div class="card position-relative" style="background-color: #FFFFFF;">
-							<!-- Carousel -->
-							<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide" data-bs-ride="carousel">
-								<div class="carousel-inner">
-									<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
-										th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
-										<img class=" rounded-1 img-fluid playFellowImg-size"
-											th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
-											alt="Image" />
-									</div>
-								</div>
-							</div>
-							<!-- End of Carousel -->
-
-							<div class="card-body p-0">
-								<a href="#"> <span class="card-title pt-2 m-0"
-										th:text="${pfgame.playFellowMember.pfnickname}"></span>
-								</a>
-								<div class="card-text">
-
-									<div class="marquee-container">
-										<p class="card-text marquee" th:text="${pfgame.playFellowMember.pfdescription}">
-										</p>
-									</div>
-								</div>
-
-
-								<h6 class="secondary-font text-primary pt-0"
-									th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
-								<div class="d-flex flex-wrap mt-3">
-									<form action="/PlayCentric/playFellow/playFellowCart" method="GET">
-										<input type="hidden" name="pfGameId" th:value="${pfgame.pfGameId}" />
-										<button type="submit" class="btn btn-outline-shop me-1 px-1 pt-1 pb-1">
-											<h6 class="text-uppercase m-0">購買</h6>
-										</button>
-									</form>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</div>
-		</div>
-		<!-- / products-carousel -->
 	</section>
+
 
 
 
@@ -246,6 +381,11 @@
 						<div class="card-body p-0">
 							<a href="#"> <span class="card-title pt-2 m-0"
 									th:text="${pfgame.playFellowMember.pfnickname}"></span>
+								<span class="card-title pt-2 m-0"> <span
+										th:if="${pfgame.playFellowMember.member.gender == 1}"
+										style="color: blue;">♂️</span> <span
+										th:if="${pfgame.playFellowMember.member.gender == 2}"
+										style="color: pink;">♀️</span></span>
 							</a>
 							<div class="card-text">
 								<div class="card-body pt-0">
@@ -286,8 +426,15 @@
 						<!-- End of Carousel -->
 
 						<div class="card-body p-0">
-							<a href="#"> <span class="card-title pt-2 m-0"
+							<a href="#">
+								<span class="card-title pt-2 m-0"
 									th:text="${pfgame.playFellowMember.pfnickname}"></span>
+								<span class="card-title pt-2 m-0">
+									<span th:if="${pfgame.playFellowMember.member.gender == 1}"
+										style="color: rgb(0, 106, 255);">♂️</span>
+									<span th:if="${pfgame.playFellowMember.member.gender == 2}"
+										style="color: pink;">♀️</span>
+								</span>
 							</a>
 							<div class="card-text">
 								<div class="card-body pt-0">
@@ -335,21 +482,20 @@
 					<div class="secondary-font text-primary text-uppercase mb-3 fs-4">遊戲伴遊招募</div>
 					<h2 class="banner-title display-1 fw-normal">PlayCentric
 						快來加入我們!</h2>
-						
-						
-						<a id="addPfMember" th:if="${session.loginMember != null}"
-									th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
-								點此申請</a> 
-								
-								<a  id="addPfMember" th:if="${session.loginMember == null}"
-									href="javascript:void(0);" onclick="alertAndRedirect();" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
-									
-								點此申請</a>
-						
-						
-						
-						
-					
+
+
+					<a id="addPfMember" th:if="${session.loginMember != null}"
+						th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}"
+						class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+						點此申請</a> <a id="addPfMember" th:if="${session.loginMember == null}" href="javascript:void(0);"
+						onclick="alertAndRedirect();" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+
+						點此申請</a>
+
+
+
+
+
 				</div>
 
 			</div>
@@ -376,6 +522,25 @@
 	<script th:src="@{/js/playfellow/plugins.js}"></script>
 	<script th:src="@{/js/playfellow/script.js}"></script>
 	<script th:src="@{/js/playfellow/playfellow.js}"></script>
+	<script>
+		var swiper = new Swiper('.swiper-container', {
+			slidesPerView: 2,
+			spaceBetween: 120,
+			loop: true,
+			autoplay: {
+				delay: 3000,
+				disableOnInteraction: false,
+			},
+			pagination: {
+				el: '.swiper-pagination',
+				clickable: true,
+			},
+			navigation: {
+				nextEl: '.swiper-button-next',
+				prevEl: '.swiper-button-prev',
+			},
+		});
+	</script>
 
 
 </body>

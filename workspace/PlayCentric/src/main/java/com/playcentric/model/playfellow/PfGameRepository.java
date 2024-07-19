@@ -16,6 +16,8 @@ public interface PfGameRepository extends JpaRepository<PfGame, Integer> {
     
     Optional<PfGame> findByPlayFellowMemberPlayFellowIdAndGameGameId(Integer playFellowId, Integer gameId);
     
+
+    
 //    @Query("SELECT pg FROM PfGame pg WHERE pg.game.gameId = :gameId")
 //    List<PfGame> findAllByGameId(@Param("gameId") Integer gameId);
 }

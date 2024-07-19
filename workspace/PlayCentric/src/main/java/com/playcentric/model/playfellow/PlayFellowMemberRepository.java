@@ -12,5 +12,10 @@ public interface PlayFellowMemberRepository extends JpaRepository<PlayFellowMemb
 	
 	//審核 抓status
 	List<PlayFellowMember> findByPfstatus(Byte pfstatus); 
+	
+    List<PlayFellowMember> findAllByOrderByPfcreatedTimeDesc();
+
+	
+	
 
 }

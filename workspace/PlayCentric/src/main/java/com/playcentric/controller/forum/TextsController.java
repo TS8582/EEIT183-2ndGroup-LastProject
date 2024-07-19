@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -95,18 +96,7 @@ public class TextsController {
 		List<Texts> arrayList = textsService.findAll();
 		model.addAttribute("arrayList", arrayList);
 
-		return "forum/texts/lsit";
-	}
-
-	// 查詢名稱
-	@PostMapping("/findTextsByTitle")
-	public String findTextsByTitle(@RequestParam("title") String title, Model model) {
-
-		List<Texts> arrayList = textsService.findAllText(title);
-
-		model.addAttribute("arrayList", arrayList);
-
-		return "forum/texts/getAllTexts";
+		return "forum/texts/list";
 	}
 
 	// 查詢Id 跳轉到文章內容
@@ -184,7 +174,7 @@ public class TextsController {
 		}
 	}
 
-	@PostMapping("/texts/edit")
+	@PutMapping("/texts/edit")
 	public String editTexts(@ModelAttribute Texts texts) {
 		textsService.update(texts);
 		return "redirect:/texts/page"; // Ajax分頁(前台)
