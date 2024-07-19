@@ -1,7 +1,6 @@
 package com.playcentric.model.prop.MemberPropInventory;
 
 import com.playcentric.model.prop.Props;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

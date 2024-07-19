@@ -1,44 +1,23 @@
 package com.playcentric.controller.prop.buyOrder;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.playcentric.controller.prop.front.propInventory.PropInventoryController;
-import com.playcentric.model.ImageLib;
-import com.playcentric.model.game.primary.Game;
-import com.playcentric.model.prop.Props;
-import com.playcentric.model.prop.buyOrder.PropBuyOrder;
-import com.playcentric.model.prop.buyOrder.PropBuyOrderDto;
-import com.playcentric.model.prop.sellOrder.PropSellOrder;
-import com.playcentric.model.prop.sellOrder.PropSellOrderDto;
-import com.playcentric.model.prop.sellOrder.PropSellOrderForMarketDto;
-import com.playcentric.model.prop.type.PropType;
-import com.playcentric.service.game.GameService;
-import com.playcentric.service.prop.PropService;
+import com.playcentric.model.member.Member;
+import com.playcentric.model.prop.buyOrder2.PropBuyOrder2;
+import com.playcentric.service.member.MemberService;
 import com.playcentric.service.prop.MemberPropInventoryService.MemberPropInventoryService;
-import com.playcentric.service.prop.buyOrder.PropBuyOrderService;
 import com.playcentric.service.prop.buyOrder.PropBuyOrderService2;
 import com.playcentric.service.prop.sellOrder.PropSellOrderService;
-import com.playcentric.service.prop.type.PropTypeService;
-import com.playcentric.service.ImageLibService;
 
 @Controller
 @SessionAttributes(names = "games")
 public class PropBuyOrderController {
-
-	@Autowired
-	PropBuyOrderService propBuyOrderService;
+//
+//	@Autowired
+//	PropBuyOrderService propBuyOrderService;
 	
 	@Autowired
 	PropBuyOrderService2 propBuyOrderService2;
@@ -48,6 +27,9 @@ public class PropBuyOrderController {
 
 	@Autowired
 	MemberPropInventoryService memberPropInventoryService;
+	
+	@Autowired
+	MemberService memberService;
 
 	// 進入成交紀錄頁面
 	@GetMapping("/prop/propTradeRecord")
@@ -56,10 +38,17 @@ public class PropBuyOrderController {
 	}
 
 	// 根據遊戲Id找所有買單
+//	@GetMapping("/prop/findAllpropBuyOrder")
+//	@ResponseBody
+//	public List<PropBuyOrderDto> finAllPropBuyOrder(@RequestParam("gameId") int gameId) {
+//		return propBuyOrderService.findPropBuyOrders(gameId);
+//	}
+	
+	// 根據遊戲Id找所有買單
 	@GetMapping("/prop/findAllpropBuyOrder")
 	@ResponseBody
-	public List<PropBuyOrderDto> finAllPropBuyOrder(@RequestParam("gameId") int gameId) {
-		return propBuyOrderService.findPropBuyOrders(gameId);
+	public List<PropBuyOrder2> findAllPropBuyOrder(@RequestParam("gameId") int gameId) {
+		return propBuyOrderService2.findPropBuyOrders(gameId);
 	}
 
 	// 根據OrderId找所有買單
@@ -87,5 +76,10 @@ public class PropBuyOrderController {
 		return "購買完成";
 
 	}
-
+	//根據memId找memName
+	@GetMapping("/prop/front/buyProp/findMenNameByMemId")
+	@ResponseBody
+	public Member findMenNameByMemId(@RequestParam("memId") Integer memId) {
+		return memberService.findById(memId);
+	}
 }

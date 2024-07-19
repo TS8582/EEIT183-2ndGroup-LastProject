@@ -1,12 +1,10 @@
 package com.playcentric.model.prop;
 
 import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.prop.type.PropType;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

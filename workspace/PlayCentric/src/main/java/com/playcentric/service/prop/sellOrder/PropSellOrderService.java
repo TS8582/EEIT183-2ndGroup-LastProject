@@ -2,18 +2,13 @@ package com.playcentric.service.prop.sellOrder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
-
-import org.apache.naming.java.javaURLContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.playcentric.model.prop.sellOrder.PropSellOrder;
 import com.playcentric.model.prop.sellOrder.PropSellOrderDto;
 import com.playcentric.model.prop.sellOrder.PropSellOrderForMarketDto;

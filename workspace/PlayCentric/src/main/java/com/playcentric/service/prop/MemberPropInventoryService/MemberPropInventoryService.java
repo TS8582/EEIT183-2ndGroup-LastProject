@@ -3,10 +3,8 @@ package com.playcentric.service.prop.MemberPropInventoryService;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.playcentric.model.prop.Props;
 import com.playcentric.model.prop.PropsRepository;
 import com.playcentric.model.member.Member;

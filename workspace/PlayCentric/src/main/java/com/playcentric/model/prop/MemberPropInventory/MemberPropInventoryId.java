@@ -2,7 +2,6 @@ package com.playcentric.model.prop.MemberPropInventory;
 
 import java.io.Serializable;
 import java.util.Objects;
-
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

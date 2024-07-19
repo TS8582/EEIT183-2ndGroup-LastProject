@@ -1,9 +1,7 @@
 package com.playcentric.model.prop.sellOrder;
 
 import java.time.LocalDateTime;
-
 import com.playcentric.model.prop.MemberPropInventory.MemberPropInventory;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

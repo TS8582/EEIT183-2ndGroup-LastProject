@@ -2,7 +2,6 @@ package com.playcentric.model.prop.MemberPropInventory;
 
 import com.playcentric.model.member.Member;
 import com.playcentric.model.prop.Props;
-
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

@@ -1,9 +1,6 @@
 package com.playcentric.model.prop.buyOrder2;
-
 import java.time.LocalDateTime;
-
 import com.playcentric.model.prop.Props;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

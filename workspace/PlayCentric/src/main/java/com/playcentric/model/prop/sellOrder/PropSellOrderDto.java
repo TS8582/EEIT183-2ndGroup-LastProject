@@ -1,7 +1,6 @@
 package com.playcentric.model.prop.sellOrder;
 
 import java.time.format.DateTimeFormatter;
-
 import com.playcentric.model.prop.MemberPropInventory.MemberPropInventoryDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
