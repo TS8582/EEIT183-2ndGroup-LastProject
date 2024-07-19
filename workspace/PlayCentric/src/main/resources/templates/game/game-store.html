@@ -51,11 +51,12 @@
             <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 shadow-md border-lime-500"></div>
         </div>
     </div>
+    <div class="px-0 py-2 lg:px-15 text-end w-full fixed">
+        <span class="mybtn mybtn-green mx-5">購物車</span>
+    </div>
     <div class="flex flex-col h-auto container mx-auto">
         <!-- 篩選欄 -->
         <div class="flex justify-center h-auto my-2">
-
-
 
             <div class="w-full lg:w-1/2 h-auto border-2 flex flex-col rounded-md justify-center items-center">
                 <!-- 以價格篩選 -->
@@ -114,9 +115,12 @@
                                 th:text=" 'NT$' + ${game.discountedPrice}"></span>
                         </div>
                         <div class="flex justify-center">
-                            <a th:if="${loginMember == null}" th:href="@{/member/login}"
+                            <a th:if="${session.loginMember == null}" th:href="@{/member/login}"
                                 class="mybtn mybtn-green">加入購物車</a>
-                            <a th:if="${loginMember}" href="#" class="mybtn mybtn-green">加入購物車</a>
+                            <span th:if="${session.loginMember} ? ${#lists.contains(cartIds,game.gameId)}" href="#"
+                                class="mybtn mybtn-green">下載</span>
+                            <span th:if="${session.loginMember} ? ${!#lists.contains(cartIds,game.gameId)}"
+                                class="mybtn mybtn-green">加入購物車</span>
                         </div>
                     </div>
                 </div>
@@ -132,7 +136,12 @@
 
     <script th:src="@{/js/axios.min.js}"></script>
     <script th:src="@{/js/game/game-store.js}"></script>
+    <script>
+        const cart = document.querySelector('cart');
+        cart.addEventListener('click', e => {
 
+        })
+    </script>
 </body>
 
 </html>
