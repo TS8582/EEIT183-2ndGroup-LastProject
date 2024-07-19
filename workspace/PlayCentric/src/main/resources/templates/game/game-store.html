@@ -53,7 +53,8 @@
         </div>
     </div>
     <div class="px-0 py-2 lg:px-15 text-end w-full fixed">
-        <span th:if="${session.loginMember}" class="mybtn mybtn-green mx-5">購物車</span>
+        <!-- 購物車按鈕 -->
+        <a th:if="${session.loginMember}" th:href="@{/gamecart/get}" class="mybtn mybtn-green mx-5 showcarts">購物車</a>
     </div>
     <div class="flex flex-col h-auto container mx-auto">
         <!-- 篩選欄 -->
@@ -93,9 +94,13 @@
                 <div
                     class="fade-in h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500">
                     <div class="py-2 h-64 flex justify-center rounded-md">
-                        <a th:href="@{/game/showGame(gameId=${game.gameId})}">
-                            <img th:if="${!game.imageLibs.empty}" class="w-auto h-full rounded-md"
+                        <a th:if="${!game.imageLibs.empty}" th:href="@{/game/showGame(gameId=${game.gameId})}">
+                            <img class="w-auto h-full rounded-md"
                                 th:src="@{/imagesLib/image{id}(id=${game.ImageLibs[0].imageId})}" alt="">
+                        </a>
+                        <a class="h-full w-full" th:if="${game.imageLibs.empty}"
+                            th:href="@{/game/showGame(gameId=${game.gameId})}">
+                            <img class="w-full h-full rounded-md" src="" alt="">
                         </a>
                     </div>
                     <div class="h-1/3 flex text-black flex-col items-center p-2">
@@ -119,7 +124,7 @@
                             <a th:if="${session.loginMember == null}" th:href="@{/member/login}"
                                 class="mybtn mybtn-green">加入購物車</a>
                             <span th:if="${session.loginMember} ? ${#lists.contains(cartIds,game.gameId)}" href="#"
-                                class="mybtn mybtn-green">下載</span>
+                                class="mybtn-disabled">已加入購物車</span>
                             <span th:if="${session.loginMember} ? ${!#lists.contains(cartIds,game.gameId)}"
                                 class="mybtn mybtn-green cart">加入購物車</span>
                             <div class="hidden memId" th:text="${session.loginMember} ? ${session.loginMember.memId}">
