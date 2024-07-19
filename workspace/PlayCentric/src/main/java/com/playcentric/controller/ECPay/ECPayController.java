@@ -14,60 +14,65 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.playcentric.model.game.transaction.Recharge;
 import com.playcentric.model.member.LoginMemDto;
-import com.playcentric.model.member.Member;
 import com.playcentric.service.ECPay.ECPayService;
-import com.playcentric.service.member.MemberService;
-
-
 
 @Controller
 @SessionAttributes(names = { "loginMember" })
 public class ECPayController {
-    
+
     @Autowired
     private ECPayService ecPayService;
 
-    @Autowired
-    private MemberService memberService;
-
     @PostMapping("/ecpayCheckout")
     @ResponseBody
-	public String startOrder(@RequestParam Integer rechargeAmount, Model model) {
-        LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
-        if(loginMember==null){
+    public String startOrder(@RequestParam Integer rechargeAmount, Model model) {
+        LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
+        if (loginMember == null) {
             return "請重新登入";
         }
 
         Recharge recharge = new Recharge();
-        Member member = memberService.findById(loginMember.getMemId());
-        recharge.setMember(member);
+        recharge.setMemId(loginMember.getMemId());
+        recharge.setPaymentId(2);
         recharge.setAmount(rechargeAmount);
 
         String aioCheckOutALLForm = ecPayService.rechargePoints(recharge);
 
-        System.err.println("儲值"+rechargeAmount+"元");
-        
-		return aioCheckOutALLForm;
-	}
-    
+        System.err.println("儲值" + rechargeAmount + "元");
+
+        return aioCheckOutALLForm;
+    }
+
     @PostMapping("/ecPayReturn")
     @ResponseBody
-    public String orderFinish(@RequestParam Map<String, String> params) {
+    public String rechargeReturn(@RequestParam Map<String, String> params) {
         try {
-            ecPayService.checkReturn(params);
             System.err.println("EC Pay 成功回傳");
-            return "1|OK";
+            // 確認加密
+            if (ecPayService.validateCheckMacValue(params)) {
+                // 確認訂單完成並存在
+                String rtnCode = params.get("RtnCode");
+                if ("1".equals(rtnCode) && ecPayService.checkRechargeReturn(params)) {
+                    System.err.println("儲值成功!");
+                    return "1|OK"; // 回應給 ECPay 表示成功接收
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return "0|Error";
         }
+        System.err.println("儲值失敗!");
+        return "0|Error";
     }
 
     @GetMapping("/ecPayOK")
-    public String backFromEcPay(RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("redirectMsg","儲值成功!");
+    public String backFromEcPay(RedirectAttributes redirectAttributes, Model model) {
+        LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+        String rechargeResult = "儲值完成!";
+        if (loginMember!=null) {
+            rechargeResult = ecPayService.getRechargeResult(loginMember.getMemId());
+        }
+        redirectAttributes.addFlashAttribute("redirectMsg", rechargeResult);
         return "redirect:/member/memInfo";
     }
-    
-    
+
 }

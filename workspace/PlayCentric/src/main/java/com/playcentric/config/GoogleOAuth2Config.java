@@ -26,7 +26,7 @@ public class GoogleOAuth2Config {
 	@Value("${controller_path}")
 	private String controllerPath;
 
-	// public String getRedirectUri(){
-	// 	return serverUri+controllerPath;
-	// }
+	public String getRedirectUri(){
+		return serverUri+controllerPath;
+	}
 }
