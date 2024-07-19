@@ -33,24 +33,44 @@
 		.footer {
 			margin-top: 100px;
 		}
+
+		.title1 {
+			color: rgb(121, 85, 252);
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+		}
+
+		.div-container {
+			padding-bottom: 60px;
+		}
+
+		img {
+			max-width: auto;
+			max-height: 500px;
+		}
+
+		.d1 {
+			width: 300px !important;
+		}
 	</style>
 </head>
 
 <body>
 
 	<div th:replace="~{layout/nav}"></div>
-
+	<div th:replace="~{forum/layout/navbar}"></div>
 
 	<section class="py-5">
 		<div class="container main">
 			<div class="row">
-				<div th:each="oneMsg : ${page.content}" class="col-md-3 my-1">
-					<div class="position-relative rounded-3 m-2 px-2 pt-1 bg-light">
+				<div th:each="oneMsg : ${page.content}">
+					<div class="position-relative rounded-3 m-2 px-2 pt-1 bg-light d1">
 						<img style="width: 100%;" th:src="@{/photo/showPhoto2(textsId=${oneMsg.textsId})}" alt="cloth"
 							class="img-fluid">
-						<h3 class="secondary-font text-primary" th:text="${oneMsg.title}"></h3>
-						<div class="secondary-font text-primary"
-							th:text="${#dates.format(oneMsg.doneTime, 'yyyy年MM月dd日 ')}"></div>
+						<h3 class="secondary-font title1" th:text="${oneMsg.title}"></h3>
+						<!-- 創作時間: -->
+						<!-- <div class="secondary-font text-primary"
+							th:text="${#dates.format(oneMsg.doneTime, 'yyyy年MM月dd日 ')}"></div> -->
+						<!--更新時間:-->
 						<div class="secondary-font text-primary"
 							th:text="${#dates.format(oneMsg.updatedTime, 'yyyy年MM月dd日 ')}"></div>
 						<div class="text-area">
@@ -66,7 +86,8 @@
 		</div>
 	</section>
 	<!-- Pagination -->
-	<div class="container">
+	<div class="container div-container">
+		<div class="d-flex justify-content-center" th:text="'總共有 ' + ${page.totalElements} + ' 筆'"></div>
 		<ul class="pagination" th:if="${page.totalPages != 0}">
 			<!-- 上一頁 -->
 			<th:block th:switch="${page.number != 0}">
@@ -95,7 +116,6 @@
 			</th:block>
 		</ul>
 
-		<div th:text="'總共有 ' + ${page.totalElements} + ' 筆'"></div>
 	</div>
 
 	<!-- Footer -->
