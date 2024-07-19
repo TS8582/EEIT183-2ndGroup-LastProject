@@ -5,9 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
+@Getter
 @Configuration
 @PropertySource("googleOAuth2.properties")
 public class GoogleOAuth2Config {
@@ -20,4 +19,14 @@ public class GoogleOAuth2Config {
 	
 	@Value("${redirect_uris}")
 	private String redirectUri;
+	
+	@Value("${server_uri}")
+	private String serverUri;
+	
+	@Value("${controller_path}")
+	private String controllerPath;
+
+	public String getRedirectUri(){
+		return serverUri+controllerPath;
+	}
 }
