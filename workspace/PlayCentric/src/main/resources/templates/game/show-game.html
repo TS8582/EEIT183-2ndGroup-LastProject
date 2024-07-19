@@ -35,6 +35,8 @@
                                     th:src="@{/imagesLib/image{id}(id=${photo.imageId})}" alt="">
                             </div>
                         </th:block>
+                        <img th:if="${game.imageLibs.empty}"
+                            class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto" src="" alt="">
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
                         data-bs-slide="prev">

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,10 @@ import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.member.MemberService;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/gamecart")
@@ -30,7 +34,7 @@ public class GameCartRestController {
 	
 	
 	@GetMapping("/insert")
-	public List<GameCarts> inserGameCart(
+	public void inserGameCart(
 			@RequestParam Integer gameId,
 			@RequestParam Integer memId) {
 		GameCarts gameCarts = new GameCarts();
@@ -39,7 +43,15 @@ public class GameCartRestController {
 		gameCarts.setGame(gService.findById(gameId));
 		gameCarts.setMember(mService.findById(memId));
 		gcService.insert(gameCarts);
-		return gcService.findByMemId(gameCarts.getMemId());
 	}
+	
+	@GetMapping("/remove")
+	public void removeGameCart(
+			@RequestParam Integer gameId,
+			@RequestParam Integer memId){
+		gcService.remove(gameId, memId);
+	}
+	
+	
 	
 }

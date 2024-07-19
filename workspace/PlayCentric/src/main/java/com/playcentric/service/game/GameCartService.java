@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import com.playcentric.model.game.secondary.GameCarts;
 import com.playcentric.model.game.secondary.GameCartsRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class GameCartService {
 	
 	@Autowired
