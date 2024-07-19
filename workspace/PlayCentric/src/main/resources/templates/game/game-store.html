@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="px-0 py-2 lg:px-15 text-end w-full fixed">
-        <span class="mybtn mybtn-green mx-5">購物車</span>
+        <span th:if="${session.loginMember}" class="mybtn mybtn-green mx-5">購物車</span>
     </div>
     <div class="flex flex-col h-auto container mx-auto">
         <!-- 篩選欄 -->
@@ -130,15 +130,7 @@
                 </div>
             </th:block>
 
-
         </main>
-
-        <div class="h-full w-full hidden msgcontainer transition-opacity opacity-0 duration-300">
-            <div class=" flex justify-center items-center">
-                <span class="bg-black text-white p-2 text-lg rounded-md msg">成功加入購物車</span>
-            </div>
-        </div>
-
 
         <div class="mt-5"></div>
 
@@ -146,30 +138,8 @@
 
     <script th:src="@{/js/axios.min.js}"></script>
     <script th:src="@{/js/utils/doAlertJs.js}"></script>
+    <script th:src="@{/js/game/cart.js}"></script>
     <script th:src="@{/js/game/game-store.js}"></script>
-    <script>
-        const cart = document.querySelectorAll('.cart');
-        cart.forEach(elm => {
-            elm.addEventListener('click', e => {
-                const gameId = elm.closest('div').querySelector('.gameId').innerHTML.trim();
-                const memId = elm.closest('div').querySelector('.memId').innerHTML.trim();
-
-                axios.get('/PlayCentric/gamecart/insert', {
-                    params: {
-                        gameId: gameId,
-                        memId: memId
-                    }
-                })
-                    .then(res => {
-                        doAlert('成功加入購物車');
-                        console.log(res.data)
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    })
-            }, { once: true })
-        });
-    </script>
 </body>
 
 </html>

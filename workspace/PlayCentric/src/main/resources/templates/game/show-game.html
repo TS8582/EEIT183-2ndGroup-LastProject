@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div th:replace="~{/layout/nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" th:href="@{/css/utils/doAlertJs.css}">
     <title th:text="${game.gameName}"></title>
 </head>
 
@@ -76,8 +77,15 @@
                             th:text=" 'NT$' + ${game.discountedPrice}"></span>
                     </div>
                     <div class="flex sm:justify-center lg:justify-start">
-                        <a th:if="${loginMember == null}" th:href="@{/member/login}" class="mybtn mybtn-green">加入購物車</a>
-                        <a th:if="${loginMember}" href="#" class="mybtn mybtn-green">加入購物車</a>
+                        <a th:if="${session.loginMember == null}" th:href="@{/member/login}"
+                            class="mybtn mybtn-green">加入購物車</a>
+                        <span th:if="${session.loginMember} ? ${#lists.contains(cartIds,game.gameId)}" href="#"
+                            class="mybtn mybtn-green">下載</span>
+                        <span th:if="${session.loginMember} ? ${!#lists.contains(cartIds,game.gameId)}"
+                            class="mybtn mybtn-green cart">加入購物車</span>
+                        <div class="hidden memId" th:text="${session.loginMember} ? ${session.loginMember.memId}">
+                        </div>
+                        <div class="hidden gameId" th:text="${game.gameId}"></div>
                     </div>
                 </div>
             </div>
@@ -101,10 +109,9 @@
 
 
     </main>
-
-
-    <script>
-    </script>
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script th:src="@{/js/utils/doAlertJs.js}"></script>
+    <script th:src="@{/js/game/cart.js}"></script>
 </body>
 
 </html>

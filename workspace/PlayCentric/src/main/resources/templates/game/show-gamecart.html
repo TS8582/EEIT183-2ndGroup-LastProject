@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div th:replace="~{/layout/nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <title th:text="${session.loginMember} ? ${session.loginMember.nickname}"></title>
+    <title th:text="${session.loginMember.nickname}"></title>
 </head>
 
 <body class="bg-gray-100 w-screen">
