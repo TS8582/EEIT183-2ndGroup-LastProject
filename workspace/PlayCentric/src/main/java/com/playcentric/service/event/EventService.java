@@ -12,30 +12,24 @@ import com.playcentric.model.event.EventRepository;
 public class EventService {
     @Autowired
     private EventRepository eventRepository;
-
     // 創建活動
     public Event createEvent(Event event) {
         return eventRepository.save(event);
     }
-
     // 根據ID查找活動
     public Event getEvent(Integer eventId) {
         return eventRepository.findById(eventId).orElse(null);
     }
-
     // 查找所有活動
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
     }
-
     // 更新活動
     public Event updateEvent(Event event) {
         return eventRepository.save(event);
     }
-
     // 刪除活動
     public void deleteEvent(Integer eventId) {
         eventRepository.deleteById(eventId);
     }
-    
 }

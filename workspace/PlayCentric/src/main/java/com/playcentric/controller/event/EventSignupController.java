@@ -23,9 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.event.Event;
 import com.playcentric.model.event.EventSignup;
+import com.playcentric.model.member.Member;
 import com.playcentric.service.ImageLibService;
 import com.playcentric.service.event.EventService;
 import com.playcentric.service.event.EventSignupService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/eventSignup")
@@ -160,34 +163,51 @@ public class EventSignupController {
         List<EventSignup> signups = eventSignupService.getAllSignups();
         return ResponseEntity.ok(signups);
     }
-    
+//    會員驗證和錯誤處理
     @PostMapping("/createimage")
     public String createSignup(@ModelAttribute EventSignup eventSignup, 
                                @RequestParam("photoFile") MultipartFile photoFile,
                                @RequestParam("eventId") Integer eventId,
+                               HttpSession session,
                                Model model) {
         try {
-            // 使用ImageLibService保存圖片
+            // 檢查用戶是否登錄
+            Member loginMember = (Member) session.getAttribute("loginMember");
+            if (loginMember == null) {
+                model.addAttribute("errorMessage", "請先登錄");
+                return "redirect:/member/login";
+            }
+
+            Event event = eventService.getEvent(eventId);
+            if (event == null) {
+                model.addAttribute("errorMessage", "活動不存在");
+                return "redirect:/events/public/list";
+            }
+            
+            if (event.getEventSignupDeadLine().isBefore(LocalDateTime.now())) {
+                model.addAttribute("errorMessage", "報名已截止");
+                return "redirect:/events/public/detail/" + eventId;
+            }
+
             ImageLib imageLib = new ImageLib();
             imageLib.setImageFile(photoFile.getBytes());
             ImageLib savedImage = imageLibService.saveImage(imageLib);
 
-            // 設置 EventSignup 屬性
-            Event event = eventService.getEvent(eventId);
+            eventSignup.setMember(loginMember);
             eventSignup.setEvent(event);
             eventSignup.setWorkImageId(savedImage.getImageId());
             eventSignup.setSignupTime(LocalDateTime.now());
             eventSignup.setWorkUploadTime(LocalDateTime.now());
             eventSignup.setVoteCount(0);
-            eventSignup.setEventSignupStatus(1); // 假設 1 表示已報名狀態
+            eventSignup.setEventSignupStatus(1);
 
             EventSignup createdSignup = eventSignupService.createSignup(eventSignup);
-            model.addAttribute("signup", createdSignup);
+            model.addAttribute("successMessage", "報名成功");
             return "redirect:/events/public/detail/" + eventId;
         } catch (IOException e) {
             e.printStackTrace();
-            model.addAttribute("errorMessage", "文件上傳失敗");
-            return "signup-form";
+            model.addAttribute("errorMessage", "檔案上傳失敗");
+            return "redirect:/events/public/detail/" + eventId;
         }
     }
 }

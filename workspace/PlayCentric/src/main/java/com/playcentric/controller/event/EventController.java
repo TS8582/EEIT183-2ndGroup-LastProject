@@ -24,7 +24,6 @@ public class EventController {
 
     @Autowired
     private EventService eventService;
-
     /**
      * 創建活動 (REST API)
      * @param event 活動實體
@@ -146,9 +145,12 @@ public class EventController {
     public String publicEventDetail(@PathVariable Integer eventId, Model model) {
         Event event = eventService.getEvent(eventId);
         if (event == null) {
-            return "redirect:/events/public/list"; // 活動不存在，重新定向到活動列表
+            model.addAttribute("errorMessage", "找不到指定的活動");
+            return "event/event-not-found"; // 創建一個新的錯誤頁面
         }
         model.addAttribute("event", event);
-        return "event/event-detail"; // 返回活動詳細頁面
+        return "event/event-detail";
     }
+    
+    
 }
