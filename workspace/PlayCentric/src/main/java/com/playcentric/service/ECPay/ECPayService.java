@@ -1,9 +1,10 @@
 package com.playcentric.service.ECPay;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import com.playcentric.config.NgrokConfig;
+import com.playcentric.model.game.transaction.Recharge;
+import com.playcentric.model.game.transaction.RechargeRepository;
 
 import ecpay.payment.integration.AllInOne;
 import ecpay.payment.integration.domain.AioCheckOutALL;
@@ -22,26 +25,29 @@ public class ECPayService {
     @Autowired
     private NgrokConfig ngrokConfig;
 
-    @Value("${ecpay.return_url}")
-    private String returnUrl;
+    @Value("${ecpay.recharge_return_url}")
+    private String rechargeReturnUrl;
 
-    @Value("${ecpay.client_back_url}")
-    private String clientBackUrl;
+    @Value("${ecpay.recharge_client_back_url}")
+    private String rechargeClientBackUrl;
 
-    @Value("${ecpay.trade_desc}")
-    private String tradeDesc;
+    @Value("${ecpay.recharge_trade_desc}")
+    private String rechargeTradeDesc;
 
-    @Value("${ecpay.item_name}")
-    private String itemName;
+    @Value("${ecpay.recharge_item_name}")
+    private String rechargeItemName;
 
     @Value("${ecpay.merchant_trade_date_format}")
     private String merchantTradeDateFormat;
 
     @Value("${ecpay.hash_key}")
-    private static String hashKey;
+    private String hashKey;
 
     @Value("${ecpay.hash_iv}")
-    private static String hashIV;
+    private String hashIV;
+
+    @Autowired
+    private RechargeRepository rechargeRepository;
 
     private final AllInOne allInOne;
 
@@ -50,22 +56,26 @@ public class ECPayService {
         this.allInOne = new AllInOne("");
     }
 
-    public String ecPayDoOrder(String totalAmount) {
-        String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
-
+    public String rechargePoints(Recharge recharge) {
+        // String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
         AioCheckOutALL obj = new AioCheckOutALL();
-        obj.setMerchantTradeNo(uuId);
-
-        // 動態生成 MerchantTradeDate
         SimpleDateFormat sdf = new SimpleDateFormat(merchantTradeDateFormat);
-        String currentDate = sdf.format(new Date());
-        obj.setMerchantTradeDate(currentDate);
+        Date nowDate = new Date();
+        String currentDate = sdf.format(nowDate);
 
-        obj.setTotalAmount(totalAmount);
-        obj.setTradeDesc(tradeDesc);
-        obj.setItemName(itemName);
-        obj.setReturnURL(ngrokConfig.getUrl()+returnUrl);
-        obj.setClientBackURL(ngrokConfig.getUrl()+clientBackUrl);
+        LocalDateTime rechargeAt = nowDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        recharge.setRechargeAt(rechargeAt);
+        recharge = rechargeRepository.save(recharge);
+
+        String tradeNo = "PlayCentric" + currentDate + "Points" + recharge.getRechargeId();
+
+        obj.setMerchantTradeNo(tradeNo);
+        obj.setMerchantTradeDate(currentDate);
+        obj.setTotalAmount(recharge.getAmount().toString());
+        obj.setTradeDesc(rechargeTradeDesc);
+        obj.setItemName(rechargeItemName);
+        obj.setReturnURL(ngrokConfig.getUrl() + rechargeReturnUrl);
+        obj.setClientBackURL(ngrokConfig.getUrl() + rechargeClientBackUrl);
         obj.setNeedExtraPaidInfo("N");
 
         String form = allInOne.aioCheckOut(obj, null);
@@ -73,7 +83,7 @@ public class ECPayService {
         return form;
     }
 
-    public boolean checkReturn(Map<String, String> params){
+    public boolean checkReturn(Map<String, String> params) {
         return true;
     }
 }

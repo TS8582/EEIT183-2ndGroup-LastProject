@@ -153,10 +153,27 @@ public class MemberController {
 		return member;
 	}
 
+
+
+	@PostMapping("/updateSelf")
+	@ResponseBody
+	public String updateSelfMember(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model)
+			throws IOException {
+		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		if (loginMember==null || loginMember.getMemId() != member.getMemId()) {
+			return "請重新登入!";
+		}
+		return updateMember(member, photoFile, model);
+	}
+
 	@PostMapping("/update")
 	@ResponseBody
-	public String updateMemberTest(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model)
+	public String updateMember(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model)
 			throws IOException {
+		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		if (loginMember==null || loginMember.getRole() != 1) {
+			return "無權修改!";
+		}
 		try {
 			Member originMem = memberService.findById(member.getMemId());
 			System.err.println("origin:" + originMem);
@@ -179,8 +196,7 @@ public class MemberController {
 				member.setPhoto(imageId);
 			}
 			memberService.updateMember(member, originMem);
-			LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
-			if (loginMember!=null && member.getMemId()==loginMember.getMemId()) {
+			if (member.getMemId()==loginMember.getMemId()) {
 				model.addAttribute("loginMember",memberService.setLoginDto(member));
 			}
 			return "更新成功!";
@@ -192,7 +208,11 @@ public class MemberController {
 
 	@DeleteMapping("/deleteMem")
 	@ResponseBody
-	public String deleteMem(@RequestParam("memId") Integer memId) {
+	public String deleteMem(@RequestParam("memId") Integer memId, Model model) {
+		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		if (loginMember==null || loginMember.getRole() != 1) {
+			return "無權刪除!";
+		}
 		return memberService.deleteMemById(memId) ? "刪除成功" : "刪除失敗";
 	}
 

@@ -2,7 +2,9 @@
 <html>
 
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>PlayCentric-個人資訊</title>
   <style>
     input:focus,
@@ -113,7 +115,8 @@
         <div class="photo-div ps-0 col-2 d-flex flex-column">
           <img class="w-100 cursor-pointer rounded-2" src="http://localhost:8080/PlayCentric/imagesLib/image144">
           <input type="file" name="photoFile" id="photoFile" style="display: none;">
-          <p class="mx-3 mt-5 ps-2 border border-2 rounded-2"><i class="fa-solid fa-sack-dollar"></i><span id="points" class="ms-2">0</span></p>
+          <p class="mx-3 mt-5 ps-2 border border-2 rounded-2"><i class="fa-solid fa-sack-dollar"></i><span id="points"
+              class="ms-2">0</span></p>
           <select id="recharge-amount" name="recharge-amount" class="form-control mb-3"
             aria-label="Default select example">
             <option value="0" selected>選擇金額</option>
@@ -135,11 +138,11 @@
   <script>
     $(function () {
       const pageUrl = window.location.origin;
-      const findMemUrl = pageUrl+"/PlayCentric/member/getMember";
-      const updateMemUrl = pageUrl+"/PlayCentric/member/update";
-      const changePwdUrl = pageUrl+"/PlayCentric/member/sendPtUrl";
-      const verifiyEmailUrl = pageUrl+"/PlayCentric/member/sendVerUrl";
-      const ecPayUrl = pageUrl+"/PlayCentric/ecpayCheckout";
+      const findMemUrl = pageUrl + "/PlayCentric/member/getMember";
+      const updateMemUrl = pageUrl + "/PlayCentric/member/updateSelf";
+      const changePwdUrl = pageUrl + "/PlayCentric/member/sendPtUrl";
+      const verifiyEmailUrl = pageUrl + "/PlayCentric/member/sendVerUrl";
+      const ecPayUrl = pageUrl + "/PlayCentric/ecpayCheckout";
       const memId = Number.parseInt('[[${session.loginMember.memId}]]');
       const redirectMsg = '[[${redirectMsg}]]';
       let memInfo = {};
@@ -165,7 +168,14 @@
         })
           .then(res => {
             console.log(res.data);
-            $('body').append(res.data)
+            if (res.data === '請重新登入') {
+              doAlert(res.data)
+              setTimeout(() => {
+                window.location.href = "/PlayCentric/member/login";
+              }, 1000);
+            } else {
+              $('body').append(res.data)
+            }
           })
           .catch(err => {
 
