@@ -22,17 +22,17 @@ public class ECPayController {
 
     @PostMapping("/ecpayCheckout")
     @ResponseBody
-	public String ecpayCheckout() {
-        String aioCheckOutALLForm = ecPayService.ecpayCheckout(Integer.toString(50));
+	public String startOrder(@RequestParam String rechargeAmount) {
+        String aioCheckOutALLForm = ecPayService.ecPayDoOrder(rechargeAmount);
 
-        System.err.println("儲值50元");
+        System.err.println("儲值"+rechargeAmount+"元");
         
 		return aioCheckOutALLForm;
 	}
     
     @PostMapping("/ecPayReturn")
     @ResponseBody
-    public String postMethodName(@RequestParam Map<String, String> params) {
+    public String orderFinish(@RequestParam Map<String, String> params) {
         try {
             ecPayService.checkReturn(params);
             System.err.println("EC Pay 成功回傳");
@@ -44,7 +44,7 @@ public class ECPayController {
     }
 
     @GetMapping("/ecPayOK")
-    public String getMethodName(RedirectAttributes redirectAttributes) {
+    public String backFromEcPay(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("redirectMsg","儲值成功!");
         return "redirect:/member/memInfo";
     }

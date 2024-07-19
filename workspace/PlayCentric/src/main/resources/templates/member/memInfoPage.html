@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>PlayCentric-個人資訊</title>
   <style>
     input:focus,
@@ -109,12 +110,19 @@
           </div>
 
         </div>
-        <div class="photo-div ps-0 col-2">
+        <div class="photo-div ps-0 col-2 d-flex flex-column">
           <img class="w-100 cursor-pointer rounded-2" src="http://localhost:8080/PlayCentric/imagesLib/image144">
           <input type="file" name="photoFile" id="photoFile" style="display: none;">
-          <div class="row">
-            <div id="ecPay-btn" class="btn btn-outline-warning align-self-center text-dark mt-5">儲值50元</div>
-          </div>
+          <p class="mx-3 mt-5 ps-2 border border-2 rounded-2"><i class="fa-solid fa-sack-dollar"></i><span id="points" class="ms-2">0</span></p>
+          <select id="recharge-amount" name="recharge-amount" class="form-control mb-3"
+            aria-label="Default select example">
+            <option value="0" selected>選擇金額</option>
+            <option value="100">100元</option>
+            <option value="500">500元</option>
+            <option value="1500">1500元</option>
+            <option value="3000">3000元</option>
+          </select>
+          <div id="ecPay-btn" class="btn btn-outline-warning align-self-center text-dark">儲值</div>
         </div>
         <div id="edit-btn-group" class="row my-2 justify-content-center" style="display: none;">
           <input type="submit" class="btn btn-outline-warning col-2 text-black" value="保存修改">
@@ -145,7 +153,16 @@
 
 
       $('#ecPay-btn').click(function () {
-        axios.post(ecPayUrl)
+
+        const rechargeAmount = $('#recharge-amount').val();
+        if (rechargeAmount <= 0) {
+          doAlert('請選擇金額')
+        }
+        axios({
+          method: 'post',
+          url: ecPayUrl,
+          params: { rechargeAmount }
+        })
           .then(res => {
             console.log(res.data);
             $('body').append(res.data)
@@ -298,6 +315,7 @@
         }
         $('#memInfo .photo-div img').attr('src', data.photoUrl)
         $('img#login-member-photo').attr('src', data.photoUrl)
+        $('#points').text(data.points)
 
         $('#edit-btn-group').hide();
       }

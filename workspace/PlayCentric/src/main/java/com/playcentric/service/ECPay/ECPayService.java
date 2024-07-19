@@ -50,7 +50,7 @@ public class ECPayService {
         this.allInOne = new AllInOne("");
     }
 
-    public String ecpayCheckout(String totalAmount) {
+    public String ecPayDoOrder(String totalAmount) {
         String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
 
         AioCheckOutALL obj = new AioCheckOutALL();

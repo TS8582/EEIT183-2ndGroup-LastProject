@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
+// @Getter
 @Configuration
 @PropertySource("ngrok.properties")
 public class NgrokConfig {

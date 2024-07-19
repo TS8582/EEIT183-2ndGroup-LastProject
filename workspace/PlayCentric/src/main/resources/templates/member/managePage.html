@@ -336,7 +336,7 @@
                             <div class="mb-3 col-2">暱稱: ${element.nickname}</div>
                             <div class="mb-3 col-2">姓名: ${element.memName != null && element.memName != '' ? element.memName : '未輸入'}</div>
                             <div class="mb-3 col-2">性別: ${element.gender === 2 ? '女' : element.gender === 1 ? '男' : '未選擇'}</div>
-                            <div class="mb-3 col-5">email: ${element.email}</div>
+                            <div class="mb-3 col-5">email: ${element.email} ${element.emailVerified? '':'(未驗證)'}</div>
                             <div class="mb-3 col-3">生日: ${element.birthday ? element.birthday : '未輸入'}</div>
                             <div class="mb-3 col-3">電話: ${element.phone != null && element.phone != '          ' ? element.phone : '未輸入'}</div>
                             <div class="mb-3 col-6">地址: ${element.address ? element.address : '未輸入'}</div>

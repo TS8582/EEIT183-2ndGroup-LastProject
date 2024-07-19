@@ -101,7 +101,7 @@ public class MemberController {
 			return "登入失敗!";
 		}
 		loginMember = memberService.memberLogin(loginMember);
-		model.addAttribute("loginMember", new LoginMemDto(loginMember));
+		model.addAttribute("loginMember", memberService.setLoginDto(loginMember));
 		// redirectAttributes.addFlashAttribute("okMsg", "登入成功");
 		return "登入成功!";
 	}
@@ -181,7 +181,7 @@ public class MemberController {
 			memberService.updateMember(member, originMem);
 			LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
 			if (loginMember!=null && member.getMemId()==loginMember.getMemId()) {
-				model.addAttribute("loginMember",new LoginMemDto(member));
+				model.addAttribute("loginMember",memberService.setLoginDto(member));
 			}
 			return "更新成功!";
 		} catch (Exception e) {
@@ -256,7 +256,7 @@ public class MemberController {
 			redirectAttributes.addFlashAttribute("redirectMsg","網址已過期!");
 			return "redirect:/";
 		}
-		model.addAttribute("loginMember", new LoginMemDto(member));
+		model.addAttribute("loginMember", memberService.setLoginDto(member));
 		model.addAttribute("token", token);
 		return "member/changePasswordPage";
 	}
@@ -322,7 +322,7 @@ public class MemberController {
 			return "redirect:/";
 		}
 		redirectAttributes.addFlashAttribute("redirectMsg","Email驗證成功!");
-		model.addAttribute("loginMember", new LoginMemDto(member));
+		model.addAttribute("loginMember", memberService.setLoginDto(member));
 		return "redirect:/";
 	}
 	
