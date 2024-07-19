@@ -2,6 +2,8 @@ package com.playcentric.model.member;
 
 import java.util.Date;
 
+import com.playcentric.config.NgrokConfig;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,14 +34,15 @@ public class LoginMemDto {
 
 
     public LoginMemDto(Member member) {
+        String url = new NgrokConfig().getUrl();
         this.account = member.getAccount();
         this.lastLogin = member.getLastLogin();
         this.memId = member.getMemId();
         this.memName = member.getMemName();
         this.nickname = member.getNickname();
-        this.photo = member.getPhoto()!=null? "http://localhost:8080/PlayCentric/imagesLib/image"+member.getPhoto():
+        this.photo = member.getPhoto()!=null? url+"/PlayCentric/imagesLib/image"+member.getPhoto():
                 member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
-                "http://localhost:8080/PlayCentric/imagesLib/image144";
+                url+"/PlayCentric/imagesLib/image144";
         this.points = member.getPoints();
         this.role = member.getRole();
     }

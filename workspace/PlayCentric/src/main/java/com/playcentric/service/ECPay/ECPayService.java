@@ -65,7 +65,7 @@ public class ECPayService {
         obj.setTradeDesc(tradeDesc);
         obj.setItemName(itemName);
         obj.setReturnURL(ngrokConfig.getUrl()+returnUrl);
-        obj.setClientBackURL(clientBackUrl);
+        obj.setClientBackURL(ngrokConfig.getUrl()+clientBackUrl);
         obj.setNeedExtraPaidInfo("N");
 
         String form = allInOne.aioCheckOut(obj, null);

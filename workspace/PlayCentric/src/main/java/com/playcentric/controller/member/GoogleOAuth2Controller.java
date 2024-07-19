@@ -41,6 +41,7 @@ public class GoogleOAuth2Controller {
 				+ "&redirect_uri=" + googleOAuth2Config.getRedirectUri()
 				+ "&state=state"
 				+ "&scope=openid%20email%20profile";
+		System.err.println(googleOAuth2Config.getRedirectUri());
 		return "redirect:" + authUrl;
 	}
 
