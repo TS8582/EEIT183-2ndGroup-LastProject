@@ -6,17 +6,8 @@
 <div th:replace="~{layout/backen_nav}"></div>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>伴遊管理介面</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" th:href="@{/css/output.css}">
 
 <style>
@@ -88,42 +79,42 @@ html, body {
 #review:hover {
 	background-color: #013220;
 }
+
+.pagination {
+	justify-content: center;
+	margin-top: 20px;
+}
+
+.pagination li a {
+	font-size: 12px !important; /* Smaller font size */
+	padding: 5px 10px !important; /* Smaller padding */
+}
+
+.pagination li a i {
+	font-size: 12px !important; /* Smaller font size for icons */
+}
 </style>
-
-
 </head>
 
 <body class="h-screen flex flex-col w-screen">
-	<!-- <div th:replace="~{/playFellow/sideBar}"></div> -->
 	<div class="flex flex-1">
-
-		<div th:replace="~{/layout/aside}"></div>
+		<div th:replace="~{/playFellow/playFellowAside}"></div>
 		<main class="w-100 p-3">
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
 				<li class="nav-item" role="presentation" style="margin-right: 10px;">
-					<button class="nav-link text-secondary" id="home-tab"
-						data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button"
-						role="tab" aria-controls="home-tab-pane" aria-selected="true">伴遊者列表</button>
+					<button class="nav-link text-secondary" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">伴遊者列表</button>
 				</li>
 				<li class="nav-item" role="presentation">
-					<button class="nav-link text-secondary" id="profile-tab"
-						data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
-						type="button" role="tab" aria-controls="profile-tab-pane"
-						aria-selected="false">交易明細</button>
+					<button class="nav-link text-secondary" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">交易明細</button>
 				</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
-				<div
-					class="tab-pane fade border border-top-0 rounded-2 rounded-top-0"
-					id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
-					tabindex="0">
+				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
 					<!-- 這裡放TABLE內容  PlayFellowMember-->
 					<br>
-
 					<div class="container">
 						<div class="table-container">
-							<table id="playFellowTable"
-								class="table table-striped table-bordered table-hover">
+							<table id="playFellowTable" class="table table-striped table-bordered table-hover">
 								<thead class="thead-light" style="font-size: 15px;">
 									<tr>
 										<th>編號</th>
@@ -138,48 +129,33 @@ html, body {
 										<th></th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="playFellowBody">
 									<tr th:each="pfmember : ${PlayFellowMember}" class="small">
 										<td th:text="${pfmember.playFellowId}"></td>
 										<td th:text="${pfmember.pfnickname}"></td>
-										<td><span
-											th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...' : pfmember.pfdescription}"></span>
-										</td>
+										<td><span th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...' : pfmember.pfdescription}"></span></td>
 										<td th:text="${pfmember.member.memId}"></td>
-										<td><span th:if="${pfmember.member.gender == 1}">男生</span>
-											<span th:if="${pfmember.member.gender == 2}">女生</span></td>
+										<td><span th:if="${pfmember.member.gender == 1}">男生</span><span th:if="${pfmember.member.gender == 2}">女生</span></td>
 										<td th:text="${pfmember.member.birthday}"></td>
 										<td th:text="${pfmember.pfcreatedTime}"></td>
-										<td
-											th:text="${pfmember.pfstatus == 1 ? '待審核' : 
-															(pfmember.pfstatus == 2 ? '審核不成功' : 
-															(pfmember.pfstatus == 3 ? '開啟' : '關閉'))}"
-											th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : 
-																(pfmember.pfstatus == 2 ? 'status-failed' : 
-																(pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}">
-										</td>
-										<td><a
-											th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}">
-												<i class="fas fa-file-invoice fa-2x"
-												style="color: rgb(60, 150, 128);"></i>
-										</a></td>
-										<td><i class="fas fa-trash-alt delete-icon fa-2x"
-											th:attr="data-playfellow-id=${pfmember.playFellowId}"></i></td>
+										<td th:text="${pfmember.pfstatus == 1 ? '待審核' : (pfmember.pfstatus == 2 ? '審核不成功' : (pfmember.pfstatus == 3 ? '開啟' : '關閉'))}" th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : (pfmember.pfstatus == 2 ? 'status-failed' : (pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}"></td>
+										<td><a th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}"><i class="fas fa-file-invoice fa-2x" style="color: rgb(60, 150, 128);"></i></a></td>
+										<td><i class="fas fa-trash-alt delete-icon fa-2x" th:attr="data-playfellow-id=${pfmember.playFellowId}"></i></td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
+						<ul class="pagination">
+							<li class="page-item"><a class="page-link" href="#" id="prevPage"><i class="fas fa-angle-left"></i></a></li>
+							<li class="page-item"><a class="page-link" href="#" id="nextPage"><i class="fas fa-angle-right"></i></a></li>
+						</ul>
 					</div>
 				</div>
-				<div
-					class="tab-pane fade border border-top-0 rounded-2 rounded-top-0"
-					id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
-					tabindex="0">
+				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
 					<br> <br>
 					<div class="container">
 						<div class="table-container">
-							<table id="orderTable"
-								class="table table-striped table-bordered table-hover">
+							<table id="orderTable" class="table table-striped table-bordered table-hover">
 								<thead class="thead-light small">
 									<tr>
 										<th>訂單編號</th>
@@ -187,15 +163,13 @@ html, body {
 										<th>下訂會員</th>
 										<th>單數</th>
 										<th>總金額</th>
-										
 										<th>交易序號</th>
 										<th>付款時間</th>
 										<th>創建時間</th>
 										<th>狀態</th>
-										<th>操作</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="orderBody">
 									<!-- 訂單資料 -->
 									<tr th:each="order : ${PfOrder}" class="small">
 										<td th:text="${order.pfOrderId}"></td>
@@ -203,90 +177,64 @@ html, body {
 										<td th:text="${order.member.memId}"></td>
 										<td th:text="${order.quantity}"></td>
 										<td th:text="${order.totalAmount}"></td>
-										
 										<td th:text="${order.transactionID}"></td>
-										<td
-											th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-										<td
-											th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
-										<td
-											th:text="${order.paymentStatus == 1 ? '交易中' : 
-						(order.paymentStatus == 2 ? '交易完成' : '交易失敗或取消')}"
-											th:classappend="${order.paymentStatus == 1 ? 'status-pending' : 
-								(order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}">
-										</td>
-										<td><a
-											th:href="@{/playFellow/updateOrder/{pfOrderId}(pfOrderId=${order.pfOrderId})}">
-												<i class="fas fa-file-invoice fa-2x"
-												style="color: rgb(60, 150, 128);"></i>
-										</a> <i class="fas fa-trash-alt delete-icon fa-2x"
-											th:attr="data-pf-order-id=${order.pfOrderId}"></i></td>
+										<td th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										<td th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										<td th:text="${order.paymentStatus == 1 ? '交易中' : (order.paymentStatus == 2 ? '交易完成' : '交易失敗或取消')}" th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}"></td>
 									</tr>
 								</tbody>
 							</table>
-
 						</div>
+						<ul class="pagination">
+							<li class="page-item"><a class="page-link" href="#" id="prevOrderPage"><i class="fas fa-angle-left"></i></a></li>
+							<li class="page-item"><a class="page-link" href="#" id="nextOrderPage"><i class="fas fa-angle-right"></i></a></li>
+						</ul>
 					</div>
 				</div>
 			</div>
-
 			<!-- 刪除跳窗 -->
-			<div class="modal fade" id="deleteModal" tabindex="-1"
-				aria-labelledby="deleteModalLabel" aria-hidden="true">
+			<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">確定要刪除這筆資料嗎？</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">取消</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
 							<button type="button" class="btn btn-danger" id="confirmDelete">刪除</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</main>
-
-
 	</div>
 
-	<a class="text-sm text-gray plus-btn mybtn" id="review">REVIEW</a>
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-	<script
-		src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-	<script
-		src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script th:src="@{/js/layout/nav.js}"></script>
 
 	<script>
-
-
 		$(document).on('click', '#review', function () {
 			window.location.href = '/PlayCentric/playFellow/reviewpfMember';
-		})
-
+		});
 
 		$(document).ready(function () {
 			$("#home-tab").click();
 		});
 
-
 		function showFullDescription(element, fullDescription) {
 			element.innerText = fullDescription;
 		}
 
-
 		document.addEventListener('DOMContentLoaded', (event) => {
 			initDeleteEventListeners();
 			initModalEventListeners(); // 小視窗監聽
+			setupPagination('playFellowTable', 'playFellowBody', 5);
+			setupPagination('orderTable', 'orderBody', 5);
 		});
 
 		function initDeleteEventListeners() {
@@ -321,44 +269,39 @@ html, body {
 			});
 		}
 
-		$(document).ready(function () {
-			$('#playFellowTable').DataTable({
-				"language": {
-					"lengthMenu": "每頁顯示 _MENU_ 筆記錄",
-					"zeroRecords": "無符合條件的記錄",
-					"info": "顯示第 _PAGE_ 頁，共 _PAGES_ 頁",
-					"infoEmpty": "無記錄",
-					"infoFiltered": "(從 _MAX_ 筆記錄過濾)",
-					"search": "搜尋:",
-					"paginate": {
-						"first": "首頁",
-						"last": "末頁",
-						"next": "下一頁",
-						"previous": "上一頁"
+		function setupPagination(tableId, tbodyId, itemsPerPage) {
+			let table = document.getElementById(tableId);
+			let tbody = document.getElementById(tbodyId);
+			let rows = tbody.getElementsByTagName('tr');
+			let currentPage = 0;
 
+			function showPage(page) {
+				currentPage = page;
+				for (let i = 0; i < rows.length; i++) {
+					if (i >= page * itemsPerPage && i < (page + 1) * itemsPerPage) {
+						rows[i].style.display = '';
+					} else {
+						rows[i].style.display = 'none';
 					}
+				}
+			}
+
+			document.getElementById(`prev${tableId.charAt(0).toUpperCase() + tableId.slice(1)}Page`).addEventListener('click', function (e) {
+				e.preventDefault();
+				if (currentPage > 0) {
+					showPage(currentPage - 1);
 				}
 			});
 
-			$('table tbody tr').click(function () {
-				$(this).toggleClass('table-gray');
+			document.getElementById(`next${tableId.charAt(0).toUpperCase() + tableId.slice(1)}Page`).addEventListener('click', function (e) {
+				e.preventDefault();
+				if (currentPage < Math.ceil(rows.length / itemsPerPage) - 1) {
+					showPage(currentPage + 1);
+				}
 			});
-		});
 
-		// 		document.addEventListener('DOMContentLoaded', function () {
-		// 			const addPfMemberBtn = document.querySelector('#addPfMember');
-
-		// 			if (addPfMemberBtn) {
-		// 				addPfMemberBtn.addEventListener('click', function () {
-		// 					const memberId = '10'; // 之後要換上當下的會員身分 替換成實際的伴遊者ID
-		// 					const url = `http://localhost:8080/PlayCentric/playFellow/memId/${memberId}`;
-		// 					window.location.href = url;
-		// 				});
-		// 			}
-		// 		});
-
+			showPage(0);
+		}
 	</script>
-
 </body>
-
 </html>

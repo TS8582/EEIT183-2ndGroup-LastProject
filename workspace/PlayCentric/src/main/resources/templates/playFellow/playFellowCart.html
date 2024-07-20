@@ -185,9 +185,8 @@ table th, table td {
 								</div>
 								<div class="button-wrap row g-2">
 									<div class="col-md-12">
-										<button type="button"
-											class="btn btn-primary p-3 text-uppercase rounded-1 w-100"
-											style="margin-bottom: 20px;" onclick="submitOrder()">提交訂單</button>
+                                        <button type="button" class="btn btn-primary p-3 text-uppercase rounded-1 w-100" style="margin-bottom: 20px;"
+                                                 onclick="submitOrder()">提交訂單</button>
 									</div>
 								</div>
 							</div>
@@ -206,6 +205,8 @@ table th, table td {
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script th:src="@{/js/playfellow/plugins.js}"></script>
 	<script th:src="@{/js/playfellow/script.js}"></script>
+		<script th:src="@{/js/playfellow/playfellow.js}"></script>
+	
 	<script>
         $(document).ready(function () {
             var amountPerUnit = '[[${pfGame.amount}]]'; 
@@ -236,33 +237,41 @@ table th, table td {
 
         function submitOrder() {
             const pfGameId = '[[${pfGame.pfGameId}]]';
-            const memId = '[[${pfGame.playFellowMember.member.memId}]]';
+            let memId = null;
+            if ('[[${session.loginMember}]]' !== 'null') {
+                memId = '[[${session.loginMember.memId}]]';
+            }
             const transactionID = null; 
             const paymentStatus = 1; 
             const quantity = parseInt($('#quantity').val());
             const totalAmount = parseInt($('#total-amount').text().replace('$', ''));
 
-            const order = {
-                pfGameId: pfGameId,
-                memId: memId,
-                transactionID: transactionID,
-                paymentStatus: paymentStatus,
-                quantity: quantity,
-                totalAmount: totalAmount
-            };
+            if (memId) {
+                const order = {
+                    pfGameId: pfGameId,
+                    memId: memId,
+                    transactionID: transactionID,
+                    paymentStatus: paymentStatus,
+                    quantity: quantity,
+                    totalAmount: totalAmount
+                };
 
-            axios.post('/PlayCentric/playFellow/addPfOrder', order)
-                .then(response => {
-                    alert(response.data); 
-                    window.location.href = '/PlayCentric/playFellow';
-
-                })
-                .catch(error => {
-                    console.error('錯誤囉:', error);
-                    alert('購買失敗，請稍後再試，謝謝!');
-                    window.location.href = '/PlayCentric/playFellow';
-                });
+                axios.post('/PlayCentric/playFellow/addPfOrder3', order)
+                    .then(response => {
+                        alert(response.data); 
+//                         window.location.href = '/PlayCentric/playFellow';
+                    })
+                    .catch(error => {
+                        console.error('錯誤囉:', error);
+                        alert('購買失敗，請稍後再試，謝謝!');
+//                         window.location.href = '/PlayCentric/playFellow';
+                    });
+            } else {
+                alert('無法提交訂單，請稍後再試');
+            }
         }
+
+        
     </script>
 
 </body>

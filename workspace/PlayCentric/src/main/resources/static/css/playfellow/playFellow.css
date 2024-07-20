@@ -739,7 +739,7 @@ Single Product section style start
 }
 
 .marquee-container {
-			width: 150px;
+			width: 140px;
 			/* 設置容器的寬度 */
 			overflow: hidden;
 			/* 隱藏超出容器寬度的部分 */
