@@ -302,6 +302,7 @@
       let buyTotalQuantity; //購買數量
       let buyPropId; //購買道具Id
       let orderId; //下架賣單用
+      let expiryDate; //到期時間(下架賣單用)
       $(document).ready(function () {
         loadGames();
 
@@ -858,6 +859,19 @@
               colDiv.appendChild(quantityDiv); // 將數量 div 添加到 colDiv 中
               colDiv.appendChild(expiryDiv); // 將到期時間 div 添加到 colDiv 中
               rowDiv.appendChild(colDiv);
+              console.log(item.orderId + "到期時間:" + item.expiryTime);
+              if (item.expiryTime) {
+                expiryDate = new Date(item.expiryTime.replace(/-/g, "/"));
+                const now = new Date();
+                const timeDifference = expiryDate - now;
+                if (timeDifference > 0) {
+                  setTimeout(() => {
+                    cancelSell(item.orderId);
+                  }, timeDifference);
+                } else {
+                  cancelSell(item.orderId);
+                }
+              }
             })
             .catch((error) => {
               console.error("獲取道具詳細資訊時出錯:", error);
