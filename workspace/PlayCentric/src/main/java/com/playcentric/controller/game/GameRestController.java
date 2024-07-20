@@ -42,10 +42,6 @@ public class GameRestController {
 	public Page<Game> getGamePage(@RequestParam Integer pg,@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		Pageable pgb = PageRequest.of(pg, 9);
 		Page<Game> findGames = gService.findShowInStore(pgb);
-		System.out.println("1645165156");
-		if (loginMember != null) {
-			System.out.println(loginMember.getMemId());
-		}
 		for (Game game : findGames) {
 			gService.setRateAndDiscountPrice(game);
 			if (loginMember != null) {
