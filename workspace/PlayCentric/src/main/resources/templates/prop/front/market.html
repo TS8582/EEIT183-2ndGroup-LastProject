@@ -198,7 +198,8 @@
                     販售
                   </button>
                   <div style="background-color: rgb(28, 40, 55); color: white">
-                    正在販售的物品
+                    <br />
+                    <p style="text-align: center">正在販售的物品</p>
                   </div>
                 </div>
                 <div
@@ -234,7 +235,7 @@
       </div>
     </div>
 
-    <div class="row isotope-container justify-content-center">
+    <div class="row isotope-container">
       <!-- 商品項目將在這裡動態生成 -->
     </div>
 
@@ -536,21 +537,19 @@
           const itemClassId = prop.propTypeId ? prop.propTypeId : "unknown";
           console.log(`Item classId is: ${itemClassId}`);
           const item = $(`
-                    <div class="item ${itemClassId} card" data-propid="${prop.propId}" style="margin-bottom:28rem; width:12vw; position: relative; text-decoration: none; color: inherit;">
-                        <div style="position: relative;">
-                            <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw;">
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="card-text">
-                                <p class="hidden-description">${prop.propDescription}</p>
-                                <h3 class="card-title pt-0 m-0">${prop.propName}</h3>
-                                <h3 class="secondary-font text-primary">平均NT$:${prop.propPrice}</h3>
-                                <div class="d-flex flex-wrap mt-3">
-                                    <!-- Additional content here -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="item ${itemClassId} card" data-propid="${prop.propId}" style="margin-bottom:1em; width:16vw; position: absolute; text-decoration: none; color: inherit; text-align: center; border:2px solid white">
+    <div style="position: absolute; margin: auto;">
+    </div>
+
+    <div class="card-body p-0" style="margin: auto; max-width: 250px; max-height: 330px;">
+        <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw; display: block; margin: auto;">
+        <div class="card-text">
+            <p class="hidden-description">${prop.propDescription}</p>
+            <h3 class="card-title pt-0 m-0 fs-5">${prop.propName}</h3>
+            <h3 class="secondary-font text-primary">平均NT$:1000</h3>
+        </div>
+    </div>
+</div>
                 `);
 
           propsContainer.append(item);
