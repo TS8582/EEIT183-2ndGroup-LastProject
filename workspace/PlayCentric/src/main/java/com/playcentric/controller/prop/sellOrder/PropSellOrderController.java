@@ -4,15 +4,29 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import com.playcentric.model.prop.MemberPropInventory.MemberPropInventory;
+import com.playcentric.model.prop.sellOrder.PropSellOrder;
 import com.playcentric.model.prop.sellOrder.PropSellOrderDto;
+import com.playcentric.service.prop.MemberPropInventoryService.MemberPropInventoryService;
 import com.playcentric.service.prop.sellOrder.PropSellOrderService;
 
 @Controller
 @SessionAttributes(names = "games")
 public class PropSellOrderController {
+	
+	private PropSellOrderDto sellOrder;
+
 
 	@Autowired
 	PropSellOrderService propSellOrderService;
+
+	
+	@Autowired
+	MemberPropInventoryService memberPropInventoryService;
+
+
+	private int quantity;
 
 	// 進入賣單頁面
 	@GetMapping("/prop/propSellOrder")
@@ -38,7 +52,20 @@ public class PropSellOrderController {
 	@GetMapping("/prop/findpropSellOrderBygameIdAndmemId")
 	@ResponseBody
 	public List<PropSellOrderDto> findpropSellOrderBygameIdAndmemId(@RequestParam("gameId") int gameId,@RequestParam("memId") int memId) {
-		
 		return null;
 	}
+	
+	// 根據orderId退單
+	// 1.找到賣單改下架 2.根據賣單道具id及數量新增至倉庫
+	@PostMapping("prop/cancelSell")
+	@ResponseBody
+	public String cancelSell(int orderId) {
+		 PropSellOrder order = propSellOrderService.changeStatusDelist(orderId);
+		 int sellerMemId = order.getSellerMemId();
+		 int propId = order.getPropId();
+		 int quantity = order.getQuantity();
+		 memberPropInventoryService.findMemberPropByIdAndPlusQuantity(sellerMemId, propId, quantity);
+		return "取消拍賣OK!";
+	}
+	
 }

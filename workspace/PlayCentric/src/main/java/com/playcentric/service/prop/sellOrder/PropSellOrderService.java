@@ -25,6 +25,8 @@ public class PropSellOrderService {
 	
 	@Autowired
 	MemberRepository memberRepo;
+
+	private Optional<PropSellOrder> order;
 	// 根據gameId找所有賣單
 	public List<PropSellOrderDto> findAllByGameId(int id) {
 		List<PropSellOrder> propSellOrders = propSellOrderRepo.findAllByGameId(id);
@@ -174,5 +176,17 @@ public class PropSellOrderService {
 
 		return "購買完成(賣單)";
     }
-
+//  根據orderId更改status為下架
+    public PropSellOrder changeStatusDelist(int id) {
+        Optional<PropSellOrder> optionalOrder = propSellOrderRepo.findById(id);
+        
+        if (optionalOrder.isPresent()) {
+            PropSellOrder order = optionalOrder.get();
+            order.setOrderStatus((byte) 2);
+            propSellOrderRepo.save(order); 
+            return order;
+        } else {
+            throw new RuntimeException("找不到賣單");        }
+    }
+    
 }
