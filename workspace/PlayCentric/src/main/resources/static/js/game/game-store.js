@@ -8,6 +8,15 @@ const spin = document.querySelector('.spin');
 const typeselector = document.querySelectorAll('input[name="typeId"]');
 let scrolltrigger = true;
 
+// 轉到購物車頁面
+const showcarts = document.querySelector('.showcarts');
+if (showcarts) {
+    showcarts.addEventListener('click', e => {
+        const form = document.querySelector('form');
+        form.submit();
+    })
+}
+
 // 滑到底部載入事件
 let scrollTimer = null;
 let firstScroll = true; // 判斷是否是第一次滑到底部的標記

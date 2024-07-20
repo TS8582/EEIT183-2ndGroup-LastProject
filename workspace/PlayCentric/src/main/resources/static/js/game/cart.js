@@ -11,7 +11,10 @@ cart.forEach(elm => {
             }
         })
             .then(res => {
-                elm.innerHTML = '下載';
+                elm.innerHTML = '已加入購物車';
+                elm.classList.toggle('mybtn-green');
+                elm.classList.toggle('mybtn-disabled');
+                elm.classList.toggle('mybtn');
                 doAlert('成功加入購物車');
                 console.log(res.data)
             })

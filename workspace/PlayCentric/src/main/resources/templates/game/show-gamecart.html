@@ -6,11 +6,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div th:replace="~{/layout/nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <title th:text="${session.loginMember.nickname}"></title>
+    <title th:text="${session.loginMember.nickname} + ' - ' + 購物車"></title>
 </head>
 
-<body class="bg-gray-100 w-screen">
+<body class="bg-gray-100">
+    <div class="container mx-auto my-10">
+        <div class="flex shadow-md my-10">
+            <div class="w-full bg-white px-10 py-10 rounded-md">
+                <div class="flex justify-between border-b pb-8">
+                    <h1 class="font-semibold text-2xl">購物車</h1>
+                    <div class="font-semibold text-2xl">
+                        <span class="gamecount" th:text="${#lists.size(games)}"></span>
+                        <span>款遊戲</span>
+                    </div>
+                </div>
 
+                <div th:if="${games == null}">
+                    <span>購物車目前沒有遊戲！</span>
+                </div>
+
+                <th:block th:if="${games}" th:each="game:${games}">
+                    <div class="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5 game">
+                        <div class="hidden gameId" th:text="${game.gameId}"></div>
+                        <div class="flex w-4/5">
+                            <!-- 遊戲 -->
+                            <div class="w-3/5 flex justify-center items-center">
+                                <a th:if="${!game.imageLibs.empty}" th:href="@{/game/showGame(gameId=${game.gameId})}">
+                                    <img class="h-32 lg:h-64 w-auto"
+                                        th:src="@{/imagesLib/image{id}(id=${game.imageLibs[0].imageId})}" alt="產品圖片">
+                                </a>
+                                <a th:if="${game.imageLibs.empty}">
+                                    <img class="h-32 lg:h-64 w-auto" alt="產品圖片">
+                                </a>
+                            </div>
+                            <div class="flex flex-col justify-between ml-4 flex-grow w-2/5">
+                                <a th:href="@{/game/showGame(gameId=${game.gameId})}" class="font-bold text-4xl"
+                                    th:text="${game.gameName}"></a>
+                                <span class="text-gray-600 font-semibold text-xl"
+                                    th:text="發布日期： + ${#temporals.format(game.releaseAt,'yyyy年MM月dd日')}"></span>
+                                <span
+                                    class="text-lg text-red-600 bg-gray-300 max-w-max p-1 rounded-md font-semibold border border-black select-none cursor-pointer mybtn remove">移除</span>
+                            </div>
+                        </div>
+                        <div class="w-1/5 text-end font-semibold text-lg flex flex-col">
+                            <span class="text-green-600 me-2" th:if="${game.rate}"
+                                th:text="'-' + ${100 - game.rate} + '%'"></span>
+                            <div>
+                                <span th:class="${game.rate} ? 'text-green-600'">NT$</span>
+                                <span th:class="${game.discountedPrice} ? 'price text-green-600' : 'price'"
+                                    th:text="${game.discountedPrice} ? ${game.discountedPrice} : ${game.price}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+
+                <div class="flex justify-end items-center mt-10 space-x-10 font-semibold text-2xl">
+                    <div class="">總價</div>
+                    <div>
+                        <span class="text-end">NT$</span>
+                        <span class="text-end total"></span>
+                    </div>
+                </div>
+                <div class="text-2xl mt-5">
+                    <div class="flex items-centert">
+                        <a th:href="@{/game/gameStore}" class="mybtn mybtn-sky me-auto">返回商店</a>
+                        <a class="mybtn mybtn-green ms-auto">結帳</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="h-px"></div>
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script>
+        const total = document.querySelector('.total');
+        const price = document.querySelectorAll('.price');
+        const gamecount = document.querySelector('.gamecount');
+        let totalPrice = 0;
+        let totalGame = parseInt(gamecount.innerHTML.trim());
+        price.forEach(elm => {
+            totalPrice += parseInt(elm.innerHTML);
+        });
+        total.innerHTML = totalPrice;
+
+        const remove = document.querySelectorAll('.remove');
+        remove.forEach(elm => {
+            elm.addEventListener('click', e => {
+                const thisprice = parseInt(elm.closest('.game').querySelector('.price').innerHTML.trim());
+                totalGame -= 1;
+                gamecount.innerHTML = totalGame;
+                totalPrice -= thisprice;
+                total.innerHTML = totalPrice;
+                const gameId = parseInt(elm.closest('.game').querySelector('.gameId').innerHTML.trim());
+                console.log(gameId);
+                axios.get('/PlayCentric/gamecart/remove', {
+                    params: {
+                        gameId: gameId
+                    }
+                })
+                    .then(res => {
+                        elm.closest('.game').remove();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+            })
+        });
+    </script>
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
+
 <head>
     <meta charset="UTF-8">
     <title>編輯文章</title>
@@ -8,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
+
 <body>
     <div th:replace="~{/forum/layout/navbarForum}"></div>
     <div class="container">
@@ -16,7 +18,7 @@
                 <h1 class="mt-5">編輯文章</h1>
                 <div class="card">
                     <div class="card-body">
-                        <form th:action="@{/texts/update}" th:object="${texts}" method="post">
+                        <form th:action="@{/texts/edit}" th:object="${texts}" method="post">
                             <input type="hidden" th:field="*{textsId}" />
                             <input type="hidden" th:field="*{doneTime}" />
                             <div class="form-group">
@@ -25,7 +27,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="textsContent">內容</label>
-                                <textarea class="form-control" id="textsContent" th:field="*{textsContent}" rows="10" required></textarea>
+                                <textarea class="form-control" id="textsContent" th:field="*{textsContent}" rows="10"
+                                    required></textarea>
                             </div>
                             <button type="submit" class="btn btn-outline-primary">儲存</button>
                         </form>
@@ -35,4 +38,5 @@
         </div>
     </div>
 </body>
+
 </html>
