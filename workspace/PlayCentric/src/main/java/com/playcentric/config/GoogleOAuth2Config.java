@@ -1,5 +1,6 @@
 package com.playcentric.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -20,13 +21,14 @@ public class GoogleOAuth2Config {
 	@Value("${redirect_uris}")
 	private String redirectUri;
 	
-	@Value("${server_uri}")
-	private String serverUri;
-	
 	@Value("${controller_path}")
 	private String controllerPath;
 
+	@Autowired
+	private NgrokConfig ngrokConfig;
+
 	public String getRedirectUri(){
-		return serverUri+controllerPath;
+		return this.redirectUri;
+		// return ngrokConfig.getUrl()+controllerPath;
 	}
 }
