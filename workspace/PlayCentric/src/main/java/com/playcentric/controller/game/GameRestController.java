@@ -1,6 +1,5 @@
 package com.playcentric.controller.game;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,45 +9,58 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
-import org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.game.primary.GameDiscount;
 import com.playcentric.model.game.primary.GameTypeLib;
+import com.playcentric.model.game.secondary.GameCarts;
+import com.playcentric.model.member.LoginMemDto;
+import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameService;
 
 @RestController
+@SessionAttributes("loginMember")
 public class GameRestController {
+	
+	@ModelAttribute("loginMember")
+	public LoginMemDto createLoginMemDto() {
+		return null;
+	}
 	
 	@Autowired
 	private GameService gService;
+	@Autowired
+	private GameCartService gcService;
 	
 	//所有遊戲
 	@GetMapping("/game/getGamePage")
-	public Page<Game> getGamePage(@RequestParam Integer pg) {
+	public Page<Game> getGamePage(@RequestParam Integer pg,@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		Pageable pgb = PageRequest.of(pg, 9);
 		Page<Game> findGames = gService.findShowInStore(pgb);
+		System.out.println("1645165156");
+		if (loginMember != null) {
+			System.out.println(loginMember.getMemId());
+		}
 		for (Game game : findGames) {
-			GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
-			if (nowDiscount != null) {
-				Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
-				int rate = (int) (oldRate * 100);
-				game.setRate(rate);
-				Integer discountedPrice = game.getPrice() * game.getRate() / 100;
-				game.setDiscountedPrice(discountedPrice);
+			gService.setRateAndDiscountPrice(game);
+			if (loginMember != null) {
+				gcService.checkInCart(loginMember, game);
 			}
 		}
+		
 		return findGames;
 	}
 	
 	//用分類找遊戲
 	@GetMapping("/game/getGamePageByType")
 	public Page<Game> getGamePageByType(@RequestParam Integer pg,
-	                                    @RequestParam List<Integer> typeId) {
+	                                    @RequestParam List<Integer> typeId,
+	                                    @ModelAttribute("loginMember") LoginMemDto loginMember) {
 	    Pageable pgb = PageRequest.of(pg, 9);
 	    List<Game> gamePage = gService.findByIsShow().stream()
 	            .filter(game -> game.getGameTypeLibs().stream()
@@ -62,13 +74,9 @@ public class GameRestController {
 	    }
 	    else {
 			for (Game game2 : gamePage) {
-				GameDiscount nowDiscount = gService.findNowDiscount(game2.getGameId());
-				if (nowDiscount != null) {
-					Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
-					int rate = (int) (oldRate * 100);
-					game2.setRate(rate);
-					Integer discountedPrice = game2.getPrice() * game2.getRate() / 100;
-					game2.setDiscountedPrice(discountedPrice);
+				gService.setRateAndDiscountPrice(game2);
+				if (loginMember != null) {
+					gcService.checkInCart(loginMember, game2);
 				}
 			}
 		}
@@ -91,32 +99,23 @@ public class GameRestController {
 	public Page<Game> getGamePageByPrice(
 			@RequestParam Integer pg,
 			@RequestParam Integer minPrice,
-			@RequestParam Integer maxPrice
+			@RequestParam Integer maxPrice,
+			@ModelAttribute("loginMember") LoginMemDto loginMember
 			) {
 		Pageable pgb = PageRequest.of(pg, 9);
 		List<Game> gamelist = gService.findAll().stream()
 				.filter(game -> {
-					GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
-					if (nowDiscount != null) {
-						Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
-						int rate = (int) (oldRate * 100);
-						game.setRate(rate);
+					Integer discountedPrice = game.getPrice();
+					Integer myDiscountPrice = gService.setRateAndDiscountPrice(game);
+					if (loginMember != null) {
+						gcService.checkInCart(loginMember, game);
 					}
-					Integer discountedPrice;
-	                // 过滤折扣后价格在指定范围内的游戏
-					if (game.getRate() != null) {
-						discountedPrice = game.getPrice() * game.getRate() / 100;
-						game.setDiscountedPrice(discountedPrice);
-					}
-					else {
-						discountedPrice = game.getPrice();
+					if (myDiscountPrice != null) {
+						discountedPrice = myDiscountPrice;
 					}
 	                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
 	            })
 	            .collect(Collectors.toList());
-		for (Game game2 : gamelist) {
-			System.out.println(game2.getRate());
-		}
 		// 計算分頁索引
 	    int start = (int) pgb.getOffset();
 	    int end = Math.min(start + pgb.getPageSize(), gamelist.size());
@@ -135,7 +134,8 @@ public class GameRestController {
 			@RequestParam Integer pg,
 			@RequestParam Integer minPrice,
 			@RequestParam Integer maxPrice,
-			@RequestParam List<Integer> typeId) {
+			@RequestParam List<Integer> typeId,
+			@ModelAttribute("loginMember") LoginMemDto loginMember) {
 	    Pageable pgb = PageRequest.of(pg, 9);
 	    // 根據條件查詢遊戲
 	    List<Game> gamePage = gService.findAll().stream()
@@ -144,23 +144,13 @@ public class GameRestController {
 	                    .collect(Collectors.toSet())
 	                    .containsAll(typeId))
 	            .filter(game -> {
+	            	if (loginMember != null) {
+	        			gcService.checkInCart(loginMember, game);
+	        		}
 	            	Integer discountedPrice;
-					GameDiscount nowDiscount = gService.findNowDiscount(game.getGameId());
-					if (nowDiscount != null) {
-						Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
-						int rate = (int) (oldRate * 100);
-						game.setRate(rate);
-						discountedPrice = game.getPrice() * game.getRate() / 100;
-						game.setDiscountedPrice(discountedPrice);
-					}
+	            	discountedPrice = game.getPrice();
+					gService.setRateAndDiscountPrice(game);
 	                // 过滤折扣后价格在指定范围内的游戏
-					if (game.getRate() != null) {
-						discountedPrice = game.getPrice() * game.getRate() / 100;
-						game.setDiscountedPrice(discountedPrice);
-					}
-					else {
-						discountedPrice = game.getPrice();
-					}
 	                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
 	            })
 	            .collect(Collectors.toList());

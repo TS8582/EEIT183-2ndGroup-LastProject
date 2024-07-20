@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <div class="col-span-1 my-3 mx-1 border-2 border-gray-500 px-4 py-2 rounded-md">
+            <div class="col-span-1 my-3 mx-1 border-2 border-gray-500 px-4 py-2 rounded-md gameitem">
                 <div class="space-y-2 sm:text-center lg:text-start">
                     <h1 class="text-5xl font-bold gameName" th:text="${game.gameName}"></h1>
                     <div class="font-semibold text-xl developer" th:text="'開發者：' + ${game.developer}"></div>
@@ -85,17 +85,20 @@
                     <div class="flex sm:justify-center lg:justify-start">
                         <a th:if="${session.loginMember == null}" th:href="@{/member/login}"
                             class="mybtn mybtn-green">加入購物車</a>
-                        <span th:if="${session.loginMember} ? ${#lists.contains(cartIds,game.gameId)}" href="#"
-                            class="mybtn-disabled">已加入購物車</span>
-                        <span th:if="${session.loginMember} ? ${!#lists.contains(cartIds,game.gameId)}"
+                        <span th:if="${session.loginMember} ? ${game.isInCart}" class="mybtn-disabled">已加入購物車</span>
+                        <span th:if="${session.loginMember} ? ${!game.isInCart}"
                             class="mybtn mybtn-green cart">加入購物車</span>
-                        <div class="hidden memId" th:text="${session.loginMember} ? ${session.loginMember.memId}">
-                        </div>
+                        <span th:if="${session.loginMember} ? ${game.isHaveGame}"
+                            class="mybtn mybtn-green download">下載</span>
                         <div class="hidden gameId" th:text="${game.gameId}"></div>
+
                     </div>
+                    <div class="hidden gameId" th:text="${game.gameId}"></div>
                 </div>
             </div>
         </div>
+        </div>
+        <div class="hidden memId" th:text="${session.loginMember} ? ${session.loginMember.memId}"></div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 w-full">
             <div class="sm:col-span-1 lg:col-span-2 m-3 h-full">
