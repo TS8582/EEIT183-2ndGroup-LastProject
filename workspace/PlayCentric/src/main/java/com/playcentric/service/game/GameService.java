@@ -87,7 +87,7 @@ public class GameService {
 	}
 	
 	//設定折扣與折扣價
-	public void setRateAndDiscountPrice(Game game) {
+	public Integer setRateAndDiscountPrice(Game game) {
 		GameDiscount nowDiscount = findNowDiscount(game.getGameId());
 		if (nowDiscount != null) {
 			Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
@@ -95,7 +95,9 @@ public class GameService {
 			game.setRate(rate);
 			Integer discountedPrice = game.getPrice() * game.getRate() / 100;
 			game.setDiscountedPrice(discountedPrice);
+			return discountedPrice;
 		}
+		return null;
 	}
 	
 	
