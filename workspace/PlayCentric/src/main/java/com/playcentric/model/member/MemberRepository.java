@@ -10,11 +10,14 @@ import org.springframework.data.repository.query.Param;
 
 
 
+
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 	Member findByAccount(String account);
 	
 	Member findByAccountAndStatus(String account,Short status);
+
+	Member findByLoginToken(String loginToken);
 
 	Member findByPasswordToken(String passwordToken);
 

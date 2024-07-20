@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -15,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playcentric.config.GoogleOAuth2Config;
+import com.playcentric.config.NgrokConfig;
 import com.playcentric.model.member.GoogleLogin;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
@@ -29,8 +31,10 @@ public class GoogleOAuth2Controller {
 	private GoogleOAuth2Config googleOAuth2Config;
 
 	@Autowired
+	private NgrokConfig ngrokConfig;
+
+	@Autowired
 	private MemberService memberService;
-	
 
 	private final String scope = "https://www.googleapis.com/auth/userinfo.eamil";
 
@@ -136,14 +140,22 @@ public class GoogleOAuth2Controller {
 				member.setEmailVerified(verified);
 			}
 			member = memberService.memberLogin(member);
-			loginMember = memberService.setLoginDto(member);
-			model.addAttribute("loginMember", loginMember);
-			return "redirect:/member/loginSuccess";
 
+			return "redirect:" + ngrokConfig.getUrl() + "/PlayCentric/member/google-loginOK/" + member.getLoginToken();
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("redirectMsg", "登入失敗!");
 			return "redirect:/member/login";
 		}
 	}
+
+	@GetMapping("/google-loginOK/{loginToken}")
+	public String googleLogin(@PathVariable String loginToken, Model model) {
+		LoginMemDto loginMember = memberService.getLoginMember(loginToken);
+		if (loginMember != null) {
+			model.addAttribute("loginMember", loginMember);
+		}
+		return "redirect:/member/loginSuccess";
+	}
+
 }

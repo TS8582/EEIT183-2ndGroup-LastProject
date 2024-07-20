@@ -43,9 +43,16 @@ public class MemberController {
 	@Autowired
 	private JavaMailSender mailSender;
 
+
+	@PostMapping("/back/regist")
+	@ResponseBody
+	public String backRegistMember(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model) throws IOException{
+		return registMember(member, photoFile, model);
+	}
+
 	@PostMapping("/regist")
 	@ResponseBody
-	public String registMemberTest(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile)
+	public String registMember(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model)
 			throws IOException {
 		System.err.println(member);
 		try {
@@ -64,6 +71,11 @@ public class MemberController {
 				Integer imageId = imageLibService.saveImage(imageLib).getImageId();
 				member.setPhoto(imageId);
 			}
+			LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+			loginMember = memberService.checkLoginMember(loginMember);
+			if (loginMember==null || loginMember.getRole() != 1) {
+				member.setRole((short)0);
+			}
 			memberService.addMember(member);
 			return "註冊成功!";
 		} catch (Exception e) {
@@ -72,10 +84,26 @@ public class MemberController {
 		return "註冊失敗!";
 	}
 
-	@GetMapping("/showLoginErr{err}")
-	public String showLoginErr(@PathVariable String err, Model model) {
-		model.addAttribute("errMsg", err);
-		return "member/loginPage";
+	//測試doAlert() 用
+	@GetMapping("/homeShowErr/{err}")
+	public String homeShowErr(@PathVariable String err, RedirectAttributes redirectAttributes) {
+		String redirectMsg = "";
+		if ("notMng".equals(err)) {
+			redirectMsg = "您不是管理員!";
+		}
+		redirectAttributes.addFlashAttribute("redirectMsg", redirectMsg);
+		return "redirect:/";
+	}
+	
+	//測試doAlert() 用
+	@GetMapping("/showLoginErr/{err}")
+	public String showLoginErr(@PathVariable String err, RedirectAttributes redirectAttributes) {
+		String redirectMsg = "";
+		if ("notLogin".equals(err)) {
+			redirectMsg = "請先登入會員!";
+		}
+		redirectAttributes.addFlashAttribute("redirectMsg", redirectMsg);
+		return "redirect:/member/login";
 	}
 
 	@GetMapping("/login")
@@ -109,6 +137,7 @@ public class MemberController {
 	@GetMapping("/loginSuccess")
 	public String loginSeccess(RedirectAttributes redirectAttributes, Model model) {
 		LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
+		redirectAttributes.addFlashAttribute("redirectMsg", "登入錯誤，請重試!");
 		if (loginMember != null) {
 			String loginName = loginMember.getNickname();
 			redirectAttributes.addFlashAttribute("redirectMsg", loginName + "登入成功!");
@@ -123,12 +152,12 @@ public class MemberController {
 		return "redirect:/";
 	}
 
-	@GetMapping("/memManage")
-	public String managePage(Model model) {
+	@GetMapping("/back/memManage")
+	public String managePage() {
 		return "member/managePage";
 	}
 
-	@GetMapping("/searchMemPage")
+	@GetMapping("/back/searchMemPage")
 	@ResponseBody
 	public Page<Member> searchMemberByPage(@RequestParam("page") Integer page,
 			@RequestParam("keyword") String keyword) {
@@ -142,7 +171,7 @@ public class MemberController {
 		return memPage;
 	}
 
-	@GetMapping("/getMember")
+	@GetMapping("/back/getMember")
 	@ResponseBody
 	public Member showMemberByPage(@RequestParam("memId") Integer memId) {
 		Member member = memberService.findById(memId);
@@ -160,17 +189,19 @@ public class MemberController {
 	public String updateSelfMember(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model)
 			throws IOException {
 		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		loginMember = memberService.checkLoginMember(loginMember);
 		if (loginMember==null || loginMember.getMemId() != member.getMemId()) {
 			return "請重新登入!";
 		}
 		return updateMember(member, photoFile, model);
 	}
 
-	@PostMapping("/update")
+	@PostMapping("/back/update")
 	@ResponseBody
 	public String updateMember(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model)
 			throws IOException {
 		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		loginMember = memberService.checkLoginMember(loginMember);
 		if (loginMember==null || loginMember.getRole() != 1) {
 			return "無權修改!";
 		}
@@ -206,10 +237,11 @@ public class MemberController {
 		return "更新失敗!";
 	}
 
-	@DeleteMapping("/deleteMem")
+	@DeleteMapping("/back/delete")
 	@ResponseBody
 	public String deleteMem(@RequestParam("memId") Integer memId, Model model) {
 		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		loginMember = memberService.checkLoginMember(loginMember);
 		if (loginMember==null || loginMember.getRole() != 1) {
 			return "無權刪除!";
 		}
@@ -218,7 +250,9 @@ public class MemberController {
 
 	@GetMapping("/memInfo")
 	public String memInfoPage(Model model, RedirectAttributes redirectAttributes) {
-		if (model.getAttribute("loginMember") == null) {
+		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
+		loginMember = memberService.checkLoginMember(loginMember);
+		if (loginMember == null) {
 			redirectAttributes.addFlashAttribute("redirectMsg", "請先登入會員!");
 			return "redirect:login";
 		}

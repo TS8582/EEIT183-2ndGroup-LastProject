@@ -81,6 +81,8 @@ public class Member {
     private Boolean emailVerified;
     @JsonIgnore
     private String emailVerifyToken;
+    @JsonIgnore
+    private String loginToken;
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
