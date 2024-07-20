@@ -99,7 +99,7 @@ public class TalkController {
 	}
 
 	// 更新談話
-    @PutMapping("/update")
+    @PutMapping("/talk/update")
     public String updateTalk(@RequestParam("talkId") Integer talkId,
                              @RequestParam("talkContent") String talkContent,
                              Model model) {
@@ -108,14 +108,14 @@ public class TalkController {
             talk.setTalkContent(talkContent);
             talkService.insert(talk);
         }
-        return "redirect:/talks";
+        return "redirect:/findAllTalk";
     }
 
 	// 刪除留言
 	@GetMapping("/talk/delete")
 	public String deleteTalk(@RequestParam Integer talkId) {
 		talkService.deleteTalkById(talkId);
-		return "redirect:/talk/page";
+		return "redirect:/findAllTalk";
 	}
 
 	// 新增一筆後，回傳傳最新的前三筆(ajax)

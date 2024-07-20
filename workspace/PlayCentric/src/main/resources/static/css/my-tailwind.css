@@ -30,16 +30,20 @@
     @apply border-gray-900 bg-slate-200
 }
 
+.mybtn-disabled {
+    @apply text-black py-2 px-3 select-none bg-gray-300 rounded-md
+}
+
 .mybtn-sky {
-    @apply text-white py-2 px-3 cursor-pointer bg-sky-500 rounded-md
+    @apply text-white py-2 px-3 select-none cursor-pointer bg-sky-500 rounded-md
 }
 
 .mybtn-green {
-    @apply text-white py-2 px-3 cursor-pointer bg-lime-600 rounded-md border border-gray-600
+    @apply text-white py-2 px-3 select-none cursor-pointer bg-lime-600 rounded-md border border-gray-600
 }
 
 .mybtn-danger {
-    @apply text-white py-2 px-3 cursor-pointer bg-red-700 rounded-md
+    @apply text-white py-2 px-3 select-none cursor-pointer bg-red-700 rounded-md
 }
 
 .mybtn-tag {

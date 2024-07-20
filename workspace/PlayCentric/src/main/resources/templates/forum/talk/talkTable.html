@@ -1,10 +1,176 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="BIG5">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Include DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+
+    <!-- Include jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Include DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 </head>
-<body>
+<style>
+    body {
+        background-image: url("[[@{/images/loginBG.jpg}]]");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .t1 {
+        margin-left: 3.5%;
+        padding: 0px;
+        width: 100%;
+    }
+
+    .container {
+        background-color: rgb(252, 243, 232);
+        border-radius: 15px;
+        padding: 70px !important;
+    }
+
+    .description {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    table {
+        border: 2px solid gray !important;
+    }
+
+    /* 增加特異性 */
+    table .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        border: 6px outset transparent;
+        border-radius: 4px;
+        text-decoration: none !important;
+        transition: all 0.3s ease;
+    }
+
+    table .btn-edit {
+        color: #fff !important;
+        background-color: #337ab7 !important;
+        border-color: #2e6da4 !important;
+    }
+
+    table .btn-delete {
+        color: #fff !important;
+        background-color: #d9534f !important;
+        border-color: #d43f3a !important;
+    }
+
+    table .btn:hover {
+        opacity: 0.8;
+    }
+
+    table .btn:active {
+        transform: translateY(2px);
+    }
+
+    table .btn-edit:active {
+        background-color: #144363 !important;
+    }
+
+    table .btn-delete:active {
+        background-color: #791616 !important;
+    }
+</style>
+
+
+<body class="h-screen flex flex-col w-screen">
+
+    <div th:replace="~{layout/backen_nav}"></div>
+    <div th:replace="~{forum/layout/backnavbar}"></div>
+
+    <div>
+        <section id="Wishlist" class="py-5 my-5">
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container">
+                        <form method="post" th:action="@{/findAlltalk}">
+                            <table id="myTable" class="display cell-border stripe nowrap" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th>留言Id</th>
+                                        <th>留言內容</th>
+                                        <th>發佈日期</th>
+                                        <!-- <th>會員Id</th> -->
+                                        <th>狀態</th>
+                                        <th>修改</th>
+                                        <th>刪除</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="talk : ${arrayList}">
+                                        <td th:text="${talk.talkId}"></td>
+                                        <td th:text="${talk.talkContent}" class="text-area"></td>
+                                        <td th:text="${talk.talkTime}"></td>
+                                        <!-- <td th:text="${post.memberId}"></td> -->
+                                        <td th:text="${talk.hideTalk} ? '是' : '否'"></td>
+                                        <td><a th:href="@{/talk/edit(talkId=${talk.talkId})}">修改</a></td>
+                                        <td><a class="delete" th:href="@{/talk/delete(talkId=${talk.talkId})}"
+                                                onclick="return confirm('你確定要刪除這個主題嗎？');">刪除</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "language": {
+                    "processing": "處理中...",
+                    "loadingRecords": "載入中...",
+                    "paginate": {
+                        "first": "第一頁",
+                        "previous": "上一頁",
+                        "next": "下一頁",
+                        "last": "最後一頁"
+                    },
+                    "emptyTable": "目前沒有資料",
+                    "zeroRecords": "沒有符合的資料",
+                    "info": "顯示第 _START_ 至 _END_ 筆結果，共 _TOTAL_ 筆",
+                    "infoEmpty": "顯示第 0 至 0 筆結果，共 0 筆",
+                    "infoFiltered": "(從 _MAX_ 筆結果中篩選)",
+                    "search": "搜尋：",
+                    "searchPlaceholder": "請輸入關鍵字",
+                    "lengthMenu": "顯示 _MENU_ 筆結果",
+                    "loadingRecords": "載入中...",
+                    "processing": "處理中...",
+                    "aria": {
+                        "sortAscending": "：升冪排列",
+                        "sortDescending": "：降冪排列"
+                    }
+                }
+            });
+        });
+    </script>
 
 </body>
+
 </html>
