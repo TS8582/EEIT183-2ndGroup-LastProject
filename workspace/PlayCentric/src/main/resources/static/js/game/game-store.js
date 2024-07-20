@@ -9,6 +9,19 @@ const typeselector = document.querySelectorAll('input[name="typeId"]');
 let scrolltrigger = true;
 let runcount = 0;
 
+const gameName = document.querySelector('#gameName');
+gameName.addEventListener('input', e => {
+    const reg = new RegExp(gameName.value, 'i');
+    const name = document.querySelectorAll('.name');
+    name.forEach(myname => {
+        if (reg.test(myname.innerHTML)) {
+            myname.closest('.gameitem').classList.remove('hidden');
+        }
+        else {
+            myname.closest('.gameitem').classList.add('hidden');
+        }
+    });
+})
 
 // 滑到底部載入事件
 let scrollTimer = null;
@@ -101,7 +114,6 @@ async function myEvent() {
             scrolltrigger = true;
         }
         else {
-
         }
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -401,7 +413,7 @@ function htmlmaker(game) {
     let gameTitle = document.createElement('div');
     gameTitle.classList.add('flex', 'justify-center');
     let titleSpan = document.createElement('span');
-    titleSpan.classList.add('text-xl', 'p-2', 'rounded-md', 'select-none');
+    titleSpan.classList.add('text-xl', 'p-2', 'rounded-md', 'select-none', 'name');
     titleSpan.textContent = game.gameName;
     let namelink = document.createElement('a');
     namelink.href = `/PlayCentric/game/showGame?gameId=${game.gameId}`;
@@ -475,6 +487,7 @@ function htmlmaker(game) {
 
     // 添加外層 div 到主要內容區域
     main.appendChild(gameItem);
+    gameName.dispatchEvent(new Event('input'));
 }
 
 
