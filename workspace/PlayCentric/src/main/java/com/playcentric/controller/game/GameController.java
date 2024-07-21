@@ -82,7 +82,7 @@ public class GameController {
 		}
 		model.addAttribute("typeIds",typeIds);
 		List<GameTypeLib> allType = gtService.findAll();
-		List<GameDiscountSet> allDiscount = gdsService.findBetweenStartAndEnd(LocalDateTime.now());
+		List<GameDiscountSet> allDiscount = gdsService.findCanChoose();
 		model.addAttribute("allType", allType);
 		model.addAttribute("allDiscount", allDiscount);
 		
