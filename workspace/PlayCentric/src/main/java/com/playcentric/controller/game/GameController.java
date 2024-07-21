@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.playcentric.model.ImageLib;
@@ -33,7 +34,13 @@ import com.playcentric.service.game.GameTypeService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@SessionAttributes("loginMember")
 public class GameController {
+	
+	@ModelAttribute("loginMember")
+	public LoginMemDto createLoginMemDto() {
+		return null;
+	}
 
 	@Autowired
 	private GameService gService;
@@ -243,21 +250,15 @@ public class GameController {
 	
 	//遊戲商店頁面
 	@GetMapping("/game/gameStore")
-	public String gameStore(Model model,HttpSession session) {
+	public String gameStore(Model model,@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		PageRequest pgb = PageRequest.of(0, 9);
 		Page<Game> games = gService.findShowInStore(pgb);
 		List<GameTypeLib> allType = gtService.findAll();
 		for (Game game : games) {
 			gService.setRateAndDiscountPrice(game);
-		}
-		LoginMemDto loginMem = (LoginMemDto) session.getAttribute("loginMember");
-		if (loginMem != null) {
-			List<Integer> cartIds = new ArrayList<>();
-			List<GameCarts> carts = gcService.findByMemId(loginMem.getMemId());
-			for (GameCarts gameCarts : carts) {
-				cartIds.add(gameCarts.getGameId());
+			if (loginMember != null) {
+				gcService.checkInCart(loginMember, game);
 			}
-			model.addAttribute("cartIds",cartIds);
 		}
 		model.addAttribute("allType",allType);
 		model.addAttribute("games",games);
@@ -266,19 +267,13 @@ public class GameController {
 	
 	@GetMapping("/game/showGame")
 	public String showGame(@RequestParam Integer gameId,
-			Model model,HttpSession session) {
+			Model model,@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		Game game = gService.findById(gameId);
 		gService.setRateAndDiscountPrice(game);
-		model.addAttribute("game",game);
-		LoginMemDto loginMem = (LoginMemDto) session.getAttribute("loginMember");
-		if (loginMem != null) {
-			List<Integer> cartIds = new ArrayList<>();
-			List<GameCarts> carts = gcService.findByMemId(loginMem.getMemId());
-			for (GameCarts gameCarts : carts) {
-				cartIds.add(gameCarts.getGameId());
-			}
-			model.addAttribute("cartIds",cartIds);
+		if (loginMember != null) {
+			gcService.checkInCart(loginMember, game);
 		}
+		model.addAttribute("game",game);
 		return "game/show-game";
 	}
 	

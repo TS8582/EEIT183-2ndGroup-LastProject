@@ -29,7 +29,7 @@ public class LoginMemDto {
     // private Short gender;
     // private Short status;
     private Integer points;
-
+    
 
     public LoginMemDto(Member member) {
         this.account = member.getAccount();
@@ -37,9 +37,10 @@ public class LoginMemDto {
         this.memId = member.getMemId();
         this.memName = member.getMemName();
         this.nickname = member.getNickname();
-        this.photo = member.getPhoto()!=null? "http://localhost:8080/PlayCentric/imagesLib/image"+member.getPhoto():
-                member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
-                "http://localhost:8080/PlayCentric/imagesLib/image144";
+        this.photo = member.getPhoto().toString();
+        // this.photo = member.getPhoto()!=null? url+"/PlayCentric/imagesLib/image"+member.getPhoto():
+        //         member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
+        //         url+"/PlayCentric/imagesLib/image144";
         this.points = member.getPoints();
         this.role = member.getRole();
     }

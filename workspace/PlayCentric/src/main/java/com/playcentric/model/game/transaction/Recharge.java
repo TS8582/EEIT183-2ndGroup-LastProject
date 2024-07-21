@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.playcentric.model.member.Member;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +29,7 @@ public class Recharge {
 	private Integer paymentId;
 	private Integer amount;
 	private LocalDateTime rechargeAt;
+	private Short status;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "memId",insertable=false, updatable=false)

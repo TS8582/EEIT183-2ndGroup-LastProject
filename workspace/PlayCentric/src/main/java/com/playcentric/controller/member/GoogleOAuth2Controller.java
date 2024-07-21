@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playcentric.config.GoogleOAuth2Config;
 import com.playcentric.model.member.GoogleLogin;
-import com.playcentric.model.member.Member;
 import com.playcentric.model.member.LoginMemDto;
+import com.playcentric.model.member.Member;
 import com.playcentric.service.member.MemberService;
 
 @Controller
@@ -30,6 +30,7 @@ public class GoogleOAuth2Controller {
 
 	@Autowired
 	private MemberService memberService;
+	
 
 	private final String scope = "https://www.googleapis.com/auth/userinfo.eamil";
 
@@ -41,6 +42,7 @@ public class GoogleOAuth2Controller {
 				+ "&redirect_uri=" + googleOAuth2Config.getRedirectUri()
 				+ "&state=state"
 				+ "&scope=openid%20email%20profile";
+		System.err.println(googleOAuth2Config.getRedirectUri());
 		return "redirect:" + authUrl;
 	}
 
@@ -133,7 +135,8 @@ public class GoogleOAuth2Controller {
 			if (userEmail.equals(member.getEmail())) {
 				member.setEmailVerified(verified);
 			}
-			loginMember = new LoginMemDto(memberService.memberLogin(member));
+			member = memberService.memberLogin(member);
+			loginMember = memberService.setLoginDto(member);
 			model.addAttribute("loginMember", loginMember);
 			return "redirect:/member/loginSuccess";
 

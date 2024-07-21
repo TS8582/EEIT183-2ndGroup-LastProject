@@ -10,9 +10,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.playcentric.config.NgrokConfig;
 import com.playcentric.model.ImageLibRepository;
 import com.playcentric.model.member.GoogleLogin;
 import com.playcentric.model.member.GoogleLoginRepository;
+import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
 import com.playcentric.model.member.MemberRepository;
 
@@ -30,6 +32,9 @@ public class MemberService {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private NgrokConfig ngrokConfig;
 	
 	
 	public void setGoogleVerified(String googleId, Boolean verified){
@@ -213,5 +218,23 @@ public class MemberService {
 		member.setPassword(encodedPwd);
 		member.setPasswordToken(null);
 		return memberRepository.save(member);
+	}
+
+	public LoginMemDto setLoginDto(Member member){
+        String url = ngrokConfig.getUrl();
+		LoginMemDto loginMember = new LoginMemDto();
+		loginMember.setAccount(member.getAccount());
+		loginMember.setLastLogin(member.getLastLogin());
+		loginMember.setMemId(member.getMemId());
+		loginMember.setMemName(member.getMemName());
+		loginMember.setNickname(member.getNickname());
+		String photoPath = member.getPhoto()!=null? url+"/PlayCentric/imagesLib/image"+member.getPhoto():
+                member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
+                url+"/PlayCentric/imagesLib/image144";
+		loginMember.setPhoto(photoPath);
+		loginMember.setPoints(member.getPoints());
+		loginMember.setRole(member.getRole());
+
+		return loginMember;
 	}
 }

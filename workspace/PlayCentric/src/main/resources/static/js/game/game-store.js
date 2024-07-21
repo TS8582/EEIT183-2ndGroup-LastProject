@@ -7,15 +7,21 @@ const main = document.querySelector('main');
 const spin = document.querySelector('.spin');
 const typeselector = document.querySelectorAll('input[name="typeId"]');
 let scrolltrigger = true;
+let runcount = 0;
 
-// 轉到購物車頁面
-const showcarts = document.querySelector('.showcarts');
-if (showcarts) {
-    showcarts.addEventListener('click', e => {
-        const form = document.querySelector('form');
-        form.submit();
-    })
-}
+const gameName = document.querySelector('#gameName');
+gameName.addEventListener('input', e => {
+    const reg = new RegExp(gameName.value, 'i');
+    const name = document.querySelectorAll('.name');
+    name.forEach(myname => {
+        if (reg.test(myname.innerHTML)) {
+            myname.closest('.gameitem').classList.remove('hidden');
+        }
+        else {
+            myname.closest('.gameitem').classList.add('hidden');
+        }
+    });
+})
 
 // 滑到底部載入事件
 let scrollTimer = null;
@@ -70,13 +76,7 @@ async function handleScroll() {
     }
 }
 
-
-minPrice.addEventListener('input', handlePriceFilter);
-maxPrice.addEventListener('input', handlePriceFilter);
-
-async function handlePriceFilter() {
-    pgnum = 0; // 重置 pgnum 變數
-    // 清空主要內容區域
+async function myEvent() {
     try {
         if (typeId.length > 0 && minPrice.value === '' && maxPrice.value === '') {
             main.innerHTML = '';
@@ -85,17 +85,27 @@ async function handlePriceFilter() {
             await typefilter();
             scrolltrigger = true;
         } else if (typeId.length > 0 && minPrice.value !== '' && maxPrice.value !== '') {
-            main.innerHTML = '';
-            spin.classList.remove('hidden');
-            scrolltrigger = false;
-            await typeAndPriceFilter();
-            scrolltrigger = true;
+            if (!isNaN(minPrice.value) && !isNaN(maxPrice.value) && minPrice.value > 0 && maxPrice.value > 0) {
+                main.innerHTML = '';
+                spin.classList.remove('hidden');
+                scrolltrigger = false;
+                await typeAndPriceFilter();
+                scrolltrigger = true;
+            }
+            else {
+
+            }
         } else if (minPrice.value !== '' && maxPrice.value !== '' && typeId.length === 0) {
-            main.innerHTML = '';
-            spin.classList.remove('hidden');
-            scrolltrigger = false;
-            await pricefilter();
-            scrolltrigger = true;
+            if (!isNaN(minPrice.value) && !isNaN(maxPrice.value) && minPrice.value > 0 && maxPrice.value > 0) {
+                main.innerHTML = '';
+                spin.classList.remove('hidden');
+                scrolltrigger = false;
+                await pricefilter();
+                scrolltrigger = true;
+            }
+            else {
+
+            }
         } else if (minPrice.value == '' && maxPrice.value == '' && typeId.length === 0) {
             main.innerHTML = '';
             spin.classList.remove('hidden');
@@ -104,11 +114,19 @@ async function handlePriceFilter() {
             scrolltrigger = true;
         }
         else {
-
         }
     } catch (error) {
         console.error('Error fetching data:', error);
     }
+}
+
+minPrice.addEventListener('input', handlePriceFilter);
+maxPrice.addEventListener('input', handlePriceFilter);
+
+async function handlePriceFilter() {
+    pgnum = 0; // 重置 pgnum 變數
+    // 清空主要內容區域
+    myEvent();
 }
 
 typeselector.forEach(typecheck => {
@@ -117,38 +135,7 @@ typeselector.forEach(typecheck => {
             .filter(input => input.checked)
             .map(input => parseInt(input.value));
         pgnum = 0; // 重置 pgnum 變數
-        try {
-            if (typeId.length > 0 && minPrice.value === '' && maxPrice.value === '') {
-                main.innerHTML = '';
-                spin.classList.remove('hidden');
-                scrolltrigger = false;
-                await typefilter();
-                scrolltrigger = true;
-            } else if (typeId.length > 0 && minPrice.value !== '' && maxPrice.value !== '') {
-                main.innerHTML = '';
-                spin.classList.remove('hidden');
-                scrolltrigger = false;
-                await typeAndPriceFilter();
-                scrolltrigger = true;
-            } else if (minPrice.value !== '' && maxPrice.value !== '' && typeId.length === 0) {
-                main.innerHTML = '';
-                spin.classList.remove('hidden');
-                scrolltrigger = false;
-                await pricefilter();
-                scrolltrigger = true;
-            } else if (minPrice.value == '' && maxPrice.value == '' && typeId.length === 0) {
-                main.innerHTML = '';
-                spin.classList.remove('hidden');
-                scrolltrigger = false;
-                await nofilter();
-                scrolltrigger = true;
-            }
-            else {
-
-            }
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+        myEvent();
     });
 });
 
@@ -188,17 +175,22 @@ async function typefilter() {
                 }).join('&');
             }
         });
+        runcount += 1;
+        await wait(300);
         totalPages = response.data.totalPages;
         main.innerHTML = ''; // 清空主要內容區域
         spin.classList.add('hidden');
         for (const game of response.data.content) {
+            if (runcount > 1) {
+                break;
+            }
             htmlmaker(game);
             await wait(300);
         }
     } catch (error) {
         console.error('Error fetching data:', error);
     } finally {
-
+        runcount -= 1;
     }
 }
 
@@ -242,16 +234,22 @@ async function pricefilter() {
                 maxPrice: maxPrice.value
             }
         });
+        runcount += 1;
+        await wait(300);
         totalPages = response.data.totalPages;
         main.innerHTML = ''; // 清空主要內容區域
         spin.classList.add('hidden');
         for (const game of response.data.content) {
+            if (runcount > 1) {
+                break;
+            }
             htmlmaker(game);
             await wait(300);
         }
     } catch (error) {
         console.error('Error fetching data:', error);
     } finally {
+        runcount -= 1;
     }
 }
 
@@ -297,16 +295,22 @@ async function typeAndPriceFilter() {
                 }).join('&');
             }
         });
+        runcount += 1;
+        await wait(300);
         totalPages = res.data.totalPages;
         main.innerHTML = '';
         spin.classList.add('hidden');
         for (const elm of res.data.content) {
+            if (runcount > 1) {
+                break;
+            }
             htmlmaker(elm);
             await wait(300);
         }
     } catch (err) {
         console.error(err);
     } finally {
+        runcount -= 1;
     }
 }
 
@@ -346,16 +350,22 @@ async function nofilter() {
 
     try {
         const res = await axios.get('/PlayCentric/game/getGamePage', { params: { pg: pgnum } });
+        runcount += 1;
+        await wait(300);
         totalPages = res.data.totalPages;
         main.innerHTML = ''; // 清空主要內容區域
         spin.classList.add('hidden');
         for (const elm of res.data.content) {
+            if (runcount > 1) {
+                break;
+            }
             htmlmaker(elm);
             await wait(300);
         }
     } catch (err) {
         console.error(err);
     } finally {
+        runcount -= 1;
     }
 }
 
@@ -379,7 +389,7 @@ async function nofilterplus() {
 function htmlmaker(game) {
     // 創建外層 div
     let gameItem = document.createElement('div');
-    gameItem.classList.add('h-auto', 'shadow-md', 'border-2', 'rounded-lg', 'flex', 'flex-col', 'p-2', 'bg-white', 'border-sky-300', 'shadow-sky-500', 'fade-in-up');
+    gameItem.classList.add('h-auto', 'shadow-md', 'border-2', 'rounded-lg', 'flex', 'flex-col', 'p-2', 'bg-white', 'border-sky-300', 'shadow-sky-500', 'fade-in-up', 'gameitem');
 
     // 圖片區域
     let imageContainer = document.createElement('div');
@@ -403,7 +413,7 @@ function htmlmaker(game) {
     let gameTitle = document.createElement('div');
     gameTitle.classList.add('flex', 'justify-center');
     let titleSpan = document.createElement('span');
-    titleSpan.classList.add('text-xl', 'p-2', 'rounded-md', 'select-none');
+    titleSpan.classList.add('text-xl', 'p-2', 'rounded-md', 'select-none', 'name');
     titleSpan.textContent = game.gameName;
     let namelink = document.createElement('a');
     namelink.href = `/PlayCentric/game/showGame?gameId=${game.gameId}`;
@@ -413,7 +423,6 @@ function htmlmaker(game) {
     // 遊戲價格
     let gamePrice = document.createElement('div');
     gamePrice.classList.add('flex', 'justify-center', 'my-2', 'space-x-3');
-    console.log(game.rate);
     if (game.rate != null) {
         let discountSpan = document.createElement('span');
         discountSpan.classList.add('price-tag', 'font-semibold');
@@ -432,14 +441,45 @@ function htmlmaker(game) {
     }
 
     // 加入購物車按鈕
-    let addToCartBtn = document.createElement('button');
-    addToCartBtn.classList.add('border', 'border-red-300', 'mybtn', 'mybtn-green');
-    addToCartBtn.textContent = '加入購物車';
+    let addToCartBtn;
+    const memId = document.querySelector('.memId').innerHTML.trim();
+    if (memId !== '') {
+        if (game.inCart) {
+            addToCartBtn = document.createElement('span');
+            addToCartBtn.textContent = '已加入購物車';
+            addToCartBtn.classList.remove('mybtn', 'mybtn-green');
+            addToCartBtn.classList.add('mybtn-disabled');
+
+        }
+        else if (game.haveGame) {
+            addToCartBtn = document.createElement('span');
+            addToCartBtn.classList.add('mybtn', 'mybtn-green', 'cart');
+            addToCartBtn.textContent = '下載';
+        }
+        else if (!game.inCart) {
+            addToCartBtn = document.createElement('span');
+            addToCartBtn.classList.add('mybtn', 'mybtn-green', 'cart');
+            addToCartBtn.textContent = '加入購物車';
+        }
+    }
+    else {
+        addToCartBtn = document.createElement('a');
+        addToCartBtn.classList.add('mybtn', 'mybtn-green', 'cart');
+        addToCartBtn.textContent = '加入購物車';
+        addToCartBtn.href = '/PlayCentric/member/login';
+    }
+
+    addToCart();
+
+    let gameIdContainer = document.createElement('div');
+    gameIdContainer.classList.add('hidden', 'gameId');
+    gameIdContainer.innerHTML = game.gameId;
 
     // 添加所有元素到遊戲信息區域
     gameInfo.appendChild(gameTitle);
     gameInfo.appendChild(gamePrice);
     gameInfo.appendChild(addToCartBtn);
+    gameInfo.appendChild(gameIdContainer);
 
     // 將圖片區域和遊戲信息區域添加到外層 div
     gameItem.appendChild(imageContainer);
@@ -447,6 +487,7 @@ function htmlmaker(game) {
 
     // 添加外層 div 到主要內容區域
     main.appendChild(gameItem);
+    gameName.dispatchEvent(new Event('input'));
 }
 
 

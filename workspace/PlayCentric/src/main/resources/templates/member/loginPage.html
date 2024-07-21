@@ -157,9 +157,10 @@
 
   <script>
     $(function () {
-      const homePageUrl = "http://localhost:8080/PlayCentric/member/login"
-      const loginUrl = "http://localhost:8080/PlayCentric/member/login"
-      const registUrl = "http://localhost:8080/PlayCentric/member/regist";
+      const pageUrl = window.location.origin;
+      const homePageUrl = pageUrl+"/PlayCentric/member/login"
+      const loginUrl = pageUrl+"/PlayCentric/member/login"
+      const registUrl = pageUrl+"/PlayCentric/member/regist";
       var loginTab = new bootstrap.Tab(document.querySelector('#login-tab'));
       const redirectMsg = '[[${redirectMsg}]]'
 

@@ -25,6 +25,11 @@ import com.playcentric.service.game.GameService;
 @SessionAttributes("loginMember")
 public class GameCartController {
 	
+	@ModelAttribute("loginMember")
+	public LoginMemDto getLoginMember() {
+		return null;
+	}
+	
 	@Autowired
 	private GameCartService gcService;
 	@Autowired
@@ -34,6 +39,9 @@ public class GameCartController {
 	
 	@GetMapping("/get")
 	public String findMemGameCarts(@ModelAttribute("loginMember") LoginMemDto loginMember,Model model) {
+		if (loginMember == null) {
+			return "redirect:/game/gameStore";
+		}
 		List<GameCarts> gamecarts = gcService.findByMemId(loginMember.getMemId());
 		List<Game> games = new ArrayList<>();
 		if (gamecarts.size() > 0) {
