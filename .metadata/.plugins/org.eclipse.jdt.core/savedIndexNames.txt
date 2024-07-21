@@ -57,7 +57,6 @@ INDEX VERSION 1.134+D:\EEIT183-2ndGroup-LastProject\.metadata\.plugins\org.eclip
 460584369.index
 3571735217.index
 1504837600.index
-3518145724.index
 407361948.index
 1865797976.index
 914055889.index
