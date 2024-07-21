@@ -22,6 +22,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.playcentric.config.NgrokConfig;
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
@@ -43,8 +44,11 @@ public class MemberController {
 	@Autowired
 	private JavaMailSender mailSender;
 
+	@Autowired
+	private NgrokConfig ngrokConfig;
 
-	@PostMapping("/back/regist")
+
+	@PostMapping("/back/api/regist")
 	@ResponseBody
 	public String backRegistMember(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model) throws IOException{
 		return registMember(member, photoFile, model);
@@ -84,26 +88,37 @@ public class MemberController {
 		return "註冊失敗!";
 	}
 
-	//測試doAlert() 用
 	@GetMapping("/homeShowErr/{err}")
 	public String homeShowErr(@PathVariable String err, RedirectAttributes redirectAttributes) {
-		String redirectMsg = "";
-		if ("notMng".equals(err)) {
-			redirectMsg = "您不是管理員!";
+		if ("notLogin".equals(err) || "loginAgain".equals(err)) {
+			return showLoginErr(err, redirectAttributes);
 		}
+		String redirectMsg = checkErr(err);
 		redirectAttributes.addFlashAttribute("redirectMsg", redirectMsg);
 		return "redirect:/";
 	}
 	
-	//測試doAlert() 用
 	@GetMapping("/showLoginErr/{err}")
 	public String showLoginErr(@PathVariable String err, RedirectAttributes redirectAttributes) {
-		String redirectMsg = "";
-		if ("notLogin".equals(err)) {
-			redirectMsg = "請先登入會員!";
-		}
+		String redirectMsg = checkErr(err);
 		redirectAttributes.addFlashAttribute("redirectMsg", redirectMsg);
 		return "redirect:/member/login";
+	}
+
+	private String checkErr(String err){
+		switch (err) {
+			case "notLogin":
+				return "請先登入會員!";
+		
+			case "loginAgain":
+				return "請重新登入會員!";
+		
+			case "notMng":
+				return "您不是管理員!";
+		
+			default:
+				return err;
+		}
 	}
 
 	@GetMapping("/login")
@@ -157,53 +172,47 @@ public class MemberController {
 		return "member/managePage";
 	}
 
-	@GetMapping("/back/searchMemPage")
+	@GetMapping("/back/api/searchMemPage")
 	@ResponseBody
 	public Page<Member> searchMemberByPage(@RequestParam("page") Integer page,
 			@RequestParam("keyword") String keyword) {
 		Page<Member> memPage = memberService.findByKeyword(keyword, page);
 		for (Member member : memPage) {
 			member.setPhotoUrl(
-					member.getPhoto() != null ? "http://localhost:8080/PlayCentric/imagesLib/image" + member.getPhoto()
+					member.getPhoto() != null ? ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image" + member.getPhoto()
 							: member.getGoogleLogin() != null ? member.getGoogleLogin().getPhoto()
-									: "http://localhost:8080/PlayCentric/imagesLib/image144");
+									: ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image144");
 		}
 		return memPage;
 	}
 
-	@GetMapping("/back/getMember")
+	@GetMapping("/back/api/getMember")
 	@ResponseBody
-	public Member showMemberByPage(@RequestParam("memId") Integer memId) {
+	public Member getOneMember(@RequestParam("memId") Integer memId) {
 		Member member = memberService.findById(memId);
 		member.setPhotoUrl(
-				member.getPhoto() != null ? "http://localhost:8080/PlayCentric/imagesLib/image" + member.getPhoto()
+				member.getPhoto() != null ? ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image" + member.getPhoto()
 						: member.getGoogleLogin() != null ? member.getGoogleLogin().getPhoto()
-								: "http://localhost:8080/PlayCentric/imagesLib/image144");
+								: ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image144");
 		return member;
 	}
 
 
 
-	@PostMapping("/updateSelf")
+	@PostMapping("/personal/api/updateSelf")
 	@ResponseBody
 	public String updateSelfMember(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model)
 			throws IOException {
-		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
-		loginMember = memberService.checkLoginMember(loginMember);
-		if (loginMember==null || loginMember.getMemId() != member.getMemId()) {
-			return "請重新登入!";
-		}
 		return updateMember(member, photoFile, model);
 	}
 
-	@PostMapping("/back/update")
+	@PostMapping("/back/api/update")
 	@ResponseBody
 	public String updateMember(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile, Model model)
 			throws IOException {
 		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
-		loginMember = memberService.checkLoginMember(loginMember);
-		if (loginMember==null || loginMember.getRole() != 1) {
-			return "無權修改!";
+		if (loginMember==null) {
+			return "更新失敗!";
 		}
 		try {
 			Member originMem = memberService.findById(member.getMemId());
@@ -237,45 +246,38 @@ public class MemberController {
 		return "更新失敗!";
 	}
 
-	@DeleteMapping("/back/delete")
+	@DeleteMapping("/back/api/delete")
 	@ResponseBody
 	public String deleteMem(@RequestParam("memId") Integer memId, Model model) {
 		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
-		loginMember = memberService.checkLoginMember(loginMember);
-		if (loginMember==null || loginMember.getRole() != 1) {
-			return "無權刪除!";
+		if (loginMember==null) {
+			return "刪除失敗!";
 		}
-		return memberService.deleteMemById(memId) ? "刪除成功" : "刪除失敗";
+		return memberService.deleteMemById(memId) ? "刪除成功!" : "刪除失敗!";
 	}
 
-	@GetMapping("/memInfo")
-	public String memInfoPage(Model model, RedirectAttributes redirectAttributes) {
-		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
-		loginMember = memberService.checkLoginMember(loginMember);
-		if (loginMember == null) {
-			redirectAttributes.addFlashAttribute("redirectMsg", "請先登入會員!");
-			return "redirect:login";
-		}
+	@GetMapping("/personal/Info")
+	public String memInfoPage() {
 		return "member/memInfoPage";
 	}
 
-	@GetMapping("/getMemInfo")
+	@GetMapping("/personal/api/getInfo")
 	@ResponseBody
 	public Member getMemInfo(Model model) {
 		LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
-		if (loginMember != null) {
-			return memberService.findById(loginMember.getMemId());
+		if (loginMember == null) {
+			return null;
 		}
-		return null;
+		return getOneMember(loginMember.getMemId());
 	}
 
-	@PostMapping("/sendPtUrl")
+	@PostMapping("/personal/api/sendPtUrl")
 	@ResponseBody
 	public String sendPTEmail(Model model,@RequestParam String email) {
 
 		//生成Token
 		String token = UUID.randomUUID().toString();
-		String changePwdUrl = "http://localhost:8080/PlayCentric/member/changePassword/"+token;
+		String changePwdUrl = ngrokConfig.getUrl() + "/PlayCentric/member/changePassword/"+token;
 		
 		//判斷登入帳號
 		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
@@ -334,13 +336,13 @@ public class MemberController {
 		return "redirect:login";
 	}
 
-	@PostMapping("/sendVerUrl")
+	@PostMapping("/personal/api/sendVerUrl")
 	@ResponseBody
 	public String sendVerEmail(Model model,@RequestParam String email) {
 
 		//生成Token
 		String token = UUID.randomUUID().toString();
-		String changePwdUrl = "http://localhost:8080/PlayCentric/member/verifyEmail/"+token;
+		String changePwdUrl = ngrokConfig.getUrl() + "/PlayCentric/member/verifyEmail/"+token;
 		
 		//判斷登入帳號
 		LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
