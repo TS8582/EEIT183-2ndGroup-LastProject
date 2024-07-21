@@ -263,11 +263,11 @@
 
 					<div class="offcanvas-body" style="overflow-y: auto; padding: 20px;">
 						<ul class="list-group" style="list-style-type: none; padding: 0;">
-							<li style="border: none; padding: 10px 15px;">
+							
 								<a th:href="@{/playFellow}" style="color: #3B89C7; text-decoration: none;"
 									onmouseover="this.style.color='#2A9D8F'; this.style.textDecoration='underline';"
-									onmouseout="this.style.color='#3B89C7'; this.style.textDecoration='none';">回伴遊首頁</a>
-							</li>
+									onmouseout="this.style.color='#3B89C7'; this.style.textDecoration='none';"><li style="border: none; padding: 10px 15px;">回伴遊首頁</li></a>
+							
 							<li style="border: none; color: #3B89C7; font-weight: bold; padding: 10px 15px;">
 								遊戲類別
 							</li>
@@ -487,151 +487,8 @@
 	<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
-	<!-- <script th:src="@{/js/playfellow/plugins.js}"></script> -->
-	<!-- <script th:src="@{/js/playfellow/script.js}"></script> -->
 	<script th:src="@{/js/playfellow/playfellow.js}"></script>
-	<script>
-		var swiper = new Swiper('.swiper-container', {
-			slidesPerView: 2,
-			spaceBetween: 120,
-			loop: true,
-			autoplay: {
-				delay: 3000,
-				disableOnInteraction: false,
-			},
-			pagination: {
-				el: '.swiper-pagination',
-				clickable: true,
-			},
-			navigation: {
-				nextEl: '.swiper-button-next',
-				prevEl: '.swiper-button-prev',
-			},
-		});
-
-
-
-
-		document.addEventListener('DOMContentLoaded', function () {
-			const modal = document.getElementById('exampleModal');
-			let selectedPfGameId = null;  // 用於存儲選中的 pfGameId
-
-			modal.addEventListener('show.bs.modal', function (event) {
-				const button = event.relatedTarget;
-				const playFellowId = button.getAttribute('data-playfellowid');
-				const modalBodyContent = document.getElementById('modal-body-content');
-
-				modalBodyContent.innerHTML = '';
-
-				axios.get('/PlayCentric/playFellow/showGame', {
-					params: {
-						playFellowId: playFellowId
-					}
-				})
-					.then(function (response) {
-						const data = response.data;
-						if (data.length > 0) {
-							data.forEach(gameDTO => {
-								const gameInfo = `
-		                        <div class="game-info">
-		                            <div class="game-title" data-pfgameid="${gameDTO.pfGameId}">
-		                               🌟 ${gameDTO.gameName}
-		                            </div>
-		                            <div class="game-details">
-		                                <p>$ ${gameDTO.amount} 元 / ${gameDTO.pricingCategory}</p>
-		                                <p>伴遊遊戲編號：${gameDTO.pfGameId}</p>
-		                            </div>
-		                        </div>
-		                    `;
-								modalBodyContent.innerHTML += gameInfo;
-							});
-
-							document.querySelectorAll('.game-title').forEach(title => {
-								title.addEventListener('click', function () {
-									document.querySelectorAll('.game-details').forEach(detailsDiv => {
-										if (detailsDiv !== this.nextElementSibling) {
-											detailsDiv.style.display = 'none';
-										}
-									});
-
-									const detailsDiv = this.nextElementSibling;
-									if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
-										detailsDiv.style.display = 'block';
-									} else {
-										detailsDiv.style.display = 'none';
-									}
-
-									selectedPfGameId = this.getAttribute('data-pfgameid');
-								});
-							});
-						} else {
-							modalBodyContent.innerHTML = '<p>系統錯誤，請稍後再試</p>';
-						}
-					})
-					.catch(function (error) {
-						console.error(error);
-						modalBodyContent.innerHTML = '<p>系統錯誤，請稍後再試</p>';
-					});
-			});
-
-			document.getElementById('orderButton').addEventListener('click', function () {
-				if (selectedPfGameId) {
-					window.location.href = `http://localhost:8080/PlayCentric/playFellow/playFellowCart?pfGameId=${selectedPfGameId}`;
-				} else {
-					alert('請先選擇一個遊戲');
-				}
-			});
-
-		});
-
-
-
-
-
-
-
-
-
-
-
-		document.addEventListener('DOMContentLoaded', function () {
-			const birthdays = document.querySelectorAll('.member-birthday');
-
-			birthdays.forEach(function (birthdayElem) {
-				const birthdayText = birthdayElem.textContent.trim();
-				if (birthdayText) {
-					const birthDate = new Date(birthdayText);
-					const age = calculateAge(birthDate);
-					birthdayElem.textContent = `${age}`;
-				}
-			});
-
-			function calculateAge(birthDate) {
-				const today = new Date();
-				let age = today.getFullYear() - birthDate.getFullYear();
-				const monthDiff = today.getMonth() - birthDate.getMonth();
-
-				if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-					age--;
-				}
-
-				return age;
-			}
-		});
-
-
-
-
-
-
-
-
-
-
-
-
-
-	</script>
+	
 
 
 </body>

@@ -32,7 +32,7 @@
             <div class="col-2 fixed">
                 <div id="list-example" class="list-group">
                   <a class="list-group-item list-group-item-action" th:href="@{/member/memInfo}">個人資訊</a>
-                  <a class="list-group-item list-group-item-action" href="#list-item-2">伴遊資訊</a>
+				  <a class="list-group-item list-group-item-action" th:href="@{/playFellow/pfOrderMsg/{memId}(memId=${session.loginMember.memId})}">伴遊資訊</a>
                   <a class="list-group-item list-group-item-action" href="#list-item-3">收藏文章</a>
                   <a class="list-group-item list-group-item-action" href="#list-item-4">遊戲道具庫</a>
                 </div>
@@ -46,6 +46,7 @@
             $('#memInfo-aside').next().next().appendTo($('#main'))
             $(`a[href="${window.location.pathname}"]`).addClass('disabled').addClass('active');
         })
+		
     </script>
 </body>
 
