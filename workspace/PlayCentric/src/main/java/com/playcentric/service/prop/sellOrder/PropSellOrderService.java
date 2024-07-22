@@ -1,12 +1,17 @@
 package com.playcentric.service.prop.sellOrder;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.playcentric.model.prop.sellOrder.PropSellOrder;
@@ -189,4 +194,38 @@ public class PropSellOrderService {
             throw new RuntimeException("找不到賣單");        }
     }
     
+//  
+ // 根據propId找stats為0(販售中)的賣單並計算加權平均單價
+    public Map<Integer, Object> calculateAverageAmountByPropId(int inputPropId) {
+        List<PropSellOrder> propSellOrders = propSellOrderRepo.findAllByPropId(inputPropId);
+
+        // 使用 Stream API 計算每個 propId 的加權平均單價
+        Map<Integer, Object> propIdToWeightedAveragePrice = propSellOrders.stream()
+            .collect(Collectors.groupingBy(
+                PropSellOrder::getPropId,
+                Collectors.collectingAndThen(
+                    Collectors.toList(),
+                    orders -> {
+                        double totalAmount = orders.stream()
+                            .mapToDouble(order -> order.getAmount() * order.getQuantity())
+                            .sum();
+                        int totalQuantity = orders.stream()
+                            .mapToInt(PropSellOrder::getQuantity)
+                            .sum();
+                        double weightedAveragePrice = totalQuantity > 0 ? totalAmount / totalQuantity : 0.0;
+                        // 四捨五入保留小數點後兩位
+                        BigDecimal roundedAveragePrice = BigDecimal.valueOf(weightedAveragePrice).setScale(2, RoundingMode.HALF_UP);
+                        return roundedAveragePrice.doubleValue();
+                    }
+                )
+            ));
+
+        // 輸出結果
+        propIdToWeightedAveragePrice.forEach((propId, weightedAveragePrice) -> 
+            System.out.println("PropId: " + propId + ", Weighted Average Price: " + weightedAveragePrice)
+        );
+
+        return propIdToWeightedAveragePrice;
+    }
+
 }
