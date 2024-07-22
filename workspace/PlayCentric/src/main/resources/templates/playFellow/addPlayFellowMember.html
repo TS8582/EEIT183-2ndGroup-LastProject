@@ -9,6 +9,10 @@
     <link rel="stylesheet" th:href="@{/css/output.css}">
 
     <style>
+        body {
+            background-color: #f9f9f9 !important;
+        }
+
         .content {
             display: none !important;
         }
@@ -65,12 +69,17 @@
         .green-text {
             color: green !important;
         }
+
+        .no-link-style {
+            color: inherit;
+            text-decoration: none;
+        }
     </style>
 </head>
 
 <body>
     <div th:replace="~{layout/nav.html}"></div>
-    <div class="container">
+    <div class="container mt-3">
         <div class="d-flex justify-content-between align-items-center">
             <p class="h3">加入我們</p>
             <span style="font-size: 0.8em;">會員編號: <span class="badge badge-secondary" style="font-size: 0.8em;"
@@ -81,14 +90,18 @@
             <div class="col-md-3">
                 <ul class="list-group">
                     <li class="list-group-item theme active" data-content="content1">基本資料</li>
-                    <li class="list-group-item theme" data-content="content2">伴遊者照片</li>
-                    
-                    <li class="list-group-item theme" data-content="content3">
-                        <a href="http://localhost:8080/PlayCentric/playFellow" id="backBtn">回前頁</a>
+                    <li class="list-group-item theme" data-content="content2" style="background-color: #f9f9f9;">伴遊者照片
                     </li>
+
+                    <li class="list-group-item theme" data-content="content3" style="background-color: #f9f9f9;">
+                        <a href="http://localhost:8080/PlayCentric/playFellow" id="backBtn"
+                            class="no-link-style">回前頁</a>
+                    </li>
+
                 </ul>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9 p-2"
+                style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                 <div id="content1" class="content active">
                     <form id="firstStepForm" th:action="@{/playFellow/add}" method="post">
                         <div>
@@ -224,27 +237,30 @@
 
             //照片上傳
             document.getElementById('secondStepForm').addEventListener('submit', function (event) {
-                event.preventDefault();
-                const playFellowId = document.getElementById('uploadPlayFellowIdInput').value;
-                const formData = new FormData(this);
-                axios.post('/PlayCentric/playFellow/Images/add', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    onUploadProgress: function (progressEvent) {
-                        let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                        document.getElementById('message').innerText = `上傳進度：${percentCompleted}%`;
-                    }
-                })
-                    .then(function (response) {
-                        document.getElementById('message').innerText = '上傳狀態: ' + response.data;
-                        getImagesByPlayFellowId(playFellowId);
-                    })
-                    .catch(function (error) {
-                        console.error('上傳狀態:', error);
-                        document.getElementById('message').innerText = '上傳失敗: ' + (error.response?.data || error.message);
-                    });
-            });
+        event.preventDefault();
+        const playFellowId = document.getElementById('uploadPlayFellowIdInput').value;
+        const formData = new FormData(this);
+        axios.post('/PlayCentric/playFellow/Images/add', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            onUploadProgress: function (progressEvent) {
+                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                document.getElementById('message').innerText = `上傳進度：${percentCompleted}%`;
+                document.getElementById('message').style.color = 'blue'; // 進度顏色
+            }
+        })
+        .then(function (response) {
+            document.getElementById('message').innerText = '上傳狀態: ' + response.data;
+            document.getElementById('message').style.color = 'green'; // 成功顏色
+            getImagesByPlayFellowId(playFellowId);
+        })
+        .catch(function (error) {
+            console.error('上傳狀態:', error);
+            document.getElementById('message').innerText = '上傳失敗: ' + (error.response?.data || error.message);
+            document.getElementById('message').style.color = 'red'; // 失敗顏色
+        });
+    });
 
 
 

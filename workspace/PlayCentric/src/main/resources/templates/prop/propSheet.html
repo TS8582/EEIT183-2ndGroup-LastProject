@@ -2,190 +2,185 @@
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" th:href="@{/css/output.css}">
-<title>遊戲道具交易後台道具總覽</title>
-<style>
-.marketTbody tr {
-	margin-top: 0px;
-	text-align: center;
-	padding: 0;
-	border: 1px;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" th:href="@{/css/output.css}" />
+  <title>遊戲道具交易後台道具總覽</title>
+  <style>
+    .marketTbody tr {
+      margin-top: 0px;
+      text-align: center;
+      padding: 0;
+      border: 1px;
+    }
 
-.navbar-table td a {
-	color: black;
-	font-weight: bold;
-	font-size: 1.4rem;
-}
+    .navbar-table td a {
+      color: black;
+      font-weight: bold;
+      font-size: 1.4rem;
+    }
 
-#myForm {
-	max-width: 21rem;
-	margin: auto;
-	padding: 1rem;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	background-color: #f9f9f9;
-	border-radius: 5px;
-	border: 1px solid #ccc;
-}
+    #myForm {
+      max-width: 21rem;
+      margin: auto;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
 
-#submitBtn {
-	background-color: black;
-	color: white;
-	border-radius: 5px;
-	padding: 0.2rem 0.3rem;
-	font-size: 1rem;
-	font-weight: bold;
-}
+    #submitBtn {
+      background-color: black;
+      color: white;
+      border-radius: 5px;
+      padding: 0.2rem 0.3rem;
+      font-size: 1rem;
+      font-weight: bold;
+    }
 
-#submitBtn:hover {
-	background-color: rgba(97, 92, 92, 0.749);
-}
-</style>
+    #submitBtn:hover {
+      background-color: rgba(97, 92, 92, 0.749);
+    }
+  </style>
 </head>
 
 <body class="h-screen flex flex-col w-screen">
-	<div th:replace="~{prop/propNavbar}"></div>
+  <div th:replace="~{prop/propNavbar}"></div>
 
+  <div class="flex flex-1 h-auto">
+    <div class="w-full p-5">
+      <table class="table table-bordered navbar-table">
+        <tbody class="marketTbody">
+          <tr>
+            <td><a th:href="@{/prop/propSheet}">道具總覽</a></td>
+            <td><a th:href="@{/prop/propSellOrder}">拍賣場</a></td>
+            <td><a th:href="@{/prop/propTradeRecord}">購買紀錄</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <header class="">
+        <div id="gameList">
+          <form id="myForm">
+            <label for="SelectGame">遊戲選單:</label>
+            <select class="border-2" id="SelectGame" name="gameId"></select>
+            <button id="submitBtn">送出</button>
+          </form>
+          <br />
+        </div>
+      </header>
+      <div class="" id="savePropButtom">
+        <div class="flex justify-end">
+          <button class="btn btn-success" onclick="savePropWindow()">
+            新增
+          </button>
+        </div>
 
-	<div class="flex flex-1 h-auto">
-		<div th:replace="~{/layout/aside}"></div>
+        <!-- 新增道具的modal -->
+        <div class="modal fade" id="savePropModal" tabindex="-1" aria-labelledby="savePropModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="savePropModalLabel">新增道具</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="savePropForm" enctype="multipart/form-data">
+                  <div class="mb-3">
+                    <label for="propName" class="form-label">名稱</label>
+                    <input type="text" class="form-control" id="propName" required />
+                  </div>
+                  <div class="mb-3">
+                    <label for="propRarity" class="form-label">稀有度</label>
+                    <input type="text" class="form-control" id="propRarity" required />
+                  </div>
+                  <div class="mb-3">
+                    <label for="propDescription" class="form-label">描述</label>
+                    <textarea class="form-control" id="propDescription" rows="3" required></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label for="propImage" class="form-label">圖片</label>
+                    <input type="file" class="form-control" id="propImage" name="propImage" required />
+                  </div>
+                  <div class="mb-3">
+                    <label for="propTypeId" class="form-label">種類</label>
+                    <select class="form-control" id="propTypeId" required></select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    確認新增
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-		<div class="w-full p-5">
-			<table class="table table-bordered navbar-table">
-				<tbody class=marketTbody>
-					<tr>
-						<td><a th:href="@{/prop/propSheet}">道具總覽</a></td>
-						<td><a th:href="@{/prop/propSellOrder}">拍賣場</a></td>
-						<td><a th:href="@{/prop/propTradeRecord}">成交紀錄</a></td>
-					</tr>
-				</tbody>
-			</table>
-			<header class="">
-				<div id="gameList">
-					<form id="myForm">
-						<label for="SelectGame">遊戲選單:</label> <select class="border-2"
-							id="SelectGame" name="gameId"></select>
-						<button id="submitBtn">送出</button>
-					</form>
-					<br />
-				</div>
-			</header>
-			<div class="" id="savePropButtom">
-				<div class="flex justify-end">
-					<button class="btn btn-success" onclick="savePropWindow()">新增</button>
+      <!-- 修改道具的modal -->
+      <div class="modal fade" id="editPropModal" tabindex="-1" aria-labelledby="editPropWindow" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editPropWindow">修改道具</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="editPropForm" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label for="editPropName" class="form-label">名稱</label>
+                  <input type="text" class="form-control" id="editPropName" required />
+                </div>
+                <div class="mb-3">
+                  <label for="editPropRarity" class="form-label">稀有度</label>
+                  <input type="text" class="form-control" id="editPropRarity" required />
+                </div>
+                <div class="mb-3">
+                  <label for="editPropDescription" class="form-label">描述</label>
+                  <textarea class="form-control" id="editPropDescription" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="editPropImage" class="form-label">圖片</label>
+                  <input type="file" class="form-control" id="editPropImage" name="editPropImage" required />
+                </div>
+                <div class="mb-3">
+                  <label for="editPropTypeId" class="form-label">種類</label>
+                  <select class="form-control" id="editPropTypeId" required></select>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  確認修改
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
-				</div>
+      <!-- 道具表格 -->
+      <table id="myTable" class="display">
+        <thead>
+          <tr>
+            <th>編號</th>
+            <th>名稱</th>
+            <th class="text-start">圖片</th>
+            <th>種類</th>
+            <th>稀有度</th>
+            <th>描述</th>
+            <th>創建時間</th>
+            <th>更新時間</th>
+            <th>修改</th>
+            <th>刪除</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 這裡的行會動態生成 -->
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-				<!-- 新增道具的modal -->
-				<div class="modal fade" id="savePropModal" tabindex="-1"
-					aria-labelledby="savePropModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="savePropModalLabel">新增道具</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal"
-									aria-label="Close"></button>
-							</div>
-							<div class="modal-body">
-								<form id="savePropForm" enctype="multipart/form-data">
-									<div class="mb-3">
-										<label for="propName" class="form-label">名稱</label> <input
-											type="text" class="form-control" id="propName" required />
-									</div>
-									<div class="mb-3">
-										<label for="propRarity" class="form-label">稀有度</label> <input
-											type="text" class="form-control" id="propRarity" required />
-									</div>
-									<div class="mb-3">
-										<label for="propDescription" class="form-label">描述</label>
-										<textarea class="form-control" id="propDescription" rows="3"
-											required></textarea>
-									</div>
-									<div class="mb-3">
-										<label for="propImage" class="form-label">圖片</label> <input
-											type="file" class="form-control" id="propImage"
-											name="propImage" required />
-									</div>
-									<div class="mb-3">
-										<label for="propTypeId" class="form-label">種類</label> <select
-											class="form-control" id="propTypeId" required></select>
-									</div>
-									<button type="submit" class="btn btn-primary">確認新增</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- 修改道具的modal -->
-			<div class="modal fade" id="editPropModal" tabindex="-1"
-				aria-labelledby="editPropWindow" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="editPropWindow">修改道具</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form id="editPropForm" enctype="multipart/form-data">
-								<div class="mb-3">
-									<label for="editPropName" class="form-label">名稱</label> <input
-										type="text" class="form-control" id="editPropName" required />
-								</div>
-								<div class="mb-3">
-									<label for="editPropRarity" class="form-label">稀有度</label> <input
-										type="text" class="form-control" id="editPropRarity" required />
-								</div>
-								<div class="mb-3">
-									<label for="editPropDescription" class="form-label">描述</label>
-									<textarea class="form-control" id="editPropDescription"
-										rows="3" required></textarea>
-								</div>
-								<div class="mb-3">
-									<label for="editPropImage" class="form-label">圖片</label> <input
-										type="file" class="form-control" id="editPropImage"
-										name="editPropImage" required />
-								</div>
-								<div class="mb-3">
-									<label for="editPropTypeId" class="form-label">種類</label> <select
-										class="form-control" id="editPropTypeId" required></select>
-								</div>
-								<button type="submit" class="btn btn-primary">確認修改</button>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- 道具表格 -->
-			<table id="myTable" class="display">
-				<thead>
-					<tr>
-						<th>編號</th>
-						<th>名稱</th>
-						<th class="text-start">圖片</th>
-						<th>種類</th>
-						<th>稀有度</th>
-						<th>描述</th>
-						<th>創建時間</th>
-						<th>更新時間</th>
-						<th>修改</th>
-						<th>刪除</th>
-					</tr>
-				</thead>
-				<tbody>
-					<!-- 這裡的行會動態生成 -->
-				</tbody>
-			</table>
-		</div>
-	</div>
-
-	<script th:src="@{/js/prop/propSheet.js}"></script>
+  <script th:src="@{/js/prop/propSheet.js}"></script>
 </body>
 
 </html>

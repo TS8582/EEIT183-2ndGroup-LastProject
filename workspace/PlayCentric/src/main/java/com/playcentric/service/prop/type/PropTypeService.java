@@ -2,10 +2,8 @@ package com.playcentric.service.prop.type;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.playcentric.model.prop.type.PropType;
 import com.playcentric.model.prop.type.PropTypeRepository;
-
 import java.util.List;
 import java.util.Optional;
 

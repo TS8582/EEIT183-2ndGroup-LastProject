@@ -80,7 +80,6 @@ public class ECPayService {
         recharge = rechargeRepository.save(recharge);
 
         String tradeNo = "PlayCentric" + "Point" + recharge.getRechargeId();
-
         obj.setMerchantTradeNo(tradeNo);
         obj.setMerchantTradeDate(currentDate);
         obj.setTotalAmount(recharge.getAmount().toString());

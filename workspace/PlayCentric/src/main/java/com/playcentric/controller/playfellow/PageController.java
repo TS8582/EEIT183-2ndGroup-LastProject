@@ -1,14 +1,9 @@
 package com.playcentric.controller.playfellow;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +17,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.member.Member;
-import com.playcentric.model.playfellow.GameToPfGameDTO;
 import com.playcentric.model.playfellow.ImageLibPfmemberAssociation;
 import com.playcentric.model.playfellow.PfGame;
 import com.playcentric.model.playfellow.PfGameDTO;
 import com.playcentric.model.playfellow.PfOrder;
+import com.playcentric.model.playfellow.PfOrder3;
+import com.playcentric.model.playfellow.PfOrder3DTO;
 import com.playcentric.model.playfellow.PfOrderDTO;
-import com.playcentric.model.playfellow.PfOrderRepository;
 import com.playcentric.model.playfellow.PlayFellowMember;
-import com.playcentric.service.member.MemberService;
 import com.playcentric.service.playfellow.PfGameService;
+import com.playcentric.service.playfellow.PfOrder3Service;
 import com.playcentric.service.playfellow.PfOrderService;
 import com.playcentric.service.playfellow.PlayFellowMemberService;
 
@@ -54,6 +49,9 @@ public class PageController {
 
 	@Autowired
 	PfOrderService pfOrderService;
+	
+	@Autowired
+	PfOrder3Service pfOrder3Service;
 
 	// 進入cart
 	@GetMapping("/playFellow/playFellowCart")
@@ -77,61 +75,49 @@ public class PageController {
 		}
 		return "playFellow/playFellowCart";
 	}
-	
-	
-	
-	
-	
 
 	@GetMapping("/playFellow")
 	public String getPlayFellowById(Model model) {
-	    List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
+		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
 
-	    for (PlayFellowMember playFellowMember : playFellowMembers) {
-	        for (ImageLibPfmemberAssociation association : playFellowMember.getImageLibAssociations()) {
-	            ImageLib imageLib = association.getImageLib();
-	            if (imageLib != null && imageLib.getImageFile() != null) {
-	                String base64Image = Base64.getEncoder().encodeToString(imageLib.getImageFile());
-	                imageLib.setBase64Image(base64Image);
-	            }
-	        }
-	    }
+		for (PlayFellowMember playFellowMember : playFellowMembers) {
+			for (ImageLibPfmemberAssociation association : playFellowMember.getImageLibAssociations()) {
+				ImageLib imageLib = association.getImageLib();
+				if (imageLib != null && imageLib.getImageFile() != null) {
+					String base64Image = Base64.getEncoder().encodeToString(imageLib.getImageFile());
+					imageLib.setBase64Image(base64Image);
+				}
+			}
+		}
 
-	    List<PlayFellowMember> lastest5playFellowMembers = playFellowMemberService.getTopFiveReviewSuccessPlayFellowMembers();
-	    model.addAttribute("TopFiveReviewSuccessMembers", lastest5playFellowMembers);
+		List<PlayFellowMember> lastest5playFellowMembers = playFellowMemberService
+				.getTopFiveReviewSuccessPlayFellowMembers();
+		model.addAttribute("TopFiveReviewSuccessMembers", lastest5playFellowMembers);
 
+		Integer gameId1 = 1;
+		Integer gameId2 = 2;
+		List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(gameId1);
+		List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(gameId2);
+		List<Game> findGameName = pfGameService.findAllGame();
 
-	    Integer gameId1 = 1;
-	    Integer gameId2 = 2;
-	    List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(gameId1);
-	    List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(gameId2);
-	    List<Game> findGameName = pfGameService.findAllGame();
+		model.addAttribute("findGameIdAndName", findGameName);
+		model.addAttribute("PfGame", pfGames);
+		model.addAttribute("PfGame2", pfGames2);
+		model.addAttribute("PlayFellowMember", playFellowMembers);
 
-	    model.addAttribute("findGameIdAndName", findGameName);
-	    model.addAttribute("PfGame", pfGames);
-	    model.addAttribute("PfGame2", pfGames2);
-	    model.addAttribute("PlayFellowMember", playFellowMembers);
-
-	    return "playFellow/playFellow";
+		return "playFellow/playFellow";
 	}
 
 	@ResponseBody
 	@GetMapping("/playFellow/showGame")
 	public ResponseEntity<List<PfGameDTO>> getPfGameDTOsByPlayFellowId(@RequestParam Integer playFellowId) {
-	    List<PfGameDTO> pfGameDTOs = pfGameService.findByPlayFellowId(playFellowId);
-	    if (pfGameDTOs.isEmpty()) {
-	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	    }
-	    return new ResponseEntity<>(pfGameDTOs, HttpStatus.OK);
+		List<PfGameDTO> pfGameDTOs = pfGameService.findByPlayFellowId(playFellowId);
+		if (pfGameDTOs.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(pfGameDTOs, HttpStatus.OK);
 	}
 
-	
-	
-	
-	
-
-	
-	
 	@PostMapping("/playFellow/{gameId}")
 	public String showGameMember(@PathVariable("gameId") Integer gameId, Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
@@ -191,10 +177,38 @@ public class PageController {
 
 		return "訂單提交成功";
 	}
+	
+	
+	
+	@ResponseBody
+	@PostMapping("playFellow/addPfOrder3")
+	public String addOrder(@RequestBody PfOrder3DTO pfOrderDTO3) {
+		PfOrder3 pfOrder3 = new PfOrder3();
 
-	@GetMapping("playFellow/savePfOrder")
-	public String savePfOrder() {
-		return "playFellow/testOrder";
+		PfGame pfGame = entityManager.getReference(PfGame.class, pfOrderDTO3.getPfGameId());
+		Member member = entityManager.getReference(Member.class, pfOrderDTO3.getMemId());
+
+		pfOrder3.setPfGame(pfGame);
+		pfOrder3.setMember(member);
+
+		String transactionID = pfOrderDTO3.getTransactionID();
+		if (transactionID == null || transactionID.trim().isEmpty()) {
+			transactionID = null;
+		}
+		pfOrder3.setTransactionID(transactionID);
+
+		pfOrder3.setPaymentStatus(pfOrderDTO3.getPaymentStatus());
+		pfOrder3.setQuantity(pfOrderDTO3.getQuantity());
+		pfOrder3.setTotalAmount(pfOrderDTO3.getTotalAmount());
+
+		pfOrder3.setAdded(new Date());
+		
+		
+		pfOrder3Service.savePfOrder3(pfOrder3);
+
+
+		
+
+		return "訂單提交成功";
 	}
-
 }

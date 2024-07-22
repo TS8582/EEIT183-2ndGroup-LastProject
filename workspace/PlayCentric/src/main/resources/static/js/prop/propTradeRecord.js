@@ -31,39 +31,37 @@ $(document).ready(function () {
         console.log("找到買單:", buyOrder);
 
         try {
-          // 根據買單中的orderId去找賣單
-          const sellOrderResponse = await axios.get(
-            "http://localhost:8080/PlayCentric/prop/findPropSellOrderByOrderId",
-            {
-              params: { orderId: buyOrder.orderId },
-            }
-          );
+          // 根據會員ID獲取會員名稱
+          const memberName = await fetchMemberNameById(buyOrder.buyerMemId);
 
-          const sellOrder = sellOrderResponse.data;
-          console.log("找到對應買單的賣單:", sellOrder);
+          // 格式化購買時間
+          const orderTime = new Date(buyOrder.orderTime).toLocaleString("zh-TW", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+          }).replace(/\//g, '-').replace(',', '');
 
-          try {
-            const propName = await fetchPropNameById(sellOrder.propId);
+          // 检查并获取付款方式名称
+          const paymentName = buyOrder.payment ? buyOrder.payment.paymentName : 'N/A';
 
-            // 將賣單和買單數據一起添加到表格中
-            myTable.row
-              .add([
-                buyOrder.orderId,
-                sellOrder.propId,
-                propName || "", // 確保有道具名稱
-                sellOrder.sellerMemId,
-                buyOrder.buyerMemId, // 買家會員編號
-                buyOrder.orderTime, // 購買時間
-                buyOrder.quantity, // 數量
-                buyOrder.price, // 金額
-                buyOrder.payment.paymentName, // 付款方式
-              ])
-              .draw();
-          } catch (err) {
-            console.error("獲取道具名稱時出錯:", err);
-          }
+          myTable.row
+            .add([
+              buyOrder.buyOrderId,
+              buyOrder.props.propId,
+              buyOrder.props.propName,
+              memberName, // 買家會員名稱
+              orderTime, // 購買時間
+              buyOrder.quantity, // 數量
+              buyOrder.price, // 金額
+              buyOrder.paymentId, // 付款方式
+            ])
+            .draw();
         } catch (err) {
-          console.error("獲取賣單時出錯:", err);
+          console.error("獲取會員名稱時出錯:", err);
         }
       }
     } catch (err) {
@@ -77,19 +75,19 @@ $(document).ready(function () {
   }, 250);
 });
 
-// 根據PropId找PropName
-async function fetchPropNameById(propId) {
+// 根據會員ID獲取會員名稱
+async function fetchMemberNameById(memId) {
   try {
     const res = await axios.get(
-      "http://localhost:8080/PlayCentric/prop/findById",
+      "http://localhost:8080/PlayCentric/prop/front/buyProp/findMenNameByMemId",
       {
-        params: { id: propId },
+        params: { memId: memId },
       }
     );
-    const propName = res.data.propName; // 假設道具名稱字段為 propName
-    return propName;
+    const memName = res.data.account; // 假設會員名稱字段為 memName
+    return memName;
   } catch (err) {
-    console.error("獲取道具名稱時出錯:", err);
+    console.error("獲取會員名稱時出錯:", err);
     throw err; // 如果需要，可以選擇拋出錯誤以便在調用此函數時處理
   }
 }

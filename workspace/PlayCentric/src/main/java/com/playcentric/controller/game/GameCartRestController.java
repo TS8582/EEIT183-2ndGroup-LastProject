@@ -28,6 +28,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 @SessionAttributes("loginMember")
 public class GameCartRestController {
 	
+	
+	@ModelAttribute("loginMember")
+	public LoginMemDto createLoginMemDto() {
+		return null;
+	}
+	
 	@Autowired
 	private GameCartService gcService;
 	@Autowired
@@ -54,7 +60,6 @@ public class GameCartRestController {
 			@ModelAttribute("loginMember") LoginMemDto loginMember){
 		gcService.remove(gameId,loginMember.getMemId());
 	}
-	
 	
 	
 }
