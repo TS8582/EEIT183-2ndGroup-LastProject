@@ -1,104 +1,104 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>新增訂單</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 80%;
-            margin-top: 50px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .h5 {
-            margin-bottom: 20px;
-            font-weight: bold;
-            color: #007bff;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <p class="h5">新增訂單</p>
-                <form id="orderForm" class="mb-4">
-                    <div class="form-group">
-                        <label for="pfGameId">伴遊遊戲編號</label>
-                        <input type="number" id="pfGameId" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="memId">會員編號</label>
-                        <input type="number" id="memId" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="transactionID">交易ID</label>
-                        <input type="text" id="transactionID" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="paymentStatus">付款狀態</label>
-                        <select id="paymentStatus" class="form-control" required>
-                            <option value="1">交易中</option>
-                            <option value="2">交易完成</option>
-                            <option value="3">交易失敗(或取消)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="quantity">訂單數量</label>
-                        <input type="number" id="quantity" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="totalAmount">總金額</label>
-                        <input type="number" id="totalAmount" class="form-control" required>
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="submitOrder()">提交訂單</button>
-                </form>
-            </div>
-        </div>
-    </div>
+<!-- <!DOCTYPE html> -->
+<!-- <html xmlns:th="http://www.thymeleaf.org"> -->
+<!-- <head> -->
+<!--     <meta charset="UTF-8"> -->
+<!--     <title>新增訂單</title> -->
+<!--     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+<!--     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+<!--     <style> -->
+/*         body { */
+/*             background-color: #f8f9fa; */
+/*             font-family: Arial, sans-serif; */
+/*         } */
+/*         .container { */
+/*             width: 80%; */
+/*             margin-top: 50px; */
+/*             padding: 20px; */
+/*             background-color: #fff; */
+/*             border-radius: 10px; */
+/*             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+/*         } */
+/*         .h5 { */
+/*             margin-bottom: 20px; */
+/*             font-weight: bold; */
+/*             color: #007bff; */
+/*         } */
+/*         .btn-primary { */
+/*             background-color: #007bff; */
+/*             border: none; */
+/*         } */
+/*         .btn-primary:hover { */
+/*             background-color: #0056b3; */
+/*         } */
+<!--     </style> -->
+<!-- </head> -->
+<!-- <body> -->
+<!--     <div class="container"> -->
+<!--         <div class="row"> -->
+<!--             <div class="col-md-6"> -->
+<!--                 <p class="h5">新增訂單</p> -->
+<!--                 <form id="orderForm" class="mb-4"> -->
+<!--                     <div class="form-group"> -->
+<!--                         <label for="pfGameId">伴遊遊戲編號</label> -->
+<!--                         <input type="number" id="pfGameId" class="form-control" required> -->
+<!--                     </div> -->
+<!--                     <div class="form-group"> -->
+<!--                         <label for="memId">會員編號</label> -->
+<!--                         <input type="number" id="memId" class="form-control" required> -->
+<!--                     </div> -->
+<!--                     <div class="form-group"> -->
+<!--                         <label for="transactionID">交易ID</label> -->
+<!--                         <input type="text" id="transactionID" class="form-control"> -->
+<!--                     </div> -->
+<!--                     <div class="form-group"> -->
+<!--                         <label for="paymentStatus">付款狀態</label> -->
+<!--                         <select id="paymentStatus" class="form-control" required> -->
+<!--                             <option value="1">交易中</option> -->
+<!--                             <option value="2">交易完成</option> -->
+<!--                             <option value="3">交易失敗(或取消)</option> -->
+<!--                         </select> -->
+<!--                     </div> -->
+<!--                     <div class="form-group"> -->
+<!--                         <label for="quantity">訂單數量</label> -->
+<!--                         <input type="number" id="quantity" class="form-control" required> -->
+<!--                     </div> -->
+<!--                     <div class="form-group"> -->
+<!--                         <label for="totalAmount">總金額</label> -->
+<!--                         <input type="number" id="totalAmount" class="form-control" required> -->
+<!--                     </div> -->
+<!--                     <button type="button" class="btn btn-primary" onclick="submitOrder()">提交訂單</button> -->
+<!--                 </form> -->
+<!--             </div> -->
+<!--         </div> -->
+<!--     </div> -->
 
-    <script>
-        function submitOrder() {
-            const pfGameId = document.getElementById('pfGameId').value;
-            const memId = document.getElementById('memId').value;
-            const transactionID = document.getElementById('transactionID').value;
-            const paymentStatus = document.getElementById('paymentStatus').value;
-            const quantity = document.getElementById('quantity').value;
-            const totalAmount = document.getElementById('totalAmount').value;
+<!--     <script> -->
+//         function submitOrder() {
+//             const pfGameId = document.getElementById('pfGameId').value;
+//             const memId = document.getElementById('memId').value;
+//             const transactionID = document.getElementById('transactionID').value;
+//             const paymentStatus = document.getElementById('paymentStatus').value;
+//             const quantity = document.getElementById('quantity').value;
+//             const totalAmount = document.getElementById('totalAmount').value;
 
-            const order = {
-                pfGameId: parseInt(pfGameId),
-                memId: parseInt(memId),
-                transactionID: transactionID,
-                paymentStatus: parseInt(paymentStatus),
-                quantity: parseInt(quantity),
-                totalAmount: parseInt(totalAmount)
-            };
+//             const order = {
+//                 pfGameId: parseInt(pfGameId),
+//                 memId: parseInt(memId),
+//                 transactionID: transactionID,
+//                 paymentStatus: parseInt(paymentStatus),
+//                 quantity: parseInt(quantity),
+//                 totalAmount: parseInt(totalAmount)
+//             };
 
-            axios.post('/PlayCentric/playFellow/addPfOrder', order)
-                .then(response => {
-                    alert(response.data); // 顯示返回的消息
-                })
-                .catch(error => {
-                    console.error('提交訂單失敗:', error);
-                    alert('提交訂單失敗');
-                });
-        }
-    </script>
-</body>
-</html>
+//             axios.post('/PlayCentric/playFellow/addPfOrder', order)
+//                 .then(response => {
+//                     alert(response.data); // 顯示返回的消息
+//                 })
+//                 .catch(error => {
+//                     console.error('提交訂單失敗:', error);
+//                     alert('提交訂單失敗');
+//                 });
+//         }
+<!--     </script> -->
+<!-- </body> -->
+<!-- </html> -->

@@ -256,7 +256,7 @@ table th, table td {
                     totalAmount: totalAmount
                 };
 
-                axios.post('/PlayCentric/playFellow/addPfOrder3', order)
+                axios.post('/PlayCentric/playFellow/addPfOrder', order)
                     .then(response => {
                         alert(response.data); 
 //                         window.location.href = '/PlayCentric/playFellow';
