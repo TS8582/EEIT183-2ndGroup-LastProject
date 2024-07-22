@@ -23,7 +23,7 @@ public class ECPayController {
     @Autowired
     private ECPayService ecPayService;
 
-    @PostMapping("/ecpayCheckout")
+    @PostMapping("/member/personal/api/newRecharge")
     @ResponseBody
     public String startOrder(@RequestParam Integer rechargeAmount, Model model) {
         LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");

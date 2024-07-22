@@ -2,6 +2,7 @@ package com.playcentric.service.member;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -175,6 +176,7 @@ public class MemberService {
 			return member;
 		}
 		String encodedPassword = member.getPassword();
+
 		return passwordEncoder.matches(password, encodedPassword)? memberRepository.save(member):null;
 	}
 
@@ -199,7 +201,22 @@ public class MemberService {
 	public Member memberLogin(Member member){
 		member.setLastLogin(new Date());
 		System.err.println("更新登入時間");
+		member.setLoginToken(UUID.randomUUID().toString());
+		System.err.println("加入登入Token");
 		return memberRepository.save(member);
+	}
+
+	public LoginMemDto getLoginMember(String loginToken){
+		Member member = memberRepository.findByLoginToken(loginToken);
+		return setLoginDto(member);
+	}
+
+	public LoginMemDto checkLoginMember(LoginMemDto loginMember){
+		if (loginMember==null) {
+			return null;
+		}
+		Member originMem = memberRepository.findByLoginToken(loginMember.getLoginToken());
+		return setLoginDto(originMem);
 	}
 
 	public Member changePassword(Integer memId, String token){
@@ -221,6 +238,9 @@ public class MemberService {
 	}
 
 	public LoginMemDto setLoginDto(Member member){
+		if (member==null) {
+			return null;
+		}
         String url = ngrokConfig.getUrl();
 		LoginMemDto loginMember = new LoginMemDto();
 		loginMember.setAccount(member.getAccount());
@@ -234,6 +254,7 @@ public class MemberService {
 		loginMember.setPhoto(photoPath);
 		loginMember.setPoints(member.getPoints());
 		loginMember.setRole(member.getRole());
+		loginMember.setLoginToken(member.getLoginToken());
 
 		return loginMember;
 	}

@@ -52,14 +52,6 @@
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav ms-auto" th:switch="${session.loginMember}">
 					<li class="nav-item"><a class="nav-link fs-4" thif="${session.loginMember!=null && session.loginMember.role == 1}" th:href="@{/back/anno}">管理介面</a></li>
-					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle fs-4" href="#" id="memberDropdown"
-							role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							會員 </a>
-						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="memberDropdown">
-							<li><a class="dropdown-item fs-5" href="#">會員資料</a></li>
-							<li><a class="dropdown-item fs-5" href="#">會員設定</a></li>
-						</ul>
-					</li>
 					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle fs-4" href="#" id="storeDropdown"
 							role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							遊戲商店 </a>
@@ -118,7 +110,7 @@
 								th:text="${session.loginMember.nickname}"></span>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-							<li><a class="dropdown-item fs-5" th:href="@{/member/memInfo}">個人資訊</a></li>
+							<li><a class="dropdown-item fs-5" th:href="@{/member/personal/Info}">個人資訊</a></li>
 							<li><a class="dropdown-item fs-5" th:href="@{/member/logout}">登出</a></li>
 						</ul>
 					</li>

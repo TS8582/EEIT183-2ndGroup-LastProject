@@ -81,9 +81,11 @@ public class Member {
     private Boolean emailVerified;
     @JsonIgnore
     private String emailVerifyToken;
+    @JsonIgnore
+    private String loginToken;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(/* fetch = FetchType.LAZY, */ cascade = CascadeType.ALL)
     @JoinColumn(name = "googeId")
     private GoogleLogin googleLogin;
     

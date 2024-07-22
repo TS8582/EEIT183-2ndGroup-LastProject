@@ -5,8 +5,9 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Setter @Getter @NoArgsConstructor
+@Setter @Getter @NoArgsConstructor @ToString
 public class LoginMemDto {
 
     private Integer memId;
@@ -29,6 +30,7 @@ public class LoginMemDto {
     // private Short gender;
     // private Short status;
     private Integer points;
+    private String loginToken;
     
 
     public LoginMemDto(Member member) {

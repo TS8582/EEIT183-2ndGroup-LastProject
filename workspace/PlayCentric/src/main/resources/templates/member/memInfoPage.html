@@ -138,11 +138,11 @@
   <script>
     $(function () {
       const pageUrl = window.location.origin;
-      const findMemUrl = pageUrl + "/PlayCentric/member/getMember";
-      const updateMemUrl = pageUrl + "/PlayCentric/member/updateSelf";
-      const changePwdUrl = pageUrl + "/PlayCentric/member/sendPtUrl";
-      const verifiyEmailUrl = pageUrl + "/PlayCentric/member/sendVerUrl";
-      const ecPayUrl = pageUrl + "/PlayCentric/ecpayCheckout";
+      const findMemUrl = pageUrl + "/PlayCentric/member/personal/api/getInfo";
+      const updateMemUrl = pageUrl + "/PlayCentric/member/personal/api/updateSelf";
+      const changePwdUrl = pageUrl + "/PlayCentric/member/personal/api/sendPtUrl";
+      const verifiyEmailUrl = pageUrl + "/PlayCentric/member/personal/api/sendVerUrl";
+      const ecPayUrl = pageUrl + "/PlayCentric/member/personal/api/newRecharge";
       const memId = Number.parseInt('[[${session.loginMember.memId}]]');
       const redirectMsg = '[[${redirectMsg}]]';
       let memInfo = {};
@@ -178,7 +178,10 @@
             }
           })
           .catch(err => {
-
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+            }
           })
       })
 
@@ -198,6 +201,9 @@
           })
           .catch(err => {
             console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+            }
           })
       })
 
@@ -217,6 +223,9 @@
           })
           .catch(err => {
             console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+            }
           })
       })
 
@@ -237,6 +246,9 @@
           })
           .catch(err => {
             console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+            }
           })
       })
 
@@ -298,7 +310,12 @@
             showMemInfo(res.data);
             memInfo = res.data;
           })
-          .catch(err => console.log(err))
+          .catch(err => {
+            console.log(err)
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+            }
+          })
       }
 
       function showMemInfo(data) {
