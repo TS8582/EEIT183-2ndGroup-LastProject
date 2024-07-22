@@ -12,9 +12,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +32,7 @@ public class EventSignup {
     private Integer signupId;
     
     @ManyToOne
-    @JoinColumn(name = "memberId", referencedColumnName = "memId")
+    @JoinColumn(name = "memId", referencedColumnName = "memId")
     private Member member;
     
     @ManyToOne
@@ -53,8 +53,8 @@ public class EventSignup {
 //    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime workUploadTime;
 
-    private Integer workImageId;
-    private String workImageUrl;
+    @Lob
+    private byte[] workImage;
     private Integer voteCount;
     private Integer eventSignupStatus;
 }

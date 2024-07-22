@@ -1,25 +1,15 @@
 package com.playcentric.controller.event;
 
-import java.util.List;
-import java.util.Map;
-
+import com.playcentric.model.event.EventVote;
+import com.playcentric.service.event.EventVoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.playcentric.model.event.EventVote;
-import com.playcentric.service.event.EventVoteService;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/eventVotes")
@@ -48,10 +38,10 @@ public class EventVoteController {
     }
 
     /**
-     * 處理創建投票的表單提交
+     * 處理創建投票的表單提交（返回視圖）
      */
     @PostMapping("/create")
-    public String createVote(@RequestParam Integer memberId, @RequestParam Integer signupId, Model model) {
+    public String createVoteForm(@RequestParam Integer memberId, @RequestParam Integer signupId, Model model) {
         try {
             EventVote vote = eventVoteService.createVote(memberId, signupId);
             return "redirect:/eventVotes/list";
@@ -124,6 +114,8 @@ public class EventVoteController {
         return "event/vote-list";
     }
 
+    // API 部分
+
     /**
      * API: 創建新的投票
      */
@@ -132,9 +124,9 @@ public class EventVoteController {
     public ResponseEntity<?> apiCreateVote(@RequestParam Integer memberId, @RequestParam Integer signupId) {
         try {
             EventVote vote = eventVoteService.createVote(memberId, signupId);
-            return ResponseEntity.ok(vote);
+            return ResponseEntity.ok(Map.of("success", true, "message", "投票成功", "vote", vote));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
         }
     }
 
@@ -202,5 +194,35 @@ public class EventVoteController {
     public ResponseEntity<List<EventVote>> apiGetVotesBySignupId(@PathVariable Integer signupId) {
         List<EventVote> votes = eventVoteService.getVotesBySignupId(signupId);
         return ResponseEntity.ok(votes);
+    }
+    
+    /**
+     * API: 獲取特定活動的所有投票
+     */
+    @GetMapping("/api/event/{eventId}")
+    @ResponseBody
+    public ResponseEntity<List<EventVote>> getVotesByEvent(@PathVariable Integer eventId) {
+        List<EventVote> votes = eventVoteService.getVotesByEventId(eventId);
+        return ResponseEntity.ok(votes);
+    }
+
+    /**
+     * API: 獲取特定用戶在特定活動中的投票次數
+     */
+    @GetMapping("/api/count/{memId}/{eventId}")
+    @ResponseBody
+    public ResponseEntity<Long> getVoteCount(@PathVariable Integer memId, @PathVariable Integer eventId) {
+        long count = eventVoteService.getVoteCountByMemberAndEvent(memId, eventId);
+        return ResponseEntity.ok(count);
+    }
+
+    /**
+     * API: 獲取特定活動的投票結果統計
+     */
+    @GetMapping("/api/results/{eventId}")
+    @ResponseBody
+    public ResponseEntity<Map<Integer, Long>> getVoteResults(@PathVariable Integer eventId) {
+        Map<Integer, Long> results = eventVoteService.getVoteResultsByEventId(eventId);
+        return ResponseEntity.ok(results);
     }
 }

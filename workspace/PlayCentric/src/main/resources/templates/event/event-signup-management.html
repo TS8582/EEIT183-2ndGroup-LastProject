@@ -113,7 +113,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         function viewSignupDetails(signupId) {
-            // 發送AJAX請求獲取報名詳情
             $.get('/eventSignup/api/' + signupId, function(data) {
                 let detailsHtml = `
                     <p><strong>報名ID:</strong> ${data.signupId}</p>
@@ -130,7 +129,6 @@
         }
 
         function editSignup(signupId) {
-            // 發送AJAX請求獲取報名信息
             $.get('/eventSignup/api/' + signupId, function(data) {
                 $('#editSignupId').val(data.signupId);
                 $('#editWorkTitle').val(data.workTitle);
@@ -150,7 +148,7 @@
                 success: function(response) {
                     alert('報名信息已更新');
                     $('#editSignupModal').modal('hide');
-                    location.reload(); // 重新加載頁面以顯示更新後的數據
+                    location.reload();
                 },
                 error: function() {
                     alert('更新失敗，請稍後再試');
@@ -165,12 +163,31 @@
                     type: 'DELETE',
                     success: function() {
                         alert('報名記錄已刪除');
-                        location.reload(); // 重新加載頁面以更新列表
+                        location.reload();
                     },
                     error: function() {
                         alert('刪除失敗，請稍後再試');
                     }
                 });
+            }
+        }
+
+        function searchSignups() {
+            let searchQuery = $('#searchSignupInput').val().toLowerCase();
+            $('table tbody tr').each(function() {
+                let title = $(this).find('td:eq(4)').text().toLowerCase();
+                if (title.includes(searchQuery)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                searchSignups();
             }
         }
     </script>

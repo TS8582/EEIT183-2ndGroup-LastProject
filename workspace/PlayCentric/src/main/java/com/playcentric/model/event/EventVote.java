@@ -30,7 +30,7 @@ public class EventVote {
     private EventSignup eventSignup;
 
     @ManyToOne
-    @JoinColumn(name = "memberId")
+    @JoinColumn(name = "memId")
     private Member member;
 
     @ManyToOne

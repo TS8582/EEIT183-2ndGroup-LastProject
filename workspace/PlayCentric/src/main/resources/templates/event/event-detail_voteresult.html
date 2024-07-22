@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${event.eventName}">活動詳情</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- 引入 Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 th:text="${event.eventName}">活動名稱</h1>
+        <p th:text="${event.eventDescription}">活動描述</p>
+        
+        <!-- 參賽作品列表 -->
+        <h2>參賽作品</h2>
+        <div id="entries-list" class="row">
+            <!-- 這裡將通過 JavaScript 動態填充參賽作品 -->
+        </div>
+
+        <!-- 投票結果圖表 -->
+        <h2>投票結果</h2>
+        <canvas id="voteChart"></canvas>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    // 獲取當前活動ID
+    const eventId = /*[[${event.eventId}]]*/ null;
+    const userId = /*[[${session.loginMember.memId}]]*/ null; // 假設使用者ID存儲在會話中
+
+    // 獲取參賽作品並顯示
+    function loadEntries() {
+        $.ajax({
+            url: '/eventSignup/api/event/' + eventId,
+            method: 'GET',
+            success: function(entries) {
+                const entriesList = $('#entries-list');
+                entriesList.empty();
+                entries.forEach(function(entry) {
+                    entriesList.append(`
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="/imagesLib/image${entry.workImageId}" class="card-img-top" alt="${entry.workTitle}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${entry.workTitle}</h5>
+                                    <p class="card-text">${entry.workDescription}</p>
+                                    <button onclick="vote(${entry.signupId})" class="btn btn-primary">投票</button>
+                                    <span class="vote-count ml-2">${entry.voteCount} 票</span>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error("Error loading entries:", error);
+                alert("載入參賽作品時發生錯誤，請稍後再試。");
+            }
+        });
+    }
+
+    // 投票功能
+    function vote(signupId) {
+        $.ajax({
+            url: '/eventVotes/api/create',
+            method: 'POST',
+            data: { memberId: userId, signupId: signupId },
+            success: function(response) {
+                if (response.success) {
+                    alert("投票成功！");
+                    loadEntries(); // 重新載入作品列表以更新票數
+                    updateVoteChart(); // 更新投票圖表
+                } else {
+                    alert(response.message || "投票失敗，請稍後再試。");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error voting:", error);
+                alert("投票時發生錯誤，請稍後再試。");
+            }
+        });
+    }
+
+    // 更新投票圖表
+    function updateVoteChart() {
+        $.ajax({
+            url: '/eventVotes/api/results/' + eventId,
+            method: 'GET',
+            success: function(results) {
+                const ctx = document.getElementById('voteChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(results),
+                        datasets: [{
+                            label: '得票數',
+                            data: Object.values(results),
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error("Error updating vote chart:", error);
+            }
+        });
+    }
+
+    // 頁面加載時執行
+    $(document).ready(function() {
+        loadEntries();
+        updateVoteChart();
+    });
+    /*]]>*/
+    </script>
+</body>
+</html>
