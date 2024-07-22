@@ -85,7 +85,7 @@ public class Member {
     private String loginToken;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(/* fetch = FetchType.LAZY, */ cascade = CascadeType.ALL)
     @JoinColumn(name = "googeId")
     private GoogleLogin googleLogin;
     

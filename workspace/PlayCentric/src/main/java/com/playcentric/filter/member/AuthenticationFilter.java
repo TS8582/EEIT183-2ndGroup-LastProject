@@ -32,7 +32,7 @@ public class AuthenticationFilter implements Filter {
         String servletPath = httpRequest.getServletPath();
 
         // 獲取 HttpSession
-        HttpSession session = httpRequest.getSession(false); // false 表示如果沒有 Session 不創建新 Session
+        HttpSession session = httpRequest.getSession(); // false 表示如果沒有 Session 不創建新 Session
         if (session != null) {
             LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
             if (loginMember == null) {
