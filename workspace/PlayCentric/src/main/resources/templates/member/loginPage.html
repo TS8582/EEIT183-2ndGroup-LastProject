@@ -166,10 +166,9 @@
 
   <script>
     $(function () {
-      const pageUrl = window.location.origin;
-      const homePageUrl = pageUrl + "/PlayCentric/member/login"
-      const loginUrl = pageUrl + "/PlayCentric/member/login"
-      const registUrl = pageUrl + "/PlayCentric/member/regist";
+      const homePageUrl = "/PlayCentric/member/login"
+      const loginUrl = "/PlayCentric/member/login"
+      const registUrl = "/PlayCentric/member/regist";
       const googleUrl = $('#googleLogin').attr('href');
       var loginTab = new bootstrap.Tab(document.querySelector('#login-tab'));
       const redirectMsg = '[[${redirectMsg}]]'

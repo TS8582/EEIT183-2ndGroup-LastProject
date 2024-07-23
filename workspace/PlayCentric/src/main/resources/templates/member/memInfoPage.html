@@ -137,12 +137,11 @@
 
   <script>
     $(function () {
-      const pageUrl = window.location.origin;
-      const findMemUrl = pageUrl + "/PlayCentric/member/personal/api/getInfo";
-      const updateMemUrl = pageUrl + "/PlayCentric/member/personal/api/updateSelf";
-      const changePwdUrl = pageUrl + "/PlayCentric/member/personal/api/sendPtUrl";
-      const verifiyEmailUrl = pageUrl + "/PlayCentric/member/personal/api/sendVerUrl";
-      const ecPayUrl = pageUrl + "/PlayCentric/member/personal/api/newRecharge";
+      const findMemUrl = "/PlayCentric/member/personal/api/getInfo";
+      const updateMemUrl = "/PlayCentric/member/personal/api/updateSelf";
+      const changePwdUrl = "/PlayCentric/member/personal/api/sendPtUrl";
+      const verifiyEmailUrl = "/PlayCentric/member/personal/api/sendVerUrl";
+      const ecPayUrl = "/PlayCentric/member/personal/api/newRecharge";
       const memId = Number.parseInt('[[${session.loginMember.memId}]]');
       const redirectMsg = '[[${redirectMsg}]]';
       let memInfo = {};
