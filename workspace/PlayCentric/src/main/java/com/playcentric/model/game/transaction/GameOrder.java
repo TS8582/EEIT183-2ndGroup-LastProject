@@ -34,7 +34,7 @@ public class GameOrder {
 	private Integer memId;
 	private LocalDateTime createAt;
 	private LocalDateTime updateAt;
-	private String status;
+	private Integer status;
 	@Column(insertable=false, updatable=false)
 	private Integer paymentId;
 	private Integer total;
