@@ -1,236 +1,287 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<title>活動管理</title>
-	<div th:replace="~{layout/backen_nav}"></div>
-	 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <meta charset="UTF-8">
+    <title>活動管理</title>
+    <!-- 導航欄模板 -->
+    <div th:replace="~{layout/backen_nav}"></div>
+    <!-- 引入 Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!-- 引入 Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        /* 自定義樣式 */
+        body {
+            background-color: #f8f9fa;
+        }
+        .content-wrapper {
+            margin-left: 250px; /* 調整為與側邊欄寬度相同 */
+            padding: 20px;
+        }
+        .table th {
+            background-color: #f1f3f5;
+        }
+        .btn-action {
+            margin-right: 5px;
+        }
+        /* 優化搜尋框樣式 */
+        .search-form {
+            display: flex;
+            align-items: center;
+        }
+        .search-form input {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .search-form button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        #span1{
+			color: black !important;
+		}
+    </style>
 </head>
-
 <body class="h-screen flex flex-col w-screen">
+    <div class="flex flex-1">
+        <!-- 側邊欄模板 -->
+        <div th:replace="~{/layout/aside}"></div>
+        
+        <!-- 主要內容區域 -->
+        <div class="content-wrapper">
+            <h1 class="mb-4">活動管理</h1>
+            <div class="row mb-3">
+                <!-- 新增活動按鈕 -->
+                <div class="col-md-6">
+                    <button class="btn btn-primary mr-2" onclick="openCreateEventForm()">
+                        <i class="fas fa-plus"></i> 新增活動
+                    </button>
+                </div>
+                <!-- 搜尋活動表單 -->
+                <div class="col-md-6">
+                    <form class="search-form float-right" onsubmit="searchEvents(); return false;">
+                        <input class="form-control" type="search" placeholder="輸入活動名稱" aria-label="Search" id="searchEventInput">
+                        <button class="btn btn-outline-success" type="button" onclick="searchEvents()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
 
-	<div class="flex flex-1">
+            <!-- 活動列表表格 -->
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>活動名稱</th>
+                            <th>活動描述</th>
+                            <th>開始時間</th>
+                            <th>結束時間</th>
+                            <th>報名截止時間</th>
+                            <th>狀態</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eventList">
+                        <tr th:each="event : ${allEvents}">
+                            <td th:text="${event.eventName}"></td>
+                            <td th:text="${event.eventDescription}"></td>
+                            <td><span th:text="${#temporals.format(event.eventStartTime, 'yyyy年MM月dd日')}"></span></td>
+                            <td><span th:text="${#temporals.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm:ss')}"></span></td>
+                            <td><span th:text="${#temporals.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm:ss')}"></span></td>
+                            <td>
+                                <span id="span1" th:class="${event.eventStatus == 0 ? 'badge badge-warning' : (event.eventStatus == 1 ? 'badge badge-success' : 'badge badge-secondary')}"
+                                      th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}">
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-info btn-sm btn-action edit-btn" th:attr="data-event-id=${event.eventId}">
+                                    <i class="fas fa-edit"></i> 編輯
+                                </button>
+                                <form method="post" th:action="@{/events/delete}" style="display: inline;">
+                                    <input type="hidden" name="eventId" th:value="${event.eventId}" />
+                                    <button type="submit" class="btn btn-danger btn-sm btn-action" onclick="return confirm('確定刪除嗎?')">
+                                        <i class="fas fa-trash-alt"></i> 刪除
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-		<div th:replace="~{/layout/aside}"></div>
-		<div class="w-full flex justify-center">
-			<div>
-				<h1>活動管理</h1>
-				<div class="row mb-3">
-					<div class="col">
-						<button class="btn btn-primary mr-2" onclick="openCreateEventForm()">新增活動</button>
+            <!-- 活動表單模態框 -->
+            <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="eventModalLabel">活動詳情</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="eventForm" method="post" th:action="@{/events/addPost}">
+                            <div class="modal-body">
+                                <!-- 活動表單字段 -->
+                                <div class="form-group">
+                                    <label for="eventName">活動名稱</label>
+                                    <input type="text" class="form-control" id="eventName" name="eventName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventDescription">活動描述</label>
+                                    <textarea class="form-control" id="eventDescription" name="eventDescription" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventStartTime">開始時間</label>
+                                    <input type="datetime-local" class="form-control datetime" id="eventStartTime" name="eventStartTime" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventEndTime">結束時間</label>
+                                    <input type="datetime-local" class="form-control datetime" id="eventEndTime" name="eventEndTime" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventSignupDeadLine">報名截止時間</label>
+                                    <input type="datetime-local" class="form-control datetime" id="eventSignupDeadLine" name="eventSignupDeadLine" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventStatus">活動狀態</label>
+                                    <select class="form-control" id="eventStatus" name="eventStatus" required>
+                                        <option value="0">未開始</option>
+                                        <option value="1" selected>進行中</option>
+                                        <option value="2">已結束</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" id="eventId" name="eventId">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                                <button type="submit" class="btn btn-primary" id="saveEventBtn">保存</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-						<!-- <button class="btn btn-secondary mr-2" onclick="openSearchEventForm()">查詢活動</button> -->
-					</div>
-					<div class="col">
-						<form class="form-inline float-right">
-							<input class="form-control mr-2" type="search" placeholder="輸入活動名稱" aria-label="Search"
-								id="searchEventInput">
-							<button class="btn btn-outline-success" type="button" onclick="searchEvents()">查詢</button>
-						</form>
-					</div>
-				</div>
-				<table class="table">
-					<thead>
-						<tr>
-							<th>活動名稱</th>
-							<th>活動描述</th>
-							<th>開始時間</th>
-							<th>結束時間</th>
-							<th>報名截止時間</th>
-							<th>操作</th>
-						</tr>
-					</thead>
-					<tbody id="eventList">
-						<!-- 活動列表將由JavaScript動態填充 -->
-						<th:block th:each=" event : ${allEvents}">
-							<tr>
-								<td>[[${event.eventName}]]</td>
-								<td>[[${event.eventDescription}]]</td>
-								<td><span
-										th:text="${event} ?  ${#dates.format(event.eventStartTime, 'yyyy年MM月dd日')}"></span>
-								</td>
-								<td><span
-										th:text="${event} ?  ${#dates.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
-								</td>
-								<td><span
-										th:text="${event} ?  ${#dates.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm:ss')}"></span>
-								</td>
-								<td class="d-flex">
-									<button class="btn btn-info btn-sm edit-btn me-2"
-										th:eventId="${event.eventId}">編輯</button>
-									<form method="post" th:action="@{/events/delete}">
-										<input name="eventId" th:value="${event.eventId}" type="hidden" />
-										<input type="submit" value="刪除" onclick="return confirm('確定刪除嗎??')"
-											class="btn btn-outline-danger btn-sm">
-									</form>
-								</td>
-							</tr>
-						</th:block>
-					</tbody>
-				</table>
-			</div>
+    <!-- jQuery 和 Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/axios.min.js}"></script>
 
-			<!-- 模態框（用於創建、編輯和查詢活動） -->
-			<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel"
-				aria-hidden="true">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="eventModalLabel">活動詳情</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<!-- 表單用於創建、編輯和查詢活動 -->
-						<form id="eventForm" method="post" th:action="@{/events/addPost}">
-							<div class="modal-body">
-								<div class="form-group">
-									<label for="eventName">活動名稱</label> <input type="text" class="form-control"
-										id="eventName" name="eventName" required>
-								</div>
-								<div class="form-group">
-									<label for="eventDescription">活動描述</label>
-									<textarea class="form-control" id="eventDescription" name="eventDescription"
-										rows="3"></textarea>
-								</div>
-								<div class="form-group">
-									<label for="eventStartTime">開始時間</label> <input type="datetime-local"
-										class="form-control datetime" id="eventStartTime" name="eventStartTime"
-										required>
-								</div>
-								<div class="form-group">
-									<label for="eventEndTime">結束時間</label> <input type="datetime-local"
-										class="form-control datetime" id="eventEndTime" name="eventEndTime" required>
-								</div>
-								<div class="form-group">
-									<label for="eventSignupDeadLine">報名截止時間</label> <input type="datetime-local"
-										class="form-control datetime" id="eventSignupDeadLine"
-										name="eventSignupDeadLine" required>
-								</div>
-								<input type="hidden" id="eventId" name="eventId">
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-								<button type="submit" class="btn btn-primary" id="saveEventBtn">保存</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
+    <div id="errMsg" th:if="${errMsg}" style="display: none;">[[${errMsg}]]</div>
 
-		</div>
+    <script th:inline="javascript">
+        // 後端 API URL
+        const findEventUrl = "/PlayCentric/events/get/";
+        const createEventUrl = "/PlayCentric/events/createPost";
+        const updateEventUrl = "/PlayCentric/events/updatePost";
 
-		<!-- jQuery 和 Bootstrap JavaScript -->
-		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-		<!-- <script th:src="@{/js/event/eventManagement.js}"></script> -->
-		<script th:src="@{/js/axios.min.js}"></script>
+        // 顯示錯誤訊息
+        if ($('#errMsg').length > 0) {
+            alert($('#errMsg').text());
+        }
+        
+        // 編輯按鈕點擊事件處理
+        $('#eventList').on('click', '.edit-btn', function () {
+            showEventInfo($(this).data('event-id'));
+        });
+        
+        // 顯示活動詳情
+        function showEventInfo(eventId) {
+            axios.get(findEventUrl + eventId)
+                .then(res => {
+                    console.log(res.data);
+                    showUpdateModal(res.data);
+                })
+                .catch(err => {
+                    console.error("獲取活動詳情失敗:", err);
+                    alert("獲取活動詳情失敗，請稍後再試");
+                });
+        }
+        
+        // 顯示編輯活動的互動視窗
+        function showUpdateModal(data) {
+            $('#eventForm').attr('action', updateEventUrl);
+            $('#eventModal .modal-title').text('編輯活動資訊');
+            $('#eventModal #eventId').val(data.eventId);
+            $('#eventModal #eventName').val(data.eventName || '');
+            $('#eventModal #eventDescription').val(data.eventDescription || '');
+            $('#eventModal #eventStartTime').val(data.eventStartTime ? data.eventStartTime.substring(0, 16) : '');
+            $('#eventModal #eventEndTime').val(data.eventEndTime ? data.eventEndTime.substring(0, 16) : '');
+            $('#eventModal #eventSignupDeadLine').val(data.eventSignupDeadLine ? data.eventSignupDeadLine.substring(0, 16) : '');
+            $('#eventModal #eventStatus').val(data.eventStatus || '0');
+            $('#eventModal').modal('show');
+        }
 
-		<div id="errMsg" th:if="${errMsg}">[[${errMsg}]]</div>
-	</div>
+        // 表單提交處理
+        $('#eventForm').submit(function (event) {
+            event.preventDefault();
 
-	<script>
-		const findEventUrl = "http://localhost:8080/PlayCentric/events/get/";
-		const createEventUrl = "http://localhost:8080/PlayCentric/events/createPost";
-		const updateEventUrl = "http://localhost:8080/PlayCentric/events/updatePost";
+            const startTime = new Date($('#eventStartTime').val());
+            const endTime = new Date($('#eventEndTime').val());
+            const signupDeadline = new Date($('#eventSignupDeadLine').val());
 
-		if ($('#errMsg').length > 0) {
-			$('#errMsg').hide();
-			alert($('#errMsg').text())
-		}
+            // 驗證邏輯
+            if (endTime <= startTime) {
+                alert("結束時間必須在開始時間之後");
+                return false;
+            }
 
-		$('#eventList').on('click', '.edit-btn', function () {
-			showEventInfo($(this).attr('eventId'))
-		})
+            if (signupDeadline >= endTime) {
+                alert("報名截止時間必須在結束時間之前");
+                return false;
+            }
+			
+			if (signupDeadline <= startTime) {
+                alert("報名截止時間必須在開始時間之後");
+                return false;
+            }
+            // 格式化日期並提交表單
+            $('#eventForm .datetime').attr('type', 'datetime');
+            $('#eventForm .datetime').each(function() {
+                $(this).val($(this).val().replace('T', ' '));
+            });
 
-		function showEventInfo(eventId) {
-			axios({
-				method: 'get',
-				url: findEventUrl + eventId
-			})
-				.then(res => {
-					console.log(res);
-					showUpdateModal(res.data);
-				})
-				.catch(err => console.log(err))
-		}
+            this.submit();
+        });
 
-		function showUpdateModal(data) {
-			$('#eventForm').attr('action', updateEventUrl);
-			$('#eventModal .modal-title').text('編輯活動資訊');
-			$('#eventModal #eventId').val(data.eventId);
-			$('#eventModal #eventName').val(data.eventName ? data.eventName : '');
+        // 打開創建活動表單
+        function openCreateEventForm() {
+            $('#eventForm').attr('action', createEventUrl);
+            $('#eventForm .datetime').attr('type', 'datetime-local');
+            $('#eventModal').modal('show');
+            $('#eventForm').trigger('reset');
+            $('#eventId').val('');
+            $('#eventModal .modal-title').text('新增活動');
+        }
 
-			$('#eventModal #eventDescription').val(data.eventDescription ? data.eventDescription : '');
+        // 搜尋活動
+        function searchEvents() {
+            let searchQuery = $('#searchEventInput').val().toLowerCase();
+            $('#eventList tr').each(function() {
+                let eventName = $(this).find('td:first').text().toLowerCase();
+                if (eventName.includes(searchQuery)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
 
-			$('#eventModal #eventStartTime').val(data.eventStartTime ? data.eventStartTime : '');
+        // 處理回車鍵搜尋
+        $('#searchEventInput').keypress(function(event) {
+            if (event.which === 13) {
+                event.preventDefault();
+                searchEvents();
+            }
+        });
 
-			$('#eventModal #eventEndTime').val(data.eventEndTime ? data.eventEndTime : '');
-
-			$('#eventModal #eventSignupDeadLine').val(data.eventSignupDeadLine ? data.eventSignupDeadLine : '');
-
-			$('#eventModal').modal('show');
-		}
-
-
-		$('#eventForm').submit(function (event) {
-			event.preventDefault();
-
-			const startTime = new Date($('#eventStartTime').val());
-			const endTime = new Date($('#eventEndTime').val());
-			const signupDeadline = new Date($('#eventSignupDeadLine').val());
-
-			if (endTime <= startTime) {
-				alert("結束時間必須在開始時間之後");
-				return false;
-			}
-
-			if (signupDeadline >= endTime) {
-				alert("報名截止時間必須在結束時間之前");
-				return false;
-			}
-
-		});
-
-		$('#eventForm').submit(function () {
-			event.preventDefault();
-			$('#eventForm .datetime').attr('type', 'datetime');
-			$('#eventForm .datetime').each(function (indx, ele) {
-				$(this).val($(this).val().replace('T', ' '));
-			});
-			this.submit();
-		})
-
-		$('#eventList').on('click', '.delete-btn', function () {
-
-		})
-
-		let openCreateEventForm = function () {
-			$('#eventForm').attr('action', createEventUrl);
-			$('#eventForm .datetime').attr('type', 'datetime-local');
-			$('#eventModal').modal('show');
-			$('#eventForm').trigger('reset');
-			$('#eventId').val('');
-			$('#deleteEventBtn').hide();  // 隱藏刪除按鈕
-		};
-
-		// 模糊查詢活動功能
-		function searchEvents() {
-			const searchValue = document.getElementById("searchEventInput").value.toLowerCase();
-			const eventList = document.getElementById("eventList");
-			const rows = eventList.getElementsByTagName("tr");
-
-			for (let i = 0; i < rows.length; i++) {
-				let eventName = rows[i].getElementsByTagName("td")[0].textContent.toLowerCase();
-				if (eventName.includes(searchValue)) {
-					rows[i].style.display = "";
-				} else {
-					rows[i].style.display = "none";
-				}
-			}
-		}
-	</script>
+        // 確保互動視窗可以正確關閉
+        $('.modal').on('hidden.bs.modal', function (e) {
+            $(this).find('form')[0].reset();
+        });
+    </script>
 </body>
-
 </html>

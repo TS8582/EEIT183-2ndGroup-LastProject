@@ -1,22 +1,29 @@
 package com.playcentric.model.event;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.playcentric.model.ImageLib;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@ToString
 @Entity
-@Data
 @Table(name = "event")
 public class Event {
     @Id
@@ -28,19 +35,21 @@ public class Event {
     private Integer eventType;
     
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") // 若要在 thymeleaf 強制使用本格式，需雙層大括號
-	@Temporal(TemporalType.TIMESTAMP)
-    private Date eventStartTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime eventStartTime;
     
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") 
-	@Temporal(TemporalType.TIMESTAMP)
-    private Date eventEndTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    
+    private LocalDateTime eventEndTime;
     
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") 
-	@Temporal(TemporalType.TIMESTAMP)
-    private Date eventSignupDeadLine;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime eventSignupDeadLine;
     
     private Integer eventStatus;
+    
+    @ManyToOne
+    @JoinColumn(name = "eventImage")
+    private ImageLib eventImage;
 }

@@ -14,11 +14,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-public class AuthenticationFilter implements Filter {
+public class AuthenticationRoleFilter implements Filter {
 
     private MemberService memberService;
 
-    public AuthenticationFilter(MemberService memberService) {
+    public AuthenticationRoleFilter(MemberService memberService) {
         this.memberService = memberService;
     }
 

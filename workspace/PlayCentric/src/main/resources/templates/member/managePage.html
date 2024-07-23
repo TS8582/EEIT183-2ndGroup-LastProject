@@ -148,12 +148,11 @@
 
   <script>
     $(function () {
-      const pageUrl = window.location.origin;
-      const findMemUrl = pageUrl + "/PlayCentric/member/back/api/getMember"
-      const searchMemUrl = pageUrl + "/PlayCentric/member/back/api/searchMemPage"
-      const registUrl = pageUrl + "/PlayCentric/member/back/api/regist";
-      const updateMemUrl = pageUrl + "/PlayCentric/member/back/api/update";
-      const deleteMemUrl = pageUrl + "/PlayCentric/member/back/api/delete"
+      const findMemUrl = "/PlayCentric/member/back/api/getMember"
+      const searchMemUrl = "/PlayCentric/member/back/api/searchMemPage"
+      const registUrl = "/PlayCentric/member/back/api/regist";
+      const updateMemUrl = "/PlayCentric/member/back/api/update";
+      const deleteMemUrl = "/PlayCentric/member/back/api/delete"
       const memInfoModal = new bootstrap.Modal('#memInfo');
       let params = {
         page: 1,
