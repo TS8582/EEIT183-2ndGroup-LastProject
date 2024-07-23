@@ -105,9 +105,9 @@ public class PropBuyOrderController {
 	    return "購買完成";
 	}
 	//根據memId找memName
-	@GetMapping("/prop/front/buyProp/findMenNameByMemId")
+	@GetMapping("/prop/front/buyProp/findAllByMemId")
 	@ResponseBody
-	public Member findMenNameByMemId(@RequestParam("memId") Integer buyerMemId) {
-		return memberService.findById(buyerMemId);
+	public Member findAllByMemId(@RequestParam("memId") Integer memId) {
+		return memberService.findById(memId);
 	}
 }

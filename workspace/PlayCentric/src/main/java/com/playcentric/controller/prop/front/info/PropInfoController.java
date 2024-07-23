@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.playcentric.model.prop.buyOrder2.PropBuyOrder2;
@@ -28,7 +29,7 @@ public class PropInfoController {
 	//回傳買單資訊
 	@GetMapping("prop/front/propInfo")
 	@ResponseBody
-	public List<PropBuyOrder2> findAllSellPropsByMemId(int buyerMemId){
-		return propBuyOrderService2.findAllByMemId(buyerMemId);
+	public List<PropBuyOrder2> findAllBuyPropsByMemId(@RequestParam("memId") int memId){
+		return propBuyOrderService2.findAllByMemId(memId);
 	}
 }
