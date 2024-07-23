@@ -84,6 +84,7 @@
 <body>
   <div th:replace="~{layout/nav}"></div>
   <div id="memberId" class="d-none" th:if="${session.loginMember}" th:text="${session.loginMember.memId}"></div>
+  <div id="memberPoints" class="d-none" th:if="${session.loginMember}" th:text="${session.loginMember.points}"></div>
 
   <header class="mt-5 d-flex justify-content-center">
     <div id="gameList" class="bg-light text-dark p-4 rounded shadow-sm">
@@ -179,6 +180,7 @@
     const propTypesMap = {};
     const inventoryBtn = document.getElementById("inventoryBtn");
     const memId = document.getElementById("memberId")?.textContent.trim() || null;
+    const memPoints = document.getElementById("memberPoints")?.textContent.trim() || null;
     let selectedGameId;
     let inventoryProps;
     let focusProp;
@@ -586,7 +588,12 @@
     }
 
     // 買道具的方法
-    function buyProp(buyTotalQuantity, propId, memId, paymentId, buyTotalPrice) {
+    function buyProp(buyTotalQuantity, propId, memId, paymentId, buyTotalPrice, memPoints) {
+      if (buyTotalPrice > memPoints) {
+        window.alert("餘額不足，請先儲值");
+        return;
+      }
+
       if (window.confirm("確定購買商品?")) {
         axios({
           method: "post",
@@ -602,17 +609,17 @@
         })
           .then((res) => {
             window.alert("交易成功");
-            findSellOrderbyPropId(propId); // 修正這裡的參數名稱
+            findSellOrderbyPropId(propId);
           })
           .catch((error) => {
-            window.alert("Error: " + error);
+            console.log("Error: " + error);
           });
       }
     }
 
     // 監控購買按鈕
     document.getElementById("buyBtn").addEventListener("click", function () {
-      buyProp(buyQuantity.value, buyPropId, memId, 1, buyTotalPrice);
+      buyProp(buyQuantity.value, buyPropId, memId, 1, buyTotalPrice, memPoints);
     });
 
     // 根據memId及gameId找所有賣單的方法
