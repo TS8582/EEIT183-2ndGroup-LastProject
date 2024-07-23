@@ -90,6 +90,18 @@ public class EventSignupService {
         logger.info("獲取會員的所有報名，會員ID: {}", memberId);
         return eventSignupRepository.findByMember_MemId(memberId);
     }
+    
+    /**
+     * 根據報名ID獲取報名圖片
+     * @param signupId 報名ID
+     * @return 報名圖片的字節數組
+     * @throws RuntimeException 如果找不到指定的報名記錄
+     */
+    public byte[] getSignupImage(Integer signupId) {
+        EventSignup signup = eventSignupRepository.findById(signupId)
+            .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
+        return signup.getWorkImage();
+    }
 
     /**
      * 更新報名信息
@@ -121,5 +133,15 @@ public class EventSignupService {
         }
         eventSignupRepository.deleteById(signupId);
         logger.info("成功刪除報名，報名ID: {}", signupId);
+    }
+    
+    /**
+     * 檢查用戶是否已經報名過特定活動
+     * @param memId 會員ID
+     * @param eventId 活動ID
+     * @return 如果已經報名則返回true，否則返回false
+     */
+    public boolean hasUserSignedUp(Integer memId, Integer eventId) {
+        return eventSignupRepository.existsByMember_MemIdAndEvent_EventId(memId, eventId);
     }
 }

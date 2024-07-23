@@ -38,7 +38,7 @@ public class EventVoteService {
     @Transactional
     public EventVote createVote(Integer memberId, Integer signupId) {
         EventSignup eventSignup = eventSignupRepository.findById(signupId)
-                .orElseThrow(() -> new RuntimeException("找不到指定的報名記錄"));
+            .orElseThrow(() -> new RuntimeException("找不到指定的報名記錄"));
 
         Event event = eventSignup.getEvent();
 
@@ -67,7 +67,7 @@ public class EventVoteService {
 
         // 創建新的投票記錄
         EventVote eventVote = new EventVote();
-        eventVote.setMember(memberRepository.findById(memberId).orElseThrow());
+        eventVote.setMember(memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("找不到指定的會員")));
         eventVote.setEventSignup(eventSignup);
         eventVote.setEvent(event);
         eventVote.setEventVoteStatus(1); // 假設1表示有效投票
@@ -169,5 +169,9 @@ public class EventVoteService {
                         vote -> vote.getEventSignup().getSignupId(),
                         Collectors.counting()
                 ));
+    }
+    
+    public long getVoteCountForSignup(Integer signupId) {
+        return eventVoteRepository.countByEventSignup_SignupId(signupId);
     }
 }

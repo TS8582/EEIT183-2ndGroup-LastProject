@@ -7,19 +7,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
+
 @Controller
 @RequestMapping("/eventVotes")
 public class EventVoteController {
+
+    private static final Logger logger = LoggerFactory.getLogger(EventVoteController.class);
 
     @Autowired
     private EventVoteService eventVoteService;
 
     /**
      * 顯示投票列表頁面
+     * @param model Spring MVC Model
+     * @return 投票列表頁面
      */
     @GetMapping("/list")
     public String listVotes(Model model) {
@@ -30,6 +37,8 @@ public class EventVoteController {
 
     /**
      * 顯示創建投票的表單
+     * @param model Spring MVC Model
+     * @return 投票表單頁面
      */
     @GetMapping("/create")
     public String showCreateForm(Model model) {
@@ -38,12 +47,16 @@ public class EventVoteController {
     }
 
     /**
-     * 處理創建投票的表單提交（返回視圖）
+     * 處理創建投票的表單提交
+     * @param memberId 會員ID
+     * @param signupId 報名ID
+     * @param model Spring MVC Model
+     * @return 重定向到投票列表或返回表單（如果出錯）
      */
     @PostMapping("/create")
     public String createVoteForm(@RequestParam Integer memberId, @RequestParam Integer signupId, Model model) {
         try {
-            EventVote vote = eventVoteService.createVote(memberId, signupId);
+            eventVoteService.createVote(memberId, signupId);
             return "redirect:/eventVotes/list";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
@@ -53,6 +66,9 @@ public class EventVoteController {
 
     /**
      * 顯示特定投票的詳情
+     * @param voteId 投票ID
+     * @param model Spring MVC Model
+     * @return 投票詳情頁面或錯誤頁面
      */
     @GetMapping("/{voteId}")
     public String getVote(@PathVariable Integer voteId, Model model) {
@@ -68,6 +84,9 @@ public class EventVoteController {
     
     /**
      * 顯示編輯投票的表單
+     * @param voteId 投票ID
+     * @param model Spring MVC Model
+     * @return 投票表單頁面
      */
     @GetMapping("/edit/{voteId}")
     public String showEditForm(@PathVariable Integer voteId, Model model) {
@@ -78,6 +97,10 @@ public class EventVoteController {
 
     /**
      * 處理更新投票的表單提交
+     * @param voteId 投票ID
+     * @param eventVoteStatus 新的投票狀態
+     * @param model Spring MVC Model
+     * @return 重定向到投票詳情或返回表單（如果出錯）
      */
     @PostMapping("/update")
     public String updateVote(@RequestParam Integer voteId, @RequestParam Integer eventVoteStatus, Model model) {
@@ -92,6 +115,9 @@ public class EventVoteController {
 
     /**
      * 處理刪除投票的請求
+     * @param voteId 投票ID
+     * @param model Spring MVC Model
+     * @return 重定向到投票列表或投票詳情（如果出錯）
      */
     @PostMapping("/delete/{voteId}")
     public String deleteVote(@PathVariable Integer voteId, Model model) {
@@ -106,6 +132,9 @@ public class EventVoteController {
 
     /**
      * 顯示特定報名的所有投票
+     * @param signupId 報名ID
+     * @param model Spring MVC Model
+     * @return 投票列表頁面
      */
     @GetMapping("/signup/{signupId}")
     public String getVotesBySignup(@PathVariable Integer signupId, Model model) {
@@ -118,20 +147,36 @@ public class EventVoteController {
 
     /**
      * API: 創建新的投票
+     * @param memberId 會員ID
+     * @param signupId 報名ID
+     * @return 創建結果的 ResponseEntity
      */
     @PostMapping("/api/create")
     @ResponseBody
-    public ResponseEntity<?> apiCreateVote(@RequestParam Integer memberId, @RequestParam Integer signupId) {
+    public ResponseEntity<?> createVote(@RequestParam Integer memberId, @RequestParam Integer signupId) {
         try {
             EventVote vote = eventVoteService.createVote(memberId, signupId);
-            return ResponseEntity.ok(Map.of("success", true, "message", "投票成功", "vote", vote));
+            // 獲取更新後的票數
+            long updatedVoteCount = eventVoteService.getVoteCountForSignup(signupId);
+            return ResponseEntity.ok(Map.of(
+                "success", true, 
+                "message", "投票成功", 
+                "vote", vote,
+                "updatedVoteCount", updatedVoteCount
+            ));
         } catch (RuntimeException e) {
+            logger.warn("投票失敗: {}", e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+        } catch (Exception e) {
+            logger.error("投票過程中發生未預期的錯誤", e);
+            return ResponseEntity.internalServerError().body(Map.of("success", false, "message", "投票時發生系統錯誤，請稍後再試"));
         }
     }
 
     /**
      * API: 獲取特定投票記錄
+     * @param voteId 投票ID
+     * @return 投票記錄的 ResponseEntity
      */
     @GetMapping("/api/{voteId}")
     @ResponseBody
@@ -146,6 +191,9 @@ public class EventVoteController {
 
     /**
      * API: 更新投票記錄
+     * @param voteId 投票ID
+     * @param payload 包含新狀態的 Map
+     * @return 更新結果的 ResponseEntity
      */
     @PutMapping("/api/{voteId}")
     @ResponseBody
@@ -164,6 +212,8 @@ public class EventVoteController {
 
     /**
      * API: 刪除投票記錄
+     * @param voteId 投票ID
+     * @return 刪除結果的 ResponseEntity
      */
     @DeleteMapping("/api/{voteId}")
     @ResponseBody
@@ -178,6 +228,7 @@ public class EventVoteController {
 
     /**
      * API: 獲取所有投票
+     * @return 所有投票的列表
      */
     @GetMapping("/api/all")
     @ResponseBody
@@ -188,6 +239,8 @@ public class EventVoteController {
 
     /**
      * API: 獲取特定報名的所有投票
+     * @param signupId 報名ID
+     * @return 特定報名的所有投票
      */
     @GetMapping("/api/signup/{signupId}")
     @ResponseBody
@@ -198,6 +251,8 @@ public class EventVoteController {
     
     /**
      * API: 獲取特定活動的所有投票
+     * @param eventId 活動ID
+     * @return 特定活動的所有投票
      */
     @GetMapping("/api/event/{eventId}")
     @ResponseBody
@@ -208,6 +263,9 @@ public class EventVoteController {
 
     /**
      * API: 獲取特定用戶在特定活動中的投票次數
+     * @param memId 會員ID
+     * @param eventId 活動ID
+     * @return 投票次數
      */
     @GetMapping("/api/count/{memId}/{eventId}")
     @ResponseBody
@@ -218,6 +276,8 @@ public class EventVoteController {
 
     /**
      * API: 獲取特定活動的投票結果統計
+     * @param eventId 活動ID
+     * @return 投票結果統計
      */
     @GetMapping("/api/results/{eventId}")
     @ResponseBody

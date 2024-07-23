@@ -7,6 +7,11 @@ public class EventSignupDTO {
     private Integer signupId;
     private String workTitle;
     private String workDescription;
-    private Integer voteCount;
+    private Long voteCount;  // 改為 Long 類型
     private String workImageBase64;
+
+    //添加接受 long 參數的 setVoteCount 方法
+    public void setVoteCount(long voteCount) {
+        this.voteCount = voteCount;
+    }
 }

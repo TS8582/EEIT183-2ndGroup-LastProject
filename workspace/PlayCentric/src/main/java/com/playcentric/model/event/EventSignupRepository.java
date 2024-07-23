@@ -17,4 +17,12 @@ public interface EventSignupRepository extends JpaRepository<EventSignup, Intege
      * @return 該會員的所有報名列表
      */
     List<EventSignup> findByMember_MemId(Integer memberId);
+
+    /**
+     * 檢查特定會員是否已經報名特定活動
+     * @param memId 會員ID
+     * @param eventId 活動ID
+     * @return 如果已經報名則返回true，否則返回false
+     */
+    boolean existsByMember_MemIdAndEvent_EventId(Integer memId, Integer eventId);
 }

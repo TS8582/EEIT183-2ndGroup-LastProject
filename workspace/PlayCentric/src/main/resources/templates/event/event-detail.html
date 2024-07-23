@@ -96,12 +96,17 @@
         </div>
 
         <div class="container">
+            <!-- 新增: 顯示成功或錯誤消息 -->
+            <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+
             <div class="row">
                 <!-- 左側：活動詳情 -->
                 <div class="col-lg-8">
                     <!-- 活動圖片 -->
-                    <img th:if="${event.eventImage != null}" th:src="@{'/imagesLib/image' + ${event.eventImage.imageId}}"
-                        class="img-fluid mb-4 event-image" alt="活動圖片">
+                    <img th:if="${event.eventImage != null}"
+                        th:src="@{'/imagesLib/image' + ${event.eventImage.imageId}}" class="img-fluid mb-4 event-image"
+                        alt="活動圖片">
 
                     <!-- 活動詳細信息卡片 -->
                     <div class="card mb-4">
@@ -109,16 +114,20 @@
                             <h5 class="card-title">活動詳情</h5>
                             <ul class="list-unstyled">
                                 <li><i class="far fa-calendar-alt mr-2"></i> <strong>開始時間：</strong>
-                                    <span th:text="${#temporals.format(event.eventStartTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                                    <span
+                                        th:text="${#temporals.format(event.eventStartTime, 'yyyy年MM月dd日 HH:mm')}"></span>
                                 </li>
                                 <li><i class="far fa-calendar-check mr-2"></i> <strong>結束時間：</strong>
-                                    <span th:text="${#temporals.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                                    <span
+                                        th:text="${#temporals.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm')}"></span>
                                 </li>
                                 <li><i class="far fa-clock mr-2"></i> <strong>報名截止時間：</strong>
-                                    <span th:text="${#temporals.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm')}"></span>
+                                    <span
+                                        th:text="${#temporals.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm')}"></span>
                                 </li>
                                 <li><i class="fas fa-info-circle mr-2"></i> <strong>狀態：</strong>
-                                    <span th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"
+                                    <span
+                                        th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"
                                         th:class="${event.eventStatus == 0 ? 'badge badge-warning' : (event.eventStatus == 1 ? 'badge badge-success' : 'badge badge-secondary')}">
                                     </span>
                                 </li>
@@ -139,10 +148,10 @@
                         <div class="card-body">
                             <h5 class="card-title">報名參加</h5>
                             <!-- 報名表單 -->
-                            <form th:if="${event.eventStatus != 2}" th:action="@{/eventSignup/create}"
-                                method="post" enctype="multipart/form-data">
+                            <form th:if="${event.eventStatus != 2}" th:action="@{/eventSignup/create}" method="post"
+                                enctype="multipart/form-data">
                                 <input type="hidden" name="eventId" th:value="${event.eventId}">
-<div class="form-group">
+                                <div class="form-group">
                                     <label for="workTitle">作品標題</label>
                                     <input type="text" class="form-control" id="workTitle" name="workTitle" required>
                                 </div>
@@ -182,20 +191,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- 頁面專用的 JavaScript 代碼 -->
+
     <script th:inline="javascript">
         /*<![CDATA[*/
         const eventId = /*[[${event.eventId}]]*/ null;
         const eventStatus = /*[[${event.eventStatus}]]*/ null;
         const userId = /*[[${session.loginMember?.memId}]]*/ null;
 
-        // 加載參賽作品
         function loadEntries() {
             $('#entries-list').html('<p class="text-center">載入中，請稍候...</p>');
             $.ajax({
-                url: '/eventSignup/api/event/' + eventId,
+                url: '/PlayCentric/eventSignup/api/event/' + eventId,
                 method: 'GET',
                 success: function (entries) {
+                    console.log("接收到的參賽作品:", entries);
                     const entriesList = $('#entries-list');
                     entriesList.empty();
                     if (entries.length === 0) {
@@ -203,60 +212,62 @@
                     } else {
                         entries.forEach(function (entry) {
                             entriesList.append(`
-                                <div class="col-md-6 col-lg-4 entry-card">
-                                    <div class="card">
-                                        <img src="data:image/jpeg;base64,${entry.workImage}" class="card-img-top entry-image" alt="${entry.workTitle}">
-                                        <div class="card-body">
-                                            <h5 class="card-title">${entry.workTitle}</h5>
-                                            <p class="card-text">${entry.workDescription}</p>
-                                            <button onclick="vote(${entry.signupId})" class="btn btn-primary vote-button" ${eventStatus != 1 ? 'disabled' : ''}>
-                                                投票
-                                            </button>
-                                            <p class="vote-count mt-2">目前票數：<span id="vote-count-${entry.signupId}">${entry.voteCount}</span></p>
-                                        </div>
+                            <div class="col-md-6 col-lg-4 entry-card">
+                                <div class="card">
+                                    <img src="/PlayCentric/eventSignup/image/${entry.signupId}" class="card-img-top entry-image" alt="${entry.workTitle}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${entry.workTitle}</h5>
+                                        <p class="card-text">${entry.workDescription}</p>
+                                        <button onclick="vote(${entry.signupId})" class="btn btn-primary vote-button" ${eventStatus != 1 ? 'disabled' : ''}>
+                                            投票
+                                        </button>
+                                        <p class="vote-count mt-2">目前票數：<span id="vote-count-${entry.signupId}">${entry.voteCount}</span></p>
                                     </div>
                                 </div>
-                            `);
+                            </div>
+                        `);
                         });
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error loading entries:", error);
+                    console.error("載入參賽作品時發生錯誤:", error);
                     $('#entries-list').html('<p class="col-12 text-danger">載入參賽作品時發生錯誤，請<a href="javascript:void(0);" onclick="loadEntries()">重試</a>。</p>');
                 }
             });
         }
 
-        // 頁面加載完成後執行
-        $(document).ready(function () {
-            loadEntries();
-        });
-
-        // 投票功能
         function vote(signupId) {
             if (!userId) {
                 alert("請先登入後再投票");
                 return;
             }
             $.ajax({
-                url: '/eventVotes/api/create',
+                url: '/PlayCentric/eventVotes/api/create',
                 method: 'POST',
                 data: { memberId: userId, signupId: signupId },
                 success: function (response) {
                     if (response.success) {
                         alert("投票成功！");
                         const voteCountSpan = $(`#vote-count-${signupId}`);
-                        voteCountSpan.text(parseInt(voteCountSpan.text()) + 1);
+                        voteCountSpan.text(response.updatedVoteCount);
                     } else {
                         alert(response.message || "投票失敗，請稍後再試。");
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error voting:", error);
-                    alert("投票時發生錯誤，請稍後再試。");
+                    console.error("投票錯誤詳情:", xhr.responseJSON);
+                    let errorMessage = "投票時發生錯誤，請稍後再試。";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    alert(errorMessage);
                 }
             });
         }
+
+        $(document).ready(function () {
+            loadEntries();
+        });
         /*]]>*/
     </script>
 </body>

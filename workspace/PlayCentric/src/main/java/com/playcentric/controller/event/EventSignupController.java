@@ -1,12 +1,13 @@
 package com.playcentric.controller.event;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,10 +26,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.playcentric.model.event.Event;
 import com.playcentric.model.event.EventSignup;
+import com.playcentric.model.event.EventSignupDTO;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
 import com.playcentric.service.event.EventService;
 import com.playcentric.service.event.EventSignupService;
+import com.playcentric.service.event.EventVoteService;
 import com.playcentric.service.member.MemberService;
 
 import jakarta.servlet.http.HttpSession;
@@ -47,6 +50,9 @@ public class EventSignupController {
 
     @Autowired
     private MemberService memberService;
+    
+    @Autowired
+    private EventVoteService eventVoteService;
 
     /**
      * 顯示報名管理頁面
@@ -77,20 +83,21 @@ public class EventSignupController {
                                RedirectAttributes redirectAttributes) {
         logger.info("開始處理報名請求，活動ID: {}", eventId);
         try {
-            // 檢查用戶是否登錄
             LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
             if (loginMember == null) {
-                logger.warn("用戶未登錄，無法報名");
                 redirectAttributes.addFlashAttribute("errorMessage", "請先登錄");
                 return "redirect:/member/login";
             }
 
             Member member = memberService.findById(loginMember.getMemId());
-            logger.info("報名用戶: {}", member.getMemName());
-
             Event event = eventService.getEvent(eventId)
                 .orElseThrow(() -> new RuntimeException("活動不存在"));
-            logger.info("報名活動: {}", event.getEventName());
+
+            // 檢查用戶是否已經報名過這個活動
+            if (eventSignupService.hasUserSignedUp(member.getMemId(), eventId)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "您已經報名過這個活動了");
+                return "redirect:/events/public/detail/" + eventId;
+            }
 
             eventSignup.setMember(member);
             eventSignup.setEvent(event);
@@ -98,11 +105,8 @@ public class EventSignupController {
             eventSignup.setWorkUploadTime(LocalDateTime.now());
 
             EventSignup createdSignup = eventSignupService.createSignup(eventSignup);
-            logger.info("成功創建報名: {}", createdSignup.getSignupId());
-            redirectAttributes.addFlashAttribute("successMessage", "報名成功");
-        } catch (IOException e) {
-            logger.error("處理上傳文件時發生錯誤", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "上傳文件失敗: " + e.getMessage());
+            logger.info("報名成功，報名ID: {}", createdSignup.getSignupId());
+            redirectAttributes.addFlashAttribute("successMessage", "報名成功！");
         } catch (Exception e) {
             logger.error("報名過程中發生錯誤", e);
             redirectAttributes.addFlashAttribute("errorMessage", "報名失敗: " + e.getMessage());
@@ -177,10 +181,34 @@ public class EventSignupController {
      */
     @GetMapping("/api/event/{eventId}")
     @ResponseBody
-    public ResponseEntity<List<EventSignup>> getEventSignups(@PathVariable Integer eventId) {
-        logger.info("獲取活動的所有報名，活動ID: {}", eventId);
+    public ResponseEntity<List<EventSignupDTO>> getEventSignups(@PathVariable Integer eventId) {
         List<EventSignup> signups = eventSignupService.getSignupsByEventId(eventId);
-        logger.info("成功獲取活動報名列表，共 {} 條記錄", signups.size());
-        return ResponseEntity.ok(signups);
+        List<EventSignupDTO> dtos = signups.stream().map(signup -> {
+            EventSignupDTO dto = new EventSignupDTO();
+            dto.setSignupId(signup.getSignupId());
+            dto.setWorkTitle(signup.getWorkTitle());
+            dto.setWorkDescription(signup.getWorkDescription());
+            dto.setVoteCount(eventVoteService.getVoteCountForSignup(signup.getSignupId()));
+            return dto;
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
+    }
+    
+    /**
+     * 獲取報名圖片
+     * @param signupId 報名ID
+     * @return 報名圖片的ResponseEntity
+     */
+    @GetMapping("/image/{signupId}")
+    public ResponseEntity<byte[]> getSignupImage(@PathVariable Integer signupId) {
+        try {
+            byte[] imageBytes = eventSignupService.getSignupImage(signupId);
+            return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(imageBytes);
+        } catch (RuntimeException e) {
+            logger.error("獲取報名圖片失敗", e);
+            return ResponseEntity.notFound().build();
+        }
     }
 }
