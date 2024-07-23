@@ -145,6 +145,9 @@ public class GameOrderController {
 			gameOrderDetails.setUnitPrice(game.getPrice());
 			gameOrderDetails.setGameOrderId(myorder.getGameOrderId());
 		}
+		member.setPoints(member.getPoints() - total);
+		loginMember.setPoints(member.getPoints() - total);
+		mService.
 	}
 	
 }
