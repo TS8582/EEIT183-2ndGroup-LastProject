@@ -24,34 +24,33 @@ public class MemberService {
 
 	@Autowired
 	private MemberRepository memberRepository;
-	
+
 	@Autowired
 	private GoogleLoginRepository googleRepository;
 
 	@Autowired
 	private ImageLibRepository imageLibRepository;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private NgrokConfig ngrokConfig;
-	
-	
-	public void setGoogleVerified(String googleId, Boolean verified){
+
+	public void setGoogleVerified(String googleId, Boolean verified) {
 		Optional<GoogleLogin> optional = googleRepository.findById(googleId);
 		if (optional.isPresent()) {
 			GoogleLogin googleLogin = optional.get();
 			googleLogin.setVerifiedEmail(verified);
 		}
 	}
-	
-	public Member memAddGoogle(GoogleLogin memGoogle){
+
+	public Member memAddGoogle(GoogleLogin memGoogle) {
 		Integer memberId = memberRepository.findByEmail(memGoogle.getEmail()).getMemId();
 		return memAddGoogle(memberId, memGoogle);
 	}
 
-	public Member memAddGoogle(Integer memberId, GoogleLogin memGoogle){
+	public Member memAddGoogle(Integer memberId, GoogleLogin memGoogle) {
 		Optional<Member> optional = memberRepository.findById(memberId);
 		if (optional.isPresent()) {
 			Member member = optional.get();
@@ -61,7 +60,7 @@ public class MemberService {
 		}
 		return null;
 	}
-	
+
 	public Member addGoogleMem(GoogleLogin memGoogle) {
 		Member newMember = new Member();
 		String password = "login by google";
@@ -75,22 +74,22 @@ public class MemberService {
 		newMember.setGoogleLogin(memGoogle);
 		return addMember(newMember);
 	}
-	
+
 	public Member addMember(Member newMember) {
 		if (!newMember.getPassword().contains("login")) {
 			String encodedPwd = passwordEncoder.encode(newMember.getPassword());
 			newMember.setPassword(encodedPwd);
 		}
 		newMember.setTotalSpent(0);
-		if (newMember.getRole()==null) {
-			newMember.setRole((short)0);
+		if (newMember.getRole() == null) {
+			newMember.setRole((short) 0);
 		}
-		newMember.setStatus((short)0);
+		newMember.setStatus((short) 0);
 		newMember.setPoints(0);
 		return memberRepository.save(newMember);
 	}
 
-	public Member updateMember(Member member, Member originMem){
+	public Member updateMember(Member member, Member originMem) {
 		originMem.setAccount(member.getAccount());
 		originMem.setAddress(member.getAddress());
 		originMem.setBirthday(member.getBirthday());
@@ -103,7 +102,7 @@ public class MemberService {
 		originMem.setMemName(member.getMemName());
 		originMem.setNickname(member.getNickname());
 		originMem.setPhone(member.getPhone());
-		if (member.getPhoto()!=null) {
+		if (member.getPhoto() != null) {
 			Integer originPhoto = originMem.getPhoto();
 			if (originPhoto != null) {
 				imageLibRepository.deleteById(originPhoto);
@@ -114,12 +113,12 @@ public class MemberService {
 		return memberRepository.save(originMem);
 	}
 
-	public boolean deleteMemById(Integer memId){
+	public boolean deleteMemById(Integer memId) {
 		Optional<Member> optional = memberRepository.findById(memId);
 		if (optional.isPresent()) {
 			Member member = optional.get();
-			if (member.getStatus()==0) {
-				member.setStatus((short)1);
+			if (member.getStatus() == 0) {
+				member.setStatus((short) 1);
 				memberRepository.save(member);
 				return true;
 			}
@@ -127,7 +126,7 @@ public class MemberService {
 		return false;
 	}
 
-	public Member verifyEmail(Integer memId, String token){
+	public Member verifyEmail(Integer memId, String token) {
 		Optional<Member> optional = memberRepository.findById(memId);
 		if (optional.isPresent()) {
 			Member member = optional.get();
@@ -137,7 +136,7 @@ public class MemberService {
 		return null;
 	}
 
-	public Member verifyEmail(String token){
+	public Member verifyEmail(String token) {
 		Member member = memberRepository.findByEmailVerifyToken(token);
 		if (member == null) {
 			return null;
@@ -147,58 +146,59 @@ public class MemberService {
 		return memberRepository.save(member);
 	}
 
-	public Page<Member> findByKeyword(String keyword,Integer pageNum){
-		PageRequest pageable = PageRequest.of(pageNum-1, 6, Sort.Direction.ASC, "memId");
-		// return memberRepository.findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining((short)0,keyword,keyword,keyword,keyword,pageable);
-		return memberRepository.findByKeyword("%"+keyword.toLowerCase()+"%", pageable);
+	public Page<Member> findByKeyword(String keyword, Integer pageNum) {
+		PageRequest pageable = PageRequest.of(pageNum - 1, 6, Sort.Direction.ASC, "memId");
+		// return
+		// memberRepository.findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining((short)0,keyword,keyword,keyword,keyword,pageable);
+		return memberRepository.findByKeyword("%" + keyword.toLowerCase() + "%", pageable);
 	}
 
-	public Page<Member> findByPage(Integer pageNum){
-		PageRequest pageable = PageRequest.of(pageNum-1, 6, Sort.Direction.ASC, "memId");
-		return memberRepository.findByStatus((short)0,pageable);
+	public Page<Member> findByPage(Integer pageNum) {
+		PageRequest pageable = PageRequest.of(pageNum - 1, 6, Sort.Direction.ASC, "memId");
+		return memberRepository.findByStatus((short) 0, pageable);
 	}
-	
+
 	public boolean checkAccountExist(String account) {
-		return memberRepository.findByAccount(account)!=null;
+		return memberRepository.findByAccount(account) != null;
 	}
-	
+
 	public boolean checkEmailExist(String email) {
-		return memberRepository.findByEmail(email)!=null;
+		return memberRepository.findByEmail(email) != null;
 	}
-	
+
 	public boolean checkGoogleExist(String googleId) {
 		return googleRepository.findById(googleId).isPresent();
 	}
-	
+
 	public Member checkLogin(String account, String password) {
-		Member member = memberRepository.findByAccountAndStatus(account,(short)0);
-		if (member==null) {
+		Member member = memberRepository.findByAccountAndStatus(account, (short) 0);
+		if (member == null) {
 			return member;
 		}
 		String encodedPassword = member.getPassword();
 
-		return passwordEncoder.matches(password, encodedPassword)? memberRepository.save(member):null;
+		return passwordEncoder.matches(password, encodedPassword) ? memberRepository.save(member) : null;
 	}
 
-	public Member findById(Integer memId){
+	public Member findById(Integer memId) {
 		Optional<Member> optional = memberRepository.findById(memId);
-		return optional.isPresent()? optional.get():null;
+		return optional.isPresent() ? optional.get() : null;
 	}
 
-	public Member findByEmail(String email){
+	public Member findByEmail(String email) {
 		return memberRepository.findByEmail(email);
 	}
 
-	public Member findByGoogleId(String googleId){
+	public Member findByGoogleId(String googleId) {
 		System.err.println("沒有更新登入時間");
 		return memberRepository.findByGoogeId(googleId);
 	}
 
-	public Member findByPwdToken(String token){
+	public Member findByPwdToken(String token) {
 		return memberRepository.findByPasswordToken(token);
 	}
 
-	public Member memberLogin(Member member){
+	public Member memberLogin(Member member) {
 		member.setLastLogin(new Date());
 		System.err.println("更新登入時間");
 		member.setLoginToken(UUID.randomUUID().toString());
@@ -206,20 +206,20 @@ public class MemberService {
 		return memberRepository.save(member);
 	}
 
-	public LoginMemDto getLoginMember(String loginToken){
+	public LoginMemDto getLoginMember(String loginToken) {
 		Member member = memberRepository.findByLoginToken(loginToken);
 		return setLoginDto(member);
 	}
 
-	public LoginMemDto checkLoginMember(LoginMemDto loginMember){
-		if (loginMember==null) {
+	public LoginMemDto checkLoginMember(LoginMemDto loginMember) {
+		if (loginMember == null) {
 			return null;
 		}
 		Member originMem = memberRepository.findByLoginToken(loginMember.getLoginToken());
 		return setLoginDto(originMem);
 	}
 
-	public Member changePassword(Integer memId, String token){
+	public Member changePassword(Integer memId, String token) {
 		Optional<Member> optional = memberRepository.findById(memId);
 		if (optional.isPresent()) {
 			Member member = optional.get();
@@ -229,7 +229,7 @@ public class MemberService {
 		return null;
 	}
 
-	public Member changePassword(String password, String token){
+	public Member changePassword(String password, String token) {
 		Member member = memberRepository.findByPasswordToken(token);
 		String encodedPwd = passwordEncoder.encode(password);
 		member.setPassword(encodedPwd);
@@ -237,20 +237,20 @@ public class MemberService {
 		return memberRepository.save(member);
 	}
 
-	public LoginMemDto setLoginDto(Member member){
-		if (member==null) {
+	public LoginMemDto setLoginDto(Member member) {
+		if (member == null) {
 			return null;
 		}
-        String url = ngrokConfig.getUrl();
+		String url = ngrokConfig.getUrl();
 		LoginMemDto loginMember = new LoginMemDto();
 		loginMember.setAccount(member.getAccount());
 		loginMember.setLastLogin(member.getLastLogin());
 		loginMember.setMemId(member.getMemId());
 		loginMember.setMemName(member.getMemName());
 		loginMember.setNickname(member.getNickname());
-		String photoPath = member.getPhoto()!=null? url+"/PlayCentric/imagesLib/image"+member.getPhoto():
-                member.getGoogleLogin()!=null? member.getGoogleLogin().getPhoto():
-                url+"/PlayCentric/imagesLib/image144";
+		String photoPath = member.getPhoto() != null ? url + "/PlayCentric/imagesLib/image" + member.getPhoto()
+				: member.getGoogleLogin() != null ? member.getGoogleLogin().getPhoto()
+						: url + "/PlayCentric/imagesLib/image144";
 		loginMember.setPhoto(photoPath);
 		loginMember.setPoints(member.getPoints());
 		loginMember.setRole(member.getRole());
@@ -258,7 +258,6 @@ public class MemberService {
 
 		return loginMember;
 	}
-	
 	public void save(Member member) {
 		memberRepository.save(member);
 	}
