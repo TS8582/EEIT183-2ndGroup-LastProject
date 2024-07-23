@@ -32,7 +32,7 @@ public class PropSellOrderService {
 	MemberRepository memberRepo;
 
 	private Optional<PropSellOrder> order;
-	// 根據gameId找所有賣單
+	// 根據gameId找賣單
 	public List<PropSellOrderDto> findAllByGameId(int id) {
 		List<PropSellOrder> propSellOrders = propSellOrderRepo.findAllByGameId(id);
 		return propSellOrders.stream().map(this::convertToDto).collect(Collectors.toList());
@@ -226,6 +226,12 @@ public class PropSellOrderService {
         );
 
         return propIdToWeightedAveragePrice;
+    }
+    
+    
+    public List<PropSellOrder> findAllByGameIdAndStatus0 (int gameId) {
+    	return propSellOrderRepo.findAllByGameIdAndStatus0(gameId);
+    
     }
 
 }
