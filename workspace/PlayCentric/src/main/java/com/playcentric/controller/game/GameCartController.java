@@ -16,7 +16,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.game.secondary.GameCarts;
+import com.playcentric.model.game.transaction.Payment;
 import com.playcentric.model.member.LoginMemDto;
+import com.playcentric.service.PaymentService;
 import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameService;
 
@@ -34,6 +36,8 @@ public class GameCartController {
 	private GameCartService gcService;
 	@Autowired
 	private GameService gService;
+	@Autowired
+	private PaymentService pService;
 	
 	
 	
@@ -51,6 +55,8 @@ public class GameCartController {
 				games.add(game);
 			}
 		}
+		List<Payment> payments = pService.findAll();
+		model.addAttribute("payments",payments);
 		model.addAttribute("games",games);
 		return "game/show-gamecart";
 	}
