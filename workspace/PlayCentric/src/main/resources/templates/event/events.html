@@ -233,7 +233,11 @@
                 alert("報名截止時間必須在結束時間之前");
                 return false;
             }
-
+			
+			if (signupDeadline <= startTime) {
+                alert("報名截止時間必須在開始時間之後");
+                return false;
+            }
             // 格式化日期並提交表單
             $('#eventForm .datetime').attr('type', 'datetime');
             $('#eventForm .datetime').each(function() {

@@ -78,12 +78,20 @@
             font-size: 0.9em;
             color: #7f8c8d;
         }
+
+        .dnav {
+            z-index: 999;
+        }
+
+        .dact {
+            z-index: 1000;
+        }
     </style>
 </head>
 
 <body>
     <!-- 導航欄 -->
-    <div th:replace="~{/layout/nav}"></div>
+    <div class="dnav" th:replace="~{/layout/nav}"></div>
 
     <!-- 活動詳情內容 -->
     <div th:if="${event != null}">
@@ -143,8 +151,8 @@
                 </div>
 
                 <!-- 右側：報名表單 -->
-                <div class="col-lg-4">
-                    <div class="card sticky-top" style="top: 20px;">
+                <div class="col-lg-4 dact">
+                    <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">報名參加</h5>
                             <!-- 報名表單 -->
