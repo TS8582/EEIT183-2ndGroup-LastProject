@@ -37,6 +37,9 @@ html, body {
 .status-pending {
 	color: #FFC107 !important;
 }
+.status-completed{
+	color: #28A745 !important;
+}
 
 .status-failed {
 	color: #DC3545 !important;
@@ -131,7 +134,7 @@ html, body {
 										<th>總金額</th>
 										<th>下單時間</th>
 										<th>付款時間</th>
-										<th>狀態</th>
+										<th>交易狀態</th>
 									</tr>
 								</thead>
 								<tbody id="orderBody">
@@ -139,13 +142,14 @@ html, body {
 									<tr th:each="order : ${pfOrder}" class="small">
 										<td th:text="${order.pfOrderId}"></td>
 										<td th:text="${order.pfGame.playFellowMember.pfnickname}"></td>
+<!-- 										<td th:text="${order.pfGame.playFellowMember.playFellowId}"></td> -->
 										<td th:text="${order.pfGame.game.gameName}"></td>
 										<td th:text="${order.member.memId}"></td>
 										<td th:text="${order.quantity}"></td>
 										<td th:text="${order.totalAmount}"></td>
 										<td th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
 										<td th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-										<td th:text="${order.paymentStatus == 1 ? '交易中' : (order.paymentStatus == 2 ? '交易完成' : '交易失敗或取消')}" th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}"></td>
+										<td th:text="${order.paymentStatus == 1 ? '尚未付款' : (order.paymentStatus == 2 ? '付款成功' : '交易失敗或取消')}" th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}"></td>
 									</tr>
 								</tbody>
 							</table>

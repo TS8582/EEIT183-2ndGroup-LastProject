@@ -2,62 +2,58 @@
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<title>PlayCentric 遊戲伴遊下訂</title>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="format-detection" content="telephone=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="keywords" content="ecommerce, pet, shop">
-<meta name="description"
-	content="Free eCommerce Pet Shop HTML Website Template">
-<link rel="stylesheet"
-	href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
-<!-- <link -->
-<!-- 	href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" -->
-<!-- 	rel="stylesheet" -->
-<!-- 	integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" -->
-<!-- 	crossorigin="anonymous"> -->
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/playfellow/playFellow.css}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-	href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
-	rel="stylesheet">
-<style>
-body {
-	background-color: #F9F9F9 !important;
-}
+	<title>PlayCentric 遊戲伴遊下訂</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="keywords" content="ecommerce, pet, shop">
+	<meta name="description" content="Free eCommerce Pet Shop HTML Website Template">
+	<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
+	<!-- <link -->
+	<!-- 	href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" -->
+	<!-- 	rel="stylesheet" -->
+	<!-- 	integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" -->
+	<!-- 	crossorigin="anonymous"> -->
+	<link rel="stylesheet" type="text/css" th:href="@{/css/playfellow/playFellow.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
+		rel="stylesheet">
+	<style>
+		body {
+			background-color: #F9F9F9 !important;
+		}
 
-table th, table td {
-	text-align: center;
-	vertical-align: middle;
-}
+		table th,
+		table td {
+			text-align: center;
+			vertical-align: middle;
+		}
 
-.quantity-input {
-	max-width: 50px;
-	padding-left: 0;
-	padding-right: 0;
-}
-</style>
+		.quantity-input {
+			max-width: 50px;
+			padding-left: 0;
+			padding-right: 0;
+		}
+	</style>
 </head>
 
 <body>
 	<div th:replace="~{layout/nav}"></div>
 
 	<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-         <defs>
-        <symbol id="minus" viewBox="0 0 24 24">
-            <path fill="currentColor"
-			d="M19 11H5a1 1 0 0 0 0 2h14a1 1 0 0 0 0-2Z" />
-        </symbol>
-        <symbol id="plus" viewBox="0 0 24 24">
-            <path fill="currentColor"
-			d="M19 11h-6V5a1 1 0 0 0-2 0v6H5a1 1 0 0 0 0 2h6v6a1 1 0 0 0 2 0v-6h6a1 1 0 0 0 0-2Z" />
-        </symbol>
-    </defs>
-    </svg>
+		<defs>
+			<symbol id="minus" viewBox="0 0 24 24">
+				<path fill="currentColor" d="M19 11H5a1 1 0 0 0 0 2h14a1 1 0 0 0 0-2Z" />
+			</symbol>
+			<symbol id="plus" viewBox="0 0 24 24">
+				<path fill="currentColor"
+					d="M19 11h-6V5a1 1 0 0 0-2 0v6H5a1 1 0 0 0 0 2h6v6a1 1 0 0 0 2 0v-6h6a1 1 0 0 0 0-2Z" />
+			</symbol>
+		</defs>
+	</svg>
 
 	<main>
 		<div class="container pb-3" th:if="${pfGame}">
@@ -71,20 +67,15 @@ table th, table td {
 								<hr class="my-4">
 								<thead>
 									<tr>
-										<th scope="col"
-											class="card-title text-uppercase text-center align-middle">遊戲伴遊
+										<th scope="col" class="card-title text-uppercase text-center align-middle">遊戲伴遊
 										</th>
-										<th scope="col"
-											class="card-title text-uppercase text-center align-middle">遊戲
+										<th scope="col" class="card-title text-uppercase text-center align-middle">遊戲
 										</th>
-										<th scope="col"
-											class="card-title text-uppercase text-center align-middle">數量
+										<th scope="col" class="card-title text-uppercase text-center align-middle">數量
 										</th>
-										<th scope="col"
-											class="card-title text-uppercase text-center align-middle">小計
+										<th scope="col" class="card-title text-uppercase text-center align-middle">小計
 										</th>
-										<th scope="col"
-											class="card-title text-uppercase text-center align-middle"></th>
+										<th scope="col" class="card-title text-uppercase text-center align-middle"></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -94,8 +85,7 @@ table th, table td {
 												class="cart-info d-flex flex-wrap align-items-center justify-content-center">
 												<div class="col-lg-3">
 													<div class="card-image">
-														<div
-															th:each="association, stat : ${pfGame.playFellowMember.imageLibAssociations}"
+														<div th:each="association, stat : ${pfGame.playFellowMember.imageLibAssociations}"
 															th:classappend="${stat.index == 0} ? ' active' : ''"
 															class="carousel-item">
 															<img class="rounded-1 img-fluid pfOrderImg-size"
@@ -125,9 +115,8 @@ table th, table td {
 															class="quantity-left-minus btn btn-light btn-number"
 															data-type="minus">
 															<svg width="16" height="16">
-                                                                <use
-																	xlink:href="#minus"></use>
-                                                            </svg>
+																<use xlink:href="#minus"></use>
+															</svg>
 														</button>
 													</span> <input type="text" id="quantity" name="quantity"
 														class="form-control input-number text-center quantity-input"
@@ -136,9 +125,8 @@ table th, table td {
 															class="quantity-right-plus btn btn-light btn-number"
 															data-type="plus" data-field="">
 															<svg width="16" height="16">
-                                                                <use
-																	xlink:href="#plus"></use>
-                                                            </svg>
+																<use xlink:href="#plus"></use>
+															</svg>
 														</button>
 													</span>
 												</div>
@@ -153,19 +141,24 @@ table th, table td {
 										<td class="py-4 text-center align-middle">
 											<div class="cart-remove">
 												<a href="#"> <svg width="24" height="24">
-                                                        <use
-															xlink:href="#trash"></use>
-                                                    </svg>
+														<use xlink:href="#trash"></use>
+													</svg>
 												</a>
 											</div>
 										</td>
 									</tr>
 								</tbody>
 							</table>
+							<hr class="my-4">
+							<h5 class="px-5">支付渠道</h5>
+							<button type="button" class="m-3 quantity-right-plus btn" style="border: 1px solid gray;">
+								<span th:text="'餘額支付'"></span><br> <span
+									th:text="${session.loginMember.points}+'點可用'"></span>
+							</button>
 						</div>
 
-						<div class="col-md-3 my-5 ms-auto"
-							style="background-color: #f4f4f4; margin-right: 15px;">
+
+						<div class="col-md-3 my-5 ms-auto" style="background-color: #f4f4f4; margin-right: 15px;">
 							<div class="cart-totals">
 								<h6 class="pb-4 my-3" id="total-label"
 									th:text="'總計 '+'( '+${pfGame.pricingCategory}+' * 1 )'"></h6>
@@ -176,17 +169,19 @@ table th, table td {
 												<th>
 													<h5>實付</h5>
 												</th>
+
 												<td data-title="Total">
 													<div id="total-amount" th:text="'$'+${pfGame.amount}"></div>
 												</td>
+
 											</tr>
 										</tbody>
 									</table>
 								</div>
 								<div class="button-wrap row g-2">
 									<div class="col-md-12">
-                                        <button type="button" class="btn btn-primary p-3 text-uppercase rounded-1 w-100" style="margin-bottom: 20px;"
-                                                 onclick="submitOrder()">提交訂單</button>
+										<button type="button" class="btn btn-primary p-3 text-uppercase rounded-1 w-100"
+											style="margin-bottom: 20px;" onclick="submitOrder()">確認購買</button>
 									</div>
 								</div>
 							</div>
@@ -197,82 +192,98 @@ table th, table td {
 		</div>
 	</main>
 
-	<script
-		src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
-	<script
-		src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
+	<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script th:src="@{/js/playfellow/plugins.js}"></script>
 	<script th:src="@{/js/playfellow/script.js}"></script>
-		<script th:src="@{/js/playfellow/playfellow.js}"></script>
-	
+	<script th:src="@{/js/playfellow/playfellow.js}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 	<script>
-        $(document).ready(function () {
-            var amountPerUnit = '[[${pfGame.amount}]]'; 
-            var pricingCategory = ' [[${pfGame.pricingCategory}]] '; 
+		$(document).ready(function () {
+			var amountPerUnit = '[[${pfGame.amount}]]';
+			var pricingCategory = ' [[${pfGame.pricingCategory}]] ';
 
-            function updateTotals(quantity) {
-                var totalPrice = amountPerUnit * quantity;
-                $('#total-label').text('總計 (' + pricingCategory + ' * ' + quantity + ' )');
-                $('#total-amount').text('$' + totalPrice);
-            }
+			function updateTotals(quantity) {
+				var totalPrice = amountPerUnit * quantity;
+				$('#total-label').text('總計 (' + pricingCategory + ' * ' + quantity + ' )');
+				$('#total-amount').text('$' + totalPrice);
+			}
 
-            $('.quantity-left-minus').click(function () {
-                var quantity = parseInt($('#quantity').val());
-                if (quantity > 1) {
-                    quantity--;
-                    $('#quantity').val(quantity);
-                    updateTotals(quantity);
-                }
-            });
+			$('.quantity-left-minus').click(function () {
+				var quantity = parseInt($('#quantity').val());
+				if (quantity > 1) {
+					quantity--;
+					$('#quantity').val(quantity);
+					updateTotals(quantity);
+				}
+			});
 
-            $('.quantity-right-plus').click(function () {
-                var quantity = parseInt($('#quantity').val());
-                quantity++;
-                $('#quantity').val(quantity);
-                updateTotals(quantity);
-            });
-        });
+			$('.quantity-right-plus').click(function () {
+				var quantity = parseInt($('#quantity').val());
+				quantity++;
+				$('#quantity').val(quantity);
+				updateTotals(quantity);
+			});
+		});
 
-        function submitOrder() {
-            const pfGameId = '[[${pfGame.pfGameId}]]';
-            let memId = null;
-            if ('[[${session.loginMember}]]' !== 'null') {
-                memId = '[[${session.loginMember.memId}]]';
-            }
-            const transactionID = null; 
-            const paymentStatus = 1; 
-            const quantity = parseInt($('#quantity').val());
-            const totalAmount = parseInt($('#total-amount').text().replace('$', ''));
+		function submitOrder() {
+			const pfGameId = '[[${pfGame.pfGameId}]]';
+			const loginMember = '[[${session.loginMember}]]';
+			const memId = '[[${session.loginMember.memId}]]';
+			const quantity = parseInt($('#quantity').val());
+			const totalAmount = parseInt($('#total-amount').text().replace('$', ''));
 
-            if (memId) {
-                const order = {
-                    pfGameId: pfGameId,
-                    memId: memId,
-                    transactionID: transactionID,
-                    paymentStatus: paymentStatus,
-                    quantity: quantity,
-                    totalAmount: totalAmount
-                };
+			if (!memId) {
+				Swal.fire({
+					icon: 'error',
+					title: '未登入會員',
+					text: '請先登入會員',
+				});
+				window.location.href = 'http://localhost:8080/PlayCentric/member/personal/Info';
+				return;
+			}
 
-                axios.post('/PlayCentric/playFellow/addPfOrder', order)
-                    .then(response => {
-                        alert(response.data); 
-//                         window.location.href = '/PlayCentric/playFellow';
-                    })
-                    .catch(error => {
-                        console.error('錯誤囉:', error);
-                        alert('購買失敗，請稍後再試，謝謝!');
-//                         window.location.href = '/PlayCentric/playFellow';
-                    });
-            } else {
-                alert('無法提交訂單，請稍後再試');
-            }
-        }
+			const order = {
+				pfGameId: pfGameId,
+				memId: memId,
+				transactionID: null,
+				paymentStatus: 2,
+				quantity: quantity,
+				totalAmount: totalAmount
+			};
 
-        
-    </script>
+			axios.post('/PlayCentric/playFellow/addPfOrder', order)
+				.then(response => {
+					if (response.data === '付款成功') {
+						Swal.fire({
+							icon: 'success',
+							title: '帳戶成功付款',
+							text: response.data
+						}).then(() => {
+							window.location.href = 'http://localhost:8080/PlayCentric/member/personal/Info';
+						});
+					} else {
+						Swal.fire({
+							icon: 'info',
+							title: '帳戶餘額不足',
+							text: response.data,
+							showCancelButton: true,
+							confirmButtonText: '前往儲值',
+							cancelButtonText: '取消'
+						}).then((result) => {
+							if (result.isConfirmed) {
+								window.location.href = 'http://localhost:8080/PlayCentric/member/personal/Info'; 
+							}
+						});
+
+					}
+				})
+		}
+	</script>
 
 </body>
 

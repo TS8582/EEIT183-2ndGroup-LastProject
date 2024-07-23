@@ -25,6 +25,7 @@ import com.playcentric.model.playfellow.PfOrder3;
 import com.playcentric.model.playfellow.PfOrder3DTO;
 import com.playcentric.model.playfellow.PfOrderDTO;
 import com.playcentric.model.playfellow.PlayFellowMember;
+import com.playcentric.service.member.MemberService;
 import com.playcentric.service.playfellow.PfGameService;
 import com.playcentric.service.playfellow.PfOrder3Service;
 import com.playcentric.service.playfellow.PfOrderService;
@@ -49,9 +50,12 @@ public class PageController {
 
 	@Autowired
 	PfOrderService pfOrderService;
-	
+
 	@Autowired
 	PfOrder3Service pfOrder3Service;
+
+	@Autowired
+	MemberService memberService;
 
 	// 進入cart
 	@GetMapping("/playFellow/playFellowCart")
@@ -153,62 +157,74 @@ public class PageController {
 	@ResponseBody
 	@PostMapping("playFellow/addPfOrder")
 	public String addOrder(@RequestBody PfOrderDTO pfOrderDTO) {
-		PfOrder pfOrder = new PfOrder();
+	    PfOrder pfOrder = new PfOrder();
 
-		PfGame pfGame = entityManager.getReference(PfGame.class, pfOrderDTO.getPfGameId());
-		Member member = entityManager.getReference(Member.class, pfOrderDTO.getMemId());
+	    PfGame pfGame = entityManager.getReference(PfGame.class, pfOrderDTO.getPfGameId());
+	    Member member = entityManager.getReference(Member.class, pfOrderDTO.getMemId());
 
-		pfOrder.setPfGame(pfGame);
-		pfOrder.setMember(member);
+	    pfOrder.setPfGame(pfGame);
 
-		String transactionID = pfOrderDTO.getTransactionID();
-		if (transactionID == null || transactionID.trim().isEmpty()) {
-			transactionID = null;
-		}
-		pfOrder.setTransactionID(transactionID);
+	    Member orderMem = memberService.findById(pfOrderDTO.getMemId());
+	    int currentPoints = orderMem.getPoints();
+	    int totalAmount = pfOrderDTO.getTotalAmount();
 
-		pfOrder.setPaymentStatus(pfOrderDTO.getPaymentStatus());
-		pfOrder.setQuantity(pfOrderDTO.getQuantity());
-		pfOrder.setTotalAmount(pfOrderDTO.getTotalAmount());
+	    if (currentPoints < totalAmount) {
+	        return "點數不足，無法扣款";
+	    }
 
-		pfOrder.setAdded(new Date());
+	    orderMem.setPoints(currentPoints - totalAmount);
+	    pfOrder.setMember(member);
+	    
+	    
 
-		pfOrderService.savePfOrder(pfOrder);
+	    String transactionID = pfOrderDTO.getTransactionID();
+	    if (transactionID == null || transactionID.trim().isEmpty()) {
+	        transactionID = null;
+	    }
+	    pfOrder.setTransactionID(transactionID);
 
-		return "訂單提交成功";
+	    pfOrder.setPaymentStatus(pfOrderDTO.getPaymentStatus());
+	    pfOrder.setQuantity(pfOrderDTO.getQuantity());
+	    pfOrder.setTotalAmount(totalAmount);
+	    pfOrder.setPaymentTime(new Date());
+	    pfOrder.setAdded(new Date());
+
+	    pfOrderService.savePfOrder(pfOrder);
+
+	    return "付款成功";
 	}
+
 	
 	
 	
-	@ResponseBody
-	@PostMapping("playFellow/addPfOrder3")
-	public String addOrder(@RequestBody PfOrder3DTO pfOrderDTO3) {
-		PfOrder3 pfOrder3 = new PfOrder3();
+	
+	
 
-		PfGame pfGame = entityManager.getReference(PfGame.class, pfOrderDTO3.getPfGameId());
-		Member member = entityManager.getReference(Member.class, pfOrderDTO3.getMemId());
-
-		pfOrder3.setPfGame(pfGame);
-		pfOrder3.setMember(member);
-
-		String transactionID = pfOrderDTO3.getTransactionID();
-		if (transactionID == null || transactionID.trim().isEmpty()) {
-			transactionID = null;
-		}
-		pfOrder3.setTransactionID(transactionID);
-
-		pfOrder3.setPaymentStatus(pfOrderDTO3.getPaymentStatus());
-		pfOrder3.setQuantity(pfOrderDTO3.getQuantity());
-		pfOrder3.setTotalAmount(pfOrderDTO3.getTotalAmount());
-
-		pfOrder3.setAdded(new Date());
-		
-		
-		pfOrder3Service.savePfOrder3(pfOrder3);
-
-
-		
-
-		return "訂單提交成功";
-	}
+//	@ResponseBody
+//	@PostMapping("playFellow/addPfOrder3")
+//	public String addOrder(@RequestBody PfOrder3DTO pfOrderDTO3) {
+//		PfOrder3 pfOrder3 = new PfOrder3();
+//
+//		PfGame pfGame = entityManager.getReference(PfGame.class, pfOrderDTO3.getPfGameId());
+//		Member member = entityManager.getReference(Member.class, pfOrderDTO3.getMemId());
+//
+//		pfOrder3.setPfGame(pfGame);
+//		pfOrder3.setMember(member);
+//
+//		String transactionID = pfOrderDTO3.getTransactionID();
+//		if (transactionID == null || transactionID.trim().isEmpty()) {
+//			transactionID = null;
+//		}
+//		pfOrder3.setTransactionID(transactionID);
+//
+//		pfOrder3.setPaymentStatus(pfOrderDTO3.getPaymentStatus());
+//		pfOrder3.setQuantity(pfOrderDTO3.getQuantity());
+//		pfOrder3.setTotalAmount(pfOrderDTO3.getTotalAmount());
+//
+//		pfOrder3.setAdded(new Date());
+//
+//		pfOrder3Service.savePfOrder3(pfOrder3);
+//
+//		return "訂單提交成功";
+//	}
 }

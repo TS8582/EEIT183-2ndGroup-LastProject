@@ -54,7 +54,6 @@ var swiper = new Swiper('.swiper-container', {
 		                            </div>
 		                            <div class="game-details">
 		                                <p>$ ${gameDTO.amount} 元 / ${gameDTO.pricingCategory}</p>
-		                                <p>伴遊遊戲編號：${gameDTO.pfGameId}</p>
 		                            </div>
 		                        </div>
 		                    `;
