@@ -1,10 +1,109 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="BIG5">
-<title>Insert title here</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org">
 
+<head>
+    <title>文章內容</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="keywords" content="ecommerce, pet, shop">
+    <meta name="description" content="Free eCommerce Pet Shop HTML Website Template">
+
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/vendor.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* 調整 placeholder 的顏色 */
+        ::placeholder {
+            color: rgba(0, 0, 0, 0.329) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar1" th:replace="~{layout/nav}"></div>
+
+    <div>
+        <section class="py-3">
+            <div class="container">
+                <div class="mt-5">
+                    <h1 class="page-title">文章名稱</h1>
+                    <h1 class="page-title" th:text="${texts.title}">文章名稱</h1>
+                    <div class="post-meta">
+                        <div
+                            th:text="${texts != null ? #dates.format(texts.doneTime, 'yyyy年MM月dd日 HH:mm:ss EEEE') : ''}">
+                        </div>
+                    </div>
+                    <p th:utext="${texts.textsContent}">文章內容</p>
+                </div>
+            </div>
+
+        </section>
+
+        <br>
+        <br>
+
+        <div class="container" with="10px">
+            <div class="card">
+                <div class="card-header">
+                    交流區
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item" th:each="talk : ${talk}">
+                            <p th:text="${#dates.format(talk.talkTime, 'yyyy年MM月dd日 HH:mm:ss')}">留言時間</p>
+                            <p th:text="${talk.talkContent}">留言內容</p>
+                        </li>
+                    </ul>
+                    <br>
+                    <form th:action="@{/talk/addByTextsId}" method="post" id="talkForm">
+                        <textarea id="myTextarea" class="form-control" name="talkContent" placeholder="寫下你的看法吧~"
+                            required></textarea>
+                        <input type="hidden" name="textsId" th:value="${textsId}" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- <div class="footer">
+        <div th:replace="~{layout/footer}"></div>
+    </div> -->
+
+
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/script.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const textarea = document.getElementById('myTextarea');
+            const form = document.getElementById('talkForm');
+
+            textarea.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); // 阻止默認的換行行為
+                    form.submit(); // 提交表單
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>

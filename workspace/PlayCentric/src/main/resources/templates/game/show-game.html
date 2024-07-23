@@ -4,11 +4,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <div th:replace="~{/layout/nav}"></div>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" th:href="@{/css/utils/doAlertJs.css}">
+    <title th:text="${game.gameName}"></title>
 </head>
 
-<body>
+<body class="bg-gray-100 w-screen">
+    <div class="px-0 py-2 lg:px-15 text-end w-full fixed">
+        <!-- 購物車按鈕 -->
+        <a th:if="${session.loginMember}" th:href="@{/gamecart/get}" class="mybtn mybtn-green mx-5 showcarts">購物車</a>
+    </div>
+    <main class="container">
 
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 w-full">
+            <!-- 圖片輪播 -->
+            <div class="sm:col-span-1 lg:col-span-2 m-3 h-full">
+                <div id="carouselExampleIndicators" class="carousel slide  bg-gray-500 rounded-md"
+                    data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <!-- 動態生成指示器 -->
+                        <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
+                            <button type="button"
+                                th:attr="data-bs-target='#carouselExampleIndicators', data-bs-slide-to=${st.index}"
+                                th:class="${st.index == 0} ? 'active' : ''" aria-current="true"
+                                aria-label="Slide ${st.index + 1}"></button>
+                        </th:block>
+                    </div>
+                    <div class="carousel-inner">
+                        <!-- 動態生成輪播項目 -->
+                        <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
+                            <div th:class="${st.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                                <img class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto"
+                                    th:src="@{/imagesLib/image{id}(id=${photo.imageId})}" alt="">
+                            </div>
+                        </th:block>
+                        <img th:if="${game.imageLibs.empty}"
+                            class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto" src="" alt="">
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-span-1 my-3 mx-1 border-2 border-gray-500 px-4 py-2 rounded-md gameitem">
+                <div class="space-y-2 sm:text-center lg:text-start">
+                    <h1 class="text-5xl font-bold gameName" th:text="${game.gameName}"></h1>
+                    <div class="font-semibold text-xl developer" th:text="'開發者：' + ${game.developer}"></div>
+                    <div class="font-semibold text-xl publisher" th:text="'發行商：' + ${game.publisher}"></div>
+                    <div class="font-semibold text-xl releaseAt"
+                        th:text="發布日期： + ${#temporals.format(game.releaseAt,'yyyy年MM月dd日')}">
+                    </div>
+                    <div class="flex flex-wrap items-center sm:justify-center lg:justify-start">
+                        <span class="font-semibold text-xl">遊戲分類：</span>
+                        <th:block th:each="type:${game.gameTypeLibs}">
+                            <span class="mybtn-tag" th:text="${type.gameTypeName}"></span>
+                        </th:block>
+                    </div>
+                    <div
+                        th:class="${game.rate} ? 'flex sm:justify-center lg:justify-start my-2 space-x-1' : 'flex my-2 sm:justify-center lg:justify-start'">
+                        <!-- 顯示優惠 -->
+                        <span th:if="${game.rate}" class="price-tag font-semibold"
+                            th:text="'-' + ${100 -  game.rate} + '%'"></span>
+                        <span></span>
+                        <!-- 沒優惠顯示的價格 -->
+                        <span th:if="${game.rate == null}" class="price-tag text-black font-semibold"
+                            th:text=" 'NT$' + ${game.price}"></span>
+                        <!-- 有優惠顯示的價格 -->
+                        <span th:if="${game.rate}" class="price-tag font-semibold"
+                            th:text=" 'NT$' + ${game.discountedPrice}"></span>
+                    </div>
+                    <div class="flex sm:justify-center lg:justify-start">
+                        <a th:if="${session.loginMember == null}" th:href="@{/member/login}"
+                            class="mybtn mybtn-green">加入購物車</a>
+                        <span th:if="${session.loginMember} ? ${game.isInCart}" class="mybtn-disabled">已加入購物車</span>
+                        <span th:if="${session.loginMember} ? ${!game.isInCart}"
+                            class="mybtn mybtn-green cart">加入購物車</span>
+                        <span th:if="${session.loginMember} ? ${game.isHaveGame}"
+                            class="mybtn mybtn-green download">下載</span>
+                        <div class="hidden gameId" th:text="${game.gameId}"></div>
+
+                    </div>
+                    <div class="hidden gameId" th:text="${game.gameId}"></div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="hidden memId" th:text="${session.loginMember} ? ${session.loginMember.memId}"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 w-full">
+            <div class="sm:col-span-1 lg:col-span-2 m-3 h-full">
+                <div class="sm:col-span-1 lg:col-span-2 border-2 border-black p-10 space-y-4 rounded-md">
+                    <h1 class="text-3xl font-bold">遊戲介紹</h1>
+                    <p class="text-justify font-semibold text-lg" th:text="${game.description}"></p>
+                </div>
+            </div>
+
+            <div class="col-span-1 my-3 mx-1 border-2 border-black px-4 py-2 rounded-md">
+
+
+            </div>
+
+        </div>
+
+
+
+    </main>
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script th:src="@{/js/utils/doAlertJs.js}"></script>
+    <script th:src="@{/js/game/cart.js}"></script>
 </body>
 
 </html>

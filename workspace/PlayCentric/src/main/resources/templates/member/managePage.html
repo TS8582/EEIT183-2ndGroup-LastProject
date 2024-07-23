@@ -148,11 +148,11 @@
 
   <script>
     $(function () {
-      const findMemUrl = "http://localhost:8080/PlayCentric/member/getMember"
-      const searchMemUrl = "http://localhost:8080/PlayCentric/member/searchMemPage"
-      const registUrl = "http://localhost:8080/PlayCentric/member/regist";
-      const updateMemUrl = "http://localhost:8080/PlayCentric/member/update";
-      const deleteMemUrl = "http://localhost:8080/PlayCentric/member/deleteMem"
+      const findMemUrl = "/PlayCentric/member/back/api/getMember"
+      const searchMemUrl = "/PlayCentric/member/back/api/searchMemPage"
+      const registUrl = "/PlayCentric/member/back/api/regist";
+      const updateMemUrl = "/PlayCentric/member/back/api/update";
+      const deleteMemUrl = "/PlayCentric/member/back/api/delete"
       const memInfoModal = new bootstrap.Modal('#memInfo');
       let params = {
         page: 1,
@@ -200,6 +200,9 @@
           })
           .catch(err => {
             console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
           })
       })
 
@@ -235,6 +238,9 @@
             })
             .catch(err => {
               console.log(err);
+              if (err.response && err.response.status === 401) {
+                window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+              }
             })
         } else {
           axios.post(updateMemUrl, formdataObject)
@@ -248,6 +254,9 @@
             })
             .catch(err => {
               console.log(err);
+              if (err.response && err.response.status === 401) {
+                window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+              }
             })
         }
       })
@@ -263,7 +272,12 @@
             console.log(res);
             htmlMaker(res.data);
           })
-          .catch(err => console.log(err))
+          .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
+          })
       }
 
       function showMemInfo(memId) {
@@ -276,7 +290,12 @@
             console.log(res);
             showUpdateModal(res.data);
           })
-          .catch(err => console.log(err))
+          .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
+          })
       }
 
       function showUpdateModal(data) {
@@ -335,7 +354,7 @@
                             <div class="mb-3 col-2">暱稱: ${element.nickname}</div>
                             <div class="mb-3 col-2">姓名: ${element.memName != null && element.memName != '' ? element.memName : '未輸入'}</div>
                             <div class="mb-3 col-2">性別: ${element.gender === 2 ? '女' : element.gender === 1 ? '男' : '未選擇'}</div>
-                            <div class="mb-3 col-5">email: ${element.email}</div>
+                            <div class="mb-3 col-5">email: ${element.email} ${element.emailVerified ? '' : '(未驗證)'}</div>
                             <div class="mb-3 col-3">生日: ${element.birthday ? element.birthday : '未輸入'}</div>
                             <div class="mb-3 col-3">電話: ${element.phone != null && element.phone != '          ' ? element.phone : '未輸入'}</div>
                             <div class="mb-3 col-6">地址: ${element.address ? element.address : '未輸入'}</div>

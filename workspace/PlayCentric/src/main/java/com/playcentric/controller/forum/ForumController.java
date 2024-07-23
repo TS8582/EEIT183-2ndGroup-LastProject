@@ -47,7 +47,7 @@ public class ForumController {
 		forumService.insertForum(forum);
 
 		model.addAttribute("insetOK", "成功");
-		return "redirect:/findAllForum";
+		return "redirect:/findAllForum2";
 	}
 
 	// 新增跳轉頁面

@@ -86,6 +86,19 @@ public class GameService {
 		return gdRepo.findNowDiscount(LocalDateTime.now(), gameId);
 	}
 	
+	//設定折扣與折扣價
+	public Integer setRateAndDiscountPrice(Game game) {
+		GameDiscount nowDiscount = findNowDiscount(game.getGameId());
+		if (nowDiscount != null) {
+			Double oldRate = Double.parseDouble(nowDiscount.getDiscountRate().toString());
+			int rate = (int) (oldRate * 100);
+			game.setRate(rate);
+			Integer discountedPrice = game.getPrice() * game.getRate() / 100;
+			game.setDiscountedPrice(discountedPrice);
+			return discountedPrice;
+		}
+		return null;
+	}
 	
 	
 }

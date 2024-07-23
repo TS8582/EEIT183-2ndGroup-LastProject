@@ -76,7 +76,7 @@ function htmlMaker(data, table) {
             item.amount,
             item.saleTime,
             item.expiryTime,
-            item.sellerMemId,
+            item.sellerName,
             orderStatusText,
             // 購買按鈕
           ])

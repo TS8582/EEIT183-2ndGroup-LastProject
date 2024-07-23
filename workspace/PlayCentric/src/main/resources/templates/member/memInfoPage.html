@@ -2,6 +2,9 @@
 <html>
 
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>PlayCentric-個人資訊</title>
   <style>
     input:focus,
@@ -53,7 +56,8 @@
             <div class="col-5">
               <input type="text" readonly class="form-control-plaintext px-2" id="email" name="email" value="">
             </div>
-            <div id="verify-email-btn" class="btn btn-outline-warning btn-sm col-2 align-self-center text-dark" style="display: none;">
+            <div id="verify-email-btn" class="btn btn-outline-warning btn-sm col-2 align-self-center text-dark"
+              style="display: none;">
               驗證Email</div>
           </div>
           <div
@@ -91,26 +95,37 @@
           </div>
           <div class="row">
             <div id="google-account" class="col-4 d-flex mb-3 justify-content-center">
-              <a class="btn p-3 border rounded-0" th:href="@{/member/google-login}">
+              <a class="btn p-3 border rounded-0" th:href="@{/member/google-login/addGoogle}">
                 <img class="h-35px" th:src="@{/images/googleLogo.png}" alt="">
                 <span>綁定Google帳號</span></a>
             </div>
             <div id="facebook-account" class="col-3 d-flex mb-3 justify-content-center">
-              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/google-login}">
+              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/facebook-login/addFacebook}">
                 <img class="h-35px" th:src="@{/images/FBlogo.webp}" alt="">
                 <span>綁定FB帳號</span></a>
             </div>
             <div id="twitter-account" class="col-4 d-flex mb-3 justify-content-center">
-              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/google-login}">
+              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/twitter-login/addTwitter}">
                 <img class="h-35px" th:src="@{/images/twitter-logo.webp}" alt="">
                 <span>綁定twitter帳號</span></a>
             </div>
           </div>
 
         </div>
-        <div class="photo-div ps-0 col-2">
-          <img class="w-100 cursor-pointer" src="http://localhost:8080/PlayCentric/imagesLib/image144">
+        <div class="photo-div ps-0 col-2 d-flex flex-column">
+          <img class="w-100 cursor-pointer rounded-2" src="http://localhost:8080/PlayCentric/imagesLib/image144">
           <input type="file" name="photoFile" id="photoFile" style="display: none;">
+          <p class="mx-3 mt-5 ps-2 border border-2 rounded-2"><i class="fa-solid fa-sack-dollar"></i><span id="points"
+              class="ms-2">0</span></p>
+          <select id="recharge-amount" name="recharge-amount" class="form-control mb-3"
+            aria-label="Default select example">
+            <option value="0" selected>選擇金額</option>
+            <option value="100">100元</option>
+            <option value="500">500元</option>
+            <option value="1500">1500元</option>
+            <option value="3000">3000元</option>
+          </select>
+          <div id="ecPay-btn" class="btn btn-outline-warning align-self-center text-dark">儲值</div>
         </div>
         <div id="edit-btn-group" class="row my-2 justify-content-center" style="display: none;">
           <input type="submit" class="btn btn-outline-warning col-2 text-black" value="保存修改">
@@ -122,10 +137,11 @@
 
   <script>
     $(function () {
-      const findMemUrl = "http://localhost:8080/PlayCentric/member/getMember";
-      const updateMemUrl = "http://localhost:8080/PlayCentric/member/update";
-      const changePwdUrl = "http://localhost:8080/PlayCentric/member/sendPtUrl";
-      const verifiyEmailUrl = "http://localhost:8080/PlayCentric/member/sendVerUrl";
+      const findMemUrl = "/PlayCentric/member/personal/api/getInfo";
+      const updateMemUrl = "/PlayCentric/member/personal/api/updateSelf";
+      const changePwdUrl = "/PlayCentric/member/personal/api/sendPtUrl";
+      const verifiyEmailUrl = "/PlayCentric/member/personal/api/sendVerUrl";
+      const ecPayUrl = "/PlayCentric/member/personal/api/newRecharge";
       const memId = Number.parseInt('[[${session.loginMember.memId}]]');
       const redirectMsg = '[[${redirectMsg}]]';
       let memInfo = {};
@@ -138,7 +154,37 @@
       getMemInfo();
 
 
-      $('#verify-email-btn').click(function(){
+      $('#ecPay-btn').click(function () {
+
+        const rechargeAmount = $('#recharge-amount').val();
+        if (rechargeAmount <= 0) {
+          doAlert('請選擇金額')
+        }
+        axios({
+          method: 'post',
+          url: ecPayUrl,
+          params: { rechargeAmount }
+        })
+          .then(res => {
+            console.log(res.data);
+            if (res.data === '請重新登入') {
+              doAlert(res.data)
+              setTimeout(() => {
+                window.location.href = "/PlayCentric/member/login";
+              }, 1000);
+            } else {
+              $('body').append(res.data)
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+            }
+          })
+      })
+
+      $('#verify-email-btn').click(function () {
         if (memInfo.emailVerified) {
           doAlert('信箱已驗證')
           return;
@@ -154,6 +200,9 @@
           })
           .catch(err => {
             console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+            }
           })
       })
 
@@ -173,6 +222,9 @@
           })
           .catch(err => {
             console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+            }
           })
       })
 
@@ -193,6 +245,9 @@
           })
           .catch(err => {
             console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+            }
           })
       })
 
@@ -254,7 +309,12 @@
             showMemInfo(res.data);
             memInfo = res.data;
           })
-          .catch(err => console.log(err))
+          .catch(err => {
+            console.log(err)
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+            }
+          })
       }
 
       function showMemInfo(data) {
@@ -281,6 +341,7 @@
         }
         $('#memInfo .photo-div img').attr('src', data.photoUrl)
         $('img#login-member-photo').attr('src', data.photoUrl)
+        $('#points').text(data.points)
 
         $('#edit-btn-group').hide();
       }

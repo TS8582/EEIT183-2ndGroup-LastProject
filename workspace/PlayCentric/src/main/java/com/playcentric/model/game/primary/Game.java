@@ -70,5 +70,8 @@ public class Game {
 	@JsonProperty
 	@Transient
 	private Integer discountedPrice;
-	
+	@Transient
+	private boolean haveGame = false;
+	@Transient
+	private boolean inCart = false;
 }

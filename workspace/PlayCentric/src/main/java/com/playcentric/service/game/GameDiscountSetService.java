@@ -36,5 +36,10 @@ public class GameDiscountSetService {
 		return rep.findBetweenStartAndEnd(date);
 	}
 	
+	//找可以選擇的優惠活動
+	public List<GameDiscountSet> findCanChoose() {
+		return rep.findByStartAtGreaterThanNow(LocalDateTime.now());
+	}
+	
 	
 }

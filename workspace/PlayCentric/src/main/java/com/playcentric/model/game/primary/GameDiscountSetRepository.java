@@ -11,5 +11,8 @@ import java.time.LocalDateTime;
 
 public interface GameDiscountSetRepository extends JpaRepository<GameDiscountSet,Integer> {
 	@Query("from GameDiscountSet where :date between startAt and endAt")
-	public List<GameDiscountSet> findBetweenStartAndEnd(@Param("date") LocalDateTime date);
+	List<GameDiscountSet> findBetweenStartAndEnd(@Param("date") LocalDateTime date);
+	
+	@Query("from GameDiscountSet where startAt > :now")
+	List<GameDiscountSet> findByStartAtGreaterThanNow(@Param("now") LocalDateTime now);
 }

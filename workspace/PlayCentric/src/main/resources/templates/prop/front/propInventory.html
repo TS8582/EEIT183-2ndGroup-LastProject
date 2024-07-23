@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <title>道具交易前台</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="keywords" content="ecommerce, pet, shop">
+  <meta name="description" content="Free eCommerce Pet Shop HTML Website Template">
+
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
+  <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/prop/template/vendor.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/prop/template/style.css}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div th:replace="~{prop/propNavbar}"></div>
+  <header class="mt-5 d-flex justify-content-center">
+    <div id="gameList" class="bg-light text-dark p-4 rounded shadow-sm">
+      <form id="myForm" class="d-flex mb-3 align-items-center">
+        <select class="form-select me-2" id="SelectGame" name="gameId" style="font-size: 2rem; border: 2px solid #343a40;"></select>
+        <button id="submitBtn" class="btn btn-dark" style="font-size: 1.5rem;">🕹️</button>
+      </form>
+      <input type="text" id="searchInput" class="form-control" placeholder="在倉庫中搜尋" style="font-size: 1.5rem; border: 2px solid #343a40;">
+    </div>
+  </header>
+  <div class="">
+
+    <div class="section-header d-md-flex justify-content-between align-items-center">
+      <h2 class="display-3 fw-normal">倉庫</h2>
+      <div class="mb-4 mb-md-0">
+        <p class="m-0">
+          <!-- 自動新增按鈕 -->
+        </p>
+      </div>
+      <div>
+        <a th:href="@{market}" class="btn btn-outline-dark btn-lg text-uppercase fs-2 rounded-1">
+          回拍賣場
+          <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
+            <use xlink:href="#arrow-right"></use>
+          </svg></a>
+      </div>
+    </div>
+
+    <div class="isotope-container row">
+      <!-- 商品項目將在這裡動態生成 -->
+    </div>
+
+    <script th:src="@{/js/prop/template/jquery-1.11.0.min.js}"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"></script>
+    <script th:src="@{/js/prop/template/plugins.js}"></script>
+    <script th:src="@{/js/prop/template/script.js}"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
+    <!-- Isotope库 -->
+
+    <script>
+      // 加載所有遊戲
+      const propTypesMap = {};
+
+      $(document).ready(function () {
+        loadGames();
+
+        // 提交按鈕點擊事件
+        $("#submitBtn").click(function (event) {
+          event.preventDefault(); // 取消表單的默認提交行為
+          const selectedGameId = $("#SelectGame").val(); // 獲取選中的遊戲ID
+          fetchPropTypesByGameId(selectedGameId, function (propTypes) {
+            propTypes.forEach(function (propType) {
+              propTypesMap[propType.propTypeId] = propType.propType; // 填充 propTypesMap
+            });
+            generateFilterButtons(propTypes); // 生成篩選按鈕
+            findAllPropsByGameId(selectedGameId); // 查找所有道具
+          });
+        });
+
+        // 初始化 Isotope
+        const $container = $('.isotope-container').isotope({
+          itemSelector: '.item',
+          layoutMode: 'fitRows'
+        });
+
+        // 篩選按鈕點擊事件
+        $(document).on('click', '.filter-button', function () {
+          const filterValue = $(this).attr('data-filter');
+          $container.isotope({ filter: filterValue });
+          $('.filter-button').removeClass('active');
+          $(this).addClass('active');
+
+          // 重新觸發搜索條件
+          $('#searchInput').trigger('input');
+        });
+
+        // 搜尋輸入框事件
+        $('#searchInput').on('input', function () {
+          const searchValue = $(this).val().toLowerCase();
+          const activeTypeFilter = $('.filter-button.active').attr('data-filter');
+
+          $container.isotope({
+            filter: function () {
+              const name = $(this).find('.card-title').text().toLowerCase();
+              const typeClass = $(this).attr('class').split(' ').filter(cls => cls.startsWith(activeTypeFilter.replace('.', '')));
+
+              return name.includes(searchValue) && (activeTypeFilter === '*' || typeClass.length > 0);
+            }
+          });
+        });
+      });
+
+      function loadGames() {
+        axios
+          .get("http://localhost:8080/PlayCentric/prop/findAllGame")
+          .then(function (res) {
+            const games = res.data;
+            const selectGame = $("#SelectGame");
+            console.log("Games data:", games); // 打印數據內容
+
+            selectGame.empty();
+            games.forEach(function (game) {
+              const option = $("<option></option>")
+                .val(game.gameId)
+                .text(game.gameName);
+              selectGame.append(option);
+            });
+
+            if (games.length > 0) {
+              selectGame.val(games[0].gameId);
+              $("#submitBtn").click();
+            }
+          })
+          .catch(function (error) {
+            console.error("獲取遊戲數據時出錯:", error);
+          });
+      }
+
+      // 根據 gameId 獲取所有道具種類
+      function fetchPropTypesByGameId(gameId, callback) {
+        axios
+          .get("http://localhost:8080/PlayCentric/prop/findAllPropTypesByGameId", {
+            params: { gameId: gameId },
+          })
+          .then((res) => {
+            callback(res.data);
+            const propTypes = res.data;
+            propTypes.forEach(function (propType) {
+              propTypesMap[propType.propTypeId] = propType.propType;
+              console.log(`propTypeId: ${propType.propTypeId}, propType: ${propType.propType}`);
+            });
+          })
+          .catch((error) => {
+            console.error("獲取道具種類數據時出錯:", error);
+          });
+      }
+
+      // 根據 gameId 查找所有道具
+      function findAllPropsByGameId(gameId) {
+        axios
+          .get("http://localhost:8080/PlayCentric/prop/findAllPropsByGameId", {
+            params: { gameId: gameId },
+          })
+          .then((res) => {
+            const props = res.data;
+            generatePropItems(props); // 動態生成道具項目
+            console.log(props);
+          })
+          .catch((error) => {
+            console.error("獲取道具數據時出錯:", error);
+          });
+      }
+
+      // 生成篩選按鈕
+      function generateFilterButtons(propTypes) {
+        const filterButtonsContainer = $(".m-0");
+        filterButtonsContainer.empty();
+        const allButton = $('<button class="filter-button me-4 active" data-filter="*" style="font-size: 2rem;">ALL</button>');
+        filterButtonsContainer.append(allButton);
+        propTypes.forEach(function (propType) {
+          const button = $('<button class="filter-button me-4" style="font-size: 2rem;"></button>')
+            .attr("data-filter", `.${propType.propTypeId}`)
+            .text(propType.propType);
+          console.log(propType.propType)
+          filterButtonsContainer.append(button);
+        });
+      }
+
+      // 生成道具項目
+      function generatePropItems(props) {
+        const propsContainer = $(".isotope-container");
+        propsContainer.empty();
+        props.forEach(function (prop) {
+          const itemClassId = prop.propTypeId ? prop.propTypeId : 'unknown';
+          console.log(`Item classId is: ${itemClassId}`);
+          const item = $(`
+<div class="item ${itemClassId}" style="margin-bottom:35rem; width:12vw; position: relative;">
+  <a href="#" class="card position-absolute" style="text-decoration: none; color: inherit;">
+    <h3 class="card-title pt-4 m-0">${prop.propName}</h3>
+    <div style="position: relative;">
+      <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 9vw;">
+      <h3 class="secondary-font" style="font-weight: bold; color: white; position: absolute; bottom: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.5); padding: 5px;">數量: 1</h3>
+    </div>
+    <div class="card-body p-0">
+      <div class="card-text">
+        <h3 class="secondary-font text-primary">平均NT$:${prop.propPrice}</h3>
+        <div class="d-flex flex-wrap mt-3">
+          <!-- Additional content here -->
+        </div>
+      </div>
+    </div>
+  </a>
+</div>
+`);
+
+          propsContainer.append(item);
+        });
+
+        // 更新 Isotope 布局
+        $('.isotope-container').isotope('reloadItems').isotope({ sortBy: 'original-order' });
+      }
+    </script>
+</body>
+
+</html>

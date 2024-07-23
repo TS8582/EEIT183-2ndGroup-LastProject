@@ -2,114 +2,128 @@
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<title>PlayCentric找個玩伴</title>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="format-detection" content="telephone=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="keywords" content="ecommerce, pet, shop">
-<meta name="description"
-	content="Free eCommerce Pet Shop HTML Website Template">
+	<title>PlayCentric找個玩伴</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="keywords" content="ecommerce, pet, shop">
+	<meta name="description" content="Free eCommerce Pet Shop HTML Website Template">
 
-<link th:replace="~{layout/nav}" />
-<link rel="stylesheet"
-	href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
-<link
-	href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
-	crossorigin="anonymous">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-	href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
-	rel="stylesheet">
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/playfellow/playFellow.css}">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-	integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMg7NfG5Dn5nC6he5h5Vms9+R9FF+9aa5e9/2E4"
-	crossorigin="anonymous">
+	<link th:replace="~{layout/nav}" />
+	<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
+	<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/playfellow/playFellow.css}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+		integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMg7NfG5Dn5nC6he5h5Vms9+R9FF+9aa5e9/2E4" crossorigin="anonymous">
 
 
 
-<style>
-/* 自訂的樣式 */
-.offcanvas-backdrop {
-	z-index: 1040;
-}
+	<style>
+		/* 自訂的樣式 */
+		.offcanvas-backdrop {
+			z-index: 1040;
+		}
 
-.offcanvas.show ~ .content {
-	transform: translateX(250px);
-	transition: transform 0.3s ease-in-out;
-}
-</style>
+		.offcanvas.show~.content {
+			transform: translateX(250px);
+			transition: transform 0.3s ease-in-out;
+		}
+
+
+		.offcanvas-body::-webkit-scrollbar {
+			width: 0px;
+			background: transparent;
+		}
+
+		.offcanvas-body {
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
+
+		.marquee-container {
+			width: 130px;
+			/* 設置容器的寬度 */
+			overflow: hidden;
+			/* 隱藏超出容器寬度的部分 */
+			white-space: nowrap;
+			/* 確保文字不換行 */
+			/*  	border: 1px solid #000; /* 用來顯示容器邊界，便於檢查  */
+		}
+	</style>
 </head>
 
 <body>
 
-	<div class="offcanvas offcanvas-end" data-bs-scroll="true"
-		tabindex="-1" id="offcanvasCart" aria-labelledby="My Cart">
+	<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart"
+		aria-labelledby="My Cart">
 		<div class="offcanvas-header justify-content-center">
-			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-				aria-label="Close"></button>
+			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
 	</div>
 
-	<div class="offcanvas offcanvas-end" data-bs-scroll="true"
-		tabindex="-1" id="offcanvasSearch" aria-labelledby="Search">
+	<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasSearch"
+		aria-labelledby="Search">
 		<div class="offcanvas-header justify-content-center">
-			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-				aria-label="Close"></button>
+			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
 	</div>
 
 
 
 
-	<section id="clothing" class="overflow-hidden"
-		style="margin-top: 100px;">
+	<section id="clothing" class="overflow-hidden" style="margin-top: 100px;">
 		<div class="container pb-1">
 			<div class="row">
 				<!-- 側邊欄圖標 -->
 				<div class="col-1">
-					<button class="btn btn-gray" type="button"
-						data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar"
-						aria-controls="offcanvasSidebar">
-						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-							fill="currentColor" class="bi bi-list" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
+					<button class="btn btn-gray" type="button" data-bs-toggle="offcanvas"
+						data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+							class="bi bi-list" viewBox="0 0 20 20">
+							<path fill-rule="evenodd"
 								d="M2.5 12.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5z" />
-                        </svg>
+						</svg>
 					</button>
 				</div>
 
-				<div class="offcanvas offcanvas-start" tabindex="-1"
-					id="offcanvasSidebar" aria-labelledby="offcanvasSidebarLabel">
+				<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSidebar"
+					aria-labelledby="offcanvasSidebarLabel" style="background-color:#F1FAEE;">
 					<div class="offcanvas-header">
 						<h5 class="offcanvas-title" id="offcanvasSidebarLabel">更多遊戲伴遊</h5>
-						<button type="button" class="btn-close"
-							data-bs-dismiss="offcanvas" aria-label="Close"></button>
+						<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 					</div>
-					<div class="offcanvas-body">
-						<ul class="list-group">
-							<ul>
-								<li><a th:href="@{/playFellow}">回伴遊首頁</a></li>
-							</ul>
-							<ul>
-								<li>遊戲類別</li>
 
-								<li th:each="games : ${findGameIdAndName}"
-									class="list-group-item">
-									<form
-										th:action="@{/playFellow/{gameId}(gameId=${games.gameId})}"
-										method="post">
+					<div class="offcanvas-body" style="overflow-y: auto; padding: 20px;">
+						<ul class="list-group" style="list-style-type: none; padding: 0;">
+							<li style="border: none; padding: 10px 15px;">
+								<a th:href="@{/playFellow}" style="color: #3B89C7; text-decoration: none;"
+									onmouseover="this.style.color='#2A9D8F'; this.style.textDecoration='underline';"
+									onmouseout="this.style.color='#3B89C7'; this.style.textDecoration='none';">回伴遊首頁</a>
+							</li>
+							<li style="border: none; color: #3B89C7; font-weight: bold; padding: 10px 15px;">
+								遊戲類別
+							</li>
+							<div th:each="games : ${findGameIdAndName}">
+								<li class="list-group-item" style="border: none; padding: 10px 15px;"
+									onmouseover="this.style.backgroundColor='#F4CBAA'; this.style.cursor='pointer';"
+									onmouseout="this.style.backgroundColor='';">
+									<form th:action="@{/playFellow/{gameId}(gameId=${games.gameId})}" method="post">
 										<button type="submit" class="btn btn-link"
-											th:text="${games.gameName}"></button>
+											style="color: #6C758F; text-decoration: none;width:300px;height:30px; padding: 0; font-size: 1rem; font-weight: bold;"
+											th:text="${games.gameName}"
+											onmouseover="this.style.color='#2A9D8F'; this.style.textDecoration='underline';"
+											onmouseout="this.style.color='#6C758F'; this.style.textDecoration='none';"></button>
 									</form>
 								</li>
-							</ul>
+							</div>
+						</ul>
 					</div>
 				</div>
 
@@ -129,33 +143,90 @@
 
 	<section id="foodies" style="margin-top: 10px;">
 		<div class="container my-1 py-0">
-			<div
-				class="section-header d-md-flex justify-content-between align-items-center">
+			<div class="section-header d-md-flex justify-content-between align-items-center">
 				<h2 class="display-6 fw-normal" th:text="${game.gameName}"></h2>
 				<div class="mb-4 mb-md-0">
 					<p class="m-0">
-						<button class="filter-button me-4" data-filter=".cat" th:text="${game.gameName}"></button>
-						<button class="filter-button me-4" data-filter=".dog">男生</button>
-						<button class="filter-button me-4" data-filter=".bird">女生</button>
+						<button class="filter-button me-4" data-filter="*">所有伴遊</button>
+						<button class="filter-button me-4" data-filter=".male">男生</button>
+						<button class="filter-button me-4" data-filter=".female">女生</button>
 					</p>
 				</div>
 			</div>
 
 
 
-			<div id="playfellow-container" class="isotope-container row"  >
+			<div id="playfellow-container" class="isotope-container row">
 				<!-- 				CS2        	-->
-				<div class="item cat col-md-3 col-lg-2 my-4" th:each="pfgame : ${PfGame}">
-					<div class="card position-relative"
-						style="background-color: #FFFFFF;">
+
+
+
+
+
+				<!-- 				male -->
+				<div class="item male col-md-3 col-lg-2 my-4" th:each="pfgame : ${Males}">
+					<div class="card position-relative" style="background-color: #FFFFFF;">
 						<!-- Carousel -->
-						<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide"
-							data-bs-ride="carousel">
+						<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide" data-bs-ride="carousel">
 							<div class="carousel-inner">
-								<div
-									th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
-									th:classappend="${stat.index == 0} ? ' active' : ''"
-									class="carousel-item">
+								<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
+									th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
+									<img class=" rounded-1 img-fluid playFellowImg-size"
+										th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
+										alt="Image" />
+								</div>
+							</div>
+						</div>
+						<!-- End of Carousel -->
+
+						<div class="card-body pl-5">
+							<div class="d-flex align-items-center" style="white-space: nowrap;">
+								<span class="card-title pt-2 m-0" th:text="${pfgame.playFellowMember.pfnickname}"
+									style="display: inline;"></span>
+								<span th:if="${pfgame.playFellowMember.member.gender == 1}"
+									style="background-color: rgb(0, 191, 255); color: white; padding: 2px 8px; border-radius: 25%; font-size: 6px; margin-left: 10px; display: inline;">♂️</span>
+								<span th:if="${pfgame.playFellowMember.member.gender == 2}"
+									style="background-color: rgb(221, 73, 97); color: white; padding: 2px 8px; border-radius: 25%; font-size: 6px; margin-left: 10px; display: inline;">♀️</span>
+								<span th:text="${pfgame.playFellowMember.member.birthday}"
+									class="member-birthday"></span>
+
+							</div>
+
+							<div class="card-text">
+								<div class="card-body pt-0">
+									<div class="marquee-container">
+										<p class="card-text marquee" th:text="${pfgame.playFellowMember.pfdescription}">
+										</p>
+									</div>
+								</div>
+
+								<h6 class="secondary-font text-primary pt-0"
+									th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
+								<div class="d-flex flex-wrap mt-3">
+									<form action="/PlayCentric/playFellow/playFellowCart" method="GET">
+										<input type="hidden" name="pfGameId" th:value="${pfgame.pfGameId}" />
+										<button type="submit" class="btn btn-outline-shop me-1 px-1 pt-1 pb-1">
+											<h6 class="text-uppercase m-0">購買</h6>
+										</button>
+									</form>
+								</div>
+							</div>
+						</div>
+
+
+
+					</div>
+				</div>
+
+
+				<!-- 				Females -->
+				<div class="item female col-md-3 col-lg-2 my-4" th:each="pfgame : ${Females}">
+					<div class="card position-relative" style="background-color: #FFFFFF;">
+						<!-- Carousel -->
+						<div id="carousel-[[${pfgame.pfGameId}]]" class="carousel slide" data-bs-ride="carousel">
+							<div class="carousel-inner">
+								<div th:each="association, stat : ${pfgame.playFellowMember.imageLibAssociations}"
+									th:classappend="${stat.index == 0} ? ' active' : ''" class="carousel-item">
 									<img class=" rounded-1 img-fluid playFellowImg-size"
 										th:src="'data:image/jpeg;base64,' + ${association.imageLib.base64Image}"
 										alt="Image" />
@@ -165,31 +236,27 @@
 						<!-- End of Carousel -->
 
 						<div class="card-body pl-1">
-							<span class="card-title pt-2 m-0"
-								th:text="${pfgame.playFellowMember.pfnickname}"></span> <span
-								class="card-title pt-2 m-0"> <span
-								th:if="${pfgame.playFellowMember.member.gender == 1}"
-								style="color: blue;">♂️</span> <span
-								th:if="${pfgame.playFellowMember.member.gender == 2}"
-								style="color: pink;">♀️</span></span>
+							<span class="card-title pt-2 m-0" th:text="${pfgame.playFellowMember.pfnickname}"></span>
+							<span class="card-title pt-2 m-0"> <span
+									th:if="${pfgame.playFellowMember.member.gender == 1}"
+									style="background-color: rgb(0, 191, 255); color: white; padding: 2px 8px; border-radius: 25%; font-size: 10px; margin-left: 10px;">♂️</span>
+								<span th:if="${pfgame.playFellowMember.member.gender == 2}"
+									style="background-color: rgb(221, 73, 97); color: white; padding: 2px 8px; border-radius: 25%; font-size: 10px; margin-left: 10px;">♀️</span></span>
 
 							<div class="card-text">
 								<div class="card-body pt-0">
 									<div class="marquee-container">
-										<p class="card-text marquee"
-											th:text="${pfgame.playFellowMember.pfdescription}"></p>
+										<p class="card-text marquee" th:text="${pfgame.playFellowMember.pfdescription}">
+										</p>
 									</div>
 								</div>
 
 								<h6 class="secondary-font text-primary pt-0"
 									th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
 								<div class="d-flex flex-wrap mt-3">
-									<form action="/PlayCentric/playFellow/playFellowCart"
-										method="GET">
-										<input type="hidden" name="pfGameId"
-											th:value="${pfgame.pfGameId}" />
-										<button type="submit"
-											class="btn btn-outline-shop me-1 px-1 pt-1 pb-1">
+									<form action="/PlayCentric/playFellow/playFellowCart" method="GET">
+										<input type="hidden" name="pfGameId" th:value="${pfgame.pfGameId}" />
+										<button type="submit" class="btn btn-outline-shop me-1 px-1 pt-1 pb-1">
 											<h6 class="text-uppercase m-0">購買</h6>
 										</button>
 									</form>
@@ -226,9 +293,8 @@
 					<a id="addPfMember" th:if="${session.loginMember != null}"
 						th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}"
 						class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
-						點此申請</a> <a id="addPfMember" th:if="${session.loginMember == null}"
-						href="javascript:void(0);" onclick="alertAndRedirect();"
-						class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+						點此申請</a> <a id="addPfMember" th:if="${session.loginMember == null}" href="javascript:void(0);"
+						onclick="alertAndRedirect();" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
 
 						點此申請</a>
 
@@ -254,18 +320,40 @@
 		</div>
 	</div>
 
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script
-		src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
-	<script
-		src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
+	<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
 	<script th:src="@{/js/playfellow/plugins.js}"></script>
 	<script th:src="@{/js/playfellow/script.js}"></script>
 	<script th:src="@{/js/playfellow/playfellow.js}"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const birthdays = document.querySelectorAll('.member-birthday');
+
+			birthdays.forEach(function (birthdayElem) {
+				const birthdayText = birthdayElem.textContent.trim();
+				if (birthdayText) {
+					const birthDate = new Date(birthdayText);
+					const age = calculateAge(birthDate);
+					birthdayElem.textContent = `${age}`;
+				}
+			});
+
+			function calculateAge(birthDate) {
+				const today = new Date();
+				let age = today.getFullYear() - birthDate.getFullYear();
+				const monthDiff = today.getMonth() - birthDate.getMonth();
+
+				if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+					age--;
+				}
+
+				return age;
+			}
+		});
+	</script>
 
 
 </body>

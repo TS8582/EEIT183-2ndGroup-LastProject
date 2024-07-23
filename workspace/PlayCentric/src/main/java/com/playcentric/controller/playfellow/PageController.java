@@ -4,8 +4,9 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,16 +17,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.member.Member;
-import com.playcentric.model.playfellow.GameToPfGameDTO;
 import com.playcentric.model.playfellow.ImageLibPfmemberAssociation;
 import com.playcentric.model.playfellow.PfGame;
 import com.playcentric.model.playfellow.PfGameDTO;
 import com.playcentric.model.playfellow.PfOrder;
+import com.playcentric.model.playfellow.PfOrder3;
+import com.playcentric.model.playfellow.PfOrder3DTO;
 import com.playcentric.model.playfellow.PfOrderDTO;
-import com.playcentric.model.playfellow.PfOrderRepository;
 import com.playcentric.model.playfellow.PlayFellowMember;
 import com.playcentric.service.member.MemberService;
 import com.playcentric.service.playfellow.PfGameService;
+import com.playcentric.service.playfellow.PfOrder3Service;
 import com.playcentric.service.playfellow.PfOrderService;
 import com.playcentric.service.playfellow.PlayFellowMemberService;
 
@@ -48,6 +50,12 @@ public class PageController {
 
 	@Autowired
 	PfOrderService pfOrderService;
+
+	@Autowired
+	PfOrder3Service pfOrder3Service;
+
+	@Autowired
+	MemberService memberService;
 
 	// 進入cart
 	@GetMapping("/playFellow/playFellowCart")
@@ -73,7 +81,7 @@ public class PageController {
 	}
 
 	@GetMapping("/playFellow")
-	public String getMethodName(Model model) {
+	public String getPlayFellowById(Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
 
 		for (PlayFellowMember playFellowMember : playFellowMembers) {
@@ -86,24 +94,34 @@ public class PageController {
 			}
 		}
 
+		List<PlayFellowMember> lastest5playFellowMembers = playFellowMemberService
+				.getTopFiveReviewSuccessPlayFellowMembers();
+		model.addAttribute("TopFiveReviewSuccessMembers", lastest5playFellowMembers);
+
 		Integer gameId1 = 1;
 		Integer gameId2 = 2;
 		List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(gameId1);
 		List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(gameId2);
-		List<PfGame> reviewSuccessPfGame = pfGameService.getAllReviewSuccessPlayFellowMembers();
 		List<Game> findGameName = pfGameService.findAllGame();
-		model.addAttribute("findGameIdAndName", findGameName);
 
+		model.addAttribute("findGameIdAndName", findGameName);
 		model.addAttribute("PfGame", pfGames);
 		model.addAttribute("PfGame2", pfGames2);
 		model.addAttribute("PlayFellowMember", playFellowMembers);
-		model.addAttribute("ReviewSuccessPfGame", reviewSuccessPfGame);
 
 		return "playFellow/playFellow";
 	}
 
-	
-	
+	@ResponseBody
+	@GetMapping("/playFellow/showGame")
+	public ResponseEntity<List<PfGameDTO>> getPfGameDTOsByPlayFellowId(@RequestParam Integer playFellowId) {
+		List<PfGameDTO> pfGameDTOs = pfGameService.findByPlayFellowId(playFellowId);
+		if (pfGameDTOs.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(pfGameDTOs, HttpStatus.OK);
+	}
+
 	@PostMapping("/playFellow/{gameId}")
 	public String showGameMember(@PathVariable("gameId") Integer gameId, Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
@@ -117,54 +135,95 @@ public class PageController {
 				}
 			}
 		}
-		
-	    Game game = pfGameService.getGameById(gameId);
-        model.addAttribute("game", game);
 
+		Game game = pfGameService.getGameById(gameId);
+		model.addAttribute("game", game);
 
-		
-		
 		List<Game> findGameName = pfGameService.findAllGame();
 		model.addAttribute("findGameIdAndName", findGameName);
-		
+
 		List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(gameId);
 		model.addAttribute("PfGame", pfGames);
+
+		List<PfGame> pfGamesMales = pfGameService.getAllPlayFellowMembersByGameIdAndMale(gameId);
+		model.addAttribute("Males", pfGamesMales);
+
+		List<PfGame> pfGamesFemales = pfGameService.getAllPlayFellowMembersByGameIdAndFemale(gameId);
+		model.addAttribute("Females", pfGamesFemales);
+
 		return "playFellow/showGameMember";
 	}
-	
-	
 
 	@ResponseBody
 	@PostMapping("playFellow/addPfOrder")
 	public String addOrder(@RequestBody PfOrderDTO pfOrderDTO) {
-		PfOrder pfOrder = new PfOrder();
+	    PfOrder pfOrder = new PfOrder();
 
-		PfGame pfGame = entityManager.getReference(PfGame.class, pfOrderDTO.getPfGameId());
-		Member member = entityManager.getReference(Member.class, pfOrderDTO.getMemId());
+	    PfGame pfGame = entityManager.getReference(PfGame.class, pfOrderDTO.getPfGameId());
+	    Member orderMem = entityManager.getReference(Member.class, pfOrderDTO.getMemId());
 
-		pfOrder.setPfGame(pfGame);
-		pfOrder.setMember(member);
+	    pfOrder.setPfGame(pfGame);
 
-		String transactionID = pfOrderDTO.getTransactionID();
-		if (transactionID == null || transactionID.trim().isEmpty()) {
-			transactionID = null;
-		}
-		pfOrder.setTransactionID(transactionID);
+	    int currentPoints = orderMem.getPoints();
+	    int totalAmount = pfOrderDTO.getTotalAmount();
 
-		pfOrder.setPaymentStatus(pfOrderDTO.getPaymentStatus());
-		pfOrder.setQuantity(pfOrderDTO.getQuantity());
-		pfOrder.setTotalAmount(pfOrderDTO.getTotalAmount());
+	    if (currentPoints < totalAmount) {
+	        return "點數不足，無法扣款";
+	    }
 
-		pfOrder.setAdded(new Date());
+	    orderMem.setPoints(currentPoints - totalAmount);
+	    pfOrder.setMember(orderMem);
+	    
+	    
 
-		pfOrderService.savePfOrder(pfOrder);
+	    String transactionID = pfOrderDTO.getTransactionID();
+	    if (transactionID == null || transactionID.trim().isEmpty()) {
+	        transactionID = null;
+	    }
+	    pfOrder.setTransactionID(transactionID);
 
-		return "訂單提交成功";
+	    pfOrder.setPaymentStatus(pfOrderDTO.getPaymentStatus());
+	    pfOrder.setQuantity(pfOrderDTO.getQuantity());
+	    pfOrder.setTotalAmount(totalAmount);
+	    pfOrder.setPaymentTime(new Date());
+	    pfOrder.setAdded(new Date());
+
+	    pfOrderService.savePfOrder(pfOrder);
+
+	    return "付款成功";
 	}
 
-	@GetMapping("playFellow/savePfOrder")
-	public String savePfOrder() {
-		return "playFellow/testOrder";
-	}
+	
+	
+	
+	
+	
 
+//	@ResponseBody
+//	@PostMapping("playFellow/addPfOrder3")
+//	public String addOrder(@RequestBody PfOrder3DTO pfOrderDTO3) {
+//		PfOrder3 pfOrder3 = new PfOrder3();
+//
+//		PfGame pfGame = entityManager.getReference(PfGame.class, pfOrderDTO3.getPfGameId());
+//		Member member = entityManager.getReference(Member.class, pfOrderDTO3.getMemId());
+//
+//		pfOrder3.setPfGame(pfGame);
+//		pfOrder3.setMember(member);
+//
+//		String transactionID = pfOrderDTO3.getTransactionID();
+//		if (transactionID == null || transactionID.trim().isEmpty()) {
+//			transactionID = null;
+//		}
+//		pfOrder3.setTransactionID(transactionID);
+//
+//		pfOrder3.setPaymentStatus(pfOrderDTO3.getPaymentStatus());
+//		pfOrder3.setQuantity(pfOrderDTO3.getQuantity());
+//		pfOrder3.setTotalAmount(pfOrderDTO3.getTotalAmount());
+//
+//		pfOrder3.setAdded(new Date());
+//
+//		pfOrder3Service.savePfOrder3(pfOrder3);
+//
+//		return "訂單提交成功";
+//	}
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" xmlms:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <title>遊戲伴遊側欄表</title>
+</head>
+
+<body>
+    <aside class="w-64 bg-slate-300 text-black flex flex-col rounded-md">
+        <div class="p-4">
+            <h1 class="text-2xl font-semibold">伴遊列表</h1>
+        </div>
+        <nav class="flex-1 left-nav">
+            <ul>
+                
+                <li class="leftmenuitem px-4 anno">
+                    <a th:href="@{/playFellow/reviewpfMember}" class="block py-2.5 px-4 rounded ">審核伴遊資格</a>
+                </li>
+<!--                 <li class="leftmenuitem px-4 anno"> -->
+<!--                     <a th:href="@{/playFellow/updateMember/{pfmemberId}}" class="block py-2.5 px-4 rounded ">審核伴遊資格</a> -->
+<!--                 </li> -->
+                
+                
+                <li class="leftmenuitem px-4 mem">
+                    <a th:href="@{/playFellow}" class="block py-2.5 px-4 rounded ">回伴遊主頁</a>
+                </li>
+                
+            </ul>
+        </nav>
+    </aside>
+    <script th:src="@{/js/layout/aside.js}"></script>
+</body>
+
+</html>
