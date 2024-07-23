@@ -18,4 +18,8 @@ public class PaymentService {
 		return pRepo.findAll();
 	}
 	
+	public Payment findById(Integer paymentId) {
+		return pRepo.findById(paymentId).get();
+	}
+	
 }
