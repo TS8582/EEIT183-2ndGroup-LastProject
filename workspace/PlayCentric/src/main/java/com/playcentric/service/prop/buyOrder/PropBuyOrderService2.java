@@ -36,4 +36,10 @@ public class PropBuyOrderService2 {
 		List<PropBuyOrder2> buyOrders = propBuyOrderRepo.findAllByGameId(gameId);
 		return buyOrders;
 	}
+	
+//	根據memId查詢所有買單
+    public List<PropBuyOrder2> findAllByMemId(int memId) {
+        List<PropBuyOrder2> sellOrders = propBuyOrderRepo.findAllByMemId(memId);
+        return sellOrders;
+    }
 }

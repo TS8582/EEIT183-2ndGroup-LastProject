@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>PlayCentric-個人資訊</title>
+  <style>
+    .h-0 {
+      height: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div th:replace="~{member/memInfoAside}"></div>
+
+  <div class="p-0">
+    <div class="container">
+      <div class="text-center mt-3"><span class="h1">道具購買紀錄</span><span id="role"
+          class="text-small text-secondary"></span>
+        <br>
+        <table>
+          <tr>
+            <th>訂單編號</th>
+            <th>道具編號</th>
+            <th>道具名稱</th>
+            <th>數量</th>
+            <th>價格</th>
+            <th>付款方式</th>
+          </tr>
+          <!-- 自動生成tr td -->
+        </table>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+  </script>
+</body>
+
+</html>

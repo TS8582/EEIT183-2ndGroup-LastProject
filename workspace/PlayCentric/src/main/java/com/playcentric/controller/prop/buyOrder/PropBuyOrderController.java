@@ -107,7 +107,7 @@ public class PropBuyOrderController {
 	//根據memId找memName
 	@GetMapping("/prop/front/buyProp/findMenNameByMemId")
 	@ResponseBody
-	public Member findMenNameByMemId(@RequestParam("memId") Integer memId) {
-		return memberService.findById(memId);
+	public Member findMenNameByMemId(@RequestParam("memId") Integer buyerMemId) {
+		return memberService.findById(buyerMemId);
 	}
 }
