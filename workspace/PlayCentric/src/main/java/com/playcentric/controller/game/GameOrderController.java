@@ -74,20 +74,23 @@ public class GameOrderController {
 	@GetMapping("/pcwallet")
 	public String pcwallet(@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
+		Member member = mService.findById(loginMember.getMemId());
+		Integer total = 0;
 //		設定訂單屬性
 		GameOrder gameOrder = new GameOrder();
 		gameOrder.setStatus(0);
 		gameOrder.setPaymentId(1);
 		gameOrder.setPayment(pService.findById(1));
 		gameOrder.setMemId(loginMember.getMemId());
-		gameOrder.setMember(mService.findById(loginMember.getMemId()));
+		gameOrder.setMember(member);
+		gameOrder.setTotal(total);
+		gameOrder.setCreateAt(LocalDateTime.now());
 		GameOrder myorder = goService.save(gameOrder);
 		String tradeNo = "PLCTCGO";
 		LocalDateTime now = LocalDateTime.now();
 		tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth();
 		tradeNo = tradeNo + "T" + myorder.getGameOrderId();
 		myorder.setTradeNo(tradeNo);
-		Integer total = 0;
 		
 		List<GameOrderDetails> detailses = new ArrayList<>();
 		for (GameCarts gameCarts : carts) {
@@ -95,59 +98,69 @@ public class GameOrderController {
 			Game game = gService.findById(gameCarts.getGameId());
 			gService.setRateAndDiscountPrice(game);
 			gameOrderDetails.setAmount(1);
-			BigDecimal rateOrigin = BigDecimal.valueOf(game.getRate());
-			BigDecimal hundred = BigDecimal.valueOf(100);
-			BigDecimal rate = rateOrigin.divide(hundred,2,BigDecimal.ROUND_HALF_UP);
-			total += game.getDiscountedPrice();
+			BigDecimal rate = BigDecimal.ONE;
+			if (game.getRate() != null) {
+				BigDecimal rateOrigin = BigDecimal.valueOf(game.getRate());
+				BigDecimal hundred = BigDecimal.valueOf(100);
+				rate = rateOrigin.divide(hundred,2,BigDecimal.ROUND_HALF_UP);
+			}
 			gameOrderDetails.setDiscountRate(rate);
+			total += game.getDiscountedPrice();
 			gameOrderDetails.setGame(game);
+			gameOrderDetails.setGameId(game.getGameId());
 			gameOrderDetails.setUnitPrice(game.getPrice());
 			gameOrderDetails.setGameOrderId(myorder.getGameOrderId());
 			gameOrderDetails.setGameOrder(myorder);
+			goService.saveDetails(gameOrderDetails);
 			gcService.remove(gameCarts.getGameId(), gameCarts.getMemId());
 		}
+		myorder.setTotal(total);
+		goService.save(myorder);
+		member.setPoints(member.getPoints() - total);
+		loginMember.setPoints(member.getPoints() - total);
+		mService.save(member);
 		
 		
 		return "redirect:/";
 	}
 	
 	
-	@PostMapping("/ecpay")
-	public String ecpay(@ModelAttribute("loginMember") LoginMemDto loginMember) {
-		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
+//	@PostMapping("/ecpay")
+//	public String ecpay(@ModelAttribute("loginMember") LoginMemDto loginMember) {
+//		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
 //		設定訂單屬性
-		GameOrder gameOrder = new GameOrder();
-		Member member = mService.findById(loginMember.getMemId());
-		gameOrder.setStatus(0);
-		gameOrder.setPaymentId(2);
-		gameOrder.setPayment(pService.findById(2));
-		gameOrder.setMemId(loginMember.getMemId());
-		gameOrder.setMember(member);
-		GameOrder myorder = goService.save(gameOrder);
-		String tradeNo = "PLCTCGO";
-		LocalDateTime now = LocalDateTime.now();
-		tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth();
-		tradeNo = tradeNo + "T" + myorder.getGameOrderId();
-		myorder.setTradeNo(tradeNo);
-		Integer total = 0;
-		
-		List<GameOrderDetails> detailses = new ArrayList<>();
-		for (GameCarts gameCarts : carts) {
-			GameOrderDetails gameOrderDetails = new GameOrderDetails();
-			Game game = gService.findById(gameCarts.getGameId());
-			gService.setRateAndDiscountPrice(game);
-			gameOrderDetails.setAmount(1);
-			BigDecimal rateOrigin = BigDecimal.valueOf(game.getRate());
-			BigDecimal hundred = BigDecimal.valueOf(100);
-			BigDecimal rate = rateOrigin.divide(hundred,2,BigDecimal.ROUND_HALF_UP);
-			gameOrderDetails.setDiscountRate(rate);
-			gameOrderDetails.setGame(game);
-			gameOrderDetails.setUnitPrice(game.getPrice());
-			gameOrderDetails.setGameOrderId(myorder.getGameOrderId());
-		}
-		member.setPoints(member.getPoints() - total);
-		loginMember.setPoints(member.getPoints() - total);
-		mService.
-	}
+//		GameOrder gameOrder = new GameOrder();
+//		Member member = mService.findById(loginMember.getMemId());
+//		gameOrder.setStatus(0);
+//		gameOrder.setPaymentId(2);
+//		gameOrder.setPayment(pService.findById(2));
+//		gameOrder.setMemId(loginMember.getMemId());
+//		gameOrder.setMember(member);
+//		GameOrder myorder = goService.save(gameOrder);
+//		String tradeNo = "PLCTCGO";
+//		LocalDateTime now = LocalDateTime.now();
+//		tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth();
+//		tradeNo = tradeNo + "T" + myorder.getGameOrderId();
+//		myorder.setTradeNo(tradeNo);
+//		Integer total = 0;
+//		
+//		List<GameOrderDetails> detailses = new ArrayList<>();
+//		for (GameCarts gameCarts : carts) {
+//			GameOrderDetails gameOrderDetails = new GameOrderDetails();
+//			Game game = gService.findById(gameCarts.getGameId());
+//			gService.setRateAndDiscountPrice(game);
+//			gameOrderDetails.setAmount(1);
+//			BigDecimal rateOrigin = BigDecimal.valueOf(game.getRate());
+//			BigDecimal hundred = BigDecimal.valueOf(100);
+//			BigDecimal rate = rateOrigin.divide(hundred,2,BigDecimal.ROUND_HALF_UP);
+//			gameOrderDetails.setDiscountRate(rate);
+//			gameOrderDetails.setGame(game);
+//			gameOrderDetails.setUnitPrice(game.getPrice());
+//			gameOrderDetails.setGameOrderId(myorder.getGameOrderId());
+//		}
+//		member.setPoints(member.getPoints() - total);
+//		loginMember.setPoints(member.getPoints() - total);
+//		mService.save(member);
+//	}
 	
 }
