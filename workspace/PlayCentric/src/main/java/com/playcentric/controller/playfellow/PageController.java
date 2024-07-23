@@ -160,11 +160,10 @@ public class PageController {
 	    PfOrder pfOrder = new PfOrder();
 
 	    PfGame pfGame = entityManager.getReference(PfGame.class, pfOrderDTO.getPfGameId());
-	    Member member = entityManager.getReference(Member.class, pfOrderDTO.getMemId());
+	    Member orderMem = entityManager.getReference(Member.class, pfOrderDTO.getMemId());
 
 	    pfOrder.setPfGame(pfGame);
 
-	    Member orderMem = memberService.findById(pfOrderDTO.getMemId());
 	    int currentPoints = orderMem.getPoints();
 	    int totalAmount = pfOrderDTO.getTotalAmount();
 
@@ -173,7 +172,7 @@ public class PageController {
 	    }
 
 	    orderMem.setPoints(currentPoints - totalAmount);
-	    pfOrder.setMember(member);
+	    pfOrder.setMember(orderMem);
 	    
 	    
 
