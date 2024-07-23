@@ -95,17 +95,17 @@
           </div>
           <div class="row">
             <div id="google-account" class="col-4 d-flex mb-3 justify-content-center">
-              <a class="btn p-3 border rounded-0" th:href="@{/member/google-login}">
+              <a class="btn p-3 border rounded-0" th:href="@{/member/google-login/addGoogle}">
                 <img class="h-35px" th:src="@{/images/googleLogo.png}" alt="">
                 <span>綁定Google帳號</span></a>
             </div>
             <div id="facebook-account" class="col-3 d-flex mb-3 justify-content-center">
-              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/google-login}">
+              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/facebook-login/addFacebook}">
                 <img class="h-35px" th:src="@{/images/FBlogo.webp}" alt="">
                 <span>綁定FB帳號</span></a>
             </div>
             <div id="twitter-account" class="col-4 d-flex mb-3 justify-content-center">
-              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/google-login}">
+              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/twitter-login/addTwitter}">
                 <img class="h-35px" th:src="@{/images/twitter-logo.webp}" alt="">
                 <span>綁定twitter帳號</span></a>
             </div>
@@ -137,12 +137,11 @@
 
   <script>
     $(function () {
-      const pageUrl = window.location.origin;
-      const findMemUrl = pageUrl + "/PlayCentric/member/personal/api/getInfo";
-      const updateMemUrl = pageUrl + "/PlayCentric/member/personal/api/updateSelf";
-      const changePwdUrl = pageUrl + "/PlayCentric/member/personal/api/sendPtUrl";
-      const verifiyEmailUrl = pageUrl + "/PlayCentric/member/personal/api/sendVerUrl";
-      const ecPayUrl = pageUrl + "/PlayCentric/member/personal/api/newRecharge";
+      const findMemUrl = "/PlayCentric/member/personal/api/getInfo";
+      const updateMemUrl = "/PlayCentric/member/personal/api/updateSelf";
+      const changePwdUrl = "/PlayCentric/member/personal/api/sendPtUrl";
+      const verifiyEmailUrl = "/PlayCentric/member/personal/api/sendVerUrl";
+      const ecPayUrl = "/PlayCentric/member/personal/api/newRecharge";
       const memId = Number.parseInt('[[${session.loginMember.memId}]]');
       const redirectMsg = '[[${redirectMsg}]]';
       let memInfo = {};

@@ -51,17 +51,17 @@
         <div class=" bg-secondary-subtle p-0 rounded-3 rounded-bottom-0">
 
           <div class="nav nav-tabs" role="tablist">
-            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
-              type="button" role="tab" aria-controls="nav-home" aria-selected="true">登入</button>
-            <button class="nav-link" id="regist-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
-              type="button" role="tab" aria-controls="nav-profile" aria-selected="false">註冊</button>
+            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button"
+              role="tab" aria-controls="nav-home" aria-selected="true">登入</button>
+            <button class="nav-link" id="regist-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button"
+              role="tab" aria-controls="nav-profile" aria-selected="false">註冊</button>
           </div>
         </div>
 
         <div class="tab-content bg-white rounded-bottom-2" id="nav-tabContent">
           <!-- 登入框內容 -->
-          <div class="tab-pane fade show active border border-top-0 rounded-bottom-2 border-bottom-0 p-2 bg-white" id="nav-home"
-            role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+          <div class="tab-pane fade show active border border-top-0 rounded-bottom-2 border-bottom-0 p-2 bg-white"
+            id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
             <form method="POST" id="login-form" th:action="@{/member/login}">
               <div class="mb-3">
                 <label for="account" class="form-label">帳號</label>
@@ -71,23 +71,32 @@
                 <label for="password" class="form-label">密碼</label>
                 <input type="password" class="form-control" name="password" required>
               </div>
+              <div class="">
+                <input type="checkbox" class="form-check-input" name="addCookie" id="addCookie">
+                <label for="addCookie" class="form-label">保持登入</label>
+              </div>
               <div class="form-btn d-flex">
-              <button type="submit" class="btn btn-primary ms-auto me-2">登入</button>
-              <button type="button" class="btn btn-secondary" onclick="window.history.back()">取消</button>
+                <a href="#" class="align-self-center" >忘記密碼</a>
+                <button type="submit" class="btn btn-primary ms-auto me-2">登入</button>
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">取消</button>
               </div>
             </form>
             <div class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0">
               <span class="px-3 text-secondary bg-white user-select-none">或者</span>
             </div>
-            <div class="d-flex mb-3 justify-content-center">
-              <a class="btn p-3 border rounded-0" th:href="@{/member/google-login}">
+            <div class="d-flex mb-3 justify-content-center align-items-center">
+              <a id="googleLogin" class="btn p-3 border rounded-0" th:href="@{/member/google-login}">
                 <img class="h-35px" th:src="@{/images/googleLogo.png}" alt="">
                 使用Google登入</a>
+                <div class="form-check form-switch ms-2">
+                  <input class="form-check-input" type="checkbox" role="switch" id="googleAddCookie">
+                  <label class="form-check-label" for="googleAddCookie">保持登入</label>
+                </div>
             </div>
           </div>
           <!-- 註冊框內容 -->
-          <div class="tab-pane fade border border-top-0 border-bottom-0 p-2 rounded-bottom-2" id="nav-profile" role="tabpanel"
-            aria-labelledby="nav-profile-tab" tabindex="0">
+          <div class="tab-pane fade border border-top-0 border-bottom-0 p-2 rounded-bottom-2" id="nav-profile"
+            role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
             <form id="registForm">
               <div class="input-group mb-1">
                 <label for="nickname" class="input-group-text">暱稱*</label>
@@ -157,10 +166,10 @@
 
   <script>
     $(function () {
-      const pageUrl = window.location.origin;
-      const homePageUrl = pageUrl+"/PlayCentric/member/login"
-      const loginUrl = pageUrl+"/PlayCentric/member/login"
-      const registUrl = pageUrl+"/PlayCentric/member/regist";
+      const homePageUrl = "/PlayCentric/member/login"
+      const loginUrl = "/PlayCentric/member/login"
+      const registUrl = "/PlayCentric/member/regist";
+      const googleUrl = $('#googleLogin').attr('href');
       var loginTab = new bootstrap.Tab(document.querySelector('#login-tab'));
       const redirectMsg = '[[${redirectMsg}]]'
 
@@ -168,8 +177,11 @@
         doAlert(redirectMsg);
       }
 
+      $('#googleLogin').attr('href',googleUrl+'?addCookie='+$(this).is(':checked'))
+
+
       //自動確認密碼是否相同
-      $('#registForm #password-confirm').blur(function(){
+      $('#registForm #password-confirm').blur(function () {
         checkPwdAndBlock();
         $('#registForm input[type=password]').keyup(checkPwdAndBlock)
         $('#registForm input[type=password]').keypress(checkPwdAndBlock)
@@ -185,11 +197,22 @@
         }
       }
 
+      $('#googleAddCookie').change(function() { 
+        $('#googleLogin').attr('href',googleUrl+'?addCookie='+$(this).is(':checked'))
+        if ($(this).is(':checked')) { 
+          console.log('Checkbox is checked'); 
+        } else { 
+          console.log('Checkbox is not checked');
+        } 
+      });
+
       $('#login-form').submit(function (e) {
 
         e.preventDefault()
 
         const formdataObject = new FormData(this);
+        const addCookie = $('#addCookie').prop('checked');
+        formdataObject.set('addCookie',addCookie);
 
         axios.post(loginUrl, formdataObject)
           .then(res => {
@@ -217,7 +240,7 @@
         }
 
         const formdataObject = new FormData(this);
-        formdataObject.set('role',0)
+        formdataObject.set('role', 0)
 
         axios.post(registUrl, formdataObject)
           .then(res => {
@@ -233,7 +256,7 @@
           })
       })
 
-      $('#cancelRegist').click(function(){
+      $('#cancelRegist').click(function () {
         loginTab.show();
       })
 
