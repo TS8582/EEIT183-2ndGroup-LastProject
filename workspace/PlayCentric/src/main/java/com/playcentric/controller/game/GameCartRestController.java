@@ -55,10 +55,16 @@ public class GameCartRestController {
 	}
 	
 	@GetMapping("/remove")
-	public void removeGameCart(
+	public String removeGameCart(
 			@RequestParam Integer gameId,
 			@ModelAttribute("loginMember") LoginMemDto loginMember){
-		gcService.remove(gameId,loginMember.getMemId());
+		if (loginMember != null) {
+			gcService.remove(gameId,loginMember.getMemId());
+			return "OK";
+		}
+		else {
+			return "ERR";
+		}
 	}
 	
 	
