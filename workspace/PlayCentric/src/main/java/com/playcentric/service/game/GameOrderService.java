@@ -24,4 +24,8 @@ public class GameOrderService {
 		return odRepo.save(orderDetails);
 	}
 	
+	public GameOrder findById(Integer gameOrderId) {
+		return oRepo.findById(gameOrderId).get();
+	}
+	
 }

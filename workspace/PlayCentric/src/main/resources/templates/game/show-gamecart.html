@@ -79,12 +79,17 @@
                 </div>
                 <div class="text-2xl mt-5 flex justify-end items-center hidden pay">
                     <span class="me-2">選擇付款方式：</span>
-                    <form action="">
-                        <select class="border-2 shadow-md" name="paymentId">
+                    <form th:action="@{/gameorder/pcwallet}" method="get">
+                        <select class="border-2 shadow-md choosepay" name="paymentId">
                             <option th:each="payment:${payments}" th:value="${payment.paymentId}"
                                 th:text="${payment.paymentName}"></option>
                         </select>
-                        <a href="#" class="mybtn mybtn-green">付款</a>
+                        <div class="showPoints inline-block">
+                            <span>PC錢包餘額： </span>
+                            <span class="mypoint"
+                                th:text="${session.loginMember} ? ${session.loginMember.points}"></span>
+                        </div>
+                        <button type="submit" class="mybtn mybtn-green">付款</button>
                     </form>
                 </div>
             </div>
