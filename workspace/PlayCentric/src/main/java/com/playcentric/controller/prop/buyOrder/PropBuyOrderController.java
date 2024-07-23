@@ -1,12 +1,16 @@
 package com.playcentric.controller.prop.buyOrder;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import com.playcentric.model.member.Member;
 import com.playcentric.model.prop.buyOrder2.PropBuyOrder2;
+import com.playcentric.model.prop.sellOrder.PropSellOrder;
 import com.playcentric.service.member.MemberService;
 import com.playcentric.service.prop.MemberPropInventoryService.MemberPropInventoryService;
 import com.playcentric.service.prop.buyOrder.PropBuyOrderService2;
@@ -30,6 +34,7 @@ public class PropBuyOrderController {
 	
 	@Autowired
 	MemberService memberService;
+	
 
 	// 進入成交紀錄頁面
 	@GetMapping("/prop/propTradeRecord")
@@ -61,20 +66,43 @@ public class PropBuyOrderController {
 	// 購買道具
 	@PostMapping("/prop/front/buyProp")
 	@ResponseBody
-	// 1.找尋所有賣單由價格低到高排序後依購買quantity扣除賣單的quantity並修改賣單quantity為0的status，
 	public String buyProp(@RequestParam("quantity") Integer quantity, @RequestParam("propId") Integer propId,
-			@RequestParam("memId") Integer memId,@RequestParam("paymentId") Integer paymentId,@RequestParam("price") Integer price) {
-		propSellOrderService.buyProp(quantity, propId);
-
-		// 2.根據propId及memId雙主鍵增加買家的propQuantity
-		memberPropInventoryService.findMemberPropByIdAndPlusQuantity(memId, propId, quantity);
-
-		// 3.新增買單
-        propBuyOrderService2.savePropBuyOrder(memId, quantity, paymentId, price,propId);
+			@RequestParam("memId") Integer memId,@RequestParam("paymentId") Integer paymentId,@RequestParam("price") Integer price,@RequestParam("selectedGameId") Integer selectedGameId) {
 		
-        // 4.扣除點數
-		return "購買完成";
+	    // 1-1 儲存未被買之前的所有賣單的quantity
+	    List<PropSellOrder> sellOrders = propSellOrderService.findAllByGameIdAndStatus0(selectedGameId);
+	    Map<Integer, Integer> initialQuantities = sellOrders.stream()
+	        .collect(Collectors.toMap(PropSellOrder::getOrderId, PropSellOrder::getQuantity)); 
+	    
+	    // 2.找尋所有賣單由價格低到高排序後依購買quantity扣除賣單的quantity並修改賣單quantity為0的status
+	    propSellOrderService.buyProp(quantity, propId);
+	    
+	    // 1-2.檢查全部賣單若quantity有變動 memberPoint += amount*變動quantity
+	    for (PropSellOrder sellOrder : sellOrders) {
+	        int initialQuantity = initialQuantities.get(sellOrder.getOrderId());
+	        int finalQuantity = sellOrder.getQuantity();
+	        int quantityDifference = initialQuantity - finalQuantity;
+	        if (quantityDifference > 0) {
+	            Member seller = memberService.findById(sellOrder.getSellerMemId());
+	            int pointsToAdd = sellOrder.getAmount() * quantityDifference;
+	            seller.setPoints(seller.getPoints() + pointsToAdd);
+	            memberService.save(seller);
+	        }
+	    }
 
+	    // 3.根據propId及memId雙主鍵增加買家倉庫的propQuantity
+	    memberPropInventoryService.findMemberPropByIdAndPlusQuantity(memId, propId, quantity);
+	    
+	    // 4.新增買單
+	    propBuyOrderService2.savePropBuyOrder(memId, quantity, paymentId, price, propId);
+	    
+	    // 5.扣除買家點數
+	    Member buyer = memberService.findById(memId);
+	    buyer.setPoints(buyer.getPoints() - price);
+	    memberService.save(buyer);
+	    memberService.setLoginDto(buyer);
+
+	    return "購買完成";
 	}
 	//根據memId找memName
 	@GetMapping("/prop/front/buyProp/findMenNameByMemId")

@@ -34,6 +34,10 @@
     @apply text-black py-2 px-3 select-none bg-gray-300 rounded-md
 }
 
+.mybtn-remove {
+    @apply text-lg text-red-600 bg-gray-300 max-w-max p-1 rounded-md font-semibold border border-black select-none cursor-pointer
+}
+
 .mybtn-sky {
     @apply text-white py-2 px-3 select-none cursor-pointer bg-sky-500 rounded-md
 }

@@ -1,918 +1,796 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-  <head>
-    <title>道具交易前台 - 市場</title>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="keywords" content="ecommerce, pet, shop" />
-    <meta
-      name="description"
-      content="Free eCommerce Pet Shop HTML Website Template"
-    />
 
-    <link
-      rel="stylesheet"
-      href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css"
-    />
-    <!-- <link
-      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
-      crossorigin="anonymous"
-    /> -->
-    <!-- <link
-      rel="stylesheet"
-      type="text/css"
-      th:href="@{/css/prop/template/vendor.css}"
-    /> -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      th:href="@{/css/prop/template/style.css}"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      header,
-      .container {
-        font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-      }
+<head>
+  <title>道具交易前台 - 市場</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="keywords" content="ecommerce, pet, shop" />
+  <meta name="description" content="Free eCommerce Pet Shop HTML Website Template" />
 
-      .selected {
-        border: 3px solid gold;
-      }
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.css" />
+  <link rel="stylesheet" type="text/css" th:href="@{/css/prop/template/style.css}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    header,
+    .container {
+      font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    }
 
-      .quantity {
-        background-color: grey;
-        color: white;
-        text-align: center;
-        margin-top: 5px;
-      }
+    .selected {
+      border: 3px solid gold;
+    }
 
-      .expiry-time {
-        background-color: darkgrey;
-        color: white;
-        text-align: center;
-        margin-top: 5px;
-      }
+    .quantity {
+      background-color: grey;
+      color: white;
+      text-align: center;
+      margin-top: 5px;
+    }
 
-      .hidden-description {
-        display: none;
-      }
+    .expiry-time {
+      background-color: darkgrey;
+      color: white;
+      text-align: center;
+      margin-top: 5px;
+    }
 
-      /* Custom styles for the modal */
-      .modal-header {
-        background-color: rgb(94, 106, 121);
-        border-bottom: 1px solid #dee2e6;
-      }
+    .hidden-description {
+      display: none;
+    }
 
-      .modal-title {
-        color: #ffffff;
-      }
+    .modal-header {
+      background-color: rgb(94, 106, 121);
+      border-bottom: 1px solid #dee2e6;
+    }
 
-      #inventoryPropsContainer {
-        background-color: #ffffff;
-      }
+    .modal-title {
+      color: #ffffff;
+    }
 
-      #inventorySellOrdersContainer {
-        background-color: rgb(28, 40, 55);
-      }
+    #inventoryPropsContainer {
+      background-color: #ffffff;
+    }
 
-      #inventoryPropsContainer h4,
-      #inventorySellOrdersContainer h4 {
-        color: #dbe8f6;
-      }
+    #inventorySellOrdersContainer {
+      background-color: rgb(28, 40, 55);
+    }
 
-      #invPropInfo {
-        background-color: #ffffff;
-      }
+    #inventoryPropsContainer h4,
+    #inventorySellOrdersContainer h4 {
+      color: #dbe8f6;
+    }
 
-      #invPropInfo h5 {
-        color: #343a40;
-      }
+    #invPropInfo {
+      background-color: #ffffff;
+    }
 
-      #waitSellProps {
-        display: none;
-        /* 初始状态为隐藏 */
-      }
-    </style>
-  </head>
+    #invPropInfo h5 {
+      color: #343a40;
+    }
 
-  <body>
-    <div th:replace="~{layout/nav}"></div>
-    <div
-      id="memberId"
-      class="d-none"
-      th:if="${session.loginMember}"
-      th:text="${session.loginMember.memId}"
-    ></div>
+    #waitSellProps {
+      display: none;
+    }
+  </style>
+</head>
 
-    <header class="mt-5 d-flex justify-content-center">
-      <div id="gameList" class="bg-light text-dark p-4 rounded shadow-sm">
-        <form id="myForm" class="d-flex mb-3 align-items-center">
-          <select
-            class="form-select me-2"
-            id="SelectGame"
-            name="gameId"
-            style="font-size: 2rem; border: 2px solid #343a40"
-          ></select>
-          <button id="submitBtn" class="btn btn-dark" style="font-size: 1.5rem">
-            🕹️
-          </button>
-        </form>
-        <input
-          type="text"
-          id="searchInput"
-          class="form-control"
-          placeholder="在拍賣場中搜尋"
-          style="font-size: 1.5rem; border: 2px solid #343a40"
-        />
-      </div>
-    </header>
-    <div
-      class="container mt-5"
-      style="
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-      "
-    >
-      <div
-        class="section-header d-md-flex justify-content-between align-items-center"
-      >
-        <div class="mb-4 mb-md-0 d-flex justify-content-center w-100">
-          <p class="m-0">
-            <!-- 自動新增按鈕 -->
-          </p>
-          <div class="m-3">
-            <a
-              href="#"
-              id="inventoryBtn"
-              class="btn btn-dark btn-lg"
-              data-bs-toggle="modal"
-              data-bs-target="#inventory"
-              style="font-weight: 700; padding: 0rem 2rem"
-            >
-              倉庫
-            </a>
-          </div>
+<body>
+  <div th:replace="~{layout/nav}"></div>
+  <div id="memberId" class="d-none" th:if="${session.loginMember}" th:text="${session.loginMember.memId}"></div>
+
+  <header class="mt-5 d-flex justify-content-center">
+    <div id="gameList" class="bg-light text-dark p-4 rounded shadow-sm">
+      <form id="myForm" class="d-flex mb-3 align-items-center">
+        <select class="form-select me-2" id="SelectGame" name="gameId"
+          style="font-size: 2rem; border: 2px solid #343a40"></select>
+        <button id="submitBtn" class="btn btn-dark" style="font-size: 1.5rem">
+          🕹️
+        </button>
+      </form>
+      <input type="text" id="searchInput" class="form-control" placeholder="在拍賣場中搜尋"
+        style="font-size: 1.5rem; border: 2px solid #343a40" />
+    </div>
+  </header>
+  <div class="container mt-5" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+    <div class="section-header d-md-flex justify-content-between align-items-center">
+      <div class="mb-4 mb-md-0 d-flex justify-content-center w-100">
+        <p class="m-0">
+          <!-- 自動新增按鈕 -->
+        </p>
+        <div class="m-3">
+          <a href="#" id="inventoryBtn" class="btn btn-dark btn-lg" data-bs-toggle="modal" data-bs-target="#inventory"
+            style="font-weight: 700; padding: 0rem 2rem">
+            倉庫
+          </a>
         </div>
+      </div>
 
-        <!-- 倉庫Modal -->
-        <div class="modal fade" id="inventory" tabindex="-1">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">我的倉庫</h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
+      <!-- 倉庫Modal -->
+      <div class="modal fade" id="inventory" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">我的倉庫</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-8" id="inventoryPropsContainer">
+                  <h4>我的物品</h4>
+                </div>
+                <div class="col-4" id="invPropInfo">完整商品資訊</div>
+                <input type="text" id="sellNum" name="" placeholder="請輸入數量" class="m-0 form-control" required />
+                <input type="text" id="sellPrice" name="" placeholder="請輸入價格" class="m-0 form-control" required />
+                <button type="button" id="sellBtn" class="btn btn-success">拍賣</button>
+                <div style="background-color: rgb(28, 40, 55); color: white">
+                  <button class="btn btn-outline-secondary" style="display: block; margin: auto; color: white"
+                    onclick="toggleVisibility()">點擊查看正在販售的物品</button>
+                </div>
               </div>
-              <div class="modal-body">
-                <div class="row">
-                  <div class="col-8" id="inventoryPropsContainer">
-                    <h4>我的物品</h4>
-                    <!-- 倉庫道具會在這裡生成 -->
-                  </div>
-
-                  <div class="col-4" id="invPropInfo">完整商品資訊</div>
-                  <input
-                    type="text"
-                    id="sellNum"
-                    name=""
-                    placeholder="請輸入數量"
-                    class="m-0 form-control"
-                    required
-                  />
-                  <input
-                    type="text"
-                    id="sellPrice"
-                    name=""
-                    placeholder="請輸入價格"
-                    class="m-0 form-control"
-                    required
-                  />
-                  <button type="button" id="sellBtn" class="btn btn-success">
-                    拍賣
-                  </button>
-                  <div style="background-color: rgb(28, 40, 55); color: white">
-                    <button
-                      class="btn btn-outline-secondary"
-                      style="display: block; margin: auto; color: white"
-                      onclick="toggleVisibility()"
-                    >
-                      點擊查看正在販售的物品
-                    </button>
-                  </div>
+              <div id="waitSellProps" class="row mt-0" style="background-color: rgb(28, 40, 55); color: white">
+                <div class="col-12 p-3 mb-4" id="inventorySellOrdersContainer">
+                  <h4>待售物品</h4>
                 </div>
-                <div
-                  id="waitSellProps"
-                  class="row mt-0"
-                  style="background-color: rgb(28, 40, 55); color: white"
-                  ;
-                >
-                  <div
-                    class="col-12 p-3 mb-4"
-                    id="inventorySellOrdersContainer"
-                  >
-                    <h4>待售物品</h4>
-                    <!-- 待售物品會在這裡生成 -->
-                  </div>
-                  <button
-                    id="delistButton"
-                    type="button"
-                    class="btn btn-danger"
-                  >
-                    下架
-                  </button>
-                </div>
+                <button id="delistButton" type="button" class="btn btn-danger">下架</button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="row isotope-container">
-      <!-- 商品項目將在這裡動態生成 -->
-    </div>
+  <div class="row isotope-container">
+    <!-- 商品項目將在這裡動態生成 -->
+  </div>
 
-    <!-- 倉庫Modal -->
-    <div
-      class="modal fade"
-      id="marketModal"
-      tabindex="-1"
-      aria-labelledby="marketModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="marketModalLabel">道具詳情</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body" id="marketModalBody">
-            <!-- Modal body content -->
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-dark" id="buyBtn">購買</button>
-            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">
-              ❌
-            </button>
-          </div>
+  <!-- 倉庫Modal -->
+  <div class="modal fade" id="marketModal" tabindex="-1" aria-labelledby="marketModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="marketModalLabel">道具詳情</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="marketModalBody"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-dark" id="buyBtn">購買</button>
+          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">❌</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <script th:src="@{/js/prop/template/jquery-1.11.0.min.js}"></script>
-    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script> -->
-    <!-- <script
-      src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"
-      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-      crossorigin="anonymous"
-    ></script> -->
-    <script th:src="@{/js/prop/template/plugins.js}"></script>
-    <script th:src="@{/js/prop/template/script.js}"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <script th:src="@{/js/axios.min.js}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
-    <!-- Isotope库 -->
+  <script th:src="@{/js/prop/template/jquery-1.11.0.min.js}"></script>
+  <script th:src="@{/js/prop/template/plugins.js}"></script>
+  <script th:src="@{/js/prop/template/script.js}"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script th:src="@{/js/axios.min.js}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
 
-    <script>
-      // 加載所有遊戲
-      const propTypesMap = {};
-      const inventoryBtn = document.getElementById("inventoryBtn");
-      const memId =
-        document.getElementById("memberId")?.textContent.trim() || null;
-      let selectedGameId;
-      let inventoryProps; //倉庫裡的所有道具
-      let focusProp; //倉庫被點擊的道具
-      let buyTotalPrice; //購買總金額
-      let buyTotalQuantity; //購買數量
-      let buyPropId; //購買道具Id
-      let orderId; //下架賣單用
-      let expiryDate; //到期時間(下架賣單用)
-      $(document).ready(function () {
-        loadGames();
+  <script>
+    const propTypesMap = {};
+    const inventoryBtn = document.getElementById("inventoryBtn");
+    const memId = document.getElementById("memberId")?.textContent.trim() || null;
+    let selectedGameId;
+    let inventoryProps;
+    let focusProp;
+    let buyTotalPrice;
+    let buyTotalQuantity;
+    let buyPropId;
+    let orderId;
+    let expiryDate;
+    let propIdforAverageAmount;
+    let averageAmount;
 
-        // 提交按鈕點擊事件
-        $("#submitBtn").click(function (event) {
-          event.preventDefault(); // 取消表單的默認提交行為
-          selectedGameId = $("#SelectGame").val(); // 獲取選中的遊戲ID
-          fetchPropTypesByGameId(selectedGameId, function (propTypes) {
-            propTypes.forEach(function (propType) {
-              propTypesMap[propType.propTypeId] = propType.propType; // 填充 propTypesMap
-            });
-            generateFilterButtons(propTypes); // 生成篩選按鈕
-            findAllPropsByGameId(selectedGameId); // 查找所有道具
+    $(document).ready(function () {
+      loadGames();
+
+      $("#submitBtn").click(function (event) {
+        event.preventDefault(); // 取消表單的默認提交行為
+        selectedGameId = $("#SelectGame").val(); // 獲取選中的遊戲ID
+        fetchPropTypesByGameId(selectedGameId, function (propTypes) {
+          propTypes.forEach(function (propType) {
+            propTypesMap[propType.propTypeId] = propType.propType; // 填充 propTypesMap
           });
-        });
-
-        // 初始化 Isotope
-        const $container = $(".isotope-container").isotope({
-          itemSelector: ".item",
-          layoutMode: "fitRows",
-        });
-
-        // 篩選按鈕點擊事件
-        $(document).on("click", ".filter-button", function () {
-          const filterValue = $(this).attr("data-filter");
-          $container.isotope({ filter: filterValue });
-          $(".filter-button").removeClass("active");
-          $(this).addClass("active");
-
-          // 重新觸發搜索條件
-          $("#searchInput").trigger("input");
-        });
-
-        // 搜尋輸入框事件
-        $("#searchInput").on("input", function () {
-          const searchValue = $(this).val().toLowerCase();
-          const activeTypeFilter = $(".filter-button.active").attr(
-            "data-filter"
-          );
-
-          $container.isotope({
-            filter: function () {
-              const name = $(this).find(".card-title").text().toLowerCase();
-              const typeClass = $(this)
-                .attr("class")
-                .split(" ")
-                .filter((cls) =>
-                  cls.startsWith(activeTypeFilter.replace(".", ""))
-                );
-
-              return (
-                name.includes(searchValue) &&
-                (activeTypeFilter === "*" || typeClass.length > 0)
-              );
-            },
-          });
+          generateFilterButtons(propTypes); // 生成篩選按鈕
+          findAllPropsByGameId(selectedGameId); // 查找所有道具
         });
       });
 
-      function loadGames() {
-        axios
-          .get("http://localhost:8080/PlayCentric/prop/findAllGame")
-          .then(function (res) {
-            const games = res.data;
-            const selectGame = $("#SelectGame");
-            console.log("Games data:", games); // 打印數據內容
-
-            selectGame.empty();
-            games.forEach(function (game) {
-              const option = $("<option></option>")
-                .val(game.gameId)
-                .text(game.gameName);
-              selectGame.append(option);
-            });
-
-            if (games.length > 0) {
-              selectGame.val(games[0].gameId);
-              $("#submitBtn").click();
-            }
-          })
-          .catch(function (error) {
-            console.error("獲取遊戲數據時出錯:", error);
-          });
-      }
-
-      // 根據 gameId 獲取所有道具種類
-      function fetchPropTypesByGameId(gameId, callback) {
-        axios
-          .get(
-            "http://localhost:8080/PlayCentric/prop/findAllPropTypesByGameId",
-            { params: { gameId: gameId } }
-          )
-          .then((res) => {
-            callback(res.data);
-            const propTypes = res.data;
-            propTypes.forEach(function (propType) {
-              propTypesMap[propType.propTypeId] = propType.propType;
-              console.log(
-                `propTypeId: ${propType.propTypeId}, propType: ${propType.propType}`
-              );
-            });
-          })
-          .catch((error) => {
-            console.error("獲取道具種類數據時出錯:", error);
-          });
-      }
-
-      // 根據 gameId 查找所有道具
-      function findAllPropsByGameId(gameId) {
-        axios
-          .get("http://localhost:8080/PlayCentric/prop/findAllPropsByGameId", {
-            params: { gameId: gameId },
-          })
-          .then((res) => {
-            const props = res.data;
-            generatePropItems(props); // 動態生成道具項目
-            console.log(props);
-          })
-          .catch((error) => {
-            console.error("獲取道具數據時出錯:", error);
-          });
-      }
-
-      // 生成篩選按鈕
-      function generateFilterButtons(propTypes) {
-        const filterButtonsContainer = $(".m-0");
-        filterButtonsContainer.empty();
-        const allButton = $(
-          '<button class="filter-button me-4 active" data-filter="*" style="font-size: 2rem;">ALL</button>'
-        );
-        filterButtonsContainer.append(allButton);
-        propTypes.forEach(function (propType) {
-          const button = $(
-            '<button class="filter-button me-4" style="font-size: 2rem;"></button>'
-          )
-            .attr("data-filter", `.${propType.propTypeId}`)
-            .text(propType.propType);
-          console.log(propType.propType);
-          filterButtonsContainer.append(button);
-        });
-      }
-
-      // 根據memId(JAVA)跟 gameId(JS) 找尋倉庫道具
-      inventoryBtn.addEventListener("click", function () {
-        generateInventoryItems(memId, selectedGameId);
+      const $container = $(".isotope-container").isotope({
+        itemSelector: ".item",
+        layoutMode: "fitRows",
       });
 
-      function generateInventoryItems(memId, selectedGameId) {
-        axios({
-          method: "get",
-          url: "http://localhost:8080/PlayCentric/prop/memberPropsbyMemId",
-          params: { memId: memId },
-        })
-          .then((res) => {
-            const inventory = res.data.filter(
-              (item) => item.prop.gameId == selectedGameId
+      // 篩選按鈕點擊事件
+      $(document).on("click", ".filter-button", function () {
+        const filterValue = $(this).attr("data-filter");
+        $container.isotope({ filter: filterValue });
+        $(".filter-button").removeClass("active");
+        $(this).addClass("active");
+
+        // 重新觸發搜索條件
+        $("#searchInput").trigger("input");
+      });
+
+      // 搜尋輸入框事件
+      $("#searchInput").on("input", function () {
+        const searchValue = $(this).val().toLowerCase();
+        const activeTypeFilter = $(".filter-button.active").attr("data-filter");
+
+        $container.isotope({
+          filter: function () {
+            const name = $(this).find(".card-title").text().toLowerCase();
+            const typeClass = $(this)
+              .attr("class")
+              .split(" ")
+              .filter((cls) =>
+                cls.startsWith(activeTypeFilter.replace(".", ""))
+              );
+
+            return (
+              name.includes(searchValue) &&
+              (activeTypeFilter === "*" || typeClass.length > 0)
             );
-            // 調用生成倉庫道具資料及圖片的函數
-            generateInventoryPropImages(inventory);
-            // 調用生成倉庫賣單資料及圖片的函數
-            findInventorySellOrder(memId, selectedGameId);
-          })
-          .catch((error) => {
-            console.error("獲取倉庫資訊時出錯:", error);
-            window.alert("請先登入");
+          },
+        });
+      });
+    });
+
+    function loadGames() {
+      axios
+        .get("http://localhost:8080/PlayCentric/prop/findAllGame")
+        .then(function (res) {
+          const games = res.data;
+          const selectGame = $("#SelectGame");
+          console.log("Games data:", games); // 打印數據內容
+
+          selectGame.empty();
+          games.forEach(function (game) {
+            const option = $("<option></option>")
+              .val(game.gameId)
+              .text(game.gameName);
+            selectGame.append(option);
           });
-      }
 
-      // 生成倉庫道具
-      function generateInventoryPropImages(inventoryProps) {
-        const container = document.getElementById("inventoryPropsContainer");
-        const invPropInfoContainer = document.getElementById("invPropInfo");
-        container.innerHTML = ""; // 清空容器
-        invPropInfoContainer.innerHTML = ""; // 清空商品資訊容器
-
-        let rowDiv = null;
-
-        inventoryProps.forEach((item, index) => {
-          // 這裡需要改為item來包含prop和propQuantity
-          if (item.propQuantity <= 0) {
-            return; // 如果數量 <= 0，就跳過這個 item
+          if (games.length > 0) {
+            selectGame.val(games[0].gameId);
+            $("#submitBtn").click();
           }
+        })
+        .catch(function (error) {
+          console.error("獲取遊戲數據時出錯:", error);
+        });
+    }
 
-          if (index % 6 === 0) {
-            // 每6個道具生成一個新的row
-            rowDiv = document.createElement("div");
-            rowDiv.className = "row mb-3";
-            container.appendChild(rowDiv);
+    // 根據 gameId 獲取所有道具種類
+    function fetchPropTypesByGameId(gameId, callback) {
+      axios
+        .get(
+          "http://localhost:8080/PlayCentric/prop/findAllPropTypesByGameId",
+          { params: { gameId: gameId } }
+        )
+        .then((res) => {
+          callback(res.data);
+          const propTypes = res.data;
+          propTypes.forEach(function (propType) {
+            propTypesMap[propType.propTypeId] = propType.propType;
+            console.log(
+              `propTypeId: ${propType.propTypeId}, propType: ${propType.propType}`
+            );
+          });
+        })
+        .catch((error) => {
+          console.error("獲取道具種類數據時出錯:", error);
+        });
+    }
+
+    // 根據 gameId 查找所有道具
+    function findAllPropsByGameId(gameId) {
+      axios
+        .get("http://localhost:8080/PlayCentric/prop/findAllPropsByGameId", {
+          params: { gameId: gameId },
+        })
+        .then((res) => {
+          const props = res.data;
+          generatePropItems(props); // 動態生成道具項目
+          console.log(props);
+        })
+        .catch((error) => {
+          console.error("獲取道具數據時出錯:", error);
+        });
+    }
+
+    // 生成篩選按鈕
+    function generateFilterButtons(propTypes) {
+      const filterButtonsContainer = $(".m-0");
+      filterButtonsContainer.empty();
+      const allButton = $(
+        '<button class="filter-button me-4 active" data-filter="*" style="font-size: 2rem;">ALL</button>'
+      );
+      filterButtonsContainer.append(allButton);
+      propTypes.forEach(function (propType) {
+        const button = $(
+          '<button class="filter-button me-4" style="font-size: 2rem;"></button>'
+        )
+          .attr("data-filter", `.${propType.propTypeId}`)
+          .text(propType.propType);
+        console.log(propType.propType);
+        filterButtonsContainer.append(button);
+      });
+    }
+
+    // 根據memId(JAVA)跟 gameId(JS) 找尋倉庫道具
+    inventoryBtn.addEventListener("click", function () {
+      generateInventoryItems(memId, selectedGameId);
+    });
+
+    function generateInventoryItems(memId, selectedGameId) {
+      axios({
+        method: "get",
+        url: "http://localhost:8080/PlayCentric/prop/memberPropsbyMemId",
+        params: { memId: memId },
+      })
+        .then((res) => {
+          const inventory = res.data.filter(
+            (item) => item.prop.gameId == selectedGameId
+          );
+          // 調用生成倉庫道具資料及圖片的函數
+          generateInventoryPropImages(inventory);
+          // 調用生成倉庫賣單資料及圖片的函數
+          findInventorySellOrder(memId, selectedGameId);
+        })
+        .catch((error) => {
+          console.error("獲取倉庫資訊時出錯:", error);
+          window.alert("請先登入");
+        });
+    }
+
+    // 生成倉庫道具
+    function generateInventoryPropImages(inventoryProps) {
+      const container = document.getElementById("inventoryPropsContainer");
+      const invPropInfoContainer = document.getElementById("invPropInfo");
+      container.innerHTML = ""; // 清空容器
+      invPropInfoContainer.innerHTML = ""; // 清空商品資訊容器
+
+      let rowDiv = null;
+
+      inventoryProps.forEach((item, index) => {
+        // 這裡需要改為item來包含prop和propQuantity
+        if (item.propQuantity <= 0) {
+          return; // 如果數量 <= 0，就跳過這個 item
+        }
+
+        if (index % 6 === 0) {
+          // 每6個道具生成一個新的row
+          rowDiv = document.createElement("div");
+          rowDiv.className = "row mb-3";
+          container.appendChild(rowDiv);
+        }
+
+        const colDiv = document.createElement("div");
+        colDiv.className = "col-3 mb-3"; // 每個圖片占3列，並且有底部外邊距
+
+        const img = document.createElement("img");
+        img.src = `http://localhost:8080/PlayCentric/prop/image?id=${item.prop.propImageId}`;
+        img.alt = item.prop.propName;
+        img.className = "img-fluid";
+        img.style.width = "6vw";
+
+        // 添加點擊事件監聽器
+        img.addEventListener("click", function () {
+          // 先移除其他圖片的選中樣式
+          const allImages = container.getElementsByTagName("img");
+          for (let i = 0; i < allImages.length; i++) {
+            allImages[i].classList.remove("selected");
           }
+          // 為當前點擊的圖片添加選中樣式
+          img.classList.add("selected");
+          focusProp = item;
+          console.log(focusProp);
 
-          const colDiv = document.createElement("div");
-          colDiv.className = "col-3 mb-3"; // 每個圖片占3列，並且有底部外邊距
-
-          const img = document.createElement("img");
-          img.src = `http://localhost:8080/PlayCentric/prop/image?id=${item.prop.propImageId}`;
-          img.alt = item.prop.propName;
-          img.className = "img-fluid";
-          img.style.width = "6vw";
-
-          // 添加點擊事件監聽器
-          img.addEventListener("click", function () {
-            // 先移除其他圖片的選中樣式
-            const allImages = container.getElementsByTagName("img");
-            for (let i = 0; i < allImages.length; i++) {
-              allImages[i].classList.remove("selected");
-            }
-            // 為當前點擊的圖片添加選中樣式
-            img.classList.add("selected");
-            focusProp = item;
-            console.log(focusProp);
-
-            // 更新倉庫道具資訊
-            invPropInfoContainer.innerHTML = `
+          // 更新倉庫道具資訊
+          invPropInfoContainer.innerHTML = `
                               <img src="http://localhost:8080/PlayCentric/prop/image?id=${item.prop.propImageId}" class="img-fluid rounded-4" alt="${item.prop.propName}" style="width: 11vw;">
                               <br>
                               <h5 class="fs-2">${item.prop.propName}</h5>
                               <p class="fs-4">描述: ${item.prop.propDescription}</p>
                           `;
-          });
-
-          const quantityDiv = document.createElement("div");
-          quantityDiv.textContent = `數量: ${item.propQuantity}`;
-          quantityDiv.className = "quantity";
-
-          colDiv.appendChild(img);
-          colDiv.appendChild(quantityDiv); // 將數量 div 添加到 colDiv 中
-          rowDiv.appendChild(colDiv);
         });
-      }
 
-      // 生成商品道具項目
-      function generatePropItems(props) {
-        const propsContainer = $(".isotope-container");
-        propsContainer.empty();
+        const quantityDiv = document.createElement("div");
+        quantityDiv.textContent = `數量: ${item.propQuantity}`;
+        quantityDiv.className = "quantity";
 
-        props.forEach(function (prop) {
-          const itemClassId = prop.propTypeId ? prop.propTypeId : "unknown";
-          console.log(`Item classId is: ${itemClassId}`);
-          const item = $(`
-        <div class="item ${itemClassId} card" data-propid="${prop.propId}" style="margin-bottom:1em; width:16vw; position: absolute; text-decoration: none; color: inherit; text-align: center; border:2px solid white">
-          <div style="position: absolute; margin: auto;">
-          </div>
+        colDiv.appendChild(img);
+        colDiv.appendChild(quantityDiv); // 將數量 div 添加到 colDiv 中
+        rowDiv.appendChild(colDiv);
+      });
+    }
 
-          <div class="card-body p-0" style="margin: auto; max-width: 250px; max-height: 330px;">
+    // 生成商品道具項目
+    function generatePropItems(props) {
+      propsData = props;
+      const propsContainer = $(".isotope-container");
+      propsContainer.empty();
+
+      props.forEach(function (prop) {
+        const itemClassId = prop.propTypeId ? prop.propTypeId : "unknown";
+        console.log(`Item classId is: ${itemClassId}`);
+
+        const item = $(`
+          <div class="item ${itemClassId} card" data-propid="${prop.propId}" style="margin-bottom:3em; width:16vw; position: absolute; text-decoration: none; color: inherit; text-align: center; border:2px solid white">
+            <div style="position: absolute; margin: auto;"></div>
+            <div class="card-body p-0" style="margin: auto; max-width: 250px; max-height: 330px;">
               <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw; display: block; margin: auto;">
               <div class="card-text">
-                  <p class="hidden-description">${prop.propDescription}</p>
-                  <h3 class="card-title pt-0 m-0 fs-5">${prop.propName}</h3>
-                  <h3 class="secondary-font text-primary">平均NT$:1000</h3>
+                <p class="hidden-description">${prop.propDescription}</p>
+                <h3 class="card-title pt-0 m-0 fs-5">${prop.propName}</h3>
+                <h3 class="secondary-font text-primary">${averageAmount}</h3>
               </div>
+            </div>
           </div>
-      </div>
-                      `);
+        `);
 
-          propsContainer.append(item);
-        });
+        propsContainer.append(item);
 
-        // 更新 Isotope 布局
-        $(".isotope-container")
-          .isotope("reloadItems")
-          .isotope({ sortBy: "original-order" });
-      }
-
-      // 販賣按鈕
-      document.getElementById("sellBtn").addEventListener("click", function () {
-        if (focusProp) {
-          console.log("販售按鈕被點擊");
-          console.log(focusProp);
-          console.log("會員ID看這邊" + memId);
-          if (
-            focusProp.propQuantity < document.getElementById("sellNum").value
-          ) {
-            window.alert("數量不足");
-          } else {
-            console.log(document.getElementById("sellNum").value);
-            sellProp(focusProp, memId);
-          }
-        } else {
-          window.alert("請選擇要販賣的物品");
-        }
-      });
-
-      // 販賣物品(java)方法
-      function sellProp(focusProp, memId) {
-        if (window.confirm("確定將商品委託拍賣?")) {
-          window.alert("已成功將商品委託拍賣!");
-          axios({
-            method: "post",
-            url: "http://localhost:8080/PlayCentric/prop/propSellorderSave",
-            params: {
-              amount: document.getElementById("sellPrice").value,
-              propId: focusProp.prop.propId,
-              quantity: document.getElementById("sellNum").value,
-              memId: memId,
-            },
-          })
-            .then((response) => {
-              console.log(
-                document.getElementById("sellNum").value + " 販賣數量"
-              );
-              console.log(
-                document.getElementById("sellPrice").value + " 販賣價格"
-              );
-              console.log(response.data);
-              generateInventoryItems(memId, selectedGameId); // 移到这里确保在成功回调后调用
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
-        } else {
-          // 啥也不幹
-        }
-      }
-
-      // 監控賣單按鈕
-      document.addEventListener("DOMContentLoaded", function () {
-        const propsContainer = document.querySelector(".isotope-container");
-
-        propsContainer.addEventListener("click", function (event) {
-          const itemDiv = event.target.closest(".item");
-          if (itemDiv) {
-            event.preventDefault(); // 防止默認行為，例如<a>的導航
-            const propImage = itemDiv.querySelector("img").src;
-            const propName = itemDiv.querySelector(".card-title").textContent;
-            const propDescription = itemDiv.querySelector(
-              ".hidden-description"
-            ).textContent; // 获取隐藏的描述内容
-            const modalBody = document.getElementById("marketModalBody");
-            const propId = itemDiv.dataset.propid; // 確保 propId 被正確獲取
-
-            // 執行根據propId找尋資料庫賣單並回傳價格區間及數量
-            findSellOrderbyPropId(propId);
-            buyPropId = propId;
-
-            modalBody.innerHTML = `
-                              <h5 class="fs-2">${propName}</h5>
-                              <img src="${propImage}" class="img-fluid rounded-4" alt="${propName}" style="width: 11vw;">
-                              <p class="fs-4">描述: ${propDescription}</p>
-                              <div>
-                                        <table class="table table-bordered fs-5" style="font-family: 'Proxima Nova', sans-serif;">                                <thead>
-                                          <tr class="fs-4">
-                                              <th>價格</th>
-                                              <th>數量</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody id="sellOrderTableBody">
-                                          <!-- 賣單資訊將在這裡動態生成 -->
-                                      </tbody>
-                                  </table>
-                                      <div class="mt-3 fs-3" style="font-family: 'Proxima Nova', sans-serif;">
-                                        <input type="number" id="buyQuantity" class="form-control" placeholder="輸入購買數量" />
-                                      <p id="totalPrice" class="mt-2">總價為: NT$ 0</p>
-                                  </div>
-                              </div>
-                          `;
-
-            const modal = new bootstrap.Modal(
-              document.getElementById("marketModal")
-            );
-            modal.show();
-          }
+        calculateAverageAmountByPropId(prop.propId).then((averageAmount) => {
+          item.find('.secondary-font.text-primary').text('均價:NT$' + averageAmount);
+        }).catch((err) => {
+          console.error(err);
         });
       });
 
-      // get 根據propId找尋資料庫賣單並回傳價格區間及數量
-      function findSellOrderbyPropId(propId) {
+      $(".isotope-container").isotope("reloadItems").isotope({ sortBy: "original-order" });
+    }
+
+    // 販賣按鈕
+    document.getElementById("sellBtn").addEventListener("click", function () {
+      if (focusProp) {
+        console.log("販售按鈕被點擊");
+        console.log(focusProp);
+        console.log("會員ID看這邊" + memId);
+        if (focusProp.propQuantity < document.getElementById("sellNum").value) {
+          window.alert("數量不足");
+        } else {
+          console.log(document.getElementById("sellNum").value);
+          sellProp(focusProp, memId);
+        }
+      } else {
+        window.alert("請選擇要販賣的物品");
+      }
+    });
+
+    // 販賣物品(java)方法
+    function sellProp(focusProp, memId) {
+      if (window.confirm("確定將商品委託拍賣?")) {
+        window.alert("已成功將商品委託拍賣!");
         axios({
-          method: "get",
-          url: "http://localhost:8080/PlayCentric/prop/front/market/orders",
-          params: { propId: propId },
+          method: "post",
+          url: "http://localhost:8080/PlayCentric/prop/propSellorderSave",
+          params: {
+            amount: document.getElementById("sellPrice").value,
+            propId: focusProp.prop.propId,
+            quantity: document.getElementById("sellNum").value,
+            memId: memId,
+          },
         })
-          .then((res) => {
-            console.log(res);
-            const orders = res.data;
-            const sellOrderTableBody =
-              document.getElementById("sellOrderTableBody");
-            sellOrderTableBody.innerHTML = "";
-            orders.forEach((order) => {
-              const row = `
-                                  <tr>
-                                      <td>${order.amount}</td>
-                                      <td>${order.quantity}</td>
-                                  </tr>
-                              `;
-              sellOrderTableBody.insertAdjacentHTML("beforeend", row);
-            });
-
-            // 添加購買數量輸入框的事件監聽器
-            const buyQuantityInput = document.getElementById("buyQuantity");
-            const totalPriceElement = document.getElementById("totalPrice");
-            buyQuantityInput.addEventListener("input", function () {
-              const buyQuantity = parseInt(buyQuantityInput.value) || 0;
-              let remainingQuantity = buyQuantity;
-              let totalPrice = 0;
-              for (let order of orders) {
-                if (remainingQuantity <= 0) break;
-                const orderQuantity = Math.min(
-                  remainingQuantity,
-                  order.quantity
-                );
-                totalPrice += orderQuantity * order.amount;
-                remainingQuantity -= orderQuantity;
-                buyTotalPrice = totalPrice;
-                buyTotalQuantity = orderQuantity;
-              }
-              totalPriceElement.textContent = `總價為: NT$ ${totalPrice}`;
-            });
+          .then((response) => {
+            console.log(document.getElementById("sellNum").value + " 販賣數量");
+            console.log(document.getElementById("sellPrice").value + " 販賣價格");
+            console.log(response.data);
+            generateInventoryItems(memId, selectedGameId);
           })
           .catch((error) => {
-            console.error("獲取賣單商品資訊錯誤:", error);
+            console.error("Error:", error);
           });
       }
+    }
 
-      function buyProp(
-        buyTotalQuantity,
-        propId,
-        memId,
-        paymentId,
-        buyTotalPrice
-      ) {
-        if (window.confirm("確定購買商品?")) {
-          axios({
-            method: "post",
-            url: "http://localhost:8080/PlayCentric/prop/front/buyProp",
-            params: {
-              quantity: buyTotalQuantity,
-              propId: propId,
-              memId: memId,
-              paymentId: paymentId,
-              price: buyTotalPrice,
-            },
-          })
-            .then((res) => {
-              window.alert("交易成功");
-              findSellOrderbyPropId(propId); // 修正這裡的參數名稱
-            })
-            .catch((error) => {
-              window.alert("Error: " + error);
-            });
-        } else {
-          // 使用者取消了操作，不執行任何動作
+    // 監控賣單按鈕
+    document.addEventListener("DOMContentLoaded", function () {
+      const propsContainer = document.querySelector(".isotope-container");
+
+      propsContainer.addEventListener("click", function (event) {
+        const itemDiv = event.target.closest(".item");
+        if (itemDiv) {
+          event.preventDefault(); // 防止默認行為，例如<a>的導航
+          const propImage = itemDiv.querySelector("img").src;
+          const propName = itemDiv.querySelector(".card-title").textContent;
+          const propDescription = itemDiv.querySelector(".hidden-description").textContent; // 获取隐藏的描述内容
+          const modalBody = document.getElementById("marketModalBody");
+          const propId = itemDiv.dataset.propid; // 確保 propId 被正確獲取
+
+          // 執行根據propId找尋資料庫賣單並回傳價格區間及數量
+          findSellOrderbyPropId(propId);
+          buyPropId = propId;
+
+          modalBody.innerHTML = `
+            <h5 class="fs-2">${propName}</h5>
+            <img src="${propImage}" class="img-fluid rounded-4" alt="${propName}" style="width: 11vw;">
+            <p class="fs-4">描述: ${propDescription}</p>
+            <div>
+              <table class="table table-bordered fs-5" style="font-family: 'Proxima Nova', sans-serif;">
+                <thead>
+                  <tr class="fs-4">
+                    <th>價格</th>
+                    <th>數量</th>
+                  </tr>
+                </thead>
+                <tbody id="sellOrderTableBody"></tbody>
+              </table>
+              <div class="mt-3 fs-3" style="font-family: 'Proxima Nova', sans-serif;">
+                <input type="number" id="buyQuantity" class="form-control" placeholder="輸入購買數量" />
+                <p id="totalPrice" class="mt-2">總價為: NT$ 0</p>
+              </div>
+            </div>
+          `;
+
+          const modal = new bootstrap.Modal(document.getElementById("marketModal"));
+          modal.show();
         }
-      }
-
-      // 監控購買按鈕
-      document.getElementById("buyBtn").addEventListener("click", function () {
-        //
-        // if會員錢包金額<buyTotalPrice window.alert餘額不足且不執行下面。
-        buyProp(buyQuantity.value, buyPropId, memId, 1, buyTotalPrice);
       });
+    });
 
-      // 根據memId及gameId找所有賣單的方法
-      function findInventorySellOrder(memId, selectedGameId) {
+    // get 根據propId找尋資料庫賣單並回傳價格區間及數量
+    function findSellOrderbyPropId(propId) {
+      axios({
+        method: "get",
+        url: "http://localhost:8080/PlayCentric/prop/front/market/orders",
+        params: { propId: propId },
+      })
+        .then((res) => {
+          console.log(res);
+          const orders = res.data;
+          const sellOrderTableBody = document.getElementById("sellOrderTableBody");
+          sellOrderTableBody.innerHTML = "";
+          orders.forEach((order) => {
+            const row = `
+              <tr>
+                <td>${order.amount}</td>
+                <td>${order.quantity}</td>
+              </tr>
+            `;
+            sellOrderTableBody.insertAdjacentHTML("beforeend", row);
+          });
+
+          // 添加購買數量輸入框的事件監聽器
+          const buyQuantityInput = document.getElementById("buyQuantity");
+          const totalPriceElement = document.getElementById("totalPrice");
+          buyQuantityInput.addEventListener("input", function () {
+            const buyQuantity = parseInt(buyQuantityInput.value) || 0;
+            let remainingQuantity = buyQuantity;
+            let totalPrice = 0;
+            for (let order of orders) {
+              if (remainingQuantity <= 0) break;
+              const orderQuantity = Math.min(remainingQuantity, order.quantity);
+              totalPrice += orderQuantity * order.amount;
+              remainingQuantity -= orderQuantity;
+              buyTotalPrice = totalPrice;
+              buyTotalQuantity = orderQuantity;
+            }
+            totalPriceElement.textContent = `總價為: NT$ ${totalPrice}`;
+          });
+        })
+        .catch((error) => {
+          console.error("獲取賣單商品資訊錯誤:", error);
+        });
+    }
+
+    // 買道具的方法
+    function buyProp(buyTotalQuantity, propId, memId, paymentId, buyTotalPrice) {
+      if (window.confirm("確定購買商品?")) {
         axios({
-          method: "get",
-          url: "http://localhost:8080/PlayCentric/prop/front/market/selloders",
+          method: "post",
+          url: "http://localhost:8080/PlayCentric/prop/front/buyProp",
           params: {
+            selectedGameId: selectedGameId,
+            quantity: buyTotalQuantity,
+            propId: propId,
             memId: memId,
-            gameId: selectedGameId,
+            paymentId: paymentId,
+            price: buyTotalPrice,
           },
         })
           .then((res) => {
-            const inventorySellOrders = res.data;
-            generateInventorySellOrderImages(inventorySellOrders);
+            window.alert("交易成功");
+            findSellOrderbyPropId(propId); // 修正這裡的參數名稱
           })
           .catch((error) => {
-            console.error("搜尋倉庫賣單錯誤:", error);
+            window.alert("Error: " + error);
           });
       }
+    }
 
-      // 生成倉庫賣單
-      function generateInventorySellOrderImages(inventorySellOrders) {
-        const container = document.getElementById(
-          "inventorySellOrdersContainer"
-        );
-        const invPropInfoContainer = document.getElementById("invPropInfo");
-        container.innerHTML = ""; // 清空容器
+    // 監控購買按鈕
+    document.getElementById("buyBtn").addEventListener("click", function () {
+      buyProp(buyQuantity.value, buyPropId, memId, 1, buyTotalPrice);
+    });
 
-        let rowDiv = null;
+    // 根據memId及gameId找所有賣單的方法
+    function findInventorySellOrder(memId, selectedGameId) {
+      axios({
+        method: "get",
+        url: "http://localhost:8080/PlayCentric/prop/front/market/selloders",
+        params: {
+          memId: memId,
+          gameId: selectedGameId,
+        },
+      })
+        .then((res) => {
+          const inventorySellOrders = res.data;
+          generateInventorySellOrderImages(inventorySellOrders);
+        })
+        .catch((error) => {
+          console.error("搜尋倉庫賣單錯誤:", error);
+        });
+    }
 
-        inventorySellOrders.forEach((item, index) => {
-          // 這裡需要改為item來包含prop和propQuantity
-          if (item.propQuantity <= 0) {
-            return; // 如果數量 <= 0，就跳過這個 item
-          }
+    // 生成倉庫賣單
+    function generateInventorySellOrderImages(inventorySellOrders) {
+      const container = document.getElementById("inventorySellOrdersContainer");
+      const invPropInfoContainer = document.getElementById("invPropInfo");
+      container.innerHTML = ""; // 清空容器
 
-          if (index % 6 === 0) {
-            // 每6個道具生成一個新的row
-            rowDiv = document.createElement("div");
-            rowDiv.className = "row mb-3";
-            container.appendChild(rowDiv);
-          }
+      let rowDiv = null;
 
-          const colDiv = document.createElement("div");
-          colDiv.className = "col-3 mb-3";
+      inventorySellOrders.forEach((item, index) => {
+        // 這裡需要改為item來包含prop和propQuantity
+        if (item.propQuantity <= 0) {
+          return; // 如果數量 <= 0，就跳過這個 item
+        }
 
-          // 添加 propId 到 item 物件中
-          console.log(`Order Item: ${JSON.stringify(item)}`);
+        if (index % 6 === 0) {
+          // 每6個道具生成一個新的row
+          rowDiv = document.createElement("div");
+          rowDiv.className = "row mb-3";
+          container.appendChild(rowDiv);
+        }
 
-          // 用 propId 發出一個新的請求來獲取詳細的 prop 資料
-          axios({
-            method: "get",
-            url: "http://localhost:8080/PlayCentric/prop/findById",
-            params: { id: item.propId },
-          })
-            .then((res) => {
-              const prop = res.data;
-              console.log(`Prop details: ${JSON.stringify(prop)}`);
+        const colDiv = document.createElement("div");
+        colDiv.className = "col-3 mb-3";
 
-              const img = document.createElement("img");
-              img.src = `http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}`;
-              img.alt = prop.propName;
-              img.className = "img-fluid";
-              img.style.width = "3vw";
+        // 添加 propId 到 item 物件中
+        console.log(`Order Item: ${JSON.stringify(item)}`);
 
-              // 添加點擊事件監聽器
-              img.addEventListener("click", function () {
-                console.log(`Clicked item propId: ${item.propId}`);
-                console.log(`Clicked item orderId:${item.orderId}`);
-                orderId = item.orderId;
-                // 先移除其他圖片的選中樣式
-                const allImages = container.getElementsByTagName("img");
-                for (let i = 0; i < allImages.length; i++) {
-                  allImages[i].classList.remove("selected");
-                }
-                // 為當前點擊的圖片添加選中樣式
-                img.classList.add("selected");
-                focusProp = item;
-                console.log(focusProp);
+        // 用 propId 發出一個新的請求來獲取詳細的 prop 資料
+        axios({
+          method: "get",
+          url: "http://localhost:8080/PlayCentric/prop/findById",
+          params: { id: item.propId },
+        })
+          .then((res) => {
+            const prop = res.data;
+            console.log(`Prop details: ${JSON.stringify(prop)}`);
 
-                // 更新商品資訊
-                invPropInfoContainer.innerHTML = `
+            const img = document.createElement("img");
+            img.src = `http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}`;
+            img.alt = prop.propName;
+            img.className = "img-fluid";
+            img.style.width = "3vw";
+
+            // 添加點擊事件監聽器
+            img.addEventListener("click", function () {
+              console.log(`Clicked item propId: ${item.propId}`);
+              console.log(`Clicked item orderId:${item.orderId}`);
+              orderId = item.orderId;
+              // 先移除其他圖片的選中樣式
+              const allImages = container.getElementsByTagName("img");
+              for (let i = 0; i < allImages.length; i++) {
+                allImages[i].classList.remove("selected");
+              }
+              // 為當前點擊的圖片添加選中樣式
+              img.classList.add("selected");
+              focusProp = item;
+              console.log(focusProp);
+
+              // 更新商品資訊
+              invPropInfoContainer.innerHTML = `
                                 <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw;">
                                 <br>
                                 <h5 class="fs-2">${prop.propName}</h5>
                                 <p class="fs-4">描述: ${prop.propDescription}</p>
                             `;
-              });
-
-              const quantityDiv = document.createElement("div");
-              quantityDiv.textContent = `數量: ${item.quantity}`;
-              quantityDiv.className = "quantity";
-
-              const expiryDiv = document.createElement("div");
-              expiryDiv.textContent = `到期時間: ${item.expiryTime}`;
-              expiryDiv.className = "expiry-time";
-
-              const unitPriceDiv = document.createElement("div"); // 修正這一行，之前用的是 priceDiv
-
-              unitPriceDiv.innerHTML = `單價:<br>${item.amount}`;
-              unitPriceDiv.className = "unit-price";
-              colDiv.appendChild(img);
-              colDiv.appendChild(unitPriceDiv); // 將單價 div 添加到 colDiv 中
-              colDiv.appendChild(quantityDiv); // 將數量 div 添加到 colDiv 中
-              colDiv.appendChild(expiryDiv); // 將到期時間 div 添加到 colDiv 中
-              rowDiv.appendChild(colDiv);
-              console.log(item.orderId + "到期時間:" + item.expiryTime);
-              if (item.expiryTime) {
-                expiryDate = new Date(item.expiryTime.replace(/-/g, "/"));
-                const now = new Date();
-                const timeDifference = expiryDate - now;
-                if (timeDifference > 0) {
-                  setTimeout(() => {
-                    cancelSell(item.orderId);
-                  }, timeDifference);
-                } else {
-                  cancelSell(item.orderId);
-                }
-              }
-            })
-            .catch((error) => {
-              console.error("獲取道具詳細資訊時出錯:", error);
             });
-        });
-      }
 
-      function toggleVisibility() {
-        var element = document.getElementById("waitSellProps");
-        if (element.style.display === "none" || element.style.display === "") {
-          element.style.display = "block"; // 展开
-        } else {
-          element.style.display = "none"; // 隐藏
-        }
-      }
+            const quantityDiv = document.createElement("div");
+            quantityDiv.textContent = `數量: ${item.quantity}`;
+            quantityDiv.className = "quantity";
 
-      // 綁定下架按鈕，退回賣單
-      document
-        .getElementById("delistButton")
-        .addEventListener("click", function () {
-          cancelSell(orderId);
-          window.alert("已成功下架!");
-          generateInventoryItems(memId, selectedGameId);
-        });
+            const expiryDiv = document.createElement("div");
+            expiryDiv.textContent = `到期時間: ${item.expiryTime}`;
+            expiryDiv.className = "expiry-time";
 
-      // 退回賣單的方法
-      function cancelSell(orderId) {
-        axios({
-          method: "post",
-          url: "http://localhost:8080/PlayCentric/prop/cancelSell",
-          params: { orderId: orderId },
-        })
-          .then((res) => {
-            console.log("成功下架!");
+            const unitPriceDiv = document.createElement("div"); // 修正這一行，之前用的是 priceDiv
+
+            unitPriceDiv.innerHTML = `單價:<br>${item.amount}`;
+            unitPriceDiv.className = "unit-price";
+            colDiv.appendChild(img);
+            colDiv.appendChild(unitPriceDiv); // 將單價 div 添加到 colDiv 中
+            colDiv.appendChild(quantityDiv); // 將數量 div 添加到 colDiv 中
+            colDiv.appendChild(expiryDiv); // 將到期時間 div 添加到 colDiv 中
+            rowDiv.appendChild(colDiv);
+            console.log(item.orderId + "到期時間:" + item.expiryTime);
+            if (item.expiryTime) {
+              expiryDate = new Date(item.expiryTime.replace(/-/g, "/"));
+              const now = new Date();
+              const timeDifference = expiryDate - now;
+              if (timeDifference > 0) {
+                setTimeout(() => {
+                  cancelSell(item.orderId);
+                }, timeDifference);
+              } else {
+                cancelSell(item.orderId);
+              }
+            }
           })
-          .catch((err) => {
-            error.log(err);
+          .catch((error) => {
+            console.error("獲取道具詳細資訊時出錯:", error);
           });
+      });
+    }
+
+    function toggleVisibility() {
+      var element = document.getElementById("waitSellProps");
+      if (element.style.display === "none" || element.style.display === "") {
+        element.style.display = "block"; // 展开
+      } else {
+        element.style.display = "none"; // 隐藏
       }
-    </script>
-  </body>
+    }
+
+    // 綁定下架按鈕，退回賣單
+    document.getElementById("delistButton").addEventListener("click", function () {
+      cancelSell(orderId);
+      window.alert("已成功下架!");
+      generateInventoryItems(memId, selectedGameId);
+    });
+
+    // 退回賣單的方法
+    function cancelSell(orderId) {
+      axios({
+        method: "post",
+        url: "http://localhost:8080/PlayCentric/prop/cancelSell",
+        params: { orderId: orderId },
+      })
+        .then((res) => {
+          console.log("成功下架!");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
+    // 根據propId回傳賣場平均價格的方法
+    function calculateAverageAmountByPropId(propIdforAverageAmount) {
+      return axios({
+        method: 'get',
+        url: '/PlayCentric/prop/front/market/averageAmountByPropId',
+        params: { propId: propIdforAverageAmount },
+      })
+        .then((res) => {
+          return res.data[propIdforAverageAmount] || 0;
+        })
+        .catch((err) => {
+          console.error(err);
+          return 0;
+        });
+    }
+
+    $('#inventory, #marketModal').on('hidden.bs.modal', function () {
+      if (propsData) {
+        generatePropItems(propsData); // 在模態框關閉後重新生成道具項目
+      }
+    });
+  </script>
+</body>
+
 </html>

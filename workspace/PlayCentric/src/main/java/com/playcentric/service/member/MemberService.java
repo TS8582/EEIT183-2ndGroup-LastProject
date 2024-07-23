@@ -258,4 +258,8 @@ public class MemberService {
 
 		return loginMember;
 	}
+	
+	public void save(Member member) {
+		memberRepository.save(member);
+	}
 }

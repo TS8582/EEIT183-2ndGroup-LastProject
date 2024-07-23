@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div th:replace="~{/layout/nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
+    <style>
+        .vis-hidden {
+            visibility: hidden;
+        }
+    </style>
     <title th:text="${session.loginMember.nickname} + ' - ' + 購物車"></title>
 </head>
 
@@ -35,7 +40,7 @@
                                     <img class="h-32 lg:h-64 w-auto"
                                         th:src="@{/imagesLib/image{id}(id=${game.imageLibs[0].imageId})}" alt="產品圖片">
                                 </a>
-                                <a th:if="${game.imageLibs.empty}">
+                                <a th:href="@{/game/showGame(gameId=${game.gameId})}" th:if="${game.imageLibs.empty}">
                                     <img class="h-32 lg:h-64 w-auto" alt="產品圖片">
                                 </a>
                             </div>
@@ -44,8 +49,7 @@
                                     th:text="${game.gameName}"></a>
                                 <span class="text-gray-600 font-semibold text-xl"
                                     th:text="發布日期： + ${#temporals.format(game.releaseAt,'yyyy年MM月dd日')}"></span>
-                                <span
-                                    class="text-lg text-red-600 bg-gray-300 max-w-max p-1 rounded-md font-semibold border border-black select-none cursor-pointer mybtn remove">移除</span>
+                                <span class="mybtn-remove mybtn remove w-max">移除</span>
                             </div>
                         </div>
                         <div class="w-1/5 text-end font-semibold text-lg flex flex-col">
@@ -70,8 +74,18 @@
                 <div class="text-2xl mt-5">
                     <div class="flex items-centert">
                         <a th:href="@{/game/gameStore}" class="mybtn mybtn-sky me-auto">返回商店</a>
-                        <a class="mybtn mybtn-green ms-auto">結帳</a>
+                        <span class="mybtn mybtn-green ms-auto gopay">結帳</span>
                     </div>
+                </div>
+                <div class="text-2xl mt-5 flex justify-end items-center hidden pay">
+                    <span class="me-2">選擇付款方式：</span>
+                    <form action="">
+                        <select class="border-2 shadow-md" name="paymentId">
+                            <option th:each="payment:${payments}" th:value="${payment.paymentId}"
+                                th:text="${payment.paymentName}"></option>
+                        </select>
+                        <a href="#" class="mybtn mybtn-green">付款</a>
+                    </form>
                 </div>
             </div>
         </div>
@@ -79,6 +93,7 @@
 
     <div class="h-px"></div>
     <script th:src="@{/js/axios.min.js}"></script>
+    <script th:src="@{/js/utils/doAlertJS.js}"></script>
     <script th:src="@{/js/game/show-gamecart.js}"></script>
 </body>
 
