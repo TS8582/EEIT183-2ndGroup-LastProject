@@ -2,6 +2,8 @@ package com.playcentric.controller.forum;
 
 import java.util.List;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,9 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.playcentric.model.ImageLib;
@@ -39,6 +44,17 @@ public class TextsController {
 	@Autowired
 	private MemberService memberService;
 
+	// 更新Status
+	@ResponseBody
+	@PostMapping("/texts/updateTextsShowStatus")
+	public Texts updatePostShowStatus(@RequestBody Texts texts) {
+		System.out.println("Received request to update texts status");
+		System.out.println("Texts ID: " + texts.getTextsId());
+		System.out.println("Hide Texts: " + texts.getHideTexts());
+
+		return textsService.updateTextsShowStatus(texts.getTextsId(), texts.getHideTexts());
+	}
+
 	// 顯示當前主題文章
 	@GetMapping("/texts/findTextsByForumId")
 	public String findTextsByForumId(@RequestParam("forumId") Integer forumId,
@@ -58,18 +74,28 @@ public class TextsController {
 	// 處理文章發布與圖片上傳
 	@PostMapping("/texts/publish")
 	public String publish(@RequestParam("textsContent") String textsContent, @RequestParam("title") String title,
-			@RequestParam("files") MultipartFile[] files, @RequestParam("forumId") Integer forumId, @RequestParam("memId") Integer memId, HttpSession session,
-			Model model) throws IOException {
+			@RequestParam("files") MultipartFile[] files, @RequestParam("forumId") Integer forumId,
+			@RequestParam("memId") Integer memId, HttpSession httpSession, Model model) throws IOException {
+
+		// 從 session 中獲取 member 對象
+		Member member = (Member) httpSession.getAttribute("member");
+
+		// 檢查 member 對象是否為 null
+		if (member == null) {
+			// 如果 member 為 null，說明用戶未登入，重定向到登入頁面
+			return "redirect:/member/login"; // 確保你有一個處理 /login 的路由
+		}
 
 		Forum forum = forumService.findById(forumId);
-		Member member = memberService.findById(memId);
 
 		// 建立一個新的文章物件
 		Texts texts = new Texts();
-		texts.setTitle(title);
+		texts.setHideTexts(null);
 		texts.setTextsContent(textsContent); // 設置文章內容
+		texts.setDoneTime(new Timestamp(System.currentTimeMillis())); // 設置發佈日期
+		texts.setTitle(title);
 		texts.setForum(forum);
-		texts.setMember(member);
+		texts.setMemId(member.getMemId());
 
 		// 如果有上傳的圖片，處理圖片上傳
 		if (files != null && files.length > 0) {
@@ -109,6 +135,18 @@ public class TextsController {
 
 		return "forum/texts/textsContent";
 
+	}
+
+	// 查詢名稱
+	@PostMapping("/member/findByNameTexts")
+	public String findByNameTexts(@RequestParam("title") String title, Model model) {
+
+		List<Texts> arrayList = textsService.findAllTexts(title);
+		System.out.println(arrayList);
+
+		model.addAttribute("arrayList", arrayList);
+
+		return "forum/texts/listFront";
 	}
 
 	// TinyMCE新增
@@ -164,22 +202,64 @@ public class TextsController {
 		return "forum/texts/listFront";
 	}
 
-	// 編輯文章
-	@GetMapping("/texts/update")
-	public String showEditForum(@RequestParam("textsId") int textsId, Model model) {
+	// 尋找修改ID
+	@GetMapping("/texts/findIdByTexts")
+	public String editTexts(@RequestParam Integer textsId, Model model) {
 		Texts texts = textsService.findById(textsId);
-		if (texts != null) {
-			model.addAttribute("texts", texts);
-			return "texts/edit"; // 對應的 Thymeleaf 模板名稱
-		} else {
-			return "forum/texts/edit";
-		}
+		model.addAttribute("texts", texts);
+		System.out.println(123);
+		List<Forum> arrayList = forumService.findAll();
+		model.addAttribute("arrayList", arrayList);
+		return "forum/texts/edit";
+
 	}
 
-	@PutMapping("/texts/edit")
-	public String editTexts(@ModelAttribute Texts texts) {
-		textsService.update(texts);
-		return "redirect:/findAllTexts"; // 後台
+	@PostMapping("/texts/update")
+	public String updateTexts(@RequestParam("textsContent") String textsContent, @RequestParam("title") String title,
+			@RequestParam("textsId") Integer textsId, @RequestParam("files") MultipartFile[] files,
+			@RequestParam("forumId") Integer forumId,
+			@RequestParam("memId") Integer memId, @RequestParam("hideTexts") Boolean hideTexts,
+			HttpSession httpSession, Model model) throws IOException {
+		// 從 session 中獲取 member 對象
+		Member member = (Member) httpSession.getAttribute("member");
+
+		// 檢查 member 對象是否為 null
+		if (member == null) {
+			// 如果 member 為 null，說明用戶未登入，重定向到登入頁面
+			return "redirect:/member/login"; // 確保你有一個處理 /login 的路由
+		}
+
+			Forum forum = forumService.findById(forumId);
+
+			// 建立一個新的文章物件
+			Texts texts = new Texts();
+			texts.setHideTexts(hideTexts);
+			texts.setTextsContent(textsContent); // 設置文章內容
+			texts.setUpdatedTime(new Timestamp(System.currentTimeMillis())); // 設置發佈日期
+			texts.setTitle(title);
+			texts.setTextsId(textsId);
+			texts.setForum(forum);
+			texts.setMemId(memId);
+
+			// 如果有上傳的圖片，處理圖片上傳
+			if (files != null && files.length > 0) {
+				List<ForumPhoto> forumPhotosList = new ArrayList<>();
+
+				for (MultipartFile file : files) {
+					ForumPhoto forumPhoto = new ForumPhoto();
+					forumPhoto.setPhotoFile(file.getBytes());
+					forumPhoto.setTexts(texts); // 設置圖片對應的文章
+					forumPhotosList.add(forumPhoto);
+				}
+
+				texts.setForumPhoto(forumPhotosList); // 將圖片列表設置到文章中
+			}
+
+			textsService.insert(texts); // 儲存文章到資料庫
+
+			// 發佈成功後重定向到成功頁面
+			return "redirect:/texts/listFront";
+		
 	}
 
 	// 刪除文章
@@ -187,7 +267,7 @@ public class TextsController {
 	public String deleteTexts(@RequestParam("textsId") Integer textsId) {
 		textsService.deleteTextsById(textsId);
 
-		return "redirect:/findAllTexts"; // 導入後台
+		return "redirect:/texts/page"; // 導入後台
 	}
 
 }

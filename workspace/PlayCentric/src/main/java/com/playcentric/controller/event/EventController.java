@@ -41,7 +41,7 @@ public class EventController {
             Event createdEvent = eventService.createEvent(event);
             logger.info("活動創建成功，活動ID: {}", createdEvent.getEventId());
             return ResponseEntity.ok(createdEvent);
-        } catch (IllegalArgumentException e) {
+        } catch (/*IllegalArgumentException*/Exception e) {
             logger.error("活動創建失敗", e);
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -165,7 +165,7 @@ public class EventController {
             Event updatedEvent = eventService.updateEvent(event);
             logger.info("活動更新成功，活動ID: {}", updatedEvent.getEventId());
             return ResponseEntity.ok(updatedEvent);
-        } catch (IllegalArgumentException e) {
+        } catch (/*IllegalArgumentException*/Exception e) {
             logger.error("活動更新失敗", e);
             return ResponseEntity.badRequest().body(e.getMessage());
         }
