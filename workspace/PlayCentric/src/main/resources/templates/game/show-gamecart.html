@@ -26,8 +26,8 @@
                     </div>
                 </div>
 
-                <div th:if="${games == null}">
-                    <span>購物車目前沒有遊戲！</span>
+                <div class="flex justify-center text-2xl font-semibold my-2" th:if="${games.empty}">
+                    <span>購物車內目前沒有遊戲！</span>
                 </div>
 
                 <th:block th:if="${games}" th:each="game:${games}">
@@ -57,7 +57,7 @@
                                 th:text="'-' + ${100 - game.rate} + '%'"></span>
                             <div>
                                 <span th:class="${game.rate} ? 'text-green-600'">NT$</span>
-                                <span th:class="${game.discountedPrice} ? 'price text-green-600' : 'price'"
+                                <span th:class="${game.rate} ? 'price text-green-600' : 'price'"
                                     th:text="${game.discountedPrice} ? ${game.discountedPrice} : ${game.price}"></span>
                             </div>
                         </div>
@@ -74,7 +74,8 @@
                 <div class="text-2xl mt-5">
                     <div class="flex items-centert">
                         <a th:href="@{/game/gameStore}" class="mybtn mybtn-sky me-auto">返回商店</a>
-                        <span class="mybtn mybtn-green ms-auto gopay">結帳</span>
+                        <span th:if="${!games.empty}" class="mybtn mybtn-green ms-auto gopay">結帳</span>
+                        <span th:if="${games.empty}" class="mybtn-disabled ms-auto">結帳</span>
                     </div>
                 </div>
                 <div class="text-2xl mt-5 flex justify-end items-center hidden pay">

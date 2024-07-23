@@ -34,15 +34,17 @@ document.querySelector('.choosepay').addEventListener('change', e => {
 })
 
 // 按下結帳按鈕顯示選擇付款方式
-gopay.addEventListener('click', e => {
-    pay.classList.remove('hidden');
-    gopay.classList.remove('mybtn', 'mybtn-green');
-    gopay.classList.add('mybtn-disabled');
-    remove.forEach(elm => {
-        elm.classList.remove('mybtn-remove', 'mybtn');
-        elm.classList.add('vis-hidden');
-    });
-}, { once: true })
+if (gopay) {
+    gopay.addEventListener('click', e => {
+        pay.classList.remove('hidden');
+        gopay.classList.remove('mybtn', 'mybtn-green');
+        gopay.classList.add('mybtn-disabled');
+        remove.forEach(elm => {
+            elm.classList.remove('mybtn-remove', 'mybtn');
+            elm.classList.add('vis-hidden');
+        });
+    }, { once: true })
+}
 
 
 // 從購物車內移除

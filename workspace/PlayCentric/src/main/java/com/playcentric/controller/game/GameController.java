@@ -30,6 +30,7 @@ import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameDiscountSetService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
+import com.playcentric.service.game.OwnGameLibService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -52,6 +53,8 @@ public class GameController {
 	private ImageLibService iService;
 	@Autowired
 	private GameCartService gcService;
+	@Autowired
+	private OwnGameLibService oglService;
 
 	// 遊戲管理後台
 	@GetMapping("/back/game")
@@ -257,7 +260,8 @@ public class GameController {
 		for (Game game : games) {
 			gService.setRateAndDiscountPrice(game);
 			if (loginMember != null) {
-				gcService.checkInCart(loginMember, game);
+				gcService.setInCart(loginMember, game);
+				oglService.setHaveGame(loginMember, game);
 			}
 		}
 		model.addAttribute("allType",allType);
@@ -271,7 +275,8 @@ public class GameController {
 		Game game = gService.findById(gameId);
 		gService.setRateAndDiscountPrice(game);
 		if (loginMember != null) {
-			gcService.checkInCart(loginMember, game);
+			gcService.setInCart(loginMember, game);
+			oglService.setHaveGame(loginMember, game);
 		}
 		model.addAttribute("game",game);
 		return "game/show-game";

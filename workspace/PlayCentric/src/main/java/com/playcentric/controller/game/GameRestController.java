@@ -45,7 +45,7 @@ public class GameRestController {
 		for (Game game : findGames) {
 			gService.setRateAndDiscountPrice(game);
 			if (loginMember != null) {
-				gcService.checkInCart(loginMember, game);
+				gcService.setInCart(loginMember, game);
 			}
 		}
 		
@@ -72,7 +72,7 @@ public class GameRestController {
 			for (Game game2 : gamePage) {
 				gService.setRateAndDiscountPrice(game2);
 				if (loginMember != null) {
-					gcService.checkInCart(loginMember, game2);
+					gcService.setInCart(loginMember, game2);
 				}
 			}
 		}
@@ -104,7 +104,7 @@ public class GameRestController {
 					Integer discountedPrice = game.getPrice();
 					Integer myDiscountPrice = gService.setRateAndDiscountPrice(game);
 					if (loginMember != null) {
-						gcService.checkInCart(loginMember, game);
+						gcService.setInCart(loginMember, game);
 					}
 					if (myDiscountPrice != null) {
 						discountedPrice = myDiscountPrice;
@@ -141,7 +141,7 @@ public class GameRestController {
 	                    .containsAll(typeId))
 	            .filter(game -> {
 	            	if (loginMember != null) {
-	        			gcService.checkInCart(loginMember, game);
+	        			gcService.setInCart(loginMember, game);
 	        		}
 	            	Integer discountedPrice;
 	            	discountedPrice = game.getPrice();
