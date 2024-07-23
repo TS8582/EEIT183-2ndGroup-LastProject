@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>PlayCentric-儲值紀錄</title>
+    <style>
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .h-35px {
+            height: 35px;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        .h-0 {
+            height: 0;
+        }
+
+        .w-100px {
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="~{member/memInfoAside}"></div>
+
+    <div class="p-0">
+        <div class="container my-4">
+            <div class="d-flex">
+                <div class="h1 p-0 text-center">儲值紀錄</div>
+                <p class="ms-auto mb-3 mt-auto ps-2 border border-2 rounded-2 col-2 fs-4">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                    <span id="points" class="ms-2">0</span>
+                </p>
+            </div>
+            <div>
+
+            </div>
+            <ul class="list-group" id="output">
+                <li class="list-group-item">這是一條儲值紀錄</li>
+            </ul>
+            <div id="pageBtn">
+                <div class="d-flex justify-content-center align-items-end mt-4">
+                    <ul class="pagination">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

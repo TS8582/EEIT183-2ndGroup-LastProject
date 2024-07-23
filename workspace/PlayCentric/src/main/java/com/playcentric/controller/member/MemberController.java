@@ -288,6 +288,12 @@ public class MemberController {
 		return "member/memInfoPage";
 	}
 
+	@GetMapping("/personal/recharge")
+	public String memRechargePage() {
+		return "member/memRechargePage";
+	}
+	
+
 	@GetMapping("/personal/api/getInfo")
 	@ResponseBody
 	public Member getMemInfo(Model model) {
