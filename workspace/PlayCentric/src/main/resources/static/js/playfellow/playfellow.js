@@ -177,3 +177,45 @@ var swiper = new Swiper('.swiper-container', {
 		  				}
 		  			});
 		  		});
+				
+				
+				function loadImage(imageId, imgElement) {
+					    axios.get(`/PlayCentric/api/images/${imageId}`, { responseType: 'arraybuffer' })
+					        .then(response => {
+					            const base64Image = btoa(
+					                new Uint8Array(response.data)
+					                    .reduce((data, byte) => data + String.fromCharCode(byte), '')
+					            );
+					            const imageUrl = `data:image/jpeg;base64,${base64Image}`;
+					            if (imgElement) {
+					                imgElement.src = imageUrl;
+					            }
+					        })
+					        .catch(error => {
+					            console.error( error);
+					        });
+					}
+
+					document.addEventListener('DOMContentLoaded', () => {
+					    const imageElements = document.querySelectorAll('[data-image-id]');
+					    const observerOptions = {
+					        root: null,
+					        rootMargin: '0px',
+					        threshold: 0.1
+					    };
+
+					    const observer = new IntersectionObserver((entries, observer) => {
+					        entries.forEach(entry => {
+					            if (entry.isIntersecting) {
+					                const img = entry.target;
+					                const imageId = img.getAttribute('data-image-id');
+					                loadImage(imageId, img);
+					                observer.unobserve(img);
+					            }
+					        });
+					    }, observerOptions);
+
+					    imageElements.forEach(img => {
+					        observer.observe(img);
+					    });
+					});

@@ -86,15 +86,7 @@ public class PageController {
 	public String getPlayFellowById(Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
 
-		for (PlayFellowMember playFellowMember : playFellowMembers) {
-			for (ImageLibPfmemberAssociation association : playFellowMember.getImageLibAssociations()) {
-				ImageLib imageLib = association.getImageLib();
-				if (imageLib != null && imageLib.getImageFile() != null) {
-					String base64Image = Base64.getEncoder().encodeToString(imageLib.getImageFile());
-					imageLib.setBase64Image(base64Image);
-				}
-			}
-		}
+
 
 		List<PlayFellowMember> lastest5playFellowMembers = playFellowMemberService
 				.getTopFiveReviewSuccessPlayFellowMembers();
@@ -196,9 +188,9 @@ public class PageController {
 	@ResponseBody
     @GetMapping("/api/images/{imageId}")
     public ResponseEntity<byte[]> getImageById(@PathVariable Integer imageId) {
-        Optional<ImageLib> imageLibOpt = imageLibRepository.findById(imageId);
-        if (imageLibOpt.isPresent()) {
-            byte[] imageData = imageLibOpt.get().getImageFile();
+        Optional<ImageLib> imageOpt = imageLibRepository.findById(imageId);
+        if (imageOpt.isPresent()) {
+            byte[] imageData = imageOpt.get().getImageFile();
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
         } else {
             return ResponseEntity.notFound().build();

@@ -183,46 +183,39 @@
 		<h4 class="fw-normal">伴遊新星🌟</h4>
 		<div class="swiper-container mySwiper">
 			<div class="swiper-wrapper">
-				<div class="swiper-slide"
-					th:each="members : ${TopFiveReviewSuccessMembers}">
-					<div class="card mb-3" id="playFellowCard"
-						style="border: none; border-radius: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 800px; height: 250px; background: linear-gradient(to right, #457B9D, #A9CCE3); color: white;">
-						<div class="row g-0 h-100">
-							<div th:if="${members.imageLibAssociations.size() > 0}"
-								class="col-md-4 h-100">
-								<img class="img-fluid rounded-start h-100 playFellowImg-size"
-									th:src="'data:image/jpeg;base64,' + ${members.imageLibAssociations[0].imageLib.base64Image}"
-									loading="lazy"
-									style="object-fit: cover; border-top-left-radius: 10px; border-bottom-left-radius: 10px;" />
-							</div>
-							<div class="col-md-8 h-100">
-								<div class="card-body h-100"
-									style="display: flex; flex-direction: column; justify-content: space-between;">
-									<div class="d-flex align-items-center">
-										<h5 class="card-title mb-0" th:text="${members.pfnickname}"
-											style="font-size: 1.25rem; font-weight: bold;"></h5>
+				<div class="swiper-slide" th:each="members : ${TopFiveReviewSuccessMembers}">
+    <div class="card mb-3" id="playFellowCard"
+        style="border: none; border-radius: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 800px; height: 250px; background: linear-gradient(to right, #457B9D, #A9CCE3); color: white;">
+        <div class="row g-0 h-100">
+            <div th:if="${members.imageLibAssociations.size() > 0}" class="col-md-4 h-100">
+                <img class="img-fluid rounded-start h-100 playFellowImg-size"
+                     th:data-image-id="${members.imageLibAssociations[0].imageLib.imageId}"
+                     style="object-fit: cover; border-top-left-radius: 10px; border-bottom-left-radius: 10px;" />
+            </div>
+            <div class="col-md-8 h-100">
+                <div class="card-body h-100"
+                     style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div class="d-flex align-items-center">
+                        <h5 class="card-title mb-0" th:text="${members.pfnickname}"
+                            style="font-size: 1.25rem; font-weight: bold;"></h5>
+                        <span class="ms-2">
+                            <span th:if="${members.member.gender == 1}"
+                                  style="border: solid 1px rgb(102, 192, 222); background-color: rgb(0, 191, 255); color: white; padding: 2px 6px; border-radius: 25%; font-size: 15px; margin-left: 10px;">♂️</span>
+                            <span th:if="${members.member.gender == 2}"
+                                  style="border: solid 1px rgb(221, 73, 97); background-color: rgb(221, 73, 97); color: white; padding: 2px 6px; border-radius: 25%; font-size: 15px; margin-left: 10px;">♀️</span>
+                            <span th:text="${members.member.birthday}" class="member-birthday"></span>
+                        </span>
+                    </div>
+                    <p class="card-text mt-2" th:text="${members.pfdescription}"
+                       style="font-size: 1rem; color: #ffffff;"></p>
+                    <button type="button" class="btn mt-1" style="background-color: #F1FAEE;" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal" th:attr="data-playfellowid=${members.playFellowId}">遊戲選擇</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-										<span class="ms-2"> <span
-											th:if="${members.member.gender == 1}"
-											style="border: solid 1px rgb(102, 192, 222); background-color: rgb(0, 191, 255); color: white; padding: 2px 6px; border-radius: 25%; font-size: 15px; margin-left: 10px;">♂️</span>
-											<span th:if="${members.member.gender == 2}"
-											style="border: solid 1px rgb(221, 73, 97); background-color: rgb(221, 73, 97); color: white; padding: 2px 6px; border-radius: 25%; font-size: 15px; margin-left: 10px;">♀️</span>
-											<span th:text="${members.member.birthday}"
-											class="member-birthday"></span>
-										</span>
-									</div>
-									<p class="card-text mt-2" th:text="${members.pfdescription}"
-										style="font-size: 1rem; color: #ffffff;"></p>
-									<button type="button" class="btn mt-1"
-										style="background-color: #F1FAEE;" data-bs-toggle="modal"
-										data-bs-target="#exampleModal"
-										th:attr="data-playfellowid=${members.playFellowId}">遊戲選擇</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
 			</div>
 
 		</div>
@@ -505,46 +498,7 @@
 	<script th:src="@{/js/jquery.min.js}"></script>
 	
 	<script>
-	function loadImage(imageId, imgElement) {
-	    axios.get(`/PlayCentric/api/images/${imageId}`, { responseType: 'arraybuffer' })
-	        .then(response => {
-	            const base64Image = btoa(
-	                new Uint8Array(response.data)
-	                    .reduce((data, byte) => data + String.fromCharCode(byte), '')
-	            );
-	            const imageUrl = `data:image/jpeg;base64,${base64Image}`;
-	            if (imgElement) {
-	                imgElement.src = imageUrl;
-	            }
-	        })
-	        .catch(error => {
-	            console.error( error);
-	        });
-	}
-
-	document.addEventListener('DOMContentLoaded', () => {
-	    const imageElements = document.querySelectorAll('[data-image-id]');
-	    const observerOptions = {
-	        root: null,
-	        rootMargin: '0px',
-	        threshold: 0.1
-	    };
-
-	    const observer = new IntersectionObserver((entries, observer) => {
-	        entries.forEach(entry => {
-	            if (entry.isIntersecting) {
-	                const img = entry.target;
-	                const imageId = img.getAttribute('data-image-id');
-	                loadImage(imageId, img);
-	                observer.unobserve(img);
-	            }
-	        });
-	    }, observerOptions);
-
-	    imageElements.forEach(img => {
-	        observer.observe(img);
-	    });
-	});
+	
 
 	</script>
 
