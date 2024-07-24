@@ -53,7 +53,7 @@ public class GameOrderService {
 		return oRepo.findById(gameOrderId).get();
 	}
 	
-	public void createOrder(LoginMemDto loginMember) {
+	public void createPcOrder(LoginMemDto loginMember) {
 		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
 		Member member = mService.findById(loginMember.getMemId());
 		Integer total = 0;

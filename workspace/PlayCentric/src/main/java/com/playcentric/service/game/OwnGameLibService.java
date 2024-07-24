@@ -20,6 +20,10 @@ public class OwnGameLibService {
 		return oglRepo.save(ownGameLib);
 	}
 	
+	public List<OwnGameLib> findByMemId(Integer memId) {
+		return oglRepo.findByMemId(memId);
+	}
+	
 	public void setHaveGame(LoginMemDto loginMember,Game game) {
 		List<OwnGameLib> ownGameLibs = oglRepo.findByMemId(loginMember.getMemId());
 		for (OwnGameLib ownGameLib : ownGameLibs) {

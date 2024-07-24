@@ -69,10 +69,10 @@ public class GameOrderController {
 	public String pcwallet(@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		
 		if (loginMember != null) {
-			goService.createOrder(loginMember);
+			goService.createPcOrder(loginMember);
 		}
 		
-		return "redirect:/";
+		return "game/gameorder-ok";
 	}
 	
 	
