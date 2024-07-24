@@ -1,7 +1,6 @@
 package com.playcentric.controller.member;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -91,7 +90,7 @@ public class MemberController {
 		return "註冊失敗!";
 	}
 
-	//把錯誤提示顯示在首頁
+	// 把錯誤提示顯示在首頁
 	@GetMapping("/homeShowErr/{err}")
 	public String homeShowErr(@PathVariable String err, RedirectAttributes redirectAttributes) {
 		if ("notLogin".equals(err) || "loginAgain".equals(err)) {
@@ -102,15 +101,15 @@ public class MemberController {
 		return "redirect:/";
 	}
 
-	//把錯誤提示顯示在登入頁面
-	@GetMapping("/showLoginErr/{err}")
+	// 把錯誤提示顯示在登入頁面
+	// @GetMapping("/showLoginErr/{err}")
 	public String showLoginErr(@PathVariable String err, RedirectAttributes redirectAttributes) {
 		String redirectMsg = checkErr(err);
 		redirectAttributes.addFlashAttribute("redirectMsg", redirectMsg);
 		return "redirect:/member/login";
 	}
 
-	//把Err轉成給用戶的提示文字
+	// 把Err轉成給用戶的提示文字
 	private String checkErr(String err) {
 		switch (err) {
 			case "notLogin":
@@ -118,6 +117,9 @@ public class MemberController {
 
 			case "loginAgain":
 				return "請重新登入會員!";
+
+			case "anotherLogin":
+				return "登入帳號已變!";
 
 			case "notMng":
 				return "您不是管理員!";
@@ -127,7 +129,7 @@ public class MemberController {
 		}
 	}
 
-	//登入頁面URL
+	// 登入頁面URL
 	@GetMapping("/login")
 	public String loginPage(Model model, RedirectAttributes redirectAttributes) {
 		if (model.getAttribute("loginMember") != null) {
@@ -137,7 +139,7 @@ public class MemberController {
 		return "member/loginPage";
 	}
 
-	//處理登入請求
+	// 處理登入請求
 	@PostMapping("/login")
 	@ResponseBody
 	public String loginPost(@RequestParam String account, @RequestParam String password,
@@ -166,7 +168,7 @@ public class MemberController {
 		return "登入成功!";
 	}
 
-	//登入成功後回到首頁顯示登入成功
+	// 登入成功後回到首頁顯示登入成功
 	@GetMapping("/loginSuccess")
 	public String loginSeccess(RedirectAttributes redirectAttributes, Model model) {
 		LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
@@ -178,7 +180,7 @@ public class MemberController {
 		return "redirect:/";
 	}
 
-	//登出
+	// 登出
 	@GetMapping("/logout")
 	public String logout(SessionStatus status, RedirectAttributes redirectAttributes, HttpServletResponse response) {
 		Cookie cookie = new Cookie("loginToken", null);
@@ -187,7 +189,7 @@ public class MemberController {
 		cookie.setHttpOnly(true);
 		cookie.setSecure(true);
 		response.addCookie(cookie);
-		
+
 		status.setComplete();
 		redirectAttributes.addFlashAttribute("okMsg", "登出完成");
 		return "redirect:/";
@@ -292,7 +294,6 @@ public class MemberController {
 	public String memRechargePage() {
 		return "member/memRechargePage";
 	}
-	
 
 	@GetMapping("/personal/api/getInfo")
 	@ResponseBody
@@ -306,27 +307,28 @@ public class MemberController {
 
 	@PostMapping("/personal/api/sendPtUrl")
 	@ResponseBody
-	public String sendPTEmail(Model model, @RequestParam String email) {
-
-		// 生成Token
-		String token = UUID.randomUUID().toString();
-		String changePwdUrl = ngrokConfig.getUrl() + "/PlayCentric/member/changePassword/" + token;
-
-		// 判斷登入帳號
+	public String sendPTEmail(Model model, @RequestParam Integer memId) {
 		LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
-		if (loginMember == null) {
-			return "錯誤，請重新登入";
+		if (loginMember != null && loginMember.getMemId() != memId) {
+			return "redirect:/member/homeShowErr/anotherLogin";
 		}
-		Member member = memberService.changePassword(loginMember.getMemId(), token);
+		return sendPTEmail(memId);
+	}
 
-		if (member == null) {
-			return "錯誤，請重新登入";
-		}
-		// 寄信
+	@PostMapping("/api/sendPtUrl")
+	@ResponseBody
+	public String sendPTEmail(@RequestParam Integer memId) {
 		try {
+
+			// 取得改密碼的帳號
+			Member member = memberService.changePassword(memId);
+
+			String changePwdUrl = ngrokConfig.getUrl() + "/PlayCentric/member/changePassword/"
+					+ member.getPasswordToken();
+			// 寄信
 			SimpleMailMessage message = new SimpleMailMessage();
 			message.setFrom("owen0414chen@gmail.com");
-			message.setTo(email);
+			message.setTo(member.getEmail());
 			message.setSubject("PlayCentric會員 " + member.getAccount() + " 更改密碼");
 			message.setText("更改密碼請點擊網址:" + changePwdUrl + "\r\n(若不是本人請忽略)");
 
@@ -373,27 +375,24 @@ public class MemberController {
 	@ResponseBody
 	public String sendVerEmail(Model model, @RequestParam String email) {
 
-		// 生成Token
-		String token = UUID.randomUUID().toString();
-		String changePwdUrl = ngrokConfig.getUrl() + "/PlayCentric/member/verifyEmail/" + token;
-
 		// 判斷登入帳號
 		LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
 		if (loginMember == null) {
 			return "錯誤，請重新登入";
 		}
-		Member member = memberService.verifyEmail(loginMember.getMemId(), token);
+		Member member = memberService.verifyEmail(loginMember.getMemId());
 
 		if (member == null) {
 			return "錯誤，請重新登入";
 		}
+		String verifyUrl = ngrokConfig.getUrl() + "/PlayCentric/member/verifyEmail/" + member.getEmailVerifyToken();
 		// 寄信
 		try {
 			SimpleMailMessage message = new SimpleMailMessage();
 			message.setFrom("owen0414chen@gmail.com");
 			message.setTo(email);
 			message.setSubject("PlayCentric會員 " + member.getAccount() + " 驗證Email");
-			message.setText("點擊網址驗證email:" + changePwdUrl + "\r\n(若不是本人請忽略)");
+			message.setText("點擊網址驗證email:" + verifyUrl + "\r\n(若不是本人請忽略)");
 
 			mailSender.send(message);
 			return "信件已發送";

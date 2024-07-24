@@ -36,44 +36,35 @@ public class AuthenticationRoleFilter implements Filter {
         if (session != null) {
             LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
             if (loginMember == null) {
-                doUnauthorized(httpResponse,err);
-                if (!servletPath.contains("/api/")) {
-                    httpResponse.sendRedirect("/PlayCentric/member/showLoginErr/" + err);
-                }
+                doUnauthorized(httpResponse,err,servletPath);
                 return;
             }
             loginMember = memberService.checkLoginMember(loginMember);
             session.setAttribute("loginMember", loginMember);
             if (loginMember == null) {
                 err = "loginAgain";
-                doUnauthorized(httpResponse, err);
-                if (!servletPath.contains("/api/")) {
-                    httpResponse.sendRedirect("/PlayCentric/member/showLoginErr/" + err);
-                }
+                doUnauthorized(httpResponse,err,servletPath);
                 return;
             }
             if (servletPath.contains("back") && loginMember.getRole() != 1) {
                 err = "notMng";
-                doUnauthorized(httpResponse, err);
-                if (!servletPath.contains("/api/")) {
-                    httpResponse.sendRedirect("/PlayCentric/member/homeShowErr/" + err);
-                }
+                doUnauthorized(httpResponse,err,servletPath);
                 return;
             }
         } else {
-            doUnauthorized(httpResponse, err);
-            if (!servletPath.contains("/api/")) {
-                httpResponse.sendRedirect("/PlayCentric/member/showLoginErr/" + err);
-            }
+            doUnauthorized(httpResponse,err,servletPath);
             return;
         }
 
         chain.doFilter(request, response);
     }
 
-    private void doUnauthorized(HttpServletResponse httpResponse, String err) throws IOException{
+    private void doUnauthorized(HttpServletResponse httpResponse, String err, String servletPath) throws IOException{
         httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         httpResponse.getWriter().write(err);
+        if (!servletPath.contains("/api/")) {
+            httpResponse.sendRedirect("/PlayCentric/member/homeShowErr/" + err);
+        }
     }
 
 }
