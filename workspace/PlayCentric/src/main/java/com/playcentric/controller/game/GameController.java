@@ -283,7 +283,7 @@ public class GameController {
 		return "game/show-game";
 	}
 	
-	@GetMapping("/game/ownGame")
+	@GetMapping("/personal/game/ownGame")
 	public String getMethodName(
 			@ModelAttribute("loginMember") LoginMemDto loginMember,
 			Model model
