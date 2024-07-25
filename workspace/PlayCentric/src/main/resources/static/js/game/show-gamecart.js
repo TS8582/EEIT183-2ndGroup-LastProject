@@ -72,6 +72,9 @@ remove.forEach(elm => {
 
             })
             .catch(err => {
+                if (err.response && err.response.status === 401) {
+                    window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+                }
                 console.error(err);
             })
     })
