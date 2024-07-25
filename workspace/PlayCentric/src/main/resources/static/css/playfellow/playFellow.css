@@ -784,6 +784,103 @@ Single Product section style start
 .carousel-item img:hover {
     transform: scale(1.2); /* 當鼠標懸停時，圖片放大 1.2 倍 */
 }
+/* 自訂的樣式 */
+		.offcanvas-backdrop {
+			z-index: 1040;
+		}
 
+		.offcanvas.show~.content {
+			transform: translateX(250px);
+			transition: transform 0.3s ease-in-out;
+		}
+
+
+		.offcanvas-body::-webkit-scrollbar {
+			width: 0px;
+			background: transparent;
+		}
+
+		.offcanvas-body {
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
+
+		.marquee-container {
+			width: 130px;
+			/* 設置容器的寬度 */
+			overflow: hidden;
+			/* 隱藏超出容器寬度的部分 */
+			white-space: nowrap;
+			/* 確保文字不換行 */
+			/*  	border: 1px solid #000; /* 用來顯示容器邊界，便於檢查  */
+		}
+.swiper-container {
+			width: 100%;
+			padding: 20px 50px;
+			overflow: hidden;
+			/* Hide overflow content */
+		}
+
+		.swiper-slide {
+			display: flex;
+			justify-content: center;
+			max-width: 100%;
+			/* Ensure slides do not exceed container width */
+		}
+
+		/* #playFellowCard {
+			width: 100%;
+			max-width: 800px;
+			height: 250px;
+			background-color: #00a7ea;
+			margin-bottom: 0;
+			color: white;
+		} */
+
+		/* #playFellowCard .card-body {
+			padding: 10px;
+		} */
+
+		#playFellowCard .row.g-0 {
+			margin-right: 0;
+			margin-left: 0;
+		}
+
+		#playFellowCard .img-fluid {
+			height: 100%;
+		}
+
+		.game-info {
+			margin-bottom: 15px;
+		}
+
+		.game-titles-container {
+			display: flex;
+			flex-wrap: nowrap;
+			overflow-x: auto;
+			padding-bottom: 10px;
+		}
+
+		.game-title {
+			cursor: pointer;
+			font-weight: bold;
+			margin-right: 15px;
+			white-space: nowrap;
+		}
+
+		.game-details {
+			display: none;
+			padding-left: 20px;
+		}
+
+		.offcanvas-body::-webkit-scrollbar {
+			width: 0px;
+			background: transparent;
+		}
+
+		.offcanvas-body {
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
 
 

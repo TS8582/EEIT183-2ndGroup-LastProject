@@ -35,7 +35,7 @@ public class GameCartService {
 	}
 	
 	//設定遊戲是否在購物車內判斷
-	public void checkInCart(LoginMemDto loginMember,Game game) {
+	public void setInCart(LoginMemDto loginMember,Game game) {
 		List<GameCarts> carts = findByMemId(loginMember.getMemId());
 		if (carts.size() != 0) {
 			for (GameCarts cart : carts) {
