@@ -112,75 +112,87 @@ public class PropSellOrderService {
 	}
 
 	 // 根據 propId 找賣單並回傳賣單的每個價格區間和數量
-    public List<PropSellOrderForMarketDto> findByPropId(Integer propId) {
-        // 從 propSellOrderRepo 中查找所有指定 propId 的 PropSellOrder 對象
-        List<PropSellOrder> orders = propSellOrderRepo.findAllByPropId(propId);
+	public List<PropSellOrderForMarketDto> findByPropId(Integer propId, Integer loginMemId) {
+	    // 從 propSellOrderRepo 中查找所有指定 propId 的 PropSellOrder 對象
+	    List<PropSellOrder> orders = propSellOrderRepo.findAllByPropId(propId);
 
-        // 排序
-        orders.sort(Comparator.comparingDouble(PropSellOrder::getAmount).thenComparing(PropSellOrder::getSaleTime));
+	    // 過濾掉 sellerMemId 等於 loginMemId 的訂單
+	    orders = orders.stream()
+	               .filter(order -> order.getSellerMemId() != loginMemId.intValue())
+	               .collect(Collectors.toList());
 
-        // 將 PropSellOrder 列表轉換為 PropSellOrderForMarketDto 列表
-        List<PropSellOrderForMarketDto> dtos = new ArrayList<>();
-        if (orders.isEmpty()) {
-            return dtos; // 如果沒有訂單，返回空列表
-        }
 
-        double currentAmount = orders.get(0).getAmount();
-        int totalQuantity = 0;
-        int i = 0;
+	    // 排序
+	    orders.sort(Comparator.comparingDouble(PropSellOrder::getAmount).thenComparing(PropSellOrder::getSaleTime));
 
-        // 遍歷所有訂單，累計每個價格區間的 quantity
-        while (i < orders.size()) {
-            totalQuantity += orders.get(i).getQuantity();
-            if (i + 1 < orders.size() && orders.get(i + 1).getAmount() != currentAmount) {
-                dtos.add(new PropSellOrderForMarketDto(orders.get(i).getPropId(), currentAmount, totalQuantity));
-                totalQuantity = 0;
-                currentAmount = orders.get(i + 1).getAmount();
-            }
-            i++;
-        }
+	    // 將 PropSellOrder 列表轉換為 PropSellOrderForMarketDto 列表
+	    List<PropSellOrderForMarketDto> dtos = new ArrayList<>();
+	    if (orders.isEmpty()) {
+	        return dtos; // 如果沒有訂單，返回空列表
+	    }
 
-        // 添加最後一個價格區間的數量
-        if (totalQuantity > 0) {
-            dtos.add(new PropSellOrderForMarketDto(orders.get(i - 1).getPropId(), currentAmount, totalQuantity));
-        }
+	    double currentAmount = orders.get(0).getAmount();
+	    int totalQuantity = 0;
+	    int i = 0;
 
-        return dtos;
-    }
+	    // 遍歷所有訂單，累計每個價格區間的 quantity
+	    while (i < orders.size()) {
+	        totalQuantity += orders.get(i).getQuantity();
+	        if (i + 1 < orders.size() && orders.get(i + 1).getAmount() != currentAmount) {
+	            dtos.add(new PropSellOrderForMarketDto(orders.get(i).getPropId(), currentAmount, totalQuantity));
+	            totalQuantity = 0;
+	            currentAmount = orders.get(i + 1).getAmount();
+	        }
+	        i++;
+	    }
+
+	    // 添加最後一個價格區間的數量
+	    if (totalQuantity > 0) {
+	        dtos.add(new PropSellOrderForMarketDto(orders.get(i - 1).getPropId(), currentAmount, totalQuantity));
+	    }
+
+	    return dtos;
+	}
     
  // 購買道具(扣除賣單數量及確認訂單狀態)
-    public String buyProp(int buyQuantity, int propId) {
-        // 從 propSellOrderRepo 中查找所有指定 propId 的 PropSellOrder 對象
-        List<PropSellOrder> orders = propSellOrderRepo.findAllByPropId(propId);
-        // 排序
-        orders.sort(Comparator.comparingDouble(PropSellOrder::getAmount).thenComparing(PropSellOrder::getSaleTime));
-        
-        for (PropSellOrder order : orders) {
-            int orderQuantity = order.getQuantity();
-            
-            if (buyQuantity <= 0) {
-                break;
-            }
-            
-            if (orderQuantity <= buyQuantity) {
-                // 如果賣單的數量小於等於購買數量，完全扣除賣單數量
-                buyQuantity -= orderQuantity;
-                order.setQuantity(0); // 賣單數量變為0
-    			order.setOrderStatus((byte) 1);
-    			propSellOrderRepo.save(order);
-                
-            } else {
-                // 如果賣單的數量大於購買數量，部分扣除賣單數量
-                order.setQuantity(orderQuantity - buyQuantity);
-                buyQuantity = 0; // 購買數量變為0，購買完成
-            }
-            
-            // 保存更新後的賣單
-            propSellOrderRepo.save(order);
-        }
+	public String buyProp(int buyQuantity, int propId, int loginMemId) {
+	    // 從 propSellOrderRepo 中查找所有指定 propId 的 PropSellOrder 對象
+	    List<PropSellOrder> orders = propSellOrderRepo.findAllByPropId(propId);
 
-		return "購買完成(賣單)";
-    }
+	    // 過濾掉 sellerMemId 等於 loginMemId 的訂單
+	    orders = orders.stream()
+	                   .filter(order -> order.getSellerMemId() != loginMemId)
+	                   .collect(Collectors.toList());
+
+	    // 排序
+	    orders.sort(Comparator.comparingDouble(PropSellOrder::getAmount).thenComparing(PropSellOrder::getSaleTime));
+
+	    // 遍歷所有訂單
+	    for (PropSellOrder order : orders) {
+	        int orderQuantity = order.getQuantity();
+
+	        // 如果購買數量已經滿足，退出循環
+	        if (buyQuantity <= 0) {
+	            break;
+	        }
+
+	        // 如果賣單的數量小於等於購買數量，完全扣除賣單數量
+	        if (orderQuantity <= buyQuantity) {
+	            buyQuantity -= orderQuantity; // 更新剩餘購買數量
+	            order.setQuantity(0); // 賣單數量變為0
+	            order.setOrderStatus((byte) 1); // 更新訂單狀態
+	            propSellOrderRepo.save(order); // 保存更新後的賣單
+	            
+	        // 如果賣單的數量大於購買數量，部分扣除賣單數量
+	        } else {
+	            order.setQuantity(orderQuantity - buyQuantity); // 更新賣單數量
+	            buyQuantity = 0; // 購買數量變為0，購買完成
+	            propSellOrderRepo.save(order); // 保存更新後的賣單
+	        }
+	    }
+
+	    return "購買完成(賣單)";
+	}
 //  根據orderId更改status為下架
     public PropSellOrder changeStatusDelist(int id) {
         Optional<PropSellOrder> optionalOrder = propSellOrderRepo.findById(id);

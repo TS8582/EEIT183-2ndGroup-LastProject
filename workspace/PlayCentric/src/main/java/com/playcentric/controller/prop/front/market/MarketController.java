@@ -25,11 +25,11 @@ public class MarketController {
 		return "prop/front/market";
 	}
 
-	// 根據 propId 找賣單後以價格為區間顯示
+	// 根據 propId及排除當前loginMemId 找賣單後以價格為區間顯示
 	@GetMapping("prop/front/market/orders")
 	@ResponseBody
-	public List<PropSellOrderForMarketDto> findByPropId(@RequestParam("propId") Integer propId) {
-		return propSellOrderService.findByPropId(propId);
+	public List<PropSellOrderForMarketDto> findByPropId(@RequestParam("propId") Integer propId,@RequestParam("loginMemId") Integer loginMemId) {
+		return propSellOrderService.findByPropId(propId,loginMemId);
 	}
 
 	// 根據gameId及memId及Order=0(販賣中)找所有賣單
