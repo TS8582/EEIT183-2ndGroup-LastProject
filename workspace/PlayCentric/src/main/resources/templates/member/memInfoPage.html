@@ -240,6 +240,8 @@
             console.log(res);
             if (res.data == '更新成功!') {
               getMemInfo();
+            } else if (res.data == 'anotherLogin') {
+              window.location.href = '/PlayCentric/member/homeShowErr/'+res.data;
             }
             doAlert(res.data);
           })

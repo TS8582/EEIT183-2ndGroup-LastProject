@@ -32,16 +32,16 @@ public class ECPayService {
     @Autowired
     private NgrokConfig ngrokConfig;
 
-    @Value("${ecpay.recharge_return_url}")
+    @Value("${recharge.return_url}")
     private String rechargeReturnUrl;
 
-    @Value("${ecpay.recharge_client_back_url}")
+    @Value("${recharge.client_back_url}")
     private String rechargeClientBackUrl;
 
-    @Value("${ecpay.recharge_trade_desc}")
+    @Value("${recharge.trade_desc}")
     private String rechargeTradeDesc;
 
-    @Value("${ecpay.recharge_item_name}")
+    @Value("${recharge.item_name}")
     private String rechargeItemName;
 
     @Value("${ecpay.merchant_trade_date_format}")

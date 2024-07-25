@@ -76,7 +76,7 @@
                 <label for="addCookie" class="form-label">保持登入</label>
               </div>
               <div class="form-btn d-flex">
-                <a href="#" class="align-self-center" >忘記密碼</a>
+                <a href="#" id="forget-password" class="align-self-center">忘記密碼</a>
                 <button type="submit" class="btn btn-primary ms-auto me-2">登入</button>
                 <button type="button" class="btn btn-secondary" onclick="window.history.back()">取消</button>
               </div>
@@ -88,10 +88,10 @@
               <a id="googleLogin" class="btn p-3 border rounded-0" th:href="@{/member/google-login}">
                 <img class="h-35px" th:src="@{/images/googleLogo.png}" alt="">
                 使用Google登入</a>
-                <div class="form-check form-switch ms-2">
-                  <input class="form-check-input" type="checkbox" role="switch" id="googleAddCookie">
-                  <label class="form-check-label" for="googleAddCookie">保持登入</label>
-                </div>
+              <div class="form-check form-switch ms-2">
+                <input class="form-check-input" type="checkbox" role="switch" id="googleAddCookie">
+                <label class="form-check-label" for="googleAddCookie">保持登入</label>
+              </div>
             </div>
           </div>
           <!-- 註冊框內容 -->
@@ -158,6 +158,26 @@
           </div>
         </div>
 
+        <!-- 忘記密碼用Modal -->
+        <div id="forgetPwdModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-body">
+                <form id="modalForm">
+                  <h1 class="my-3 text-center">忘記密碼</h1>
+                  <div class="d-flex my-4">
+                    <input type="text" class="form-control" id="accOrEmail" name="accOrEmail" placeholder="請輸入會員 帳號 或 Email" required>
+                  </div>
+                  <div class="d-flex">
+                    <button type="submit" class="btn btn-primary ms-auto">送出</button>
+                    <button type="button" class="btn btn-secondary mx-3" data-bs-dismiss="modal">取消</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     <div>
@@ -166,19 +186,27 @@
 
   <script>
     $(function () {
-      const homePageUrl = "/PlayCentric/member/login"
       const loginUrl = "/PlayCentric/member/login"
       const registUrl = "/PlayCentric/member/regist";
+      const forgetPwdUrl = "/PlayCentric/member/api/sendPtUrl";
       const googleUrl = $('#googleLogin').attr('href');
-      var loginTab = new bootstrap.Tab(document.querySelector('#login-tab'));
+      const loginTab = new bootstrap.Tab(document.querySelector('#login-tab'));
+      const forgetPwdModal = new bootstrap.Modal('#forgetPwdModal');
       const redirectMsg = '[[${redirectMsg}]]'
 
       if (redirectMsg && redirectMsg.trim() != "") {
         doAlert(redirectMsg);
       }
 
-      $('#googleLogin').attr('href',googleUrl+'?addCookie='+$(this).is(':checked'))
+      $('#googleLogin').attr('href', googleUrl + '?addCookie=' + $(this).is(':checked'))
 
+
+      $('#forget-password').click(function (e) {
+
+        e.preventDefault()
+
+        forgetPwdModal.show();
+      })
 
       //自動確認密碼是否相同
       $('#registForm #password-confirm').blur(function () {
@@ -197,14 +225,34 @@
         }
       }
 
-      $('#googleAddCookie').change(function() { 
-        $('#googleLogin').attr('href',googleUrl+'?addCookie='+$(this).is(':checked'))
-        if ($(this).is(':checked')) { 
-          console.log('Checkbox is checked'); 
-        } else { 
+      $('#googleAddCookie').change(function () {
+        $('#googleLogin').attr('href', googleUrl + '?addCookie=' + $(this).is(':checked'))
+        if ($(this).is(':checked')) {
+          console.log('Checkbox is checked');
+        } else {
           console.log('Checkbox is not checked');
-        } 
+        }
       });
+
+      $('#modalForm').submit(function (e) {
+
+        e.preventDefault()
+
+        const formdataObject = new FormData(this);
+        const addCookie = $('#addCookie').prop('checked');
+        formdataObject.set('addCookie', addCookie);
+
+        axios.post(forgetPwdUrl, formdataObject)
+          .then(res => {
+            console.log(res);
+            doAlert(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+
+          $('#forgetPwdModal').modal('hide');
+      })
 
       $('#login-form').submit(function (e) {
 
@@ -212,7 +260,7 @@
 
         const formdataObject = new FormData(this);
         const addCookie = $('#addCookie').prop('checked');
-        formdataObject.set('addCookie',addCookie);
+        formdataObject.set('addCookie', addCookie);
 
         axios.post(loginUrl, formdataObject)
           .then(res => {

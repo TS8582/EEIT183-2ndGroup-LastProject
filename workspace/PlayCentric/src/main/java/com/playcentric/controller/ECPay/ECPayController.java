@@ -43,7 +43,7 @@ public class ECPayController {
         return aioCheckOutALLForm;
     }
 
-    @PostMapping("/ecPayReturn")
+    @PostMapping("/recharge/ecPayReturn")
     @ResponseBody
     public String rechargeReturn(@RequestParam Map<String, String> params) {
         try {
@@ -64,7 +64,7 @@ public class ECPayController {
         return "0|Error";
     }
 
-    @GetMapping("/ecPayOK")
+    @GetMapping("/personal/ecPayOK")
     public String backFromEcPay(RedirectAttributes redirectAttributes, Model model) {
         LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
         String rechargeResult = "儲值完成!";

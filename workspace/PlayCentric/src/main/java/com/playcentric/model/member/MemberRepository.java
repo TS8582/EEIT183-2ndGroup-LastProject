@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 
 
+
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 	Member findByAccount(String account);
@@ -26,6 +27,8 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	Member findByEmail(String email);
 
 	Member findByGoogeId(String googeId);
+
+	Member findByAccountOrEmail(String account, String email);
 
 	Page<Member> findByStatus(Short status, Pageable pageable);
 

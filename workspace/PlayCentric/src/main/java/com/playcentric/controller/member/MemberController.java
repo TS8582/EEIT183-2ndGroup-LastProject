@@ -231,6 +231,10 @@ public class MemberController {
 	public String updateSelfMember(@ModelAttribute Member member, @RequestParam("photoFile") MultipartFile photoFile,
 			Model model)
 			throws IOException {
+		LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
+		if (loginMember!=null && loginMember.getMemId()!=member.getMemId()) {
+			return "anotherLogin";
+		}
 		return updateMember(member, photoFile, model);
 	}
 
@@ -255,7 +259,8 @@ public class MemberController {
 					&& memberService.checkAccountExist(member.getAccount())) {
 				return "帳號已存在";
 			}
-			if (!originMem.getEmail().equals(member.getEmail()) && memberService.checkEmailExist(member.getEmail())) {
+			if (!originMem.getEmail().equals(member.getEmail())
+					&& memberService.checkEmailExist(member.getEmail(), member.getMemId())) {
 				return "Email已註冊";
 			}
 			if (!photoFile.isEmpty()) {
@@ -317,6 +322,15 @@ public class MemberController {
 
 	@PostMapping("/api/sendPtUrl")
 	@ResponseBody
+	public String sendPTEmail(@RequestParam String accOrEmail) {
+		Member member = memberService.findByAccOrEmail(accOrEmail);
+		if (member==null) {
+			return "信件已發送";
+		}
+		return sendPTEmail(member.getMemId());
+	}
+
+	// 寄送修改密碼信件
 	public String sendPTEmail(@RequestParam Integer memId) {
 		try {
 
