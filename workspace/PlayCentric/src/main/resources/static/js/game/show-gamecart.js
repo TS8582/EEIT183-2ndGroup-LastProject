@@ -5,6 +5,30 @@ const gopay = document.querySelector('.gopay');
 const pay = document.querySelector('.pay');
 const remove = document.querySelectorAll('.remove');
 const showPoints = document.querySelector('.showPoints');
+const cancel = document.querySelector('.cancel');
+
+cancel.addEventListener('click', e => {
+    pay.classList.add('hidden');
+    gopay.classList.add('mybtn', 'mybtn-green');
+    gopay.classList.remove('mybtn-disabled');
+    remove.forEach(elm => {
+        elm.classList.add('mybtn-remove', 'mybtn');
+        elm.classList.remove('vis-hidden');
+    });
+})
+
+// 按下結帳按鈕顯示選擇付款方式
+if (gopay) {
+    gopay.addEventListener('click', e => {
+        pay.classList.remove('hidden');
+        gopay.classList.remove('mybtn', 'mybtn-green');
+        gopay.classList.add('mybtn-disabled');
+        remove.forEach(elm => {
+            elm.classList.remove('mybtn-remove', 'mybtn');
+            elm.classList.add('vis-hidden');
+        });
+    })
+}
 
 // 計算總價
 let totalPrice = 0;
@@ -32,19 +56,6 @@ document.querySelector('.choosepay').addEventListener('change', e => {
         showPoints.classList.remove('hidden');
     }
 })
-
-// 按下結帳按鈕顯示選擇付款方式
-if (gopay) {
-    gopay.addEventListener('click', e => {
-        pay.classList.remove('hidden');
-        gopay.classList.remove('mybtn', 'mybtn-green');
-        gopay.classList.add('mybtn-disabled');
-        remove.forEach(elm => {
-            elm.classList.remove('mybtn-remove', 'mybtn');
-            elm.classList.add('vis-hidden');
-        });
-    }, { once: true })
-}
 
 
 // 從購物車內移除

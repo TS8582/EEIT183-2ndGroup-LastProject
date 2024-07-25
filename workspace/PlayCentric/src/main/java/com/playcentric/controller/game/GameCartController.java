@@ -43,9 +43,6 @@ public class GameCartController {
 	
 	@GetMapping("/get")
 	public String findMemGameCarts(@ModelAttribute("loginMember") LoginMemDto loginMember,Model model) {
-		if (loginMember == null) {
-			return "redirect:/member/homeShowErr/notLogin";
-		}
 		List<GameCarts> gamecarts = gcService.findByMemId(loginMember.getMemId());
 		List<Game> games = new ArrayList<>();
 		if (gamecarts.size() > 0) {
