@@ -354,7 +354,7 @@
 
       function loadGames() {
         axios
-          .get("http://localhost:8080/PlayCentric/prop/findAllGame")
+          .get("/PlayCentric/prop/findAllGame")
           .then(function (res) {
             const games = res.data;
             const selectGame = $("#SelectGame");
@@ -381,10 +381,9 @@
       // 根據 gameId 獲取所有道具種類
       function fetchPropTypesByGameId(gameId, callback) {
         axios
-          .get(
-            "http://localhost:8080/PlayCentric/prop/findAllPropTypesByGameId",
-            { params: { gameId: gameId } }
-          )
+          .get("/PlayCentric/prop/findAllPropTypesByGameId", {
+            params: { gameId: gameId },
+          })
           .then((res) => {
             callback(res.data);
             const propTypes = res.data;
@@ -403,7 +402,7 @@
       // 根據 gameId 查找所有道具
       function findAllPropsByGameId(gameId) {
         axios
-          .get("http://localhost:8080/PlayCentric/prop/findAllPropsByGameId", {
+          .get("/PlayCentric/prop/findAllPropsByGameId", {
             params: { gameId: gameId },
           })
           .then((res) => {
@@ -487,7 +486,7 @@
           colDiv.className = "col-3 mb-3"; // 每個圖片占3列，並且有底部外邊距
 
           const img = document.createElement("img");
-          img.src = `http://localhost:8080/PlayCentric/prop/image?id=${item.prop.propImageId}`;
+          img.src = `/PlayCentric/prop/image?id=${item.prop.propImageId}`;
           img.alt = item.prop.propName;
           img.className = "img-fluid";
           img.style.width = "6vw";
@@ -506,7 +505,7 @@
 
             // 更新倉庫道具資訊
             invPropInfoContainer.innerHTML = `
-                              <img src="http://localhost:8080/PlayCentric/prop/image?id=${item.prop.propImageId}" class="img-fluid rounded-4" alt="${item.prop.propName}" style="width: 11vw;">
+                              <img src="/PlayCentric/prop/image?id=${item.prop.propImageId}" class="img-fluid rounded-4" alt="${item.prop.propName}" style="width: 11vw;">
                               <br>
                               <h5 class="fs-2">${item.prop.propName}</h5>
                               <p class="fs-4">描述: ${item.prop.propDescription}</p>
@@ -537,7 +536,7 @@
           <div class="item ${itemClassId} card" data-propid="${prop.propId}" style="margin-bottom:3em; width:16vw; position: absolute; text-decoration: none; color: inherit; text-align: center; border:2px solid white">
             <div style="position: absolute; margin: auto;"></div>
             <div class="card-body p-0" style="margin: auto; max-width: 250px; max-height: 330px;">
-              <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw; display: block; margin: auto;">
+              <img src="/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw; display: block; margin: auto;">
               <div class="card-text">
                 <p class="hidden-description">${prop.propDescription}</p>
                 <h3 class="card-title pt-0 m-0 fs-5">${prop.propName}</h3>
@@ -837,7 +836,7 @@
               console.log(`Prop details: ${JSON.stringify(prop)}`);
 
               const img = document.createElement("img");
-              img.src = `http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}`;
+              img.src = `/PlayCentric/prop/image?id=${prop.propImageId}`;
               img.alt = prop.propName;
               img.className = "img-fluid";
               img.style.width = "3vw";
@@ -859,7 +858,7 @@
 
                 // 更新商品資訊
                 invPropInfoContainer.innerHTML = `
-                                <img src="http://localhost:8080/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw;">
+                                <img src="/PlayCentric/prop/image?id=${prop.propImageId}" class="img-fluid rounded-4" alt="${prop.propName}" style="width: 11vw;">
                                 <br>
                                 <h5 class="fs-2">${prop.propName}</h5>
                                 <p class="fs-4">描述: ${prop.propDescription}</p>
