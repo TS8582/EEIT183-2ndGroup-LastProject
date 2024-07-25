@@ -3,6 +3,10 @@ package com.playcentric.controller.prop.front.info;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,10 +30,15 @@ public class PropInfoController {
 		return "prop/front/propInfoPage";
 	}
 	
-	//回傳買單資訊
-	@GetMapping("prop/front/propInfo")
-	@ResponseBody
-	public List<PropBuyOrder2> findAllBuyPropsByMemId(@RequestParam("memId") int memId){
-		return propBuyOrderService2.findAllByMemId(memId);
-	}
+    // 回傳買單資訊
+    @GetMapping("prop/front/propInfo")
+    @ResponseBody
+    public Page<PropBuyOrder2> findAllBuyPropsByMemId(
+            @RequestParam("memId") int memId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        
+        Pageable pageable = PageRequest.of(page, size);
+        return propBuyOrderService2.findOrdersByMemId(memId, pageable);
+    }
 }

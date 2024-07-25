@@ -1,45 +1,188 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <title>PlayCentric-道具購買紀錄</title>
+    <style>
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none !important;
+        box-shadow: none !important;
+      }
 
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <title>PlayCentric-個人資訊</title>
-  <style>
-    .h-0 {
-      height: 0;
-    }
-  </style>
-</head>
+      .h-35px {
+        height: 35px;
+      }
 
-<body>
-  <div th:replace="~{member/memInfoAside}"></div>
+      .cursor-pointer {
+        cursor: pointer;
+      }
 
-  <div class="p-0">
-    <div class="container">
-      <div class="text-center mt-3"><span class="h1">道具購買紀錄</span><span id="role"
-          class="text-small text-secondary"></span>
-        <br>
-        <table>
-          <tr>
-            <th>訂單編號</th>
-            <th>道具編號</th>
-            <th>道具名稱</th>
-            <th>數量</th>
-            <th>價格</th>
-            <th>付款方式</th>
-          </tr>
-          <!-- 自動生成tr td -->
-        </table>
+      .h-0 {
+        height: 0;
+      }
+    </style>
+  </head>
 
+  <body>
+    <div th:replace="~{member/memInfoAside}"></div>
 
+    <div class="p-0">
+      <div class="container">
+        <div class="text-center mt-3">
+          <span class="h1">道具購買紀錄</span>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <table id="buyOrderTable" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>訂單編號</th>
+                  <th>道具編號</th>
+                  <th>道具名稱</th>
+                  <th>數量</th>
+                  <th>單價</th>
+                  <th>總價</th>
+                  <th>付款方式</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 自動生成tr td -->
+              </tbody>
+            </table>
+            <!-- 分頁 -->
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <label for="pageSize">每頁顯示</label>
+                <select
+                  id="pageSize"
+                  class="form-control d-inline-block w-auto"
+                >
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+                <span>筆資料</span>
+              </div>
+              <ul id="pagination" class="pagination">
+                <!-- 分頁按鈕 -->
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script>
-  </script>
-</body>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      $(function () {
+        let currentPage = 0;
+        let pageSize = 10;
+        const memId = Number.parseInt("[[${session.loginMember.memId}]]");
+        const propInfoUrl = "/PlayCentric/prop/front/propInfo";
 
+        getPropInfo();
+
+        $("#pageSize").change(function () {
+          pageSize = parseInt($(this).val());
+          currentPage = 0;
+          getPropInfo();
+        });
+
+        function getPropInfo() {
+          axios({
+            method: "get",
+            url: propInfoUrl,
+            params: { memId, page: currentPage, size: pageSize },
+          })
+            .then((res) => {
+              console.log(res);
+              showPropInfo(res.data.content);
+              setupPagination(res.data);
+            })
+            .catch((err) => {
+              console.log(err);
+              if (err.response && err.response.status === 401) {
+                window.location.href =
+                  "/PlayCentric/member/homeShowErr/" + err.response.data;
+              }
+            });
+        }
+
+        function showPropInfo(data) {
+          const tableBody = $("#buyOrderTable tbody");
+          tableBody.empty();
+
+          data.forEach((order) => {
+            // 計算總價
+            const totalPrice = order.price * order.quantity;
+            const row = $("<tr>");
+            row.html(`
+              <td>${order.buyOrderId}</td>
+              <td>${order.props.propId}</td>
+              <td>${order.props.propName}</td>
+              <td>${order.quantity}</td>
+              <td>${order.price}</td>
+              <td>${totalPrice}</td>
+
+              <td>${order.paymentId}</td>
+            `);
+            tableBody.append(row);
+          });
+        }
+
+        function setupPagination(data) {
+          const totalPages = data.totalPages;
+          const pagination = $("#pagination");
+          pagination.empty();
+
+          if (currentPage > 0) {
+            pagination.append(
+              `<li class="page-item"><a class="page-link" href="#" data-page="${
+                currentPage - 1
+              }">上一頁</a></li>`
+            );
+          }
+
+          for (let i = 0; i < totalPages; i++) {
+            const pageItem = $(`<li class="page-item ${
+              i === currentPage ? "active" : ""
+            }">
+                                  <a class="page-link" href="#" data-page="${i}">${
+              i + 1
+            }</a>
+                                </li>`);
+            pagination.append(pageItem);
+          }
+
+          if (currentPage < totalPages - 1) {
+            pagination.append(
+              `<li class="page-item"><a class="page-link" href="#" data-page="${
+                currentPage + 1
+              }">下一頁</a></li>`
+            );
+          }
+
+          $(".page-link").click(function (e) {
+            e.preventDefault();
+            currentPage = $(this).data("page");
+            getPropInfo();
+          });
+        }
+      });
+    </script>
+  </body>
 </html>
