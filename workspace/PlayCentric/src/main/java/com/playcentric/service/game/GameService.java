@@ -97,7 +97,8 @@ public class GameService {
 			game.setDiscountedPrice(discountedPrice);
 			return discountedPrice;
 		}
-		return null;
+		game.setDiscountedPrice(game.getPrice());
+		return game.getPrice();
 	}
 	
 	

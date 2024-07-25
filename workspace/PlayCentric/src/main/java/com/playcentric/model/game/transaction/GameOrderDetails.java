@@ -33,11 +33,11 @@ public class GameOrderDetails {
 	private BigDecimal discountRate;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gameId")
+	@JoinColumn(name = "gameId",insertable = false,updatable = false)
 	private Game game;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gameOrderId")
+	@JoinColumn(name = "gameOrderId",insertable = false,updatable = false)
 	private GameOrder gameOrder;
 	
 }

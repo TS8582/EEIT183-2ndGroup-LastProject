@@ -23,7 +23,7 @@ import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameService;
 
 @Controller
-@RequestMapping("/gamecart")
+@RequestMapping("/personal/gamecart")
 @SessionAttributes("loginMember")
 public class GameCartController {
 	
@@ -43,9 +43,6 @@ public class GameCartController {
 	
 	@GetMapping("/get")
 	public String findMemGameCarts(@ModelAttribute("loginMember") LoginMemDto loginMember,Model model) {
-		if (loginMember == null) {
-			return "redirect:/game/gameStore";
-		}
 		List<GameCarts> gamecarts = gcService.findByMemId(loginMember.getMemId());
 		List<Game> games = new ArrayList<>();
 		if (gamecarts.size() > 0) {

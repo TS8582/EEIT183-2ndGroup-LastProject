@@ -38,6 +38,7 @@ public class GameOrder {
 	@Column(insertable=false, updatable=false)
 	private Integer paymentId;
 	private Integer total;
+	private String tradeNo;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "memId")

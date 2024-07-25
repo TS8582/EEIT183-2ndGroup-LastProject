@@ -6,7 +6,7 @@ function addToCart() {
                 const gameId = elm.closest('.gameitem').querySelector('.gameId').innerHTML.trim();
                 const memId = document.querySelector('.memId').innerHTML.trim();
 
-                axios.get('/PlayCentric/gamecart/insert', {
+                axios.get('/PlayCentric/personal/api/gamecart/insert', {
                     params: {
                         gameId: gameId,
                         memId: memId
@@ -20,6 +20,9 @@ function addToCart() {
                         doAlert('成功加入購物車');
                     })
                     .catch(err => {
+                        if (err.response && err.response.status === 401) {
+                            window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+                        }
                         console.error(err);
                     })
             }, { once: true })

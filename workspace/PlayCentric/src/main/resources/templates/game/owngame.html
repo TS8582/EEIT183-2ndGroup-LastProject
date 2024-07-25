@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <title th:text="${session.loginMember} ? ${session.loginMember.nickname} + 的遊戲收藏庫"></title>
+</head>
+
+<body>
+    <div th:replace="~{member/memInfoAside}"></div>
+
+    <div class="container">
+        <th:block th:if="${games}" th:each="game:${games}">
+            <div class="flex items-center px-6 py-5 game">
+                <div class="hidden gameId" th:text="${game.gameId}"></div>
+                <div class="flex w-4/5">
+                    <!-- 遊戲 -->
+                    <div class="w-3/5 flex justify-center items-center">
+                        <a class="text-black text-decoration-none" th:if="${!game.imageLibs.empty}"
+                            th:href="@{/game/showGame(gameId=${game.gameId})}">
+                            <img class="h-32 lg:h-64 w-auto"
+                                th:src="@{/imagesLib/image{id}(id=${game.imageLibs[0].imageId})}" alt="產品圖片">
+                        </a>
+                        <a class="text-black text-decoration-none" th:href="@{/game/showGame(gameId=${game.gameId})}"
+                            th:if="${game.imageLibs.empty}">
+                            <img class="h-32 lg:h-64 w-auto" alt="產品圖片">
+                        </a>
+                    </div>
+                    <div class="flex flex-col justify-between ml-4 flex-grow w-2/5">
+                        <a th:href="@{/game/showGame(gameId=${game.gameId})}"
+                            class="font-bold text-4xl text-black text-decoration-none" th:text="${game.gameName}"></a>
+                        <span class="text-gray-600 font-semibold text-xl"
+                            th:text="發布日期： + ${#temporals.format(game.releaseAt,'yyyy年MM月dd日')}"></span>
+                    </div>
+                </div>
+                <div class="w-1/5 font-semibold text-lg flex justify-end">
+                    <span class="mybtn mybtn-sky download">下載</span>
+                </div>
+            </div>
+            <div class="h-1 w-full bg-black"></div>
+        </th:block>
+    </div>
+
+</body>
+
+</html>
