@@ -55,8 +55,14 @@ public class GameOrderController {
 	
 	
 	@GetMapping("/return")
-	public String gameorder(@RequestParam Integer paymentId) {
-		if (paymentId == 1) {
+	public String gameorder(
+			@RequestParam Integer paymentId,
+			@ModelAttribute("loginMember") LoginMemDto loginMember
+			) {
+		if (loginMember == null) {
+			return "redirect:/member/showLoginErr/notLogin";
+		}
+		else if (paymentId == 1) {
 			return "redirect:/gameorder/pcwallet";
 		}
 		else if (paymentId == 2) {

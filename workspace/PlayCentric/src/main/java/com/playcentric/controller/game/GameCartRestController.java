@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/gamecart")
+@RequestMapping("/api/gamecart")
 @SessionAttributes("loginMember")
 public class GameCartRestController {
 	
