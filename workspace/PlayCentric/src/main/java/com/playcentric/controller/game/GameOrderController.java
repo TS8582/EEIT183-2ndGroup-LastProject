@@ -44,7 +44,6 @@ public class GameOrderController {
 			@RequestParam Integer paymentId,
 			@ModelAttribute("loginMember") LoginMemDto loginMember
 			) {
-		System.out.println(paymentId);
 		if (loginMember == null) {
 			return "redirect:/member/showLoginErr/notLogin";
 		}
@@ -87,7 +86,6 @@ public class GameOrderController {
 			HttpSession session,
 			@RequestParam(name = "TradeNo", required = false) String tradeNo
 			) {
-		System.out.println("有進來嗎");
 		LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
 		goService.createOrder(loginMember,tradeNo);
 		return "game/gameorder-ok";
