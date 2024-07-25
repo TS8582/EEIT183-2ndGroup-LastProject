@@ -45,7 +45,7 @@ public class GameOrderController {
 			@ModelAttribute("loginMember") LoginMemDto loginMember
 			) {
 		if (loginMember == null) {
-			return "redirect:/member/showLoginErr/notLogin";
+			return "redirect:/member/homeShowErr/notLogin";
 		}
 		else if (paymentId == 1) {
 			return "redirect:/gameorder/pcwallet";

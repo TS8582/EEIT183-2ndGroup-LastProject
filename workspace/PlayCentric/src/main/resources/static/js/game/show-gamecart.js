@@ -5,6 +5,7 @@ const gopay = document.querySelector('.gopay');
 const pay = document.querySelector('.pay');
 const remove = document.querySelectorAll('.remove');
 const showPoints = document.querySelector('.showPoints');
+const choosepay = document.querySelector('.choosepay');
 const cancel = document.querySelector('.cancel');
 let totalPrice = 0;
 let totalGame = parseInt(gamecount.innerHTML.trim());
@@ -14,6 +15,7 @@ if (totalGame === 0) {
     nogame.classList.remove('hidden');
 }
 
+//取消結帳按鈕
 cancel.addEventListener('click', e => {
     pay.classList.add('hidden');
     gopay.classList.add('mybtn', 'mybtn-green');
@@ -24,6 +26,7 @@ cancel.addEventListener('click', e => {
     });
 })
 
+// 按下結帳按鈕顯示選擇付款方式
 function gopayfunc() {
     pay.classList.remove('hidden');
     gopay.classList.remove('mybtn', 'mybtn-green');
@@ -34,7 +37,6 @@ function gopayfunc() {
     });
 }
 
-// 按下結帳按鈕顯示選擇付款方式
 if (gopay) {
     gopay.addEventListener('click', gopayfunc)
 }
@@ -56,7 +58,7 @@ document.querySelector('form').addEventListener('submit', e => {
 
 
 // 錢包餘額顯示
-document.querySelector('.choosepay').addEventListener('change', e => {
+choosepay.addEventListener('change', e => {
     if (e.target.value !== '1') {
         showPoints.classList.add('hidden');
     }
