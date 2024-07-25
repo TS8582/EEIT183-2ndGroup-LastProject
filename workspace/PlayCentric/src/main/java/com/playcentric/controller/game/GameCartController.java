@@ -23,7 +23,7 @@ import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameService;
 
 @Controller
-@RequestMapping("/gamecart")
+@RequestMapping("/personal/gamecart")
 @SessionAttributes("loginMember")
 public class GameCartController {
 	
