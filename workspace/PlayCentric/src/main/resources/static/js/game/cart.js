@@ -6,7 +6,7 @@ function addToCart() {
                 const gameId = elm.closest('.gameitem').querySelector('.gameId').innerHTML.trim();
                 const memId = document.querySelector('.memId').innerHTML.trim();
 
-                axios.get('/PlayCentric/api/gamecart/insert', {
+                axios.get('/PlayCentric/personal/api/gamecart/insert', {
                     params: {
                         gameId: gameId,
                         memId: memId
