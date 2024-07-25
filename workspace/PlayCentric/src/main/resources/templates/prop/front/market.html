@@ -918,6 +918,8 @@
           cancelSell(orderId);
           window.alert("已成功下架!");
           generateInventoryItems(memId, selectedGameId);
+          // 重新載入商品
+          findAllPropsByGameId(selectedGameId);
         });
 
       // 退回賣單的方法
