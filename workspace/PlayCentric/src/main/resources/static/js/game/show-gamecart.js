@@ -52,7 +52,7 @@ remove.forEach(elm => {
     elm.addEventListener('click', e => {
         const gameId = parseInt(elm.closest('.game').querySelector('.gameId').innerHTML.trim());
 
-        axios.get('/PlayCentric/gamecart/remove', {
+        axios.get('/PlayCentric/api/gamecart/remove', {
             params: {
                 gameId: gameId
             }

@@ -289,7 +289,7 @@ public class GameController {
 			Model model
 			) {
 		if (loginMember == null) {
-			return "redirect:/member/showLoginErr/notLogin";
+			return "redirect:/member/homeShowErr//notLogin";
 		}
 		List<OwnGameLib> ownGames = oglService.findByMemId(loginMember.getMemId());
 		List<Game> games = new ArrayList<>();
