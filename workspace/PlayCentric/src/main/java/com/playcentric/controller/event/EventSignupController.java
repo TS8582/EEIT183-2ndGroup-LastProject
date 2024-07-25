@@ -125,14 +125,19 @@ public class EventSignupController {
         logger.info("獲取報名詳情，報名ID: {}", signupId);
         return eventSignupService.getSignupById(signupId)
             .map(signup -> {
-                logger.info("成功獲取報名詳情");
-                return ResponseEntity.ok(signup);
+                EventSignupDTO dto = new EventSignupDTO();
+                dto.setSignupId(signup.getSignupId());
+                dto.setWorkTitle(signup.getWorkTitle());
+                dto.setWorkDescription(signup.getWorkDescription());
+                dto.setVoteCount(eventVoteService.getVoteCountForSignup(signup.getSignupId()));
+                dto.setMember(signup.getMember());
+                return ResponseEntity.ok(dto);
             })
             .orElseGet(() -> {
                 logger.warn("未找到指定的報名記錄");
                 return ResponseEntity.notFound().build();
             });
-    }
+    }    
 
     /**
      * 更新報名信息（REST API）
@@ -189,6 +194,7 @@ public class EventSignupController {
             dto.setWorkTitle(signup.getWorkTitle());
             dto.setWorkDescription(signup.getWorkDescription());
             dto.setVoteCount(eventVoteService.getVoteCountForSignup(signup.getSignupId()));
+            dto.setMember(signup.getMember());
             return dto;
         }).collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
