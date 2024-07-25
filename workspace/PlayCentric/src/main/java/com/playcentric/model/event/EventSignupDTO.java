@@ -13,7 +13,10 @@ public class EventSignupDTO {
     private String workImageBase64;
     private Member member;
     
-    //添加接受 long 參數的 setVoteCount 方法
+    /**
+     * 設置投票數量
+     * @param voteCount 投票數量
+     */
     public void setVoteCount(long voteCount) {
         this.voteCount = voteCount;
     }

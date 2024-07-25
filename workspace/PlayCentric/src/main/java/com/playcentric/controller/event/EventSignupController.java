@@ -11,16 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -53,6 +44,8 @@ public class EventSignupController {
     
     @Autowired
     private EventVoteService eventVoteService;
+
+    // ======== 網頁視圖相關方法 ========
 
     /**
      * 顯示報名管理頁面
@@ -113,6 +106,8 @@ public class EventSignupController {
         }
         return "redirect:/events/public/detail/" + eventId;
     }
+
+    // ======== API 相關方法 ========
 
     /**
      * 獲取報名詳情（REST API）
@@ -201,7 +196,7 @@ public class EventSignupController {
     }
     
     /**
-     * 獲取報名圖片
+     * 獲取報名圖片（REST API）
      * @param signupId 報名ID
      * @return 報名圖片的ResponseEntity
      */

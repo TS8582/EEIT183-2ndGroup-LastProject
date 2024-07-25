@@ -28,6 +28,8 @@ public class EventVoteService {
     @Autowired
     private MemberRepository memberRepository;
 
+    // ======== 投票管理相關方法 ========
+
     /**
      * 創建新的投票，包含投票限制和時間限制檢查
      * @param memberId 會員ID
@@ -76,19 +78,9 @@ public class EventVoteService {
     }
 
     /**
-     * 讀取特定的投票記錄
-     * @param voteId 投票ID
-     * @return 投票記錄
-     * @throws RuntimeException 如果找不到指定的投票記錄
-     */
-    public EventVote getVote(Integer voteId) {
-        return eventVoteRepository.findById(voteId)
-                .orElseThrow(() -> new RuntimeException("找不到指定的投票記錄"));
-    }
-
-    /**
      * 更新投票記錄
-     * @param eventVote 更新後的投票記錄
+     * @param voteId 投票ID
+     * @param eventVoteStatus 新的投票狀態
      * @return 更新後的投票記錄
      * @throws RuntimeException 如果找不到指定的投票記錄
      */
@@ -117,6 +109,19 @@ public class EventVoteService {
         eventSignupRepository.save(eventSignup);
 
         eventVoteRepository.deleteById(voteId);
+    }
+
+    // ======== 投票查詢相關方法 ========
+
+    /**
+     * 讀取特定的投票記錄
+     * @param voteId 投票ID
+     * @return 投票記錄
+     * @throws RuntimeException 如果找不到指定的投票記錄
+     */
+    public EventVote getVote(Integer voteId) {
+        return eventVoteRepository.findById(voteId)
+                .orElseThrow(() -> new RuntimeException("找不到指定的投票記錄"));
     }
 
     /**
@@ -171,6 +176,11 @@ public class EventVoteService {
                 ));
     }
     
+    /**
+     * 獲取特定報名的投票數量
+     * @param signupId 報名ID
+     * @return 投票數量
+     */
     public long getVoteCountForSignup(Integer signupId) {
         return eventVoteRepository.countByEventSignup_SignupId(signupId);
     }

@@ -25,6 +25,8 @@ public class EventSignupService {
     @Autowired
     private EventRepository eventRepository;
 
+    // ======== 報名管理相關方法 ========
+
     /**
      * 創建新的報名
      * @param eventSignup 新的報名數據
@@ -51,6 +53,40 @@ public class EventSignupService {
         logger.info("成功創建新的報名，報名ID: {}", savedSignup.getSignupId());
         return savedSignup;
     }
+
+    /**
+     * 更新報名信息
+     * @param eventSignup 更新的報名數據
+     * @return 更新後的報名數據
+     * @throws RuntimeException 如果報名記錄不存在
+     */
+    public EventSignup updateSignup(EventSignup eventSignup) {
+        logger.info("開始更新報名信息，報名ID: {}", eventSignup.getSignupId());
+        if (!eventSignupRepository.existsById(eventSignup.getSignupId())) {
+            logger.error("報名記錄不存在，報名ID: {}", eventSignup.getSignupId());
+            throw new RuntimeException("報名記錄不存在");
+        }
+        EventSignup updatedSignup = eventSignupRepository.save(eventSignup);
+        logger.info("成功更新報名信息，報名ID: {}", updatedSignup.getSignupId());
+        return updatedSignup;
+    }
+
+    /**
+     * 刪除報名
+     * @param signupId 報名ID
+     * @throws RuntimeException 如果報名記錄不存在
+     */
+    public void deleteSignup(Integer signupId) {
+        logger.info("開始刪除報名，報名ID: {}", signupId);
+        if (!eventSignupRepository.existsById(signupId)) {
+            logger.error("報名記錄不存在，報名ID: {}", signupId);
+            throw new RuntimeException("報名記錄不存在");
+        }
+        eventSignupRepository.deleteById(signupId);
+        logger.info("成功刪除報名，報名ID: {}", signupId);
+    }
+
+    // ======== 報名查詢相關方法 ========
 
     /**
      * 根據ID獲取報名信息
@@ -101,38 +137,6 @@ public class EventSignupService {
         EventSignup signup = eventSignupRepository.findById(signupId)
             .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
         return signup.getWorkImage();
-    }
-
-    /**
-     * 更新報名信息
-     * @param eventSignup 更新的報名數據
-     * @return 更新後的報名數據
-     * @throws RuntimeException 如果報名記錄不存在
-     */
-    public EventSignup updateSignup(EventSignup eventSignup) {
-        logger.info("開始更新報名信息，報名ID: {}", eventSignup.getSignupId());
-        if (!eventSignupRepository.existsById(eventSignup.getSignupId())) {
-            logger.error("報名記錄不存在，報名ID: {}", eventSignup.getSignupId());
-            throw new RuntimeException("報名記錄不存在");
-        }
-        EventSignup updatedSignup = eventSignupRepository.save(eventSignup);
-        logger.info("成功更新報名信息，報名ID: {}", updatedSignup.getSignupId());
-        return updatedSignup;
-    }
-
-    /**
-     * 刪除報名
-     * @param signupId 報名ID
-     * @throws RuntimeException 如果報名記錄不存在
-     */
-    public void deleteSignup(Integer signupId) {
-        logger.info("開始刪除報名，報名ID: {}", signupId);
-        if (!eventSignupRepository.existsById(signupId)) {
-            logger.error("報名記錄不存在，報名ID: {}", signupId);
-            throw new RuntimeException("報名記錄不存在");
-        }
-        eventSignupRepository.deleteById(signupId);
-        logger.info("成功刪除報名，報名ID: {}", signupId);
     }
     
     /**

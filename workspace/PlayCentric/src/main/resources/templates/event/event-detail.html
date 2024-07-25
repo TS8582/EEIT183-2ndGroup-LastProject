@@ -404,7 +404,9 @@ const eventId = /*[[${event.eventId}]]*/ null;
 const eventStatus = /*[[${event.eventStatus}]]*/ null;
 const userId = /*[[${session.loginMember?.memId}]]*/ null;
 
-// 備註: 載入參賽作品的函數
+/**
+ * 載入參賽作品的函數
+ */
 function loadEntries() {
     $('#entries-list').html('<p class="text-center">載入中，請稍候...</p>');
 
@@ -448,7 +450,10 @@ function loadEntries() {
     });
 }
 
-// 備註: 顯示作品詳情的函數
+/**
+ * 顯示作品詳情的函數
+ * @param {number} signupId - 報名ID
+ */
 function showEntryDetail(signupId) {
     $.ajax({
         url: '/PlayCentric/eventSignup/api/' + signupId,
@@ -474,21 +479,21 @@ function showEntryDetail(signupId) {
     });
 }
 
-// 備註: 投票函數
+/**
+ * 投票函數
+ * @param {number} signupId - 報名ID
+ */
 function vote(signupId) {
-    // 檢查用戶是否已登入
     if (!userId) {
         alert("請先登入後再投票");
         return;
     }
 
-    // 檢查活動是否已結束
     if (eventStatus == 2) {
         alert("活動已結束，無法投票");
         return;
     }
 
-    // 發送投票請求
     $.ajax({
         url: '/PlayCentric/eventVotes/api/create',
         method: 'POST',
@@ -496,7 +501,6 @@ function vote(signupId) {
         success: function (response) {
             if (response.success) {
                 alert("投票成功！");
-                // 更新所有顯示該作品投票數的元素
                 $(`.vote-count[data-signup-id="${signupId}"]`).text(response.updatedVoteCount);
             } else {
                 alert(response.message || "投票失敗，請稍後再試。");
@@ -513,7 +517,9 @@ function vote(signupId) {
     });
 }
 
-// 備註: 更新倒計時的函數
+/**
+ * 更新倒計時的函數
+ */
 function updateCountdown() {
     const now = new Date().getTime();
     const endTime = new Date(/*[[${event.eventEndTime}]]*/).getTime();
@@ -528,25 +534,41 @@ function updateCountdown() {
         document.getElementById("countdown").innerHTML = `${days}天 ${hours}時 ${minutes}分 ${seconds}秒`;
     } else {
         document.getElementById("countdown").innerHTML = "活動已結束";
-        // 活動結束後禁用報名按鈕
         $('#signupButton').prop('disabled', true).text('活動已結束');
     }
 }
 
-// 備註: 頁面加載完成後執行的函數
+/**
+ * 更新活動狀態的函數
+ * @param {Object} event - 活動對象
+ */
+function updateEventStatus(event) {
+    if (event.eventStatus === 1 && new Date(event.eventEndTime) < new Date()) {
+        event.eventStatus = 2; // 更新狀態為已結束
+        $('#eventStatus').text('已結束').removeClass('badge-success').addClass('badge-secondary');
+        $('#signupButton').prop('disabled', true).text('活動已結束');
+    }
+}
+
+// 頁面加載完成後執行的函數
 $(document).ready(function () {
     // 初始化 AOS 動畫
     AOS.init({
         duration: 1000,
         once: true
     });
+    
+    // 獲取活動數據並更新狀態
+    const event = /*[[${event}]]*/ null;
+    if (event) {
+        updateEventStatus(event);
+    }
 
     // 載入參賽作品
     loadEntries();
 
     // 綁定報名按鈕點擊事件
     $('#signupButton').click(function () {
-        // 檢查活動是否已結束
         if (eventStatus == 2) {
             alert("活動已結束，無法報名");
             return;
@@ -557,7 +579,6 @@ $(document).ready(function () {
     // 綁定報名表單提交事件
     $('#signupForm').submit(function (e) {
         e.preventDefault();
-        // 再次檢查活動是否已結束
         if (eventStatus == 2) {
             alert("活動已結束，無法報名");
             return;
@@ -599,7 +620,7 @@ $(document).ready(function () {
     }
 });
 /*]]>*/
-    </script>
+</script>
 </body>
 
 </html>

@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-
 @Controller
 @RequestMapping("/eventVotes")
 public class EventVoteController {
@@ -22,6 +21,8 @@ public class EventVoteController {
 
     @Autowired
     private EventVoteService eventVoteService;
+
+    // ======== 網頁視圖相關方法 ========
 
     /**
      * 顯示投票列表頁面
@@ -143,7 +144,7 @@ public class EventVoteController {
         return "event/vote-list";
     }
 
-    // API 部分
+    // ======== API 相關方法 ========
 
     /**
      * API: 創建新的投票
@@ -156,7 +157,6 @@ public class EventVoteController {
     public ResponseEntity<?> createVote(@RequestParam Integer memberId, @RequestParam Integer signupId) {
         try {
             EventVote vote = eventVoteService.createVote(memberId, signupId);
-            // 獲取更新後的票數
             long updatedVoteCount = eventVoteService.getVoteCountForSignup(signupId);
             return ResponseEntity.ok(Map.of(
                 "success", true, 
