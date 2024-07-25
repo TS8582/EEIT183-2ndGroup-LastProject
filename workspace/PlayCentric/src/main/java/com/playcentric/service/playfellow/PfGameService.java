@@ -60,7 +60,6 @@ public class PfGameService {
 		return pfGameDTOs;
 	}
 
-	
 	public List<PfGameDTO> findByPlayFellowId(Integer playFellowId) {
 		List<PfGame> pfGames = pfGameRepository.findByPlayFellowMemberPlayFellowId(playFellowId);
 		List<PfGameDTO> pfGameDTOs = new ArrayList<>();
@@ -70,8 +69,6 @@ public class PfGameService {
 		}
 		return pfGameDTOs;
 	}
-	
-	
 
 	// 這個只有審核通過 沒分性別
 	public List<PfGame> getAllPlayFellowMembersByGameId(Integer gameId) {
@@ -87,6 +84,7 @@ public class PfGameService {
 		return reviewSusscessPfmem;
 	}
 
+	
 	public List<PfGame> getAllPlayFellowMembersByGameIdAndMale(Integer gameId) {
 		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
 		List<PfGame> reviewSuccessPfmem = new ArrayList<>();
@@ -98,6 +96,8 @@ public class PfGameService {
 		}
 		return reviewSuccessPfmem;
 	}
+	
+	
 
 	public List<PfGame> getAllPlayFellowMembersByGameIdAndFemale(Integer gameId) {
 		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
@@ -142,21 +142,11 @@ public class PfGameService {
 		PfGameDTO pfGameDTO = new PfGameDTO();
 		pfGameDTO.setPfGameId(pfGame.getPfGameId());
 
-		if (pfGame.getPlayFellowMember() != null) {
-			pfGameDTO.setPlayFellowId(pfGame.getPlayFellowMember().getPlayFellowId());
-			pfGameDTO.setPfNickname(pfGame.getPlayFellowMember().getPfnickname());
-		} else {
-			pfGameDTO.setPlayFellowId(null);
-			pfGameDTO.setPfNickname(null);
-		}
+		pfGameDTO.setPlayFellowId(pfGame.getPlayFellowMember().getPlayFellowId());
+		pfGameDTO.setPfNickname(pfGame.getPlayFellowMember().getPfnickname());
 
-		if (pfGame.getGame() != null) {
-			pfGameDTO.setGameId(pfGame.getGame().getGameId());
-			pfGameDTO.setGameName(pfGame.getGame().getGameName());
-		} else {
-			pfGameDTO.setGameId(null);
-			pfGameDTO.setGameName(null);
-		}
+		pfGameDTO.setGameId(pfGame.getGame().getGameId());
+		pfGameDTO.setGameName(pfGame.getGame().getGameName());
 
 		pfGameDTO.setPricingCategory(pfGame.getPricingCategory());
 		pfGameDTO.setAmount(pfGame.getAmount());
@@ -190,10 +180,5 @@ public class PfGameService {
 		}
 		return null;
 	}
-	
-	
-	
-	
-	
 
 }

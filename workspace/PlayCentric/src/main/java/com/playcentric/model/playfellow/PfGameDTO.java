@@ -21,7 +21,7 @@ public class PfGameDTO {
     private Byte pfGameStatus; // 狀態 1:開啟 2:關閉
     private String pfNickname; // 暱稱
     private String base64Image; // 照片的 base64 編碼
-    private PlayFellowMember playFellowMember; // 新增屬性
-    private Member member; // 新增屬性
+//    private PlayFellowMember playFellowMember; // 新增屬性
+//    private Member member; // 新增屬性
 
 }
