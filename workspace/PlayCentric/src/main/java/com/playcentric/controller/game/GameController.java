@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -292,6 +293,15 @@ public class GameController {
 		}
 		model.addAttribute("games",games);
 		return "game/owngame";
+	}
+	
+	@GetMapping("/game/buyRecord")
+	public String buyRecord(
+			Model model
+			) {
+		List<Game> all = gService.findAll();
+		model.addAttribute("games",all);
+		return "game/buy-record";
 	}
 	
 	
