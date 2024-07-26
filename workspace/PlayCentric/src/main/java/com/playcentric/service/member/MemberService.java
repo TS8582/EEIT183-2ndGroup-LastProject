@@ -169,23 +169,17 @@ public class MemberService {
 	public boolean checkEmailExist(String email, Integer memId) {
 		boolean memExistEmail = memberRepository.findByEmail(email) != null;
 		boolean googleExistEmail = googleRepository.findByEmail(email) != null;
-		System.err.println("1會員email重複?"+memExistEmail);
-		System.err.println("1google email重複?"+googleExistEmail);
 		Optional<Member> memOptional = null;
 		if ((memExistEmail || googleExistEmail) && memId != null && (memOptional = memberRepository.findById(memId)).isPresent()) {
-			System.out.println("進來了");
 			Member member = memOptional.get();
 			memExistEmail = memExistEmail && !email.equals(member.getEmail());
 			String googeId = member.getGoogeId();
 			Optional<GoogleLogin> gOptional = null;
 			if (googleExistEmail && googeId != null && (gOptional = googleRepository.findById(googeId)).isPresent()) {
-				System.out.println("進來了2");
 				String memGoogleEmail = gOptional.get().getEmail();
 				googleExistEmail = !email.equals(memGoogleEmail);
 			}
 		}
-		System.err.println("2會員email重複?"+memExistEmail);
-		System.err.println("2google email重複?"+googleExistEmail);
 		return memExistEmail || googleExistEmail;
 	}
 
