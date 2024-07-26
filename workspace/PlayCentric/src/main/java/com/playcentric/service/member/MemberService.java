@@ -105,6 +105,15 @@ public class MemberService {
 			}
 			originMem.setPhoto(member.getPhoto());
 		}
+		String googleId = "";
+		Optional<GoogleLogin> optional = null;
+		if (!originMem.getEmailVerified()
+			&& (googleId = originMem.getGoogeId())!=null
+			&& (optional = googleRepository.findById(googleId)).isPresent()
+			&& originMem.getEmail().equals(optional.get().getEmail())
+			&& optional.get().getVerifiedEmail()) {
+			originMem.setEmailVerified(true);
+		}
 		originMem.setRole(member.getRole());
 		return memberRepository.save(originMem);
 	}
@@ -145,8 +154,6 @@ public class MemberService {
 
 	public Page<Member> findByKeyword(String keyword, Integer pageNum) {
 		PageRequest pageable = PageRequest.of(pageNum - 1, 6, Sort.Direction.ASC, "memId");
-		// return
-		// memberRepository.findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining((short)0,keyword,keyword,keyword,keyword,pageable);
 		return memberRepository.findByKeyword("%" + keyword.toLowerCase() + "%", pageable);
 	}
 
@@ -159,8 +166,25 @@ public class MemberService {
 		return memberRepository.findByAccount(account) != null;
 	}
 
+	public boolean checkEmailExist(String email, Integer memId) {
+		boolean memExistEmail = memberRepository.findByEmail(email) != null;
+		boolean googleExistEmail = googleRepository.findByEmail(email) != null;
+		Optional<Member> memOptional = null;
+		if ((memExistEmail || googleExistEmail) && memId != null && (memOptional = memberRepository.findById(memId)).isPresent()) {
+			Member member = memOptional.get();
+			memExistEmail = memExistEmail && !email.equals(member.getEmail());
+			String googeId = member.getGoogeId();
+			Optional<GoogleLogin> gOptional = null;
+			if (googleExistEmail && googeId != null && (gOptional = googleRepository.findById(googeId)).isPresent()) {
+				String memGoogleEmail = gOptional.get().getEmail();
+				googleExistEmail = !email.equals(memGoogleEmail);
+			}
+		}
+		return memExistEmail || googleExistEmail;
+	}
+
 	public boolean checkEmailExist(String email) {
-		return memberRepository.findByEmail(email) != null && googleRepository.findByEmail(email) != null;
+		return checkEmailExist(email, null);
 	}
 
 	public boolean checkGoogleExist(String googleId) {
@@ -195,6 +219,10 @@ public class MemberService {
 		return memberRepository.findByPasswordToken(token);
 	}
 
+	public Member findByAccOrEmail(String accOrEmail) {
+		return memberRepository.findByAccountOrEmail(accOrEmail, accOrEmail);
+	}
+
 	public Member memberLogin(Member member) {
 		member.setLastLogin(new Date());
 		System.err.println("更新登入時間");
@@ -209,7 +237,7 @@ public class MemberService {
 	}
 
 	public LoginMemDto checkLoginMember(LoginMemDto loginMember) {
-		if (loginMember == null) {
+		if (loginMember == null || loginMember.getLoginToken() == null) {
 			return null;
 		}
 		Member originMem = memberRepository.findByLoginToken(loginMember.getLoginToken());
@@ -256,6 +284,7 @@ public class MemberService {
 
 		return loginMember;
 	}
+
 	public Member save(Member member) {
 		return memberRepository.save(member);
 	}

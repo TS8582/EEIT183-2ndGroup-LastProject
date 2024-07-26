@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter

@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -32,16 +33,16 @@ public class ECPayService {
     @Autowired
     private NgrokConfig ngrokConfig;
 
-    @Value("${ecpay.recharge_return_url}")
+    @Value("${recharge.return_url}")
     private String rechargeReturnUrl;
 
-    @Value("${ecpay.recharge_client_back_url}")
+    @Value("${recharge.client_back_url}")
     private String rechargeClientBackUrl;
 
-    @Value("${ecpay.recharge_trade_desc}")
+    @Value("${recharge.trade_desc}")
     private String rechargeTradeDesc;
 
-    @Value("${ecpay.recharge_item_name}")
+    @Value("${recharge.item_name}")
     private String rechargeItemName;
 
     @Value("${ecpay.merchant_trade_date_format}")
@@ -143,8 +144,24 @@ public class ECPayService {
     public String getRechargeResult(Integer memId){
 		PageRequest pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "rechargeAt");
         Recharge recharge = rechargeRepository.findByMemId(memId, pageable);
-        recharge.setStatus((short)1);
+
+        Short originStatus = recharge.getStatus();
+        if (originStatus!=1 && originStatus!=2) {
+            Optional<Member> optional = memberRepository.findById(memId);
+            if (optional.isPresent()) {
+                Member member = optional.get();
+                member.setPoints(member.getPoints() + recharge.getAmount());
+                memberRepository.save(member);
+            }
+            recharge.setStatus((short)1);
+            rechargeRepository.save(recharge);
+        }
 
         return recharge.getStatus()==1? "儲值成功!":"儲值失敗!";
+    }
+
+    public Page<Recharge> getMemRechargePage(Integer memId, Integer pageNum){
+        PageRequest pageable = PageRequest.of(pageNum - 1, 10, Sort.Direction.DESC, "rechargeAt");
+		return rechargeRepository.findByMemIdAndStatus(memId,(short)1, pageable);
     }
 }
