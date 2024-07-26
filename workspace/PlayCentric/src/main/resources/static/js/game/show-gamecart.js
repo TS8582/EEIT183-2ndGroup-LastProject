@@ -50,7 +50,7 @@ total.innerHTML = totalPrice;
 //提交表單前
 document.querySelector('form').addEventListener('submit', e => {
     const mypoint = document.querySelector('.mypoint').innerHTML;
-    if (parseInt(mypoint) < totalPrice) {
+    if (choosepay.value === 1 && parseInt(mypoint) < totalPrice) {
         doAlert('PC錢包餘額不足');
         e.preventDefault();
     }

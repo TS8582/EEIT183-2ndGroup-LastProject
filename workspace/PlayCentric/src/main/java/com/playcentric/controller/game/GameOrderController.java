@@ -60,13 +60,13 @@ public class GameOrderController {
 	public String pcwallet(@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		
 		if (loginMember != null) {
-			String tradeNo = "PLCTCGO";
+			String tradeNo = "PCGO";
 			LocalDateTime now = LocalDateTime.now();
-			tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth();
+			tradeNo += now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
 			Random random = new Random();
-			int ran = 100 + random.nextInt(900);
-			tradeNo = tradeNo + "T" + ran;
-			goService.createOrder(loginMember,tradeNo);
+			int num = 100 + random.nextInt(900);
+			tradeNo += "T" + num;
+			goService.createOrder(loginMember,tradeNo,1);
 		}
 		
 		return "game/gameorder-ok";
@@ -84,17 +84,24 @@ public class GameOrderController {
 	@GetMapping("/done")
 	public String ecpayDine(
 			HttpSession session,
-			@RequestParam(name = "TradeNo", required = false) String tradeNo
+			@RequestParam(name = "MerchantTradeNo", required = false) String tradeNo
 			) {
 		LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
-		goService.createOrder(loginMember,tradeNo);
+		String myTradeNo = "PCGO";
+		LocalDateTime now = LocalDateTime.now();
+		myTradeNo += now.getYear() + now.getMonthValue() + now.getDayOfMonth();
+		Random random = new Random();
+		int num = 10000 + random.nextInt(90000);
+		myTradeNo += "T" + num;
+		
+		goService.createOrder(loginMember,myTradeNo,2);
 		return "game/gameorder-ok";
 	}
 	
-	@PostMapping("/ECPayReturn")
-    @ResponseBody
-    public String rechargeReturn(@RequestParam Map<String, String> params) {
-		return "1|OK";
-    }
+//	@PostMapping("/ECPayReturn")
+//    @ResponseBody
+//    public String rechargeReturn(@RequestParam Map<String, String> params) {
+//		return "1|OK";
+//    }
 	
 }
