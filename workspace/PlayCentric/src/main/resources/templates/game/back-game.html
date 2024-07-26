@@ -40,7 +40,8 @@
                             <th:block th:each="game:${allGame}">
                                 <tr>
                                     <td class="border p-3 gameName mylink">
-                                        <a href="#" th:text="${game.gameName}" class="text-center"></a>
+                                        <a th:href="@{/game/showGame(gameId=${game.gameId})}" th:text="${game.gameName}"
+                                            class="text-center"></a>
                                     </td>
                                     <td th:text="${game.price}" class="text-center border p-3 price"></td>
                                     <td th:text="${#temporals.format(game.releaseAt,'yyyy-MM-dd HH:mm:ss')}"
