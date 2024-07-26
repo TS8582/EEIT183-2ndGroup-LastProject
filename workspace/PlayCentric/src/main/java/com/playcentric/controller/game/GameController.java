@@ -23,7 +23,6 @@ import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.game.primary.GameDiscount;
 import com.playcentric.model.game.primary.GameDiscountSet;
 import com.playcentric.model.game.primary.GameTypeLib;
-import com.playcentric.model.game.secondary.GameCarts;
 import com.playcentric.model.game.secondary.OwnGameLib;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.ImageLibService;
@@ -32,8 +31,6 @@ import com.playcentric.service.game.GameDiscountSetService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
 import com.playcentric.service.game.OwnGameLibService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @SessionAttributes("loginMember")
