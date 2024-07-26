@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.playcentric.model.member.Member;
 import com.playcentric.model.prop.sellOrder.PropSellOrderDto;
 import com.playcentric.model.prop.sellOrder.PropSellOrderForMarketDto;
+import com.playcentric.service.member.MemberService;
 import com.playcentric.service.prop.sellOrder.PropSellOrderService;
 
 @Controller
@@ -19,6 +21,9 @@ public class MarketController {
 	@Autowired
 	private PropSellOrderService propSellOrderService;
 
+	@Autowired
+	private MemberService memberService;
+	
 	// 進入市場頁面
 	@GetMapping("prop/front/market")
 	public String showMarketPage() {
@@ -46,4 +51,13 @@ public class MarketController {
 	public Map calculateAverageAmountByPropId(@RequestParam("propId") Integer propId){
 	    return propSellOrderService.calculateAverageAmountByPropId(propId);
 	}
+	
+	//根據memId讀取會員點數
+	@GetMapping("prop/front/market/findMemPointsbyMemId")
+	@ResponseBody
+	public Integer findMemPointsbymemId(@RequestParam("memId") Integer memId ) {
+		Integer points = memberService.findById(memId).getPoints();
+		return points;
+	}
+	
 }

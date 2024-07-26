@@ -166,6 +166,15 @@
               >
                 <h5 class="modal-title" id="exampleModalLabel">我的倉庫</h5>
                 <div style="flex-grow: 1"></div>
+                <h5
+                  class="modal-title memberPoints fs-3"
+                  style="
+                    font-family: 'Proxima Nova', sans-serif;
+                    margin-right: 1.2rem;
+                  "
+                >
+                  💵NT$:
+                </h5>
 
                 <button
                   type="button"
@@ -239,7 +248,7 @@
       <!-- 商品項目將在這裡動態生成 -->
     </div>
 
-    <!-- 倉庫Modal -->
+    <!-- 購買Modal -->
     <div
       class="modal fade"
       id="marketModal"
@@ -250,8 +259,16 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="marketModalLabel">道具詳情</h5>
             <div style="flex-grow: 1"></div>
+            <h5
+              class="modal-title memberPoints fs-3"
+              style="
+                font-family: 'Proxima Nova', sans-serif;
+                margin-right: 1rem;
+              "
+            >
+              💵NT$:
+            </h5>
             <button
               type="button"
               class="btn-close"
@@ -297,7 +314,6 @@
       let averageAmount;
       $(document).ready(function () {
         loadGames();
-
         $("#submitBtn").click(function (event) {
           event.preventDefault(); // 取消表單的默認提交行為
           selectedGameId = $("#SelectGame").val(); // 獲取選中的遊戲ID
@@ -449,6 +465,8 @@
             const inventory = res.data.filter(
               (item) => item.prop.gameId == selectedGameId
             );
+            // 調用生成會員點數的函數
+            loadMemPoints(memId);
             // 調用生成倉庫道具資料及圖片的函數
             generateInventoryPropImages(inventory);
             // 調用生成倉庫賣單資料及圖片的函數
@@ -524,6 +542,8 @@
 
       // 生成商品道具項目
       function generatePropItems(props) {
+        // 讀取會員點數
+        loadMemPoints(memId);
         propsData = props;
         const propsContainer = $(".isotope-container");
         propsContainer.empty();
@@ -758,7 +778,7 @@
           })
             .then((res) => {
               window.alert("交易成功");
-
+              loadMemPoints(memId);
               findSellOrderbyPropId(propId, memId);
               // 重新載入商品
               findAllPropsByGameId(selectedGameId);
@@ -950,6 +970,24 @@
           .catch((err) => {
             console.error(err);
             return 0;
+          });
+      }
+
+      // 讀取會員點數的方法
+      function loadMemPoints(memId) {
+        axios({
+          method: "get",
+          url: "/PlayCentric/prop/front/market/findMemPointsbyMemId",
+          params: { memId: memId },
+        })
+          .then((res) => {
+            const points = res.data;
+            document.querySelectorAll(".memberPoints").forEach((element) => {
+              element.textContent = `💵NT$: ${points}`;
+            });
+          })
+          .catch((err) => {
+            console.error(err);
           });
       }
     </script>
