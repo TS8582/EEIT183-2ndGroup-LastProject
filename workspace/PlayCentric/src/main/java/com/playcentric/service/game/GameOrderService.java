@@ -80,7 +80,6 @@ public class GameOrderService {
         SimpleDateFormat sdf = new SimpleDateFormat(merchantTradeDateFormat);
         String currentDate = sdf.format(new Date());
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(merchantTradeDateFormat);
         String tradeNo = "PCGO";
 		LocalDateTime now = LocalDateTime.now();
 		tradeNo += now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
