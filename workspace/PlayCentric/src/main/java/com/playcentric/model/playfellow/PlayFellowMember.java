@@ -41,7 +41,7 @@ public class PlayFellowMember {
 
     private String pfdescription; // 自介
 
-    @OneToMany(mappedBy = "playFellowMember", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "playFellowMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImageLibPfmemberAssociation> imageLibAssociations; // 使用中介表管理多張照片的關聯
 
     private Byte pfstatus; // 狀態:1 待審核、2審核失敗、 3開啟，4關閉

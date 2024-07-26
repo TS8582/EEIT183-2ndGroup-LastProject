@@ -179,7 +179,7 @@
           .catch(err => {
             console.log(err);
             if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+              window.location.href = '/PlayCentric/member/homeShowErr/'+err.response.data;
             }
           })
       })
@@ -201,7 +201,7 @@
           .catch(err => {
             console.log(err);
             if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+              window.location.href = '/PlayCentric/member/homeShowErr/'+err.response.data;
             }
           })
       })
@@ -214,7 +214,7 @@
         axios({
           method: 'post',
           url: changePwdUrl,
-          params: { email: memInfo.email }
+          params: { memId: memInfo.memId }
         })
           .then(res => {
             console.log(res);
@@ -223,7 +223,7 @@
           .catch(err => {
             console.log(err);
             if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+              window.location.href = '/PlayCentric/member/homeShowErr/'+err.response.data;
             }
           })
       })
@@ -246,7 +246,7 @@
           .catch(err => {
             console.log(err);
             if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+              window.location.href = '/PlayCentric/member/homeShowErr/'+err.response.data;
             }
           })
       })
@@ -312,7 +312,7 @@
           .catch(err => {
             console.log(err)
             if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/showLoginErr/'+err.response.data;
+              window.location.href = '/PlayCentric/member/homeShowErr/'+err.response.data;
             }
           })
       }

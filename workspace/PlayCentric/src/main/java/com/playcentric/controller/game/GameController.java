@@ -24,12 +24,14 @@ import com.playcentric.model.game.primary.GameDiscount;
 import com.playcentric.model.game.primary.GameDiscountSet;
 import com.playcentric.model.game.primary.GameTypeLib;
 import com.playcentric.model.game.secondary.GameCarts;
+import com.playcentric.model.game.secondary.OwnGameLib;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.ImageLibService;
 import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameDiscountSetService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
+import com.playcentric.service.game.OwnGameLibService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -52,6 +54,8 @@ public class GameController {
 	private ImageLibService iService;
 	@Autowired
 	private GameCartService gcService;
+	@Autowired
+	private OwnGameLibService oglService;
 
 	// 遊戲管理後台
 	@GetMapping("/back/game")
@@ -257,7 +261,8 @@ public class GameController {
 		for (Game game : games) {
 			gService.setRateAndDiscountPrice(game);
 			if (loginMember != null) {
-				gcService.checkInCart(loginMember, game);
+				gcService.setInCart(loginMember, game);
+				oglService.setHaveGame(loginMember, game);
 			}
 		}
 		model.addAttribute("allType",allType);
@@ -271,11 +276,27 @@ public class GameController {
 		Game game = gService.findById(gameId);
 		gService.setRateAndDiscountPrice(game);
 		if (loginMember != null) {
-			gcService.checkInCart(loginMember, game);
+			gcService.setInCart(loginMember, game);
+			oglService.setHaveGame(loginMember, game);
 		}
 		model.addAttribute("game",game);
 		return "game/show-game";
 	}
+	
+	@GetMapping("/personal/game/ownGame")
+	public String getMethodName(
+			@ModelAttribute("loginMember") LoginMemDto loginMember,
+			Model model
+			) {
+		List<OwnGameLib> ownGames = oglService.findByMemId(loginMember.getMemId());
+		List<Game> games = new ArrayList<>();
+		for (OwnGameLib ownGameLib : ownGames) {
+			games.add(gService.findById(ownGameLib.getGameId()));
+		}
+		model.addAttribute("games",games);
+		return "game/owngame";
+	}
+	
 	
 	
 }

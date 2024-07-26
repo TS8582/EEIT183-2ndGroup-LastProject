@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <div th:replace="~{layout/nav}"></div>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayCentric-付款成功</title>
+</head>
+
+<body class="h-screen">
+
+    <div class="h-1/2 w-full flex justify-center items-center mt-5">
+        <div class="h-full w-1/2 p-3 border-2 shadow-md flex flex-col justify-center items-center space-y-8">
+            <span class="text-3xl">付款成功！</span>
+            <span class="text-xl">感謝您的購買！</span>
+            <div class="space-x-2">
+                <a class="mybtn mybtn-sky" th:href="@{/}">返回主頁面</a>
+                <a class="mybtn mybtn-green" th:href="@{/game/gameStore}">返回商店</a>
+                <a class="mybtn mybtn-sky" th:href="@{/personal/game/ownGame}">檢視遊戲庫</a>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

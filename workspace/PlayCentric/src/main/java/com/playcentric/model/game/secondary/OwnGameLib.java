@@ -32,10 +32,8 @@ import lombok.Setter;
 public class OwnGameLib {
 	
 	@Id
-	@Column(insertable = false,updatable = false)
 	private Integer memId;
 	@Id
-	@Column(insertable = false,updatable = false)
 	private Integer gameId;
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy年MM月dd日 HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
@@ -43,11 +41,11 @@ public class OwnGameLib {
 	private LocalDateTime buyAt;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "memId")
+	@JoinColumn(name = "memId",insertable = false,updatable = false)
 	private Member member;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gameId")
+	@JoinColumn(name = "gameId",insertable = false,updatable = false)
 	private Game game;
 	
 }

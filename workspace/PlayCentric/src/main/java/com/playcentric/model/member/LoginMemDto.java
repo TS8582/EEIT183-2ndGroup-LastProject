@@ -2,6 +2,8 @@ package com.playcentric.model.member;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +32,7 @@ public class LoginMemDto {
     // private Short gender;
     // private Short status;
     private Integer points;
+    @JsonIgnore
     private String loginToken;
     
 
