@@ -2,120 +2,210 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>PlayCentric-儲值紀錄</title>
-    <style>
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none !important;
-            box-shadow: none !important;
-        }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>PlayCentric-會員錢包</title>
+  <style>
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
 
-        .h-35px {
-            height: 35px;
-        }
+    .h-35px {
+      height: 35px;
+    }
 
-        .cursor-pointer {
-            cursor: pointer;
-        }
+    .cursor-pointer {
+      cursor: pointer;
+    }
 
-        .h-0 {
-            height: 0;
-        }
+    .h-0 {
+      height: 0;
+    }
 
-        .w-150px {
-            width: 150px;
-        }
+    .w-150px {
+      width: 150px;
+    }
 
-        .n1 label {
-            border: 6px outset rgb(128, 60, 5);
-            margin-right: 10px;
-            display: inline-block;
-            /* 確保label內的內容看起來像按鈕 */
-            transition: transform 0.1s ease, color 0.1s ease;
-            /* 添加平滑過渡效果 */
-            background: linear-gradient(145deg, rgb(255, 187, 1) 25%, rgb(230, 170, 0) 25%, rgb(230, 170, 0) 50%, rgb(255, 187, 1) 50%, rgb(255, 187, 1) 75%, rgb(230, 170, 0) 75%);
-            background-size: 200% 200%;
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
-        }
+    .n1 label {
+      border: 6px outset rgb(182, 128, 11);
+      margin-right: 10px;
+      display: inline-block;
+      /* 確保label內的內容看起來像按鈕 */
+      transition: transform 0.1s ease, color 0.1s ease;
+      /* 添加平滑過渡效果 */
+      background: linear-gradient(145deg, rgb(255, 187, 1) 25%, rgb(230, 170, 0) 25%, rgb(230, 170, 0) 50%, rgb(255, 187, 1) 50%, rgb(255, 187, 1) 75%, rgb(230, 170, 0) 75%);
+      background-size: 200% 200%;
+      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
+    }
 
-        .n1 label:hover {
-            background-color: gold;
-            transform: scale(0.88);
-            /* 模擬按下的效果 */
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.8);
-        }
+    .n1 label:hover {
+      background-color: gold;
+      transform: scale(0.88);
+      /* 模擬按下的效果 */
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.8);
+    }
 
-        .n1 label:active {
-            border-style: inset;
-            /* 讓按下時有按下去的感覺 */
-            background-color: rgb(245, 40, 40);
-            /* 按下時變色 */
-        }
+    .n1 label:active {
+      border-style: inset;
+      /* 讓按下時有按下去的感覺 */
+      background-color: rgb(245, 40, 40);
+      /* 按下時變色 */
+    }
 
-        .n1 {
-            background-color: rgb(255, 187, 1);
-            margin: 0;
-            padding: 10px;
-        }
-    </style>
+    .n1 {
+      background-color: rgb(255, 187, 1);
+      margin: 0;
+      padding: 10px;
+    }
+  </style>
 </head>
 
 <body>
-    <div th:replace="~{member/memInfoAside}"></div>
+  <div th:replace="~{member/memInfoAside}"></div>
 
-    <div class="p-0">
-        <div class="container my-4">
-            <div class="d-flex">
-                <div class="h1 p-0 text-center">儲值紀錄</div>
-                <p class="ms-auto mb-3 mt-auto ps-2 border border-2 rounded-2 col-2 fs-4">
-                    <i class="fa-solid fa-sack-dollar"></i>
-                    <span id="points" class="ms-2">0</span>
-                </p>
+  <div class="p-0">
+    <div class="container my-4">
+      <div class="d-flex">
+        <div class="h1 p-0 text-center">會員錢包</div>
+        <p class="ms-auto mb-3 mt-auto ps-2 border border-2 rounded-2 col-2 fs-4">
+          <i class="fa-solid fa-sack-dollar"></i>
+          <span id="points" class="ms-2" th:text="${session.loginMember.points}"></span>
+        </p>
+      </div>
+      <div class="border rounded-3 navbar navbar-expand-lg n1 mb-3 py-3">
+        <div class="container-fluid">
+          <div class="h3 align-self-end w-150px ms-4">錢包儲值:</div>
+          <div class="w-100 d-flex justify-content-center">
+            <div class="navbar-nav">
+              <label class="mx-4">
+                <span value="100" class="nav-link active recharge-btn">100</span>
+              </label>
+
+              <label class="mx-4">
+                <span value="500" class="nav-link active recharge-btn">500</span>
+              </label>
+
+              <label class="mx-4">
+                <span value="1500" class="nav-link active recharge-btn">1500</span>
+              </label>
+
+              <label class="mx-4">
+                <span value="3000" class="nav-link active recharge-btn">3000</span>
+              </label>
+
             </div>
-            <div class="border rounded-3 navbar navbar-expand-lg n1 mb-3 py-3">
-                <div class="container-fluid">
-                    <div class="h3 align-self-end w-150px ms-4">儲值選項:</div>
-                    <div class="w-100 d-flex justify-content-center">
-                        <div class="navbar-nav">
-                            <label class="mx-4">
-                                <a class="nav-link active" aria-current="page" th:href="@{/findAllForum}">
-                                    100</a>
-                            </label>
-    
-                            <label class="mx-4">
-                                <a class="nav-link active" aria-current="page" th:href="@{/texts/page}">
-                                    500</a>
-                            </label>
-    
-                            <label class="mx-4">
-                                <a class="nav-link active" th:href="@{/findAllForum2}">
-                                    1500
-                                </a>
-                            </label>
-                            <label class="mx-4">
-                                <a class="nav-link active" aria-current="page" th:href="@{/forum/insertForum}">
-                                    3000</a>
-                            </label>
-    
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <ul class="list-group" id="output">
-                <li class="list-group-item">這是一條儲值紀錄</li>
-            </ul>
-            <div id="pageBtn">
-                <div class="d-flex justify-content-center align-items-end mt-4">
-                    <ul class="pagination">
-                    </ul>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
+      <div class="h4 ps-3">儲值紀錄</div>
+      <ul class="list-group container" id="output">
+        <li class="list-group-item d-flex">
+          <div class="col-3 fw-bold ms-auto">項目</div>
+          <div class="col-3 fw-bold">金額</div>
+          <div class="col-5 fw-bold">時間</div>
+        </li>
+      </ul>
+      <div id="pageBtn">
+        <div class="d-flex justify-content-center align-items-end mt-4">
+          <ul class="pagination">
+          </ul>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <script>
+    $(function () {
+      const rechargeUrl = "/PlayCentric/member/personal/api/newRecharge"
+      const rechargeHisUrl = "/PlayCentric/personal/api/rechargeHis"
+      const params = { pageNum:1 }
+
+      findRechargeHis();
+
+
+
+      $('.recharge-btn').click(function (e) {
+        e.preventDefault();
+
+        rechargeAmount = $(this).attr('value');
+
+        axios({
+          method: 'post',
+          url: rechargeUrl,
+          params: { rechargeAmount }
+        })
+          .then(res => {
+            console.log(res.data);
+            if (res.data === '請重新登入') {
+              window.location.href = "/PlayCentric/member/homeShowErr/loginAgain";
+            } else {
+              $('body').append(res.data)
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
+          })
+      })
+
+      function findRechargeHis() {
+        axios({
+          method: 'get',
+          url: rechargeHisUrl,
+          params
+        })
+          .then(res => {
+            console.log(res);
+            htmlMaker(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
+          })
+      }
+
+      function htmlMaker(data) {
+        $('#output').text('')
+        
+        $('#output').append(`<li class="list-group-item d-flex">
+                              <div class="col-3 fw-bold ms-auto">項目</div>
+                              <div class="col-3 fw-bold">金額</div>
+                              <div class="col-5 fw-bold">時間</div>
+                            </li>`)
+
+        data.content.forEach((element) => {
+          const dataHtml = `<li class="list-group-item d-flex">
+                              <div class="col-3 ms-auto">錢包儲值</div>
+                              <div class="col-3">${element.amount}</div>
+                              <div class="col-5">${element.rechargeAt}</div>
+                            </li>`
+          $('#output').append(dataHtml);
+          $('[role=1]').addClass('bg-manager-blue');
+        });
+
+        $('#pageBtn').hide();
+        if (data.totalPages > 1) {
+          $('#pageBtn').show();
+          $('.pagination').text('')
+          for (let index = 1; index <= data.totalPages; index++) {
+            if (index != params.page) {
+              $('.pagination').append(`<li class="page-item"><a class="page-link">${index}</a></li>`)
+              continue;
+            }
+            $('.pagination').append(`<li class="page-item active"><a class="page-link">${index}</a></li>`)
+          }
+        }
+      }
+    })
+  </script>
 </body>
 
 </html>

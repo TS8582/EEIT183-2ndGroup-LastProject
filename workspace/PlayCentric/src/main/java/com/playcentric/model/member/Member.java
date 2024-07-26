@@ -96,5 +96,8 @@ public class Member {
 		}
 		this.lastLogin = new Date();
 	}
-    
+ 
+    public void setEmail(String email){
+        this.email = email.toLowerCase();
+    }
 }

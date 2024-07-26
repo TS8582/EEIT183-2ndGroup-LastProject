@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -140,6 +141,13 @@ public class ECPayService {
 		PageRequest pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "rechargeAt");
         Recharge recharge = rechargeRepository.findByMemId(memId, pageable);
 
+        recharge.setStatus(recharge.getStatus()==2? (short)2:(short)1);
+
         return recharge.getStatus()==1? "儲值成功!":"儲值失敗!";
+    }
+
+    public Page<Recharge> getMemRechargePage(Integer memId, Integer pageNum){
+        PageRequest pageable = PageRequest.of(pageNum - 1, 10, Sort.Direction.DESC, "rechargeAt");
+		return rechargeRepository.findByMemIdAndStatus(memId,(short)1, pageable);
     }
 }
