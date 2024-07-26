@@ -81,12 +81,12 @@ public class GameOrderService {
         String currentDate = sdf.format(new Date());
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern(merchantTradeDateFormat);
-        String tradeNo = "PLCTCGO";
+        String tradeNo = "PCGO";
 		LocalDateTime now = LocalDateTime.now();
-		tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth();
+		tradeNo += now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
 		Random random = new Random();
-		int ran = 100 + random.nextInt(900);
-		tradeNo = tradeNo + "T" + ran;
+		int num = 100 + random.nextInt(900);
+		tradeNo += "T" + num;
 		int total = 0;
 		String itemname = "";
 		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
@@ -114,7 +114,7 @@ public class GameOrderService {
         return form;
 	}
 	
-	public void createOrder(LoginMemDto loginMember,String tradeNo) {
+	public void createOrder(LoginMemDto loginMember,String tradeNo,Integer paymentId) {
 		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
 		Member member = mService.findById(loginMember.getMemId());
 		Integer total = 0;
@@ -162,9 +162,11 @@ public class GameOrderService {
 		}
 		myorder.setTotal(total);
 		save(myorder);
-		member.setPoints(member.getPoints() - total);
-		loginMember.setPoints(member.getPoints() - total);
-		mService.save(member);
+		if (paymentId == 1) {
+			member.setPoints(member.getPoints() - total);
+			loginMember.setPoints(member.getPoints() - total);
+			mService.save(member);
+		}
 	}
 	
 }
