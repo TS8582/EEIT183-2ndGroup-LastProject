@@ -74,4 +74,6 @@ public class Game {
 	private boolean haveGame = false;
 	@Transient
 	private boolean inCart = false;
+	@Transient
+	private LocalDateTime buyAt;
 }

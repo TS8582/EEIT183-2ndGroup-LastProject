@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <title th:text="${session.loginMember} ? ${session.loginMember.nickname} + 的遊戲收藏庫"></title>
+    <title th:text="${session.loginMember} ? 'PlayCentric-' + ${session.loginMember.nickname} + 的遊戲收藏庫"></title>
 </head>
 
 <body>
