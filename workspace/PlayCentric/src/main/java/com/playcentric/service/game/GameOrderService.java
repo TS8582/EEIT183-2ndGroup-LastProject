@@ -1,11 +1,17 @@
 package com.playcentric.service.game;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import com.playcentric.model.game.primary.Game;
@@ -20,7 +26,11 @@ import com.playcentric.model.member.Member;
 import com.playcentric.service.PaymentService;
 import com.playcentric.service.member.MemberService;
 
+import ecpay.payment.integration.AllInOne;
+import ecpay.payment.integration.domain.AioCheckOutALL;
+
 @Service
+@PropertySource("ecPay.properties")
 public class GameOrderService {
 	
 	@Autowired
@@ -28,6 +38,17 @@ public class GameOrderService {
 	@Autowired
 	private GameOrderDetailsRepository odRepo;
 	
+	@Value("${ecpay.merchant_trade_date_format}")
+    private String merchantTradeDateFormat;
+    
+    @Value("${ecpay.gameorder_return_url}")
+	private String returnUrl;
+    
+    @Value("${ecpay.gameorder_client_back_url}")
+    private String backUrl;
+    
+    @Value("${ecpay.gameorder_trade_desc}")
+    private String tradeDesc;
 	
 	@Autowired
 	private GameCartService gcService;
@@ -40,6 +61,7 @@ public class GameOrderService {
 	@Autowired
 	private OwnGameLibService oglService;
 	
+	private final AllInOne allInOne = new AllInOne("");
 	
 	public GameOrder save(GameOrder gameOrder) {
 		return oRepo.save(gameOrder);
@@ -53,7 +75,46 @@ public class GameOrderService {
 		return oRepo.findById(gameOrderId).get();
 	}
 	
-	public void createPcOrder(LoginMemDto loginMember) {
+	public String startEcpayOrder(LoginMemDto loginMember) {
+		AioCheckOutALL obj = new AioCheckOutALL();
+        SimpleDateFormat sdf = new SimpleDateFormat(merchantTradeDateFormat);
+        String currentDate = sdf.format(new Date());
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(merchantTradeDateFormat);
+        String tradeNo = "PCGO";
+		LocalDateTime now = LocalDateTime.now();
+		tradeNo += now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
+		Random random = new Random();
+		int num = 100 + random.nextInt(900);
+		tradeNo += "T" + num;
+		int total = 0;
+		String itemname = "";
+		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
+		for (GameCarts gameCarts : carts) {
+			Game game = gameCarts.getGame();
+			gService.setRateAndDiscountPrice(game);
+			total += game.getPrice();
+			itemname += game.getGameName() + 
+					" NT$" + game.getDiscountedPrice()+
+					"#";
+		}
+		itemname.substring(0,itemname.length() - 1);
+		
+        obj.setMerchantTradeNo(tradeNo);
+        obj.setMerchantTradeDate(currentDate);
+        obj.setTotalAmount(String.valueOf(total));
+        obj.setTradeDesc(tradeDesc);
+        obj.setItemName(itemname);
+        obj.setReturnURL(returnUrl);
+        obj.setClientBackURL(backUrl);
+        obj.setNeedExtraPaidInfo("N");
+
+        String form = allInOne.aioCheckOut(obj, null);
+
+        return form;
+	}
+	
+	public void createOrder(LoginMemDto loginMember,String tradeNo,Integer paymentId) {
 		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
 		Member member = mService.findById(loginMember.getMemId());
 		Integer total = 0;
@@ -67,10 +128,7 @@ public class GameOrderService {
 		gameOrder.setTotal(total);
 		gameOrder.setCreateAt(LocalDateTime.now());
 		GameOrder myorder = save(gameOrder);
-		String tradeNo = "PLCTCGO";
-		LocalDateTime now = LocalDateTime.now();
-		tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth();
-		tradeNo = tradeNo + "T" + myorder.getGameOrderId();
+		
 		myorder.setTradeNo(tradeNo);
 		
 		List<GameOrderDetails> detailses = new ArrayList<>();
@@ -95,7 +153,7 @@ public class GameOrderService {
 			saveDetails(gameOrderDetails);
 			gcService.remove(gameCarts.getGameId(), gameCarts.getMemId());
 			OwnGameLib ownGameLib = new OwnGameLib();
-			ownGameLib.setBuyAt(now);
+			ownGameLib.setBuyAt(LocalDateTime.now());
 			ownGameLib.setGame(game);
 			ownGameLib.setGameId(game.getGameId());
 			ownGameLib.setMember(member);
@@ -104,9 +162,11 @@ public class GameOrderService {
 		}
 		myorder.setTotal(total);
 		save(myorder);
-		member.setPoints(member.getPoints() - total);
-		loginMember.setPoints(member.getPoints() - total);
-		mService.save(member);
+		if (paymentId == 1) {
+			member.setPoints(member.getPoints() - total);
+			loginMember.setPoints(member.getPoints() - total);
+			mService.save(member);
+		}
 	}
 	
 }

@@ -1,50 +1,28 @@
 package com.playcentric.controller.game;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.playcentric.model.game.primary.Game;
-import com.playcentric.model.game.secondary.GameCarts;
-import com.playcentric.model.game.transaction.GameOrder;
-import com.playcentric.model.game.transaction.GameOrderDetails;
 import com.playcentric.model.member.LoginMemDto;
-import com.playcentric.model.member.Member;
-import com.playcentric.service.PaymentService;
-import com.playcentric.service.game.GameCartService;
+import com.playcentric.service.ECPay.ECPayService;
 import com.playcentric.service.game.GameOrderService;
-import com.playcentric.service.game.GameService;
-import com.playcentric.service.game.OwnGameLibService;
 import com.playcentric.service.member.MemberService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/gameorder")
 @SessionAttributes("loginMember")
-@PropertySource("ecPay.properties")
 public class GameOrderController {
-	
-	@Value("${ecpay.merchant_trade_date_format}")
-    private String merchantTradeDateFormat;
-
-    @Value("${ecpay.hash_key}")
-    private String hashKey;
-
-    @Value("${ecpay.hash_iv}")
-    private String hashIV;
 	
 	@ModelAttribute("loginMember")
 	public LoginMemDto getLoginMember() {
@@ -52,11 +30,21 @@ public class GameOrderController {
 	}
 	@Autowired
 	private GameOrderService goService;
+	@Autowired
+	private MemberService mService;
+	@Autowired
+	private ECPayService ecPayService;
 	
 	
 	@GetMapping("/return")
-	public String gameorder(@RequestParam Integer paymentId) {
-		if (paymentId == 1) {
+	public String gameorder(
+			@RequestParam Integer paymentId,
+			@ModelAttribute("loginMember") LoginMemDto loginMember
+			) {
+		if (loginMember == null) {
+			return "redirect:/member/homeShowErr/notLogin";
+		}
+		else if (paymentId == 1) {
 			return "redirect:/gameorder/pcwallet";
 		}
 		else if (paymentId == 2) {
@@ -69,49 +57,48 @@ public class GameOrderController {
 	public String pcwallet(@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		
 		if (loginMember != null) {
-			goService.createPcOrder(loginMember);
+			String tradeNo = "PCGO";
+			LocalDateTime now = LocalDateTime.now();
+			tradeNo += now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
+			Random random = new Random();
+			int num = 100 + random.nextInt(900);
+			tradeNo += "T" + num;
+			goService.createOrder(loginMember,tradeNo,1);
 		}
 		
 		return "game/gameorder-ok";
 	}
 	
 	
-//	@PostMapping("/ecpay")
-//	public String ecpay(@ModelAttribute("loginMember") LoginMemDto loginMember) {
-//		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
-//		設定訂單屬性
-//		GameOrder gameOrder = new GameOrder();
-//		Member member = mService.findById(loginMember.getMemId());
-//		gameOrder.setStatus(0);
-//		gameOrder.setPaymentId(2);
-//		gameOrder.setPayment(pService.findById(2));
-//		gameOrder.setMemId(loginMember.getMemId());
-//		gameOrder.setMember(member);
-//		GameOrder myorder = goService.save(gameOrder);
-//		String tradeNo = "PLCTCGO";
-//		LocalDateTime now = LocalDateTime.now();
-//		tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth();
-//		tradeNo = tradeNo + "T" + myorder.getGameOrderId();
-//		myorder.setTradeNo(tradeNo);
-//		Integer total = 0;
-//		
-//		List<GameOrderDetails> detailses = new ArrayList<>();
-//		for (GameCarts gameCarts : carts) {
-//			GameOrderDetails gameOrderDetails = new GameOrderDetails();
-//			Game game = gService.findById(gameCarts.getGameId());
-//			gService.setRateAndDiscountPrice(game);
-//			gameOrderDetails.setAmount(1);
-//			BigDecimal rateOrigin = BigDecimal.valueOf(game.getRate());
-//			BigDecimal hundred = BigDecimal.valueOf(100);
-//			BigDecimal rate = rateOrigin.divide(hundred,2,BigDecimal.ROUND_HALF_UP);
-//			gameOrderDetails.setDiscountRate(rate);
-//			gameOrderDetails.setGame(game);
-//			gameOrderDetails.setUnitPrice(game.getPrice());
-//			gameOrderDetails.setGameOrderId(myorder.getGameOrderId());
-//		}
-//		member.setPoints(member.getPoints() - total);
-//		loginMember.setPoints(member.getPoints() - total);
-//		mService.save(member);
-//	}
+	@GetMapping("/ecpay")
+	@ResponseBody
+	public String ecpay(
+			@ModelAttribute("loginMember") LoginMemDto loginMember
+			) {
+		return goService.startEcpayOrder(loginMember);
+	}
+	
+	@GetMapping("/done")
+	public String ecpayDine(
+			HttpSession session,
+			@RequestParam(name = "MerchantTradeNo", required = false) String tradeNo
+			) {
+		LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
+		String myTradeNo = "PCGO";
+		LocalDateTime now = LocalDateTime.now();
+		myTradeNo += now.getYear() + now.getMonthValue() + now.getDayOfMonth();
+		Random random = new Random();
+		int num = 10000 + random.nextInt(90000);
+		myTradeNo += "T" + num;
+		
+		goService.createOrder(loginMember,myTradeNo,2);
+		return "game/gameorder-ok";
+	}
+	
+//	@PostMapping("/ECPayReturn")
+//    @ResponseBody
+//    public String rechargeReturn(@RequestParam Map<String, String> params) {
+//		return "1|OK";
+//    }
 	
 }

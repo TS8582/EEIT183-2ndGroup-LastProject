@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div class="" th:replace="~{/layout/nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
     <link rel="stylesheet" th:href="@{/css/utils/doAlertJs.css}">
     <style>
         @keyframes fadeIn {
@@ -54,7 +54,8 @@
     </div>
     <div class="px-0 py-2 lg:px-15 text-end w-full fixed">
         <!-- 購物車按鈕 -->
-        <a th:if="${session.loginMember}" th:href="@{/gamecart/get}" class="mybtn mybtn-green me-3 showcarts">購物車</a>
+        <a th:if="${session.loginMember}" th:href="@{/personal/gamecart/get}"
+            class="mybtn mybtn-green me-3 showcarts">購物車</a>
     </div>
     <div class="flex flex-col h-auto container mx-auto">
         <!-- 篩選欄 -->
@@ -127,7 +128,7 @@
                             <span th:if="${session.loginMember} ? ${!game.isInCart && !game.isHaveGame}"
                                 class="mybtn mybtn-green cart">加入購物車</span>
                             <span th:if="${session.loginMember} ? ${game.isHaveGame}"
-                                class="mybtn mybtn-green download">下載</span>
+                                class="mybtn mybtn-sky download">下載</span>
                             <div class="hidden gameId" th:text="${game.gameId}"></div>
                         </div>
                     </div>

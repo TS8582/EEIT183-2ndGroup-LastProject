@@ -21,7 +21,6 @@
             background-image: url("[[@{/images/loginBG.jpg}]]");
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
         }
 
         .t1 {
@@ -109,18 +108,20 @@
                             <table id="myTable" class="display cell-border stripe nowrap">
                                 <thead>
                                     <tr>
+                                        <th>會員Id</th>
                                         <th>文章Id</th>
                                         <th>文章名稱</th>
                                         <th>文章內容</th>
                                         <th>創建日期</th>
                                         <th>更新日期</th>
                                         <th>狀態</th>
-                                        <th>修改</th>
-                                        <th>刪除</th>
+                                        <!-- <th>修改</th> -->
+                                        <!-- <th>刪除</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:each="texts : ${arrayList}">
+                                        <td th:text="${texts.memId}"></td>
                                         <td th:text="${texts.textsId}"></td>
                                         <td th:text="${texts.title}"></td>
 

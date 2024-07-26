@@ -21,32 +21,40 @@ public class TextsService {
 	@Autowired
 	private TextsRepository textsRepository;
 
+	// 確定是否有重複文章
+	public boolean checkTitlExist(String title) {
+		List<Texts> allByTitle = textsRepository.findAllByTitle(title);
+		return !allByTitle.isEmpty();
+	}
+
+	// 修改狀態
+	public Texts updateTextsShowStatus(Integer textsId, Boolean hideTexts) {
+		Optional<Texts> optional = textsRepository.findById(textsId);
+		if (optional.isPresent()) {
+			Texts texts = optional.get();
+			texts.setHideTexts(hideTexts);
+
+			return textsRepository.save(texts);
+		} else {
+			return null; // or handle the case where Forum is not found
+		}
+	}
+
 	// 當前所有主題的文章
 	public List<Texts> findTextsByForumId(Integer forumId) {
 		return textsRepository.findTextsByForumId(forumId);
 	}
 
-	// 分頁 當forumId下的
+	// 分頁 當forumId下的前12筆
 	public Page<Texts> findByPage(Integer forumId, Integer pageNumber) {
 		Pageable pageable = PageRequest.of(pageNumber - 1, 12, Sort.Direction.DESC, "doneTime");
 		return textsRepository.findByForumForumId(forumId, pageable);
 	}
 
-	// 分頁 當forumId下的(All)
+	// 分頁 查詢全部的最新前12筆的 
 	public Page<Texts> findAllByPage(Integer pageNumber) {
 		Pageable pageable = PageRequest.of(pageNumber - 1, 12, Sort.Direction.DESC, "doneTime");
 		return textsRepository.findAll(pageable);
-	}
-
-	// 是否顯示
-	public Texts findByHideTexts(Boolean hideTexts) {
-		List<Texts> optional = textsRepository.findAllByHideTexts(hideTexts);
-
-		if (optional.isEmpty()) {
-			return null;
-		}
-
-		return optional.get(0);
 	}
 
 	// 新增
@@ -55,7 +63,7 @@ public class TextsService {
 	}
 
 	// 模糊查詢
-	public List<Texts> findAllText(String texts) {
+	public List<Texts> findAllTexts(String texts) {
 		return textsRepository.findAllByTitle(texts);
 	}
 
@@ -79,21 +87,19 @@ public class TextsService {
 		}
 	}
 
+	// 編輯
 	@Transactional
-	public Texts update(Texts updateTexts) {
-		Optional<Texts> existingTextsOpt = textsRepository.findById(updateTexts.getTextsId());
-		if (existingTextsOpt.isPresent()) {
-			Texts existingTexts = existingTextsOpt.get();
-			existingTexts.setTitle(updateTexts.getTitle());
-			existingTexts.setTextsContent(updateTexts.getTextsContent());
-			existingTexts.setUpdatedTime(new Timestamp(System.currentTimeMillis())); // 更新 updatedTime 為當前時間
-			existingTexts.setTextsLikeNum(updateTexts.getTextsLikeNum());
-			existingTexts.setHideTexts(updateTexts.getHideTexts());
+	public Texts update(Texts texts) {
+		Texts existingTexts = textsRepository.findById(texts.getTextsId()).orElse(null);
+		if (existingTexts != null) {
+			existingTexts.setTitle(texts.getTitle());
+			existingTexts.setTextsContent(texts.getTextsContent());
+			existingTexts.setForum(texts.getForum());
+			existingTexts.setMember(texts.getMember());
+			existingTexts.setForumPhoto(texts.getForumPhoto());
 			return textsRepository.save(existingTexts);
-		} else {
-			System.out.println("查無文章");
-			return null;
 		}
+		return null;
 	}
 
 	// 分頁

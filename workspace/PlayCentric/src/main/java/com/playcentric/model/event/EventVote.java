@@ -1,5 +1,7 @@
 package com.playcentric.model.event;
 
+import java.time.LocalDateTime;
+
 import com.playcentric.model.member.Member;
 
 import jakarta.persistence.Entity;
@@ -38,5 +40,5 @@ public class EventVote {
     private Event event;
 
     private Integer eventVoteStatus;
-
+    private LocalDateTime voteTime;
 }

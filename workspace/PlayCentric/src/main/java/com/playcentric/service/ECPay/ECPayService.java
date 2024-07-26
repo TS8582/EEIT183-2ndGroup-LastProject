@@ -66,6 +66,10 @@ public class ECPayService {
         // 初始化 AllInOne 物件
         this.allInOne = new AllInOne("");
     }
+    
+    public Recharge saveRecharge(Recharge recharge) {
+		return rechargeRepository.save(recharge);
+	}
 
     public String rechargePoints(Recharge recharge) {
         // String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0,
@@ -140,6 +144,7 @@ public class ECPayService {
     public String getRechargeResult(Integer memId){
 		PageRequest pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "rechargeAt");
         Recharge recharge = rechargeRepository.findByMemId(memId, pageable);
+        recharge.setStatus((short)1);
 
         recharge.setStatus(recharge.getStatus()==2? (short)2:(short)1);
 
