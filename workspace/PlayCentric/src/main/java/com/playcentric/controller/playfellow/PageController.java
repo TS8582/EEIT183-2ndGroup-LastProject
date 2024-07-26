@@ -116,6 +116,8 @@ public class PageController {
 		return new ResponseEntity<>(pfGameDTOs, HttpStatus.OK);
 	}
 
+	
+	
 	@PostMapping("/playFellow/{gameId}")
 	public String showGameMember(@PathVariable("gameId") Integer gameId, Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
@@ -148,6 +150,8 @@ public class PageController {
 		return "playFellow/showGameMember";
 	}
 
+	
+	
 	@ResponseBody
 	@PostMapping("playFellow/addPfOrder")
 	public String addOrder(@RequestBody PfOrderDTO pfOrderDTO) {
@@ -185,6 +189,8 @@ public class PageController {
 		return "付款成功";
 	}
 
+	
+	
 	@ResponseBody
     @GetMapping("/api/images/{imageId}")
     public ResponseEntity<byte[]> getImageById(@PathVariable Integer imageId) {
