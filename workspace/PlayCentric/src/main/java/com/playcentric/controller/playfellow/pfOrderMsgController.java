@@ -18,7 +18,6 @@ import com.playcentric.service.playfellow.PlayFellowMemberService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
 public class pfOrderMsgController {
 
@@ -28,8 +27,6 @@ public class pfOrderMsgController {
 	MemberService memberService;
 	@Autowired
 	PlayFellowMemberService playFellowMemberService;
-	
-	
 
 	@GetMapping("/playFellow/pfOrderMsg")
 	public String findMemberpfOrder(HttpSession session, Model model) {
@@ -39,17 +36,20 @@ public class pfOrderMsgController {
 		System.out.println(memId);
 
 		Member member = memberService.findById(memId);
-		
+
 		List<PfOrder> pfOrder = pfOrderService.findByMember(member);
 		model.addAttribute("pfOrder", pfOrder);
-		
-		List<PfOrder> orders = pfOrderService.findpfMemberOfpfOrderByMember(memId);
-	    model.addAttribute("orders", orders);
 
-		return "playFellow/pfMemberOrderMsg";
+		if (member != null) {
+			PlayFellowMember havePlayFellowMember = playFellowMemberService.findByMember(member);
+			List<PfOrder> orders = pfOrderService.findpfMemberOfpfOrderByMember(memId);
+			model.addAttribute("orders", orders);
+            model.addAttribute("havePlayFellowMember", havePlayFellowMember);
+
+
+			return "playFellow/pfMemberOrderMsg";
+		}
+        return null;
+
 	}
-	
-	
-
-	
 }

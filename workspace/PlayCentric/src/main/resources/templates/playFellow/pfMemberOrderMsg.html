@@ -25,7 +25,7 @@ html, body {
 
 .table thead th {
 	background-color: #CBD5E1 !important;
-	color: #ADD8E6 !important;
+/* 	color: #ADD8E6 !important; */
 	color: rgba(29, 18, 18, 0.995) !important;
 }
 
@@ -75,17 +75,7 @@ html, body {
 	pointer-events: auto;
 }
 
-#review {
-	background-color: transparent;
-	color: #666;
-	padding: 5px 10px;
-	transition: background-color 0.3s;
-	bottom: 10px;
-}
 
-#review:hover {
-	background-color: #013220;
-}
 
 .pagination {
 	justify-content: center;
@@ -111,20 +101,33 @@ html, body {
 		<main class="w-100 p-3">
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
 
-				<li class="nav-item" role="presentation">
-				
-					<button class="btn text-secondary" 
-						data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
-						type="button" >
-						<i class="fas fa-calendar-alt"></i>購買明細</button>
-				</li>
-				
-				
-				<li class="nav-item" role="presentation">
+				<li class="nav-item" role="presentation" style="margin: 6px;">
+
 					<button class="btn text-secondary" data-bs-toggle="tab"
-						data-bs-target="#second-tab-pane" type="button" th:text="${session.loginMember.memId}">
-						 這是伴遊者被下單的紀錄
+						id="profile-tab" data-bs-target="#profile-tab-pane" type="button">
+						<i class="fas fa-calendar-alt"></i>購買明細
 					</button>
+				</li>
+
+
+				<li class="nav-item" role="presentation" style="margin: 6px;">
+					<button class="btn text-secondary" data-bs-toggle="tab"
+						data-bs-target="#second-tab-pane" type="button"
+						th:if="${havePlayFellowMember != null}">訂單消息</button>
+				</li>
+				<li class="nav-item" role="presentation" style="margin: 6px;">
+					<a class="btn text-secondary"
+					th:if="${havePlayFellowMember != null}"
+					th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${havePlayFellowMember.playFellowId})}">
+						前往查看伴遊資訊 </a>
+
+				</li>
+				<li class="nav-item" role="presentation" style="margin: 6px;">
+					<a class="btn text-secondary"
+					th:if="${havePlayFellowMember != null}"
+					th:href="@{/playFellow/pfGame/{playFellowId}(playFellowId=${havePlayFellowMember.playFellowId})}">
+						前往查看遊戲資訊 </a>
+
 				</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
@@ -140,8 +143,7 @@ html, body {
 
 
 
-				<div
-					class="tab-pane fade border border-top-0 rounded-2 rounded-top-0"
+				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0"
 					id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
 					tabindex="0">
 					<br> <br>

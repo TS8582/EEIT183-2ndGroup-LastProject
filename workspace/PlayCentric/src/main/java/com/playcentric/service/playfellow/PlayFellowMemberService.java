@@ -63,7 +63,7 @@ public class PlayFellowMemberService {
 	}
 	
 	//用member找pfmember資料((onetoOne
-	public PlayFellowMember findByFellowMember(Member member) {
+	public PlayFellowMember findByMember(Member member) {
 		return playFellowMemberRepository.findByMember(member);
 	}
 
