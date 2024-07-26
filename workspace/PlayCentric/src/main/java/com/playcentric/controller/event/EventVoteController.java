@@ -1,18 +1,29 @@
 package com.playcentric.controller.event;
 
-import com.playcentric.model.event.EventVote;
-import com.playcentric.service.event.EventVoteService;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.Map;
-
+import com.playcentric.model.event.EventVote;
+import com.playcentric.service.event.EventVoteService;
 
 @Controller
 @RequestMapping("/eventVotes")
@@ -22,6 +33,8 @@ public class EventVoteController {
 
     @Autowired
     private EventVoteService eventVoteService;
+
+    // ======== 網頁視圖相關方法 ========
 
     /**
      * 顯示投票列表頁面
@@ -143,7 +156,17 @@ public class EventVoteController {
         return "event/vote-list";
     }
 
-    // API 部分
+    /**
+     * 顯示投票管理頁面
+     * @param model Spring MVC Model
+     * @return 投票管理頁面視圖
+     */
+    @GetMapping("/manage")
+    public String manageVotes(Model model) {
+        return "event/event-vote-management";
+    }
+
+    // ======== API 相關方法 ========
 
     /**
      * API: 創建新的投票
@@ -156,7 +179,6 @@ public class EventVoteController {
     public ResponseEntity<?> createVote(@RequestParam Integer memberId, @RequestParam Integer signupId) {
         try {
             EventVote vote = eventVoteService.createVote(memberId, signupId);
-            // 獲取更新後的票數
             long updatedVoteCount = eventVoteService.getVoteCountForSignup(signupId);
             return ResponseEntity.ok(Map.of(
                 "success", true, 
@@ -284,5 +306,49 @@ public class EventVoteController {
     public ResponseEntity<Map<Integer, Long>> getVoteResults(@PathVariable Integer eventId) {
         Map<Integer, Long> results = eventVoteService.getVoteResultsByEventId(eventId);
         return ResponseEntity.ok(results);
+    }
+
+    /**
+     * API: 獲取投票統計信息
+     * @return 投票統計信息的 ResponseEntity
+     */
+    @GetMapping("/api/statistics")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getVoteStatistics() {
+        List<EventVote> allVotes = eventVoteService.getAllVotes();
+        
+        long totalVotes = allVotes.size();
+        long validVotes = allVotes.stream().filter(v -> v.getEventVoteStatus() == 1).count();
+        long pendingVotes = totalVotes - validVotes;
+        long activeUsers = allVotes.stream().map(v -> v.getMember().getMemId()).distinct().count();
+        double avgVotesPerUser = activeUsers > 0 ? (double) totalVotes / activeUsers : 0;
+
+        // 計算投票趨勢（最近7天）
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        Map<LocalDateTime, Long> voteTrendMap = allVotes.stream()
+            .filter(v -> v.getVoteTime().isAfter(sevenDaysAgo))
+            .collect(Collectors.groupingBy(
+                EventVote::getVoteTime,
+                Collectors.counting()
+            ));
+
+        List<Map<String, Object>> voteTrend = voteTrendMap.entrySet().stream()
+            .map(entry -> {
+                Map<String, Object> trendItem = new HashMap<>();
+                trendItem.put("date", entry.getKey());
+                trendItem.put("count", entry.getValue());
+                return trendItem;
+            })
+            .collect(Collectors.toList());
+
+        Map<String, Object> statistics = new HashMap<>();
+        statistics.put("totalVotes", totalVotes);
+        statistics.put("validVotes", validVotes);
+        statistics.put("pendingVotes", pendingVotes);
+        statistics.put("activeUsers", activeUsers);
+        statistics.put("avgVotesPerUser", avgVotesPerUser);
+        statistics.put("voteTrend", voteTrend);
+
+        return ResponseEntity.ok(statistics);
     }
 }
