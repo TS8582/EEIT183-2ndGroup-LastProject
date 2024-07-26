@@ -25,8 +25,10 @@ import com.playcentric.model.ImageLib;
 import com.playcentric.model.forum.Forum;
 import com.playcentric.model.forum.ForumPhoto;
 import com.playcentric.model.forum.Texts;
+import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
 import com.playcentric.service.forum.ForumService;
+import com.playcentric.service.forum.PhotoService;
 import com.playcentric.service.forum.TextsService;
 import com.playcentric.service.member.MemberService;
 
@@ -43,6 +45,9 @@ public class TextsController {
 
 	@Autowired
 	private MemberService memberService;
+
+	@Autowired
+	private PhotoService photoService;
 
 	// 更新Status
 	@ResponseBody
@@ -72,19 +77,19 @@ public class TextsController {
 	}
 
 	// 處理文章發布與圖片上傳
-	@PostMapping("/texts/publish")
+	@PostMapping("/personal/texts/publish")
 	public String publish(@RequestParam("textsContent") String textsContent, @RequestParam("title") String title,
 			@RequestParam("files") MultipartFile[] files, @RequestParam("forumId") Integer forumId,
-			@RequestParam("memId") Integer memId, HttpSession httpSession, Model model) throws IOException {
+			HttpSession httpSession, Model model) throws IOException {
 
 		// 從 session 中獲取 member 對象
-		Member member = (Member) httpSession.getAttribute("member");
+		LoginMemDto loginMember = (LoginMemDto) httpSession.getAttribute("loginMember");
 
 		// 檢查 member 對象是否為 null
-		if (member == null) {
-			// 如果 member 為 null，說明用戶未登入，重定向到登入頁面
-			return "redirect:/member/login"; // 確保你有一個處理 /login 的路由
-		}
+//		if (loginMember == null) {
+//			// 如果 member 為 null，說明用戶未登入，重定向到登入頁面
+//			return "redirect:/member/showLoginErr/notLogin"; // 確保你有一個處理 /login 的路由
+//		}
 
 		Forum forum = forumService.findById(forumId);
 
@@ -95,7 +100,7 @@ public class TextsController {
 		texts.setDoneTime(new Timestamp(System.currentTimeMillis())); // 設置發佈日期
 		texts.setTitle(title);
 		texts.setForum(forum);
-		texts.setMemId(member.getMemId());
+		texts.setMemId(loginMember.getMemId());
 
 		// 如果有上傳的圖片，處理圖片上傳
 		if (files != null && files.length > 0) {
@@ -150,7 +155,7 @@ public class TextsController {
 	}
 
 	// TinyMCE新增
-	@GetMapping("/texts/insertTexts2")
+	@GetMapping("/personal/texts/insertTexts2")
 	public String insertTexts2(Model model) {
 		List<Forum> arrayList = forumService.findAll();
 		model.addAttribute("arrayList", arrayList);
@@ -158,11 +163,28 @@ public class TextsController {
 	}
 
 	@PostMapping("/texts/insertTextsData2")
-	public String insertTextsData2(@RequestParam("textsContent") String textsContent, Model model,
-			HttpSession httpSession) {
+	public String insertTextsData2(@ModelAttribute Texts texts, @RequestParam("files") MultipartFile files, Model model,
+			HttpSession httpSession) throws IOException {
 
-		Texts texts = new Texts();
-		texts.setTextsContent(textsContent);
+		LoginMemDto loginMember = (LoginMemDto) httpSession.getAttribute("loginMember");
+
+		Forum forum = forumService.findById(texts.getForumId());
+		texts.setForum(forum);
+
+		Member member = memberService.findById(loginMember.getMemId());
+		texts.setMember(member);
+		
+
+		if (!files.isEmpty()) {
+			ForumPhoto forumPhoto = new ForumPhoto();
+			forumPhoto.setPhotoFile(files.getBytes());
+			forumPhoto.setTexts(texts);
+			ArrayList<ForumPhoto> photoList = new ArrayList<>();
+			photoList.add(forumPhoto);
+			texts.setForumPhoto(photoList);
+//			forumPhoto = photoService.insertPhoto(forumPhoto);
+		}
+
 		textsService.insert(texts);
 
 		Texts lastestTexts = textsService.findLastestMsg();
@@ -218,48 +240,48 @@ public class TextsController {
 	public String updateTexts(@RequestParam("textsContent") String textsContent, @RequestParam("title") String title,
 			@RequestParam("textsId") Integer textsId, @RequestParam("files") MultipartFile[] files,
 			@RequestParam("forumId") Integer forumId,
-			@RequestParam("memId") Integer memId, @RequestParam("hideTexts") Boolean hideTexts,
+			/* @RequestParam("memId") Integer memId, */ @RequestParam("hideTexts") Boolean hideTexts,
 			HttpSession httpSession, Model model) throws IOException {
 		// 從 session 中獲取 member 對象
-		Member member = (Member) httpSession.getAttribute("member");
+		LoginMemDto loginMember = (LoginMemDto) httpSession.getAttribute("loginMember");
 
 		// 檢查 member 對象是否為 null
-		if (member == null) {
+		if (loginMember == null) {
 			// 如果 member 為 null，說明用戶未登入，重定向到登入頁面
-			return "redirect:/member/login"; // 確保你有一個處理 /login 的路由
+			return "redirect:/member/showLoginErr/notLogin"; // 確保你有一個處理 /login 的路由
 		}
 
-			Forum forum = forumService.findById(forumId);
+		Forum forum = forumService.findById(forumId);
 
-			// 建立一個新的文章物件
-			Texts texts = new Texts();
-			texts.setHideTexts(hideTexts);
-			texts.setTextsContent(textsContent); // 設置文章內容
-			texts.setUpdatedTime(new Timestamp(System.currentTimeMillis())); // 設置發佈日期
-			texts.setTitle(title);
-			texts.setTextsId(textsId);
-			texts.setForum(forum);
-			texts.setMemId(memId);
+		// 建立一個新的文章物件
+		Texts texts = new Texts();
+		texts.setHideTexts(hideTexts);
+		texts.setTextsContent(textsContent); // 設置文章內容
+		texts.setUpdatedTime(new Timestamp(System.currentTimeMillis())); // 設置發佈日期
+		texts.setTitle(title);
+		texts.setTextsId(textsId);
+		texts.setForum(forum);
+		texts.setMemId(loginMember.getMemId());
 
-			// 如果有上傳的圖片，處理圖片上傳
-			if (files != null && files.length > 0) {
-				List<ForumPhoto> forumPhotosList = new ArrayList<>();
+		// 如果有上傳的圖片，處理圖片上傳
+		if (files != null && files.length > 0) {
+			List<ForumPhoto> forumPhotosList = new ArrayList<>();
 
-				for (MultipartFile file : files) {
-					ForumPhoto forumPhoto = new ForumPhoto();
-					forumPhoto.setPhotoFile(file.getBytes());
-					forumPhoto.setTexts(texts); // 設置圖片對應的文章
-					forumPhotosList.add(forumPhoto);
-				}
-
-				texts.setForumPhoto(forumPhotosList); // 將圖片列表設置到文章中
+			for (MultipartFile file : files) {
+				ForumPhoto forumPhoto = new ForumPhoto();
+				forumPhoto.setPhotoFile(file.getBytes());
+				forumPhoto.setTexts(texts); // 設置圖片對應的文章
+				forumPhotosList.add(forumPhoto);
 			}
 
-			textsService.insert(texts); // 儲存文章到資料庫
+			texts.setForumPhoto(forumPhotosList); // 將圖片列表設置到文章中
+		}
 
-			// 發佈成功後重定向到成功頁面
-			return "redirect:/texts/listFront";
-		
+		textsService.insert(texts); // 儲存文章到資料庫
+
+		// 發佈成功後重定向到成功頁面
+		return "redirect:/texts/listFront";
+
 	}
 
 	// 刪除文章

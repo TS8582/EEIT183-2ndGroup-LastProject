@@ -14,10 +14,10 @@
         }
 
         .b1 {
-            background-image: url("[[@{/images/loginBG.jpg}]]");
-            background-size: cover;
+            /* background-image: url("[[@{/images/loginBG.jpg}]]"); */
+            /* background-size: cover; */
             /* 確保圖片覆蓋整個容器 */
-            background-position: center;
+            /* background-position: center; */
             /* 確保圖片居中 */
             margin: 0;
             padding: 0;
@@ -46,7 +46,7 @@
         }
 
         td label {
-            margin-left: 120px;
+            margin-left: 235px;
         }
 
         .btn1 {
@@ -82,27 +82,20 @@
         <div class="row">
             <h1 class="my-2 d-flex justify-content-center">新增文章</h1>
             <br>
-            <form id="postForm" th:action="@{/texts/publish}" method="post" enctype="multipart/form-data">
+            <form id="postForm" th:action="@{/texts/insertTextsData2}" method="post" enctype="multipart/form-data">
                 <table>
                     <tr>
                         <td>
                             <div>
-                                <label>會員Id:</label>
-                                <input type="text" name="memId" required>
-                            </div>
-                        </td>
-                        <br>
-                        <td>
-                            <div>
                                 <label for="title">文章標題：</label>
-                                <input type="text" id="title" name="title">
+                                <input type="text" id="title" name="title" required>
                             </div>
                         </td>
                         <br>
                         <td>
                             <div>
                                 <label for="forumId">主題類型：</label>
-                                <select id="forumId" name="forumId">
+                                <select id="forumId" name="forumId" required>
                                     <option value="" disabled selected>請選擇</option>
                                     <!-- Iterate over 'arrayList' to populate options -->
                                     <option th:each="forum : ${arrayList}" th:value="${forum.forumId}"
