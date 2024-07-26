@@ -106,7 +106,7 @@
         </div>
       </div>
       <div class="h4 ps-3">儲值紀錄</div>
-      <ul class="list-group container" id="output">
+      <ul class="list-group container mb-4" id="output">
         <li class="list-group-item d-flex">
           <div class="col-3 fw-bold ms-auto">項目</div>
           <div class="col-3 fw-bold">金額</div>
@@ -114,7 +114,7 @@
         </li>
       </ul>
       <div id="pageBtn">
-        <div class="d-flex justify-content-center align-items-end mt-4">
+        <div class="d-flex justify-content-center align-items-end">
           <ul class="pagination">
           </ul>
         </div>
@@ -187,11 +187,16 @@
       function htmlMaker(data) {
         $('#output').text('')
         
+        if(data.empty){
+          $('#output')[0].innerHTML = '<li class="list-group-item">查無儲值紀錄!</li>'
+          return
+        }
+        
         $('#output').append(`<li class="list-group-item d-flex">
                               <div class="col-3 fw-bold ms-auto">項目</div>
                               <div class="col-3 fw-bold">金額</div>
                               <div class="col-5 fw-bold">時間</div>
-                            </li>`)
+                            `)
 
         data.content.forEach((element) => {
           const dataHtml = `<li class="list-group-item d-flex">
