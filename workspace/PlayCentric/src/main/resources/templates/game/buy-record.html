@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div th:replace="~{/layout/nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <title>PlayCentric-遊戲購買紀錄</title>
+    <title th:text="${session.loginMember} ? 'PlayCentric-' + ${session.loginMember.nickname} + 遊戲購買紀錄">遊戲購買紀錄</title>
 </head>
 
 <body>
