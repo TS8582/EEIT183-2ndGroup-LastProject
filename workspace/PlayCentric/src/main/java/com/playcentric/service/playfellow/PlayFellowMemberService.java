@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.playcentric.model.member.Member;
 import com.playcentric.model.playfellow.ImageLibPfmemberAssociation;
 import com.playcentric.model.playfellow.PlayFellowMember;
 import com.playcentric.model.playfellow.PlayFellowMemberRepository;
@@ -59,6 +60,11 @@ public class PlayFellowMemberService {
 		}
 
 		return reviewSuccessMembers;
+	}
+	
+	//用member找pfmember資料((onetoOne
+	public PlayFellowMember findByFellowMember(Member member) {
+		return playFellowMemberRepository.findByMember(member);
 	}
 
 }

@@ -26,8 +26,14 @@ public class PfOrderService {
 		return pfOrderRepository.save(pfOrder);
 	}
 	
-	
-	public List<PfOrder> findByMember(Member member) {
+	public List<PfOrder> findByMember(Member member){
 		return pfOrderRepository.findByMember(member);
 	}
+	
+	
+	public List<PfOrder> findpfMemberOfpfOrderByMember(Integer memId) {
+		return pfOrderRepository.findOrdersByMember(memId);
+	}
+	
+	
 }
