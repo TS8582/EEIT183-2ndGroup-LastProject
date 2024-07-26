@@ -33,4 +33,11 @@ public interface EventVoteRepository extends JpaRepository<EventVote, Integer> {
      * @return 投票數量
      */
     long countByEventSignup_SignupId(Integer signupId);
+    
+    /**
+     * 檢查是否存在與指定報名ID相關的投票
+     * @param signupId 報名ID
+     * @return 如果存在相關投票則返回true，否則返回false
+     */
+    boolean existsByEventSignup_SignupId(Integer signupId);
 }

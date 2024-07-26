@@ -73,6 +73,7 @@ public class EventVoteService {
         eventVote.setEventSignup(eventSignup);
         eventVote.setEvent(event);
         eventVote.setEventVoteStatus(1); // 假設1表示有效投票
+        eventVote.setVoteTime(now); // 設置投票時間
 
         return eventVoteRepository.save(eventVote);
     }

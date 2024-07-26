@@ -9,9 +9,10 @@ public class EventSignupDTO {
     private Integer signupId;
     private String workTitle;
     private String workDescription;
-    private Long voteCount;  // 改為 Long 類型
+    private Long voteCount;
     private String workImageBase64;
     private Member member;
+    private Integer eventSignupStatus;
     
     /**
      * 設置投票數量
