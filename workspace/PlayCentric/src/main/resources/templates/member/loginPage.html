@@ -8,6 +8,9 @@
   <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
   <script th:src="@{/js/axios.min.js}"></script>
   <script th:src="@{/js/utils/doAlertJQ.js}"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+		integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>PlayCentric-登入頁面</title>
   <style>
     html,
@@ -37,6 +40,10 @@
 
     .mt150px {
       margin-top: 150px !important;
+    }
+
+    .cursor-pointer{
+      cursor: pointer;
     }
   </style>
 </head>
@@ -163,6 +170,7 @@
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-body">
+                <!-- 發送信件表單 -->
                 <form id="modalForm">
                   <h1 class="my-3 text-center">忘記密碼</h1>
                   <div class="d-flex my-4">
@@ -173,6 +181,23 @@
                     <button type="button" class="btn btn-secondary mx-3" data-bs-dismiss="modal">取消</button>
                   </div>
                 </form>
+                <!-- loading -->
+                 <div id="emailSending" style="display: none;">
+                   <div class="d-flex justify-content-center align-items-center">
+                     <span class="spinner-grow text-success" role="status">
+                       <span class="visually-hidden"></span>
+                     </span>
+                     <span class="ms-2">信件發送中。。。</span>
+                   </div>
+                 </div>
+                <!-- 信件已發送 -->
+                <div id="emailSent" style="display: none;">
+                  <i class="fa-solid fa-arrow-left cursor-pointer fs-3"></i>
+                  <p class="text-center fs-3 mb-3">信件發送完成!</p>
+                  <div class="d-flex justify-content-center">
+                    <div class="btn btn-primary" data-bs-dismiss="modal">確定</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -206,6 +231,12 @@
         e.preventDefault()
 
         forgetPwdModal.show();
+      })
+
+      $('#emailSent i').click(function(){
+        console.log(123);
+        $('#emailSent').hide();
+        $('#modalForm').show();
       })
 
       //自動確認密碼是否相同
@@ -245,13 +276,16 @@
         axios.post(forgetPwdUrl, formdataObject)
           .then(res => {
             console.log(res);
-            doAlert(res.data);
+            $('#emailSending').hide();
+            $('#emailSent p').text(res.data)
+            $('#emailSent').show();
           })
           .catch(err => {
             console.log(err);
           })
 
-          $('#forgetPwdModal').modal('hide');
+          $('#modalForm').hide();
+          $('#emailSending').show();
       })
 
       $('#login-form').submit(function (e) {

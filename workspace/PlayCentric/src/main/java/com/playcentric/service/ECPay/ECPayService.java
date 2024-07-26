@@ -144,9 +144,18 @@ public class ECPayService {
     public String getRechargeResult(Integer memId){
 		PageRequest pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "rechargeAt");
         Recharge recharge = rechargeRepository.findByMemId(memId, pageable);
-        recharge.setStatus((short)1);
 
-        recharge.setStatus(recharge.getStatus()==2? (short)2:(short)1);
+        Short originStatus = recharge.getStatus();
+        if (originStatus!=1 && originStatus!=2) {
+            Optional<Member> optional = memberRepository.findById(memId);
+            if (optional.isPresent()) {
+                Member member = optional.get();
+                member.setPoints(member.getPoints() + recharge.getAmount());
+                memberRepository.save(member);
+            }
+            recharge.setStatus((short)1);
+            rechargeRepository.save(recharge);
+        }
 
         return recharge.getStatus()==1? "儲值成功!":"儲值失敗!";
     }

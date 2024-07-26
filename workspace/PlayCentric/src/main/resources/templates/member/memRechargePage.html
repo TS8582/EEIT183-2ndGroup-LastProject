@@ -22,6 +22,10 @@
       cursor: pointer;
     }
 
+    .cursor-default {
+      cursor: default;
+    }
+
     .h-0 {
       height: 0;
     }
@@ -68,7 +72,7 @@
   <div th:replace="~{member/memInfoAside}"></div>
 
   <div class="p-0">
-    <div class="container my-4">
+    <div class="container mt-4">
       <div class="d-flex">
         <div class="h1 p-0 text-center">會員錢包</div>
         <p class="ms-auto mb-3 mt-auto ps-2 border border-2 rounded-2 col-2 fs-4">
@@ -154,6 +158,14 @@
           })
       })
 
+      $('#pageBtn').on('click', '.page-item', function () {
+        console.log($(this).text());
+        if (params.pageNum != $(this).text()) {
+          params.pageNum = $(this).text();
+          findRechargeHis();
+        }
+      })
+
       function findRechargeHis() {
         axios({
           method: 'get',
@@ -196,11 +208,11 @@
           $('#pageBtn').show();
           $('.pagination').text('')
           for (let index = 1; index <= data.totalPages; index++) {
-            if (index != params.page) {
-              $('.pagination').append(`<li class="page-item"><a class="page-link">${index}</a></li>`)
+            if (index != params.pageNum) {
+              $('.pagination').append(`<li class="page-item cursor-pointer"><a class="page-link">${index}</a></li>`)
               continue;
             }
-            $('.pagination').append(`<li class="page-item active"><a class="page-link">${index}</a></li>`)
+            $('.pagination').append(`<li class="page-item active cursor-default"><a class="page-link">${index}</a></li>`)
           }
         }
       }

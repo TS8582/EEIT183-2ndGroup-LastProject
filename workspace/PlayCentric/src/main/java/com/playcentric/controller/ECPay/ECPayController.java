@@ -4,8 +4,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.playcentric.model.game.transaction.Recharge;
-import com.playcentric.model.game.transaction.RechargeRepository;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
 import com.playcentric.service.ECPay.ECPayService;
@@ -31,8 +28,6 @@ public class ECPayController {
     private ECPayService ecPayService;
     @Autowired
     private MemberService mService;
-    @Autowired
-    private RechargeRepository rechargeRepository;
 
     @PostMapping("/member/personal/api/newRecharge")
     @ResponseBody
@@ -82,14 +77,9 @@ public class ECPayController {
     @GetMapping("/personal/ecPayOK")
     public String backFromEcPay(RedirectAttributes redirectAttributes, Model model) {
         LoginMemDto loginMember = (LoginMemDto)model.getAttribute("loginMember");
-        PageRequest pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "rechargeAt");
-        Recharge recharge = rechargeRepository.findByMemId(loginMember.getMemId(), pageable);
         String rechargeResult = "儲值完成!";
         if (loginMember!=null) {
             rechargeResult = ecPayService.getRechargeResult(loginMember.getMemId());
-            Member member = mService.findById(loginMember.getMemId());
-            member.setPoints(member.getPoints() + recharge.getAmount());
-            mService.save(member);
         }
         redirectAttributes.addFlashAttribute("redirectMsg", rechargeResult);
         return "redirect:/member/personal/Info";
