@@ -26,6 +26,10 @@
         ::placeholder {
             color: rgba(0, 0, 0, 0.329) !important;
         }
+
+        .container {
+            overflow: hidden;
+        }
     </style>
 </head>
 
@@ -35,8 +39,9 @@
     <div>
         <section class="py-3">
             <div class="container">
+                <a th:href="@{/texts/findIdByTexts(textsId=${texts.textsId})}" class="btn btn-primary">編輯文章</a>
+                <a th:href="@{/texts/delete(textsId=${texts.textsId})}" class="btn btn-danger">刪除文章</a>
                 <div class="mt-5">
-                    <h1 class="page-title">文章名稱</h1>
                     <h1 class="page-title" th:text="${texts.title}">文章名稱</h1>
                     <div class="post-meta">
                         <div
