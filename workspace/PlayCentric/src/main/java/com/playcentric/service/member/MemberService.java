@@ -122,10 +122,11 @@ public class MemberService {
 		return false;
 	}
 
-	public Member verifyEmail(Integer memId, String token) {
+	public Member verifyEmail(Integer memId) {
 		Optional<Member> optional = memberRepository.findById(memId);
 		if (optional.isPresent()) {
 			Member member = optional.get();
+			String token = UUID.randomUUID().toString();
 			member.setEmailVerifyToken(token);
 			return memberRepository.save(member);
 		}
@@ -159,7 +160,7 @@ public class MemberService {
 	}
 
 	public boolean checkEmailExist(String email) {
-		return memberRepository.findByEmail(email) != null;
+		return memberRepository.findByEmail(email) != null && googleRepository.findByEmail(email) != null;
 	}
 
 	public boolean checkGoogleExist(String googleId) {
@@ -215,10 +216,11 @@ public class MemberService {
 		return setLoginDto(originMem);
 	}
 
-	public Member changePassword(Integer memId, String token) {
+	public Member changePassword(Integer memId) {
 		Optional<Member> optional = memberRepository.findById(memId);
 		if (optional.isPresent()) {
 			Member member = optional.get();
+			String token = UUID.randomUUID().toString();
 			member.setPasswordToken(token);
 			return memberRepository.save(member);
 		}
@@ -230,6 +232,7 @@ public class MemberService {
 		String encodedPwd = passwordEncoder.encode(password);
 		member.setPassword(encodedPwd);
 		member.setPasswordToken(null);
+		member.setEmailVerified(true);
 		return memberRepository.save(member);
 	}
 

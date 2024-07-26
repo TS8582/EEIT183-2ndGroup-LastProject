@@ -14,7 +14,7 @@
             color: white;
             border-radius: 5px;
 
-            &.disabled,
+            &.disabled-tab,
             &:hover {
                 font-weight: 700;
                 color: rgb(0, 0, 0);
@@ -73,14 +73,8 @@
                     <li class="nav-item me-2">
                         <a class="nav-link fs-4" th:href="@{/playFellow/cms}">伴遊管理</a>
                     </li>
-                    <li class="nav-item dropdown me-2">
-                        <a class="nav-link dropdown-toggle fs-4" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            活動管理
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item fs-5" th:href="@{/events/listEvents}">活動</a></li>
-                            <li><a class="dropdown-item fs-5" th:href="@{/eventSignup/manage}">活動報名</a></li>
-                        </ul>
+                    <li class="nav-item me-2">
+                        <a class="nav-link fs-4" th:href="@{/events/listEvents}">活動管理</a>
                     </li>
                     <li class="nav-item me-2">
                         <a class="nav-link fs-4" th:href="@{/findAllForum2}">討論區管理</a>

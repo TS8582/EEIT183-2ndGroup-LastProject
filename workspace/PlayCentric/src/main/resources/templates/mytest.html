@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星星進度條</title>
+    <style>
+        .star-container {
+            position: relative;
+            display: inline-block;
+            font-size: 2em;
+            color: #ccc;
+            /* 灰色星星 */
+        }
+
+        .star-container .filled {
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* white-space: nowrap; */
+            overflow: hidden;
+            color: gold;
+            /* 金色星星 */
+        }
+
+        /* .star-container .filled::before {
+            content: '★★★★★';
+        }
+
+        .star-container .unfilled::before {
+            content: '★★★★★';
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="star-container">
+        <div class="filled" style="width: 80%;">★★★★★</div>
+        <div class="unfilled">★★★★★</div>
+    </div>
+</body>
+
+</html>

@@ -1,12 +1,10 @@
 package com.playcentric.controller.game;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,13 +16,9 @@ import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.member.MemberService;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
-@RequestMapping("/gamecart")
+@RequestMapping("/personal/api/gamecart")
 @SessionAttributes("loginMember")
 public class GameCartRestController {
 	
@@ -44,13 +38,10 @@ public class GameCartRestController {
 	
 	@GetMapping("/insert")
 	public void inserGameCart(
-			@RequestParam Integer gameId,
-			@RequestParam Integer memId) {
-		GameCarts gameCarts = new GameCarts();
-		gameCarts.setGameId(gameId);
-		gameCarts.setMemId(memId);
-		gameCarts.setGame(gService.findById(gameId));
-		gameCarts.setMember(mService.findById(memId));
+			@ModelAttribute GameCarts gameCarts
+			) {
+		gameCarts.setGame(gService.findById(gameCarts.getGameId()));
+		gameCarts.setMember(mService.findById(gameCarts.getMemId()));
 		gcService.insert(gameCarts);
 	}
 	

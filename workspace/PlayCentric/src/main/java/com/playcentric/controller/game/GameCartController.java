@@ -8,11 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.game.secondary.GameCarts;
@@ -23,7 +20,7 @@ import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameService;
 
 @Controller
-@RequestMapping("/gamecart")
+@RequestMapping("/personal/gamecart")
 @SessionAttributes("loginMember")
 public class GameCartController {
 	
@@ -43,9 +40,6 @@ public class GameCartController {
 	
 	@GetMapping("/get")
 	public String findMemGameCarts(@ModelAttribute("loginMember") LoginMemDto loginMember,Model model) {
-		if (loginMember == null) {
-			return "redirect:/game/gameStore";
-		}
 		List<GameCarts> gamecarts = gcService.findByMemId(loginMember.getMemId());
 		List<Game> games = new ArrayList<>();
 		if (gamecarts.size() > 0) {

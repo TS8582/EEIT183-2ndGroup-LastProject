@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +24,6 @@ import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.game.primary.GameDiscount;
 import com.playcentric.model.game.primary.GameDiscountSet;
 import com.playcentric.model.game.primary.GameTypeLib;
-import com.playcentric.model.game.secondary.GameCarts;
 import com.playcentric.model.game.secondary.OwnGameLib;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.ImageLibService;
@@ -32,8 +32,6 @@ import com.playcentric.service.game.GameDiscountSetService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
 import com.playcentric.service.game.OwnGameLibService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @SessionAttributes("loginMember")
@@ -283,7 +281,7 @@ public class GameController {
 		return "game/show-game";
 	}
 	
-	@GetMapping("/game/ownGame")
+	@GetMapping("/personal/game/ownGame")
 	public String getMethodName(
 			@ModelAttribute("loginMember") LoginMemDto loginMember,
 			Model model
@@ -295,6 +293,15 @@ public class GameController {
 		}
 		model.addAttribute("games",games);
 		return "game/owngame";
+	}
+	
+	@GetMapping("/game/buyRecord")
+	public String buyRecord(
+			Model model
+			) {
+		List<Game> all = gService.findAll();
+		model.addAttribute("games",all);
+		return "game/buy-record";
 	}
 	
 	
