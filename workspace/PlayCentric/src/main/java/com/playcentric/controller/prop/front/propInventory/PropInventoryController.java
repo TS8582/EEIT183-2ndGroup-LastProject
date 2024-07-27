@@ -29,7 +29,7 @@ public class PropInventoryController {
 	
 	
 	//根據會員id讀取倉庫資料
-	@GetMapping("prop/memberPropsbyMemId")
+	@GetMapping("/personal/api/PlayCentric/prop/memberPropsbyMemId")
 	@ResponseBody
 	public List<MemberPropInventoryForFrontDto> memberPropsbyMemId(int memId) {
 		return memberPropInventoryService.memberPropsbyMemId(memId);		 

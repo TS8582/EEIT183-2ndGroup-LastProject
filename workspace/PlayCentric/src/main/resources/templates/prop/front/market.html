@@ -556,7 +556,7 @@
       function generateInventoryItems(memId, selectedGameId) {
         axios({
           method: "get",
-          url: "/PlayCentric/prop/memberPropsbyMemId",
+          url: "/personal/api/PlayCentric/prop/memberPropsbyMemId",
           params: { memId: memId },
         })
           .then((res) => {
@@ -570,9 +570,13 @@
             // 調用生成倉庫賣單資料及圖片的函數
             findInventorySellOrder(memId, selectedGameId);
           })
-          .catch((error) => {
-            console.error("獲取倉庫資訊時出錯:", error);
+          .catch((err) => {
+            console.err("獲取倉庫資訊時出錯:", err);
             window.alert("請先登入");
+            if (err.response && err.response.status === 401) {
+              window.location.href =
+                "/PlayCentric/member/homeShowErr/" + err.response.data;
+            }
           });
       }
 
