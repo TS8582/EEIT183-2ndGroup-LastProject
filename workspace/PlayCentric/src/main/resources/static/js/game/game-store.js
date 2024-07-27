@@ -189,6 +189,7 @@ typeTag.forEach(tag => {
 
 function frontFilter() {
     gameName.dispatchEvent(new Event('input'));
+    minPrice.dispatchEvent(new Event('input'));
 }
 
 
@@ -260,127 +261,7 @@ async function typefilterplus() {
     }
 }
 
-// async function pricefilter() {
 
-//     try {
-//         const response = await axios.get('/PlayCentric/game/getGamePageByPrice', {
-//             params: {
-//                 pg: pgnum,
-//                 minPrice: minPrice.value,
-//                 maxPrice: maxPrice.value
-//             }
-//         });
-//         runcount += 1;
-//         await wait(300);
-//         totalPages = response.data.totalPages;
-//         main.innerHTML = ''; // 清空主要內容區域
-//         spin.classList.add('hidden');
-//         for (const game of response.data.content) {
-//             if (runcount > 1) {
-//                 break;
-//             }
-//             htmlmaker(game);
-//             await wait(300);
-//         }
-//     } catch (error) {
-//         console.error('Error fetching data:', error);
-//     } finally {
-//         runcount -= 1;
-//     }
-// }
-
-// async function pricefilterplus() {
-
-//     try {
-//         const res = await axios.get('/PlayCentric/game/getGamePageByPrice', {
-//             params: {
-//                 pg: pgnum + 1,
-//                 minPrice: minPrice.value,
-//                 maxPrice: maxPrice.value
-//             }
-//         });
-//         totalPages = res.data.totalPages;
-//         spin.classList.add('hidden');
-//         for (const elm of res.data.content) {
-//             htmlmaker(elm);
-//             await wait(300);
-//         }
-//         pgnum += 1;
-//     } catch (err) {
-//         console.error(err);
-//     } finally {
-//     }
-// }
-
-// async function typeAndPriceFilter() {
-
-//     try {
-//         const res = await axios.get('/PlayCentric/game/getGamePageByPriceAndType', {
-//             params: {
-//                 pg: pgnum,
-//                 typeId: typeId,
-//                 minPrice: minPrice.value,
-//                 maxPrice: maxPrice.value
-//             },
-//             paramsSerializer: function (params) {
-//                 return Object.keys(params).map(key => {
-//                     if (Array.isArray(params[key])) {
-//                         return params[key].map(val => `${key}=${val}`).join('&');
-//                     }
-//                     return `${key}=${params[key]}`;
-//                 }).join('&');
-//             }
-//         });
-//         runcount += 1;
-//         await wait(300);
-//         totalPages = res.data.totalPages;
-//         main.innerHTML = '';
-//         spin.classList.add('hidden');
-//         for (const elm of res.data.content) {
-//             if (runcount > 1) {
-//                 break;
-//             }
-//             htmlmaker(elm);
-//             await wait(300);
-//         }
-//     } catch (err) {
-//         console.error(err);
-//     } finally {
-//         runcount -= 1;
-//     }
-// }
-
-// async function typeAndPriceFilterPlus() {
-
-//     try {
-//         const res = await axios.get('/PlayCentric/game/getGamePageByPriceAndType', {
-//             params: {
-//                 pg: pgnum + 1,
-//                 typeId: typeId,
-//                 minPrice: minPrice.value,
-//                 maxPrice: maxPrice.value
-//             },
-//             paramsSerializer: function (params) {
-//                 return Object.keys(params).map(key => {
-//                     if (Array.isArray(params[key])) {
-//                         return params[key].map(val => `${key}=${val}`).join('&');
-//                     }
-//                     return `${key}=${params[key]}`;
-//                 }).join('&');
-//             }
-//         });
-//         totalPages = res.data.totalPages;
-//         spin.classList.add('hidden');
-//         for (const elm of res.data.content) {
-//             htmlmaker(elm);
-//             await wait(300);
-//         }
-//         pgnum += 1;
-//     } catch (err) {
-//         console.error(err);
-//     } finally {
-//     }
-// }
 
 async function nofilter() {
 
@@ -396,8 +277,8 @@ async function nofilter() {
                 break;
             }
             htmlmaker(elm);
-            await wait(300);
             frontFilter();
+            await wait(300);
         }
     } catch (err) {
         console.error(err);
@@ -414,8 +295,8 @@ async function nofilterplus() {
         spin.classList.add('hidden');
         for (const elm of res.data.content) {
             htmlmaker(elm);
-            await wait(300);
             frontFilter();
+            await wait(300);
         }
         pgnum += 1;
     } catch (err) {
