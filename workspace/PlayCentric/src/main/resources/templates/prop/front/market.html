@@ -990,6 +990,24 @@
             console.error(err);
           });
       }
+
+      // 呼叫gpt helper的方法
+      function helper() {
+        axios({
+          method: "GET",
+          url: "/PlayCentric/getCompletion",
+          params: {
+            gameId: selectedGameId,
+            prompt: prompt,
+          },
+        })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      }
     </script>
   </body>
 </html>
