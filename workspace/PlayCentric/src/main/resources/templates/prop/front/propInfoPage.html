@@ -52,7 +52,7 @@
                   <th>道具編號</th>
                   <th>道具名稱</th>
                   <th>數量</th>
-                  <th>單價</th>
+                  <th>平均單價</th>
                   <th>總價</th>
                   <th>付款方式</th>
                 </tr>
@@ -127,16 +127,16 @@
           tableBody.empty();
 
           data.forEach((order) => {
-            // 計算總價
-            const totalPrice = order.price * order.quantity;
+            // 計算平均單價
+            const averagePrice = order.price / order.quantity;
             const row = $("<tr>");
             row.html(`
               <td>${order.buyOrderId}</td>
               <td>${order.props.propId}</td>
               <td>${order.props.propName}</td>
               <td>${order.quantity}</td>
+              <td>${averagePrice}</td>
               <td>${order.price}</td>
-              <td>${totalPrice}</td>
 
               <td>${order.paymentId}</td>
             `);
