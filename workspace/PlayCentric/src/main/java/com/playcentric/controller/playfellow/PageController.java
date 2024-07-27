@@ -47,9 +47,6 @@ public class PageController {
 	@Autowired
 	PfGameService pfGameService;
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
 	@Autowired
 	PfOrderService pfOrderService;
 
@@ -61,7 +58,11 @@ public class PageController {
 
 	@Autowired
 	ImageLibRepository imageLibRepository;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
+	
 	// 進入cart
 	@GetMapping("/playFellow/playFellowCart")
 	public String viewPlayFellowCart(@RequestParam("pfGameId") Integer pfGameId, Model model) {

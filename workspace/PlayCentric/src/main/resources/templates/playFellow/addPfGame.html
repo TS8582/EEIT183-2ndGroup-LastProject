@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <div th:replace="~{layout/backen_nav}"></div>
 
-<title>新增伴遊者遊戲</title>
+<title>伴遊遊戲</title>
 <!-- <link rel="stylesheet" -->
 <!-- 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -50,19 +50,20 @@ body {
 }
 </style>
 </head>
-<!-- 			<div th:replace="~{/layout/aside}"></div> -->
 <body>
+	<!-- 	<div th:replace="~{member/memInfoAside}"></div> -->
+
+
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6">
 				<p class="h5">新增想伴遊的遊戲</p>
 				<form id="thirdStepForm" class="mb-4">
 					<div class="form-group row">
-						<label for="playFellowId"
-							class="col-sm-4 col-form-label font-weight-bold">待審核編號</label>
+						
 						<div class="col-sm-8">
 							<input id="playFellowId" class="form-control"
-								th:value="${pfGame.playFellowMember.playFellowId}" readonly />
+								th:value="${pfGame.playFellowMember.playFellowId}" style="display:none" />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -101,15 +102,20 @@ body {
 								th:value="${pfGame.pfGameStatus}" />
 						</div>
 					</div>
-					  
+
 					<div class="form-group row">
 						<div class="col-sm-12 d-flex justify-content-between">
+							<a class="btn btn-secondary"
+								href="http://localhost:8080/PlayCentric/member/personal/Info"
+								style="margin-top: 10px"> 返回 </a>
+
+
 							<button type="button" class="btn btn-success"
-								onclick="submitPfGameForm()">新增</button>
-								
+								onclick="submitPfGameForm()" style="margin-top: 10px">新增</button>
+
 							<button type="button" class="btn btn-primary ml-auto"
-                                th:if="${pfGame.playFellowMember.pfstatus != 3}"
-                                onclick="backToCms()">遞交審核</button>
+								th:if="${pfGame.playFellowMember.pfstatus != 3}"
+								onclick="backToCms()">遞交審核</button>
 						</div>
 					</div>
 				</form>

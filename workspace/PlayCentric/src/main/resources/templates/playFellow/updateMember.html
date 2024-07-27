@@ -94,7 +94,9 @@
                 <ul class="list-group">
                     <li class="list-group-item theme" data-content="content1" th:text="${pfnickname} + '基本資料'"></li>
                     <li class="list-group-item theme" data-content="content2" th:text="${pfnickname} + '伴遊者照片'"></li>
-                </ul>
+<li class="list-group-item" role="presentation"style="margin-right: 20px;">
+<a class="btn text-secondary" th:href="@{http://localhost:8080/PlayCentric/member/personal/Info}">返回</a>
+</ul>
             </div>
             <h5 class="text-center" id="nicknameDetail"></h5>
             <div class="col-md-8">
@@ -196,7 +198,6 @@
 
                             <button type="button" class="btn btn-success" id="editBtn">新增照片</button>
                             <button type="submit" class="btn btn-success" id="addBtn" style="display: none;">上傳</button>
-                            <button type="button" class="btn btn-primary" id="backCmsBtn">回前頁</button>
                         </form>
 
                     </div>
@@ -210,6 +211,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -266,22 +268,32 @@
 
 
             // 第一階段form表單提交監聽 不要監聽按鈕 監聽form
-            const pfmemberMsg = document.getElementById('memberForm');
-            pfmemberMsg.addEventListener('submit', function (event) {
-                event.preventDefault();
+           const pfmemberMsg = document.getElementById('memberForm');
+pfmemberMsg.addEventListener('submit', function (event) {
+    event.preventDefault();
 
-                const formData = new FormData(memberForm);
-                axios.post('/PlayCentric/playFellow/updateMember/save', formData)
-                    .then(response => {
-                        document.getElementById('successMessage').style.display = 'block';
-                        setTimeout(() => {
-                            document.getElementById('successMessage').style.display = 'none';
-                        }, 3000);
-                    })
-                    .catch(error => {
-                        console.error('存取失敗QQ', error);
-                    });
+    const formData = new FormData(pfmemberMsg); // 注意這裡要和 document.getElementById('memberForm') 一致
+    axios.post('/PlayCentric/playFellow/updateMember/save', formData)
+        .then(response => {
+            // 使用 SweetAlert 顯示成功提示
+            Swal.fire({
+                icon: 'success',
+                title: '更新成功！',
+                text: '您的資料已經更新。',
+                confirmButtonText: '確認'
             });
+        })
+        .catch(error => {
+            console.error('存取失敗QQ', error);
+            Swal.fire({
+                icon: 'error',
+                title: '更新失敗！',
+                text: '無法更新資料，請稍後再試。',
+                confirmButtonText: '確認'
+            });
+        });
+});
+
 
             // 監聽 pfnickname 輸入變化事件
             const pfnicknameInput = document.getElementById('pfnickname');

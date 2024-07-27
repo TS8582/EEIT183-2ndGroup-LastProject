@@ -5,8 +5,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>伴遊管理介面</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+	rel="stylesheet">
 <link rel="stylesheet" th:href="@{/css/output.css}">
 
 <style>
@@ -21,7 +25,7 @@ html, body {
 
 .table thead th {
 	background-color: #CBD5E1 !important;
-	color: #ADD8E6 !important;
+/* 	color: #ADD8E6 !important; */
 	color: rgba(29, 18, 18, 0.995) !important;
 }
 
@@ -36,7 +40,8 @@ html, body {
 .status-pending {
 	color: #FFC107 !important;
 }
-.status-completed{
+
+.status-completed {
 	color: #28A745 !important;
 }
 
@@ -70,17 +75,7 @@ html, body {
 	pointer-events: auto;
 }
 
-#review {
-	background-color: transparent;
-	color: #666;
-	padding: 5px 10px;
-	transition: background-color 0.3s;
-	bottom: 10px;
-}
 
-#review:hover {
-	background-color: #013220;
-}
 
 .pagination {
 	justify-content: center;
@@ -99,38 +94,69 @@ html, body {
 </head>
 
 <body class="h-screen flex flex-col w-screen">
-  <div th:replace="~{member/memInfoAside}"></div>
+	<div th:replace="~{member/memInfoAside}"></div>
 
 	<div class="flex flex-1">
-<!-- 		<div th:replace="~{/playFellow/playFellowAside}"></div> -->
+		<!-- 		<div th:replace="~{/playFellow/playFellowAside}"></div> -->
 		<main class="w-100 p-3">
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
-				
-				<li class="nav-item" role="presentation">
-					<button class="nav-link text-secondary" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">購買明細</button>
+
+				<li class="nav-item" role="presentation" style="margin: 6px;">
+
+					<button class="btn text-secondary" data-bs-toggle="tab"
+						id="profile-tab" data-bs-target="#profile-tab-pane" type="button">
+						<i class="fas fa-calendar-alt"></i>購買明細
+					</button>
+				</li>
+
+
+				<li class="nav-item" role="presentation" style="margin: 6px;">
+					<button class="btn text-secondary" data-bs-toggle="tab"
+						data-bs-target="#second-tab-pane" type="button"
+						th:if="${havePlayFellowMember != null}">訂單消息</button>
+				</li>
+				<li class="nav-item" role="presentation" style="margin: 6px;">
+					<a class="btn text-secondary"
+					th:if="${havePlayFellowMember != null}"
+					th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${havePlayFellowMember.playFellowId})}">
+						前往查看伴遊資訊 </a>
+
+				</li>
+				<li class="nav-item" role="presentation" style="margin: 6px;">
+					<a class="btn text-secondary"
+					th:if="${havePlayFellowMember != null}"
+					th:href="@{/playFellow/pfGame/{playFellowId}(playFellowId=${havePlayFellowMember.playFellowId})}">
+						前往查看遊戲資訊 </a>
+
 				</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
-				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+				<div
+					class="tab-pane fade border border-top-0 rounded-2 rounded-top-0"
+					id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+					tabindex="0">
 					<!-- 這裡放TABLE內容  PlayFellowMember-->
 					<br>
-					
+
 				</div>
-				
-				
-				
-				
-				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+
+
+
+
+				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0"
+					id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
+					tabindex="0">
 					<br> <br>
 					<div class="container">
 						<div class="table-container">
-							<table id="orderTable" class="table table-striped table-bordered table-hover">
+							<table id="orderTable"
+								class="table table-striped table-bordered table-hover">
 								<thead class="thead-light">
 									<tr>
 										<th>訂單編號</th>
 										<th>遊戲伴遊名稱</th>
 										<th>遊戲名稱</th>
-										<th>單筆金額</th>
+										<th>單數</th>
 										<th>總金額</th>
 										<th>下單時間</th>
 										<th>付款時間</th>
@@ -142,14 +168,60 @@ html, body {
 									<tr th:each="order : ${pfOrder}" class="small">
 										<td th:text="${order.pfOrderId}"></td>
 										<td th:text="${order.pfGame.playFellowMember.pfnickname}"></td>
-<!-- 										<td th:text="${order.pfGame.playFellowMember.playFellowId}"></td> -->
+										<!-- 										<td th:text="${order.pfGame.playFellowMember.playFellowId}"></td> -->
 										<td th:text="${order.pfGame.game.gameName}"></td>
-<!-- 										<td th:text="${order.member.memId}"></td> -->
+										<!-- 										<td th:text="${order.member.memId}"></td> -->
 										<td th:text="${order.quantity}"></td>
 										<td th:text="${order.totalAmount}"></td>
-										<td th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
-										<td th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-										<td th:text="${order.paymentStatus == 1 ? '尚未付款' : (order.paymentStatus == 2 ? '付款成功' : '交易失敗或取消')}" th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}"></td>
+										<td
+											th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										<td
+											th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										<td
+											th:text="${order.paymentStatus == 1 ? '尚未付款' : (order.paymentStatus == 2 ? '付款成功' : '交易失敗或取消')}"
+											th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div
+					class="tab-pane fade border border-top-0 rounded-2 rounded-top-0"
+					id="second-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
+					tabindex="0">
+					<br> <br>
+					<div class="container">
+						<div class="table-container">
+							<table id="orderTable"
+								class="table table-striped table-bordered table-hover">
+								<thead class="thead-light">
+									<tr>
+										<th>編號</th>
+										<th>遊戲名稱</th>
+										<th>下單會員</th>
+										<th>單數</th>
+										<th>總金額</th>
+										<th>下訂時間</th>
+										<th>狀態</th>
+									</tr>
+								</thead>
+								<tbody id="orderBody">
+									<!-- 訂單資料 -->
+									<tr th:each="order : ${orders}" class="small">
+										<td th:text="${order.pfGame.pfGameId}"></td>
+										<td th:text="${order.pfGame.game.gameName}"></td>
+										<td th:text="${order.pfGame.playFellowMember.pfnickname}"></td>
+										<td th:text="${order.quantity}"></td>
+										<td th:text="${order.totalAmount}"></td>
+										<td
+											th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
+										<td
+											th:text="${order.paymentStatus == 1 ? '尚未付款' : (order.paymentStatus == 2 ? '付款成功' : '交易失敗或取消')}"
+											th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}"></td>
+
+
 									</tr>
 								</tbody>
 							</table>

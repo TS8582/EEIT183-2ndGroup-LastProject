@@ -115,18 +115,13 @@
         <div class="photo-div ps-0 col-2 d-flex flex-column">
           <img class="w-100 cursor-pointer rounded-2" src="http://localhost:8080/PlayCentric/imagesLib/image144">
           <input type="file" name="photoFile" id="photoFile" style="display: none;">
-          <p class="mx-3 mt-5 ps-2 border border-2 rounded-2"><i class="fa-solid fa-sack-dollar"></i><span id="points"
-              class="ms-2">0</span></p>
-          <select id="recharge-amount" name="recharge-amount" class="form-control mb-3"
-            aria-label="Default select example">
-            <option value="0" selected>選擇金額</option>
-            <option value="100">100元</option>
-            <option value="500">500元</option>
-            <option value="1500">1500元</option>
-            <option value="3000">3000元</option>
-          </select>
-          <div id="ecPay-btn" class="btn btn-outline-warning align-self-center text-dark">儲值</div>
+          <p id="points-box" class="mx-3 mt-5 ps-2 border border-2 rounded-2 cursor-pointer d-flex align-items-center">
+            <i class="fa-solid fa-sack-dollar"></i>
+            <span id="points" class="ms-2">[[${session.loginMember.points}]]</span>
+            <i class="ms-auto fs-5 me-1 fw-bold fa-solid fa-plus"></i>
+          </p>
         </div>
+
         <div id="edit-btn-group" class="row my-2 justify-content-center" style="display: none;">
           <input type="submit" class="btn btn-outline-warning col-2 text-black" value="保存修改">
           <div id="cancel-btn" class="btn btn-outline-danger col-1 ms-2">取消</div>
@@ -154,6 +149,10 @@
       getMemInfo();
 
 
+      $('#points-box').click(function(){
+        window.location.href = "/PlayCentric/member/personal/recharge";
+      })
+
       $('#ecPay-btn').click(function () {
 
         const rechargeAmount = $('#recharge-amount').val();
@@ -179,7 +178,7 @@
           .catch(err => {
             console.log(err);
             if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/homeShowErr/'+err.response.data;
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
             }
           })
       })
@@ -201,7 +200,7 @@
           .catch(err => {
             console.log(err);
             if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/homeShowErr/'+err.response.data;
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
             }
           })
       })
@@ -223,7 +222,7 @@
           .catch(err => {
             console.log(err);
             if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/homeShowErr/'+err.response.data;
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
             }
           })
       })
@@ -240,13 +239,15 @@
             console.log(res);
             if (res.data == '更新成功!') {
               getMemInfo();
+            } else if (res.data == 'anotherLogin') {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + res.data;
             }
             doAlert(res.data);
           })
           .catch(err => {
             console.log(err);
             if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/homeShowErr/'+err.response.data;
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
             }
           })
       })
@@ -312,7 +313,7 @@
           .catch(err => {
             console.log(err)
             if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/homeShowErr/'+err.response.data;
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
             }
           })
       }
@@ -339,9 +340,10 @@
           $('#memInfo #google-account span').text('已綁定✔️');
           $('#memInfo #google-account .btn').addClass('disabled');
         }
-        $('#memInfo .photo-div img').attr('src', data.photoUrl)
-        $('img#login-member-photo').attr('src', data.photoUrl)
-        $('#points').text(data.points)
+        $('#memInfo .photo-div img').attr('src', data.photoUrl);
+        $('img#login-member-photo').attr('src', data.photoUrl);
+        $('#points').text(data.points);
+        console.log(data.points);
 
         $('#edit-btn-group').hide();
       }

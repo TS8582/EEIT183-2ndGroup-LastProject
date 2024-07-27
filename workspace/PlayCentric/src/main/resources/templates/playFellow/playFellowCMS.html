@@ -42,7 +42,8 @@ html, body {
 	color: #DC3545 !important;
 }
 
-.status-open {
+.status-open,
+.status-completed {
 	color: #28A745 !important;
 }
 
@@ -101,7 +102,7 @@ html, body {
 		<div th:replace="~{/playFellow/playFellowAside}"></div>
 		<main class="w-100 p-3">
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
-				<li class="nav-item" role="presentation" style="margin-right: 10px;">
+				<li class="nav-item" role="presentation" style="margin-right: 6px;">
 					<button class="nav-link text-secondary" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">伴遊者列表</button>
 				</li>
 				<li class="nav-item" role="presentation">
@@ -133,7 +134,7 @@ html, body {
 									<tr th:each="pfmember : ${PlayFellowMember}" >
 										<td th:text="${pfmember.playFellowId}"></td>
 										<td th:text="${pfmember.pfnickname}"></td>
-										<td><span th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...' : pfmember.pfdescription}"></span></td>
+										<td><span th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '....' : pfmember.pfdescription}"></span></td>
 										<td th:text="${pfmember.member.memId}"></td>
 										<td><span th:if="${pfmember.member.gender == 1}">男生</span><span th:if="${pfmember.member.gender == 2}">女生</span></td>
 										<td th:text="${pfmember.member.birthday}"></td>
@@ -163,7 +164,6 @@ html, body {
 										<th>下訂會員</th>
 										<th>單數</th>
 										<th>總金額</th>
-										<th>交易序號</th>
 										<th>付款時間</th>
 										<th>創建時間</th>
 										<th>狀態</th>
@@ -177,7 +177,6 @@ html, body {
 										<td th:text="${order.member.memId}"></td>
 										<td th:text="${order.quantity}"></td>
 										<td th:text="${order.totalAmount}"></td>
-										<td th:text="${order.transactionID}"></td>
 										<td th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
 										<td th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
 										<td th:text="${order.paymentStatus == 1 ? '交易中' : (order.paymentStatus == 2 ? '交易完成' : '交易失敗或取消')}" th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}"></td>
