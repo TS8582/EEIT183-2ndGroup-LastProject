@@ -11,7 +11,7 @@
 <body>
     <div th:replace="~{member/memInfoAside}"></div>
 
-    <div class="container overflow-scroll noscrollbar border">
+    <div class="container border">
         <th:block th:if="${games}" th:each="game,status:${games}">
             <div class="flex items-center px-6 py-5 game">
                 <div class="hidden gameId" th:text="${game.gameId}"></div>

@@ -93,17 +93,6 @@ public class GameController {
 		model.addAttribute("nowDiscount",nowDiscount);
 		return "game/update-game";
 	}
-	//遊戲上下架
-	@GetMapping("/game/isShow")
-	public String postMethodName(@RequestParam Integer gameId) {
-		Game game = gService.findById(gameId);
-		if (game.getIsShow() == true) game.setIsShow(false);
-		else game.setIsShow(true);
-		gService.save(game);
-			
-		return "redirect:/back/game";
-	}
-	
 
 	// 進行新增遊戲
 	@PostMapping("/game/insertGame")
