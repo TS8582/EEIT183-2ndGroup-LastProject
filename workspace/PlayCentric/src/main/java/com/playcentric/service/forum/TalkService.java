@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.playcentric.model.forum.Talk;
 import com.playcentric.model.forum.TalkRepository;
@@ -18,6 +19,16 @@ public class TalkService {
 
 	@Autowired
 	private TalkRepository talkRepository;
+
+	// 編輯文章ajax
+	@Transactional
+    public void editTalk(Integer talkId, String talkContent) {
+        Talk talk = talkRepository.findById(talkId)
+                .orElseThrow(() -> new RuntimeException("留言不存在"));
+        
+        talk.setTalkContent(talkContent);
+        talkRepository.save(talk);
+    }
 
 	// 當前所有文章的訊息
 	public List<Talk> getTalkByTextsId(Integer textsId) {

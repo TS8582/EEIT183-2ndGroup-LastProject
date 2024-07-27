@@ -46,7 +46,7 @@
         }
 
         td label {
-            margin-left: 120px;
+            margin-left: 240px;
         }
 
         .btn1 {
@@ -80,8 +80,7 @@
         <div class="row">
             <h1 class="my-2 d-flex justify-content-center">編輯文章</h1>
             <br>
-            <form id="postForm" th:action="@{/texts/update}" th:object="${texts}" method="post"
-                enctype="multipart/form-data">
+            <form id="postForm" th:action="@{/texts/update}" method="post" enctype="multipart/form-data">
 
                 <!-- Hidden field to store the article ID -->
                 <input type="hidden" id="textsId" name="textsId" th:value="${texts.textsId}">
@@ -94,14 +93,14 @@
                         <td>
                             <div>
                                 <label for="title">文章標題：</label>
-                                <input type="text" id="title" name="title">
+                                <input type="text" id="title" name="title" th:value="${texts.title}" required>
                             </div>
                         </td>
                         <br>
                         <td>
                             <div>
                                 <label for="forumId">主題類型：</label>
-                                <select id="forumId" name="forumId">
+                                <select id="forumId" name="forumId" required>
                                     <option value="" disabled selected>請選擇</option>
                                     <!-- Iterate over 'arrayList' to populate options -->
                                     <option th:each="forum : ${arrayList}" th:value="${forum.forumId}"
@@ -112,7 +111,7 @@
                         </td>
                     </tr>
                 </table>
-                <textarea id="textsContent" name="textsContent"></textarea>
+                <textarea id="textsContent" name="textsContent" th:text="${texts.textsContent}"></textarea>
                 <br>
                 <div class="d-flex justify-content-start">
                     <label for="files">選擇文章展示圖片：</label><br>
@@ -123,6 +122,7 @@
                 </div>
             </form>
         </div>
+        <script th:if="${errorScript}" th:utext="${errorScript}"></script>
         <script>
             tinymce.init({
                 selector: '#textsContent',
@@ -169,7 +169,7 @@
             $(document).ready(function () {
                 $.ajax({
                     url: '/findAllforumInTexts', // 修改为你实际的后端接口路径
-                    method: 'GET',
+                    method: 'POST',
                     success: function (data) {
                         data.forEach(function (forum) {
                             $('#forumId').append('<option value="' + forum.forumId + '">' + forum.forumName + '</option>');
