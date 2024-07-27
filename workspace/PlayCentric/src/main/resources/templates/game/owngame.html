@@ -5,17 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <title th:text="${session.loginMember} ? ${session.loginMember.nickname} + 的遊戲收藏庫"></title>
+    <title th:text="${session.loginMember} ? 'PlayCentric-' + ${session.loginMember.nickname} + 的遊戲收藏庫"></title>
 </head>
 
 <body>
     <div th:replace="~{member/memInfoAside}"></div>
 
-    <div class="container">
-        <th:block th:if="${games}" th:each="game:${games}">
+    <div class="container overflow-scroll noscrollbar border">
+        <th:block th:if="${games}" th:each="game,status:${games}">
             <div class="flex items-center px-6 py-5 game">
                 <div class="hidden gameId" th:text="${game.gameId}"></div>
-                <div class="flex w-4/5">
+                <div class="flex w-4/5 noscrollbar overflow-scroll">
                     <!-- 遊戲 -->
                     <div class="w-3/5 flex justify-center items-center">
                         <a class="text-black text-decoration-none" th:if="${!game.imageLibs.empty}"
@@ -39,7 +39,7 @@
                     <span class="mybtn mybtn-sky download">下載</span>
                 </div>
             </div>
-            <div class="h-1 w-full bg-black"></div>
+            <div th:if="${status.index != games.size() - 1}" class="h-1 w-full bg-black"></div>
         </th:block>
     </div>
 

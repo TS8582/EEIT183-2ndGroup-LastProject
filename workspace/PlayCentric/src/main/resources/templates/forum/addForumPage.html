@@ -42,7 +42,7 @@
 
     h2 {
       text-align: center;
-      color: #333;
+      color: rgb(52, 0, 148) !important;
     }
 
     .form-group {
@@ -90,19 +90,25 @@
     }
 
     .form-group input[type="submit"] {
-      display: block;
-      width: 97%;
-      padding: 10px;
-      font-size: 1em;
-      color: #fff;
-      background-color: #007BFF;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      background-color: yellow;
+      border: 5px outset rgb(202, 199, 2);
+      color: black;
+      font-size: larger;
+      width: 250px;
+      transition: transform 0.2s;
     }
 
     .form-group input[type="submit"]:hover {
-      background-color: #0056b3;
+      background-color: rgb(255, 30, 30);
+      border: 5px outset rgb(179, 10, 10);
+      color: rgb(255, 255, 255);
+      transform: translateY(4px);
+    }
+
+    .form-group input[type="submit"]:active {
+      transform: translateY(2px);
+      background-color: rgb(172, 16, 16);
+      border: 5px inset rgb(116, 8, 8);
     }
 
     table {
@@ -135,8 +141,8 @@
           <label for="comment1" class="t1">主題內容:</label>
           <textarea name="textsIntro" id="comment1" cols="40" rows="5"></textarea>
         </div>
-        <div class="form-group">
-          <input type="submit" value="確定">
+        <div class="form-group d-flex justify-content-center">
+          <input class="btn1" type="submit" value="確定">
         </div>
       </form>
     </div>

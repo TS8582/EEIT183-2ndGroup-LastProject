@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
@@ -22,7 +23,7 @@ public class pfOrderMsg {
 	@Autowired
 	MemberService memberService;
 
-	@PostMapping("/playFellow/pfOrderMsg")
+	@GetMapping("/playFellow/pfOrderMsg")
 	public String addImage(HttpSession session, Model model) {
         LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
         

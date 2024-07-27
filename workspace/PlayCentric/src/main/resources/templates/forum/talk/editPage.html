@@ -19,7 +19,6 @@
 
                         <form th:action="@{/talk/update}" th:method="PUT" th:object="${talk}">
                             <input th:field="*{talkId}" type="hidden" />
-                            <input th:field="*{talkTime}" type="hidden" />
 
                             <textarea class="form-control" th:field="*{talkContent}"></textarea>
                             <br>
