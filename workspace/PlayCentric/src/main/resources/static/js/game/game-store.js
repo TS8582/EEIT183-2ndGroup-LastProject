@@ -404,6 +404,15 @@ function htmlmaker(game) {
         imglink.appendChild(img);
         imageContainer.appendChild(imglink);
     }
+    else {
+        let img = document.createElement('img');
+        img.classList.add('w-full', 'h-full', 'rounded-md');
+        let imglink = document.createElement('a');
+        imglink.classList.add('w-full', 'h-full');
+        imglink.href = `/PlayCentric/game/showGame?gameId=${game.gameId}`;
+        imglink.appendChild(img);
+        imageContainer.appendChild(imglink);
+    }
 
     // 遊戲信息區域
     let gameInfo = document.createElement('div');
