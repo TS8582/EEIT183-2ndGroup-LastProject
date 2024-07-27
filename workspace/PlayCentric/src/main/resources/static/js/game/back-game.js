@@ -20,7 +20,6 @@ isShow.forEach(elm => {
         const gameId = elm.closest('td').querySelector('.gameId').innerHTML.trim();
         axios.get('/PlayCentric/game/isShow', { params: { gameId: gameId } })
             .then(res => {
-                console.log(res);
                 elm.classList.remove('mybtn-disabled');
                 elm.classList.add('mybtn-green');
                 elm.innerHTML = '上架';
@@ -46,7 +45,6 @@ isShow.forEach(elm => {
         const gameId = elm.closest('td').querySelector('.gameId').innerHTML.trim();
         axios.get('/PlayCentric/game/isShow', { params: { gameId: gameId } })
             .then(res => {
-                console.log(res);
                 elm.classList.remove('mybtn-disabled');
                 elm.classList.add('mybtn-danger');
                 elm.innerHTML = '下架';
