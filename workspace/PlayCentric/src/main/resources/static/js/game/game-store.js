@@ -8,20 +8,44 @@ const spin = document.querySelector('.spin');
 const typeselector = document.querySelectorAll('input[name="typeId"]');
 let scrolltrigger = true;
 let runcount = 0;
-
 const gameName = document.querySelector('#gameName');
-gameName.addEventListener('input', e => {
-    const reg = new RegExp(gameName.value, 'i');
-    const name = document.querySelectorAll('.name');
-    name.forEach(myname => {
+
+window.addEventListener('beforeunload', e => {
+    minPrice.value = '';
+    maxPrice.value = '';
+    gameName.value = '';
+})
+
+
+//名稱篩選
+const reg = new RegExp(gameName.value, 'i');
+const name = document.querySelectorAll('.name');
+name.forEach(myname => {
+    if (gameName.value != '') {
         if (reg.test(myname.innerHTML)) {
-            myname.closest('.gameitem').classList.remove('hidden');
+
+            if (minPrice.value !== '' && maxPrice.value !== '') {
+                if (Number.isInteger(Number(minPrice.value)) && Number.isInteger(Number(maxPrice.value)) && Number(minPrice.value) > 0 && Number(maxPrice.value) > 0) {
+                    if (Number(minPrice.value) < Number(maxPrice.value)) {
+                        const prices = document.querySelectorAll('#price');
+                        prices.forEach(elm => {
+                            if (Number(elm.innerHTML) <= Number(maxPrice.value) && Number(elm.innerHTML) >= Number(minPrice.value)) {
+                                myname.closest('.gameitem').classList.remove('hidden');
+                            }
+                            else {
+                                myname.closest('.gameitem').classList.add('hidden');
+                            }
+                        });
+                    }
+                }
+            }
         }
         else {
             myname.closest('.gameitem').classList.add('hidden');
         }
-    });
-})
+    }
+});
+
 
 // 滑到底部載入事件
 let scrollTimer = null;
@@ -57,13 +81,13 @@ async function handleScroll() {
             scrolltrigger = false;
             await nofilterplus();
             scrolltrigger = true; // 等待完成後重設 scrolltrigger
-            minPrice.dispatchEvent(new Event('input'));
+
         } else if (typeId.length !== 0) {
             spin.classList.remove('hidden');
             scrolltrigger = false;
             await typefilterplus();
             scrolltrigger = true; // 等待完成後重設 scrolltrigger
-            minPrice.dispatchEvent(new Event('input'));
+
         }
     }
 }
@@ -77,7 +101,7 @@ async function myEvent() {
             await typefilter();
             scrolltrigger = true;
         }
-        else if (typeId.length === 0) {
+        else if (typeId.length == 0) {
             main.innerHTML = '';
             spin.classList.remove('hidden');
             scrolltrigger = false;
@@ -93,7 +117,10 @@ async function myEvent() {
 minPrice.addEventListener('input', handlePriceFilter);
 maxPrice.addEventListener('input', handlePriceFilter);
 
-async function handlePriceFilter() {
+function handlePriceFilter() {
+
+
+
     if (minPrice.value !== '' || maxPrice.value !== '') {
         if (!((Number.isInteger(Number(minPrice.value)) || Number.isInteger(Number(maxPrice.value))) && (Number(minPrice.value) > 0 || Number(maxPrice.value) > 0))) {
             minPrice.value = '';
@@ -129,6 +156,7 @@ async function handlePriceFilter() {
     }
 }
 
+// 分類篩選
 typeselector.forEach(typecheck => {
     typecheck.addEventListener('change', async e => {
         typeId = Array.from(typeselector)
@@ -159,6 +187,11 @@ typeTag.forEach(tag => {
     });
 });
 
+function frontFilter() {
+    gameName.dispatchEvent(new Event('input'));
+}
+
+
 async function typefilter() {
 
     try {
@@ -186,6 +219,7 @@ async function typefilter() {
                 break;
             }
             htmlmaker(game);
+            frontFilter();
             await wait(300);
         }
     } catch (error) {
@@ -216,6 +250,7 @@ async function typefilterplus() {
         spin.classList.add('hidden');
         for (const elm of res.data.content) {
             htmlmaker(elm);
+            frontFilter();
             await wait(300);
         }
         pgnum += 1;
@@ -362,6 +397,7 @@ async function nofilter() {
             }
             htmlmaker(elm);
             await wait(300);
+            frontFilter();
         }
     } catch (err) {
         console.error(err);
@@ -379,6 +415,7 @@ async function nofilterplus() {
         for (const elm of res.data.content) {
             htmlmaker(elm);
             await wait(300);
+            frontFilter();
         }
         pgnum += 1;
     } catch (err) {
