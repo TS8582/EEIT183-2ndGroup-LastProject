@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 
 
+
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 	Member findByAccount(String account);
@@ -27,12 +28,11 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 	Member findByGoogeId(String googeId);
 
+	Member findByAccountOrEmail(String account, String email);
+
 	Page<Member> findByStatus(Short status, Pageable pageable);
 
 	@Query("from Member where status = 0 and (lower(account) like :keyword or lower(nickname) like :keyword or lower(memName) like :keyword or lower(email) like :keyword)")
 	Page<Member> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
-
-	Page<Member> findByStatusAndAccountContainingOrNicknameContainingOrMemNameContainingOrEmailContaining(Short status, String account, String nickname, String memName, String email, Pageable pageable);
-
 	
 }

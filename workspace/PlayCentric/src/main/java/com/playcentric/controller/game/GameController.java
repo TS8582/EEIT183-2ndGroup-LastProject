@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,23 +93,12 @@ public class GameController {
 		model.addAttribute("nowDiscount",nowDiscount);
 		return "game/update-game";
 	}
-	//遊戲上下架
-	@GetMapping("/game/isShow")
-	public String postMethodName(@RequestParam Integer gameId) {
-		Game game = gService.findById(gameId);
-		if (game.getIsShow() == true) game.setIsShow(false);
-		else game.setIsShow(true);
-		gService.save(game);
-			
-		return "redirect:/back/game";
-	}
-	
 
 	// 進行新增遊戲
 	@PostMapping("/game/insertGame")
 	public String insertGame(@ModelAttribute Game game, @RequestParam List<Integer> typeId,
-			@RequestParam("photos") MultipartFile[] photos, @RequestParam BigDecimal discountRate,
-			@RequestParam Integer discountId,
+			@RequestParam("photos") MultipartFile[] photos, @RequestParam(defaultValue = "0") BigDecimal discountRate,
+			@RequestParam(defaultValue = "0") Integer discountId,
 			@RequestParam MultipartFile gameFiles) throws IOException {
 		// 設定遊戲分類
 		List<GameTypeLib> types = new ArrayList<>();
@@ -157,8 +147,8 @@ public class GameController {
 		// 進行修改遊戲
 		@PostMapping("/game/updateGame")
 		public String updateGame(@ModelAttribute Game game, @RequestParam List<Integer> typeId,
-				@RequestParam("photos") MultipartFile[] photos, @RequestParam BigDecimal discountRate,
-				@RequestParam Integer discountId,@RequestParam List<Integer> photoId) throws IOException {
+				@RequestParam("photos") MultipartFile[] photos, @RequestParam(defaultValue = "0") BigDecimal discountRate,
+				@RequestParam(defaultValue = "0") Integer discountId,@RequestParam List<Integer> photoId) throws IOException {
 			Game myGame = gService.findById(game.getGameId());
 			myGame.setGameName(game.getGameName());
 			myGame.setDescription(game.getDescription());
@@ -267,6 +257,7 @@ public class GameController {
 		return "game/game-store";
 	}
 	
+	//單一遊戲頁面
 	@GetMapping("/game/showGame")
 	public String showGame(@RequestParam Integer gameId,
 			Model model,@ModelAttribute("loginMember") LoginMemDto loginMember) {
@@ -280,6 +271,7 @@ public class GameController {
 		return "game/show-game";
 	}
 	
+	//會員遊戲收藏庫
 	@GetMapping("/personal/game/ownGame")
 	public String getMethodName(
 			@ModelAttribute("loginMember") LoginMemDto loginMember,
@@ -292,6 +284,16 @@ public class GameController {
 		}
 		model.addAttribute("games",games);
 		return "game/owngame";
+	}
+	
+//	會員遊戲購買紀錄
+	@GetMapping("/game/buyRecord")
+	public String buyRecord(
+			Model model
+			) {
+		List<Game> all = gService.findAll();
+		model.addAttribute("games",all);
+		return "game/buy-record";
 	}
 	
 	

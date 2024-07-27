@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div class="" th:replace="~{/layout/backen_nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <link rel="stylesheet" th:href="@{/css/tabulator.min.css}">
     <script th:src="@{/js/tabulator.min.js}"></script>
     <title>PlayCentric-後台管理-公告</title>
 </head>
@@ -35,17 +34,17 @@
                     <table class="w-full border-collapse">
                         <thead class="sticky sticky-top bg-black text-white">
                             <tr>
-                                <th class="text-center w-1/12 border">標題</th>
-                                <th class="text-center w-2/12 border">分類</th>
-                                <th class="text-center w-1/6 border">創建日期</th>
-                                <th class="text-center w-2/6 border">最後編輯時間</th>
-                                <th class="text-center w-1/4 border">操作</th>
+                                <th class="text-center w-3/12 border">標題</th>
+                                <th class="text-center w-1/12 border">分類</th>
+                                <th class="text-center w-2/12 border">創建日期</th>
+                                <th class="text-center w-3/12 border">最後編輯時間</th>
+                                <th class="text-center w-3/12 border">操作</th>
                             </tr>
                         </thead>
                         <tbody>
                             <th:block th:each="anno:${allAnno}">
                                 <tr>
-                                    <td class="border p-3 title">
+                                    <td class="border p-3 title text-center">
                                         <a th:href="@{/anno/showOneAnno(annoId=${anno.annoId})}" th:text="${anno.title}"
                                             class="text-center mylink"></a>
                                     </td>

@@ -226,6 +226,7 @@ public class GoogleOAuth2Controller {
 		Member member = null;
 		if (loginMember != null) {
 			String redirectMsg = "";
+			hasEmail = memberService.checkEmailExist(userEmail, loginMember.getMemId());
 			if (hasGoogle) {
 				redirectMsg = "此Google已被綁定!";
 			}else if (hasEmail) {

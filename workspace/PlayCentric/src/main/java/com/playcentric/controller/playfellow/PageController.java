@@ -47,9 +47,6 @@ public class PageController {
 	@Autowired
 	PfGameService pfGameService;
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
 	@Autowired
 	PfOrderService pfOrderService;
 
@@ -61,7 +58,11 @@ public class PageController {
 
 	@Autowired
 	ImageLibRepository imageLibRepository;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
+	
 	// 進入cart
 	@GetMapping("/playFellow/playFellowCart")
 	public String viewPlayFellowCart(@RequestParam("pfGameId") Integer pfGameId, Model model) {
@@ -116,6 +117,8 @@ public class PageController {
 		return new ResponseEntity<>(pfGameDTOs, HttpStatus.OK);
 	}
 
+	
+	
 	@PostMapping("/playFellow/{gameId}")
 	public String showGameMember(@PathVariable("gameId") Integer gameId, Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
@@ -148,6 +151,8 @@ public class PageController {
 		return "playFellow/showGameMember";
 	}
 
+	
+	
 	@ResponseBody
 	@PostMapping("playFellow/addPfOrder")
 	public String addOrder(@RequestBody PfOrderDTO pfOrderDTO) {
@@ -185,6 +190,8 @@ public class PageController {
 		return "付款成功";
 	}
 
+	
+	
 	@ResponseBody
     @GetMapping("/api/images/{imageId}")
     public ResponseEntity<byte[]> getImageById(@PathVariable Integer imageId) {

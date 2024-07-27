@@ -40,7 +40,8 @@
                             <th:block th:each="game:${allGame}">
                                 <tr>
                                     <td class="border p-3 gameName mylink">
-                                        <a href="#" th:text="${game.gameName}" class="text-center"></a>
+                                        <a th:href="@{/game/showGame(gameId=${game.gameId})}" th:text="${game.gameName}"
+                                            class="text-center"></a>
                                     </td>
                                     <td th:text="${game.price}" class="text-center border p-3 price"></td>
                                     <td th:text="${#temporals.format(game.releaseAt,'yyyy-MM-dd HH:mm:ss')}"
@@ -52,12 +53,13 @@
                                         class="text-center border p-3 score"></td>
                                     <td th:if="${game.totalReviews == 0}" class="text-center border p-3 score">0</td>
                                     <td class="text-center border p-3">
+                                        <span class="hidden gameId" th:text="${game.gameId}"></span>
                                         <a th:href="@{/game/getUpdateGame(gameId=${game.gameId})}"
                                             class="mybtn mybtn-sky rounded-md me-2 block lg:inline">修改</a>
-                                        <a th:if="${!game.isShow}" th:href="@{/game/isShow(gameId=${game.gameId})}"
-                                            class="mybtn mybtn-green rounded-md me-2 block lg:inline">上架</a>
-                                        <a th:if="${game.isShow}" th:href="@{/game/isShow(gameId=${game.gameId})}"
-                                            class="mybtn mybtn-danger rounded-md me-2 block lg:inline">下架</a>
+                                        <span th:if="${!game.isShow}"
+                                            class="mybtn mybtn-green rounded-md me-2 block lg:inline isShow">上架</span>
+                                        <span th:if="${game.isShow}"
+                                            class="mybtn mybtn-danger rounded-md me-2 block lg:inline isShow">下架</span>
                                     </td>
                                 </tr>
                             </th:block>
@@ -70,6 +72,7 @@
 
     <a th:href="@{/game/getInsertGame}" class="text-4xl text-black plus-btn mybtn">+</a>
 
+    <script th:src="@{/js/axios.min.js}"></script>
     <script th:src="@{/js/game/back-game.js}"></script>
 
 </body>

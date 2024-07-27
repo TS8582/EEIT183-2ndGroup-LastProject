@@ -1,97 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <!-- <script th:src="@{/js/bootstrap.bundle.js}"></script> -->
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
     <script th:src="@{/js/axios.min.js}"></script>
     <script th:src="@{/js/utils/doAlertJQ.js}"></script>
     <script th:src="@{/js/member/managePage.js}"></script>
     <style>
-      .fixed {
-        position: fixed;
-      }
+        .fixed {
+            position: fixed;
+        }
 
-      .relative {
-        position: relative;
-      }
+        .relative {
+            position: relative;
+        }
 
-      #list-example.list-group > .list-group-item.active {
-        background-color: #243e75;
-      }
+        #list-example.list-group>.list-group-item.active {
+            background-color: #243e75;
+        }
     </style>
-  </head>
+</head>
 
-  <body class="bg-light">
+<body class="bg-light">
     <div th:replace="~{layout/nav}"></div>
 
     <div id="memInfo-aside" class="container relative start-0 end-0 bottom-0">
-      <div class="row mt-3">
-        <div class="col-2 fixed">
-          <div id="list-example" class="list-group">
-            <a
-              class="list-group-item list-group-item-action"
-              th:href="@{/member/personal/Info}"
-              >個人資訊</a
-            >
-            <a
-              class="list-group-item list-group-item-action"
-              id="pfOrderMsg"
-              th:href="@{/playFellow/pfOrderMsg/{memId}(memId=${session.loginMember.memId})}"
-              >伴遊資訊</a
-            >
-            <a
-              class="list-group-item list-group-item-action"
-              th:href="@{/personal/game/ownGame}"
-              >遊戲收藏庫</a
-            >
-            <a
-              class="list-group-item list-group-item-action"
-              href="#list-item-3"
-              >收藏文章</a
-            >
-            <a
-              class="list-group-item list-group-item-action"
-              th:href="@{/prop/front/propInfoPage}"
-              >道具購買紀錄</a
-            >
-            <a
-              class="list-group-item list-group-item-action"
-              th:href="@{/member/personal/recharge}"
-              >儲值紀錄</a
-            >
-          </div>
+        <div class="row mt-3">
+            <div class="col-2 fixed">
+                <div id="list-example" class="list-group">
+                    <a class="list-group-item list-group-item-action" th:href="@{/member/personal/Info}">個人資訊</a>
+                    <a class="list-group-item list-group-item-action" th:href="@{/playFellow/pfOrderMsg}">伴遊資訊</a>
+                    <a class="list-group-item list-group-item-action" th:href="@{/personal/game/ownGame}">遊戲收藏庫</a>
+                    <a class="list-group-item list-group-item-action" href="#list-item-3">收藏文章</a>
+                    <a class="list-group-item list-group-item-action" href="#list-item-4">遊戲道具庫</a>
+                    <a class="list-group-item list-group-item-action" th:href="@{/member/personal/recharge}">會員錢包</a>
+                </div>
+            </div>
+            <div id="main" class="col-9 ms-auto rounded-4 shadow"></div>
         </div>
-        <div id="main" class="col-9 ms-auto rounded-4 shadow"></div>
-      </div>
     </div>
 
     <script>
-      $(function () {
-        $("#memInfo-aside").next().next().appendTo($("#main"));
-        $(`a[href="${window.location.pathname}"]`)
-          .addClass("disabled")
-          .addClass("active");
-      });
+        $(function () {
+            $('#memInfo-aside').next().next().appendTo($('#main'))
+            $(`a[href="${window.location.pathname}"]`).addClass('disabled').addClass('active');
+        })
 
-      //組長 這是伴遊的購買明細...
-      document
-        .getElementById("pfOrderMsg")
-        .addEventListener("click", function (event) {
-          event.preventDefault();
-          axios
-            .post("/PlayCentric/playFellow/pfOrderMsg")
-            .then((response) => {
-              document.open();
-              console.log(response.data);
-              document.write(response.data);
-              document.close();
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
-        });
+
+
     </script>
-  </body>
+</body>
+
 </html>

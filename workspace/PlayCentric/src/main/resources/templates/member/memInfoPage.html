@@ -1,532 +1,375 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <title>PlayCentric-個人資訊</title>
-    <style>
-      input:focus,
-      textarea:focus,
-      select:focus {
-        outline: none !important;
-        box-shadow: none !important;
-      }
 
-      .h-35px {
-        height: 35px;
-      }
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>PlayCentric-個人資訊</title>
+  <style>
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
 
-      .cursor-pointer {
-        cursor: pointer;
-      }
+    .h-35px {
+      height: 35px;
+    }
 
-      .h-0 {
-        height: 0;
-      }
-    </style>
-  </head>
+    .cursor-pointer {
+      cursor: pointer;
+    }
 
-  <body>
-    <div th:replace="~{member/memInfoAside}"></div>
+    .h-0 {
+      height: 0;
+    }
+  </style>
+</head>
 
-    <div class="p-0">
-      <div class="container">
-        <div class="text-center mt-3">
-          <span class="h1">個人資訊</span
-          ><span
-            id="role"
-            class="text-small text-secondary"
-            style="display: none"
-            >管理員</span
-          >
-        </div>
-        <form id="memInfo" class="row" action="#">
-          <div class="col-10 pe-0">
-            <div class="row">
-              <label for="nickname" class="col-form-label col-1 px-0 text-end"
-                >暱稱:</label
-              >
-              <div class="col-2">
-                <input
-                  type="text"
-                  readonly
-                  class="form-control-plaintext px-2"
-                  id="nickname"
-                  name="nickname"
-                  value=""
-                />
-              </div>
-              <label for="account" class="col-form-label col-1 px-0 text-end"
-                >帳號:</label
-              >
-              <div class="col-2">
-                <input
-                  type="text"
-                  readonly
-                  class="form-control-plaintext px-2"
-                  id="account"
-                  name="account"
-                  value=""
-                />
-              </div>
+<body>
+  <div th:replace="~{member/memInfoAside}"></div>
+
+  <div class="p-0">
+    <div class="container">
+      <div class="text-center mt-3"><span class="h1">個人資訊</span><span id="role" class="text-small text-secondary"
+          style="display: none;">管理員</span></div>
+      <form id="memInfo" class="row" action="#">
+        <div class="col-10 pe-0">
+          <div class="row">
+            <label for="nickname" class="col-form-label col-1 px-0 text-end">暱稱:</label>
+            <div class="col-2">
+              <input type="text" readonly class="form-control-plaintext px-2" id="nickname" name="nickname" value="">
             </div>
-            <div class="row">
-              <div
-                id="change-pwd-btn"
-                class="btn btn-outline-warning btn-sm col-4 align-self-center ms-4 mt-2 text-dark"
-              >
-                修改密碼
-              </div>
-            </div>
-            <div class="row mt-2">
-              <label for="email" class="col-form-label col-1 px-0 text-end"
-                >Email:</label
-              >
-              <div class="col-5">
-                <input
-                  type="text"
-                  readonly
-                  class="form-control-plaintext px-2"
-                  id="email"
-                  name="email"
-                  value=""
-                />
-              </div>
-              <div
-                id="verify-email-btn"
-                class="btn btn-outline-warning btn-sm col-2 align-self-center text-dark"
-                style="display: none"
-              >
-                驗證Email
-              </div>
-            </div>
-            <div
-              class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0 ms-2 me-5"
-            >
-              <span class="px-3 text-secondary bg-light user-select-none"
-                >以上必填</span
-              >
-            </div>
-            <div class="row">
-              <label for="memName" class="col-form-label col-1 px-0 text-end"
-                >姓名:</label
-              >
-              <div class="col-2">
-                <input
-                  type="text"
-                  readonly
-                  class="form-control-plaintext px-2"
-                  id="memName"
-                  name="memName"
-                  value=""
-                />
-              </div>
-              <label for="gender" class="col-form-label col-1 px-0 text-end"
-                >性別:</label
-              >
-              <div class="col-2">
-                <select
-                  id="gender"
-                  name="gender"
-                  readonly
-                  class="form-control-plaintext"
-                  aria-label="Default select example"
-                >
-                  <option value="0" selected>選擇性別</option>
-                  <option value="1">男</option>
-                  <option value="2">女</option>
-                </select>
-              </div>
-              <label for="birthday" class="col-form-label col-1 px-0 text-end"
-                >生日:</label
-              >
-              <div class="col-3">
-                <input
-                  type="date"
-                  readonly
-                  class="form-control-plaintext px-2"
-                  id="birthday"
-                  name="birthday"
-                  value=""
-                />
-              </div>
-            </div>
-            <div class="row mt-2">
-              <label for="address" class="col-form-label col-2 px-0 text-center"
-                >聯絡地址:</label
-              >
-              <div class="col-8">
-                <input
-                  type="text"
-                  readonly
-                  class="form-control-plaintext px-2"
-                  id="address"
-                  name="address"
-                  value=""
-                />
-              </div>
-            </div>
-            <div
-              class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0 ms-2 me-5"
-            >
-              <span class="px-3 text-secondary bg-light user-select-none"
-                >其他登入方式</span
-              >
-            </div>
-            <div class="row">
-              <div
-                id="google-account"
-                class="col-4 d-flex mb-3 justify-content-center"
-              >
-                <a
-                  class="btn p-3 border rounded-0"
-                  th:href="@{/member/google-login/addGoogle}"
-                >
-                  <img
-                    class="h-35px"
-                    th:src="@{/images/googleLogo.png}"
-                    alt=""
-                  />
-                  <span>綁定Google帳號</span></a
-                >
-              </div>
-              <div
-                id="facebook-account"
-                class="col-3 d-flex mb-3 justify-content-center"
-              >
-                <a
-                  class="btn p-3 border rounded-0 disabled"
-                  th:href="@{/member/facebook-login/addFacebook}"
-                >
-                  <img class="h-35px" th:src="@{/images/FBlogo.webp}" alt="" />
-                  <span>綁定FB帳號</span></a
-                >
-              </div>
-              <div
-                id="twitter-account"
-                class="col-4 d-flex mb-3 justify-content-center"
-              >
-                <a
-                  class="btn p-3 border rounded-0 disabled"
-                  th:href="@{/member/twitter-login/addTwitter}"
-                >
-                  <img
-                    class="h-35px"
-                    th:src="@{/images/twitter-logo.webp}"
-                    alt=""
-                  />
-                  <span>綁定twitter帳號</span></a
-                >
-              </div>
+            <label for="account" class="col-form-label col-1 px-0 text-end">帳號:</label>
+            <div class="col-2">
+              <input type="text" readonly class="form-control-plaintext px-2" id="account" name="account" value="">
             </div>
           </div>
-          <div class="photo-div ps-0 col-2 d-flex flex-column">
-            <img
-              class="w-100 cursor-pointer rounded-2"
-              src="http://localhost:8080/PlayCentric/imagesLib/image144"
-            />
-            <input
-              type="file"
-              name="photoFile"
-              id="photoFile"
-              style="display: none"
-            />
-            <p class="mx-3 mt-5 ps-2 border border-2 rounded-2">
-              <i class="fa-solid fa-sack-dollar"></i
-              ><span id="points" class="ms-2">0</span>
-            </p>
-            <select
-              id="recharge-amount"
-              name="recharge-amount"
-              class="form-control mb-3"
-              aria-label="Default select example"
-            >
-              <option value="0" selected>選擇金額</option>
-              <option value="100">100元</option>
-              <option value="500">500元</option>
-              <option value="1500">1500元</option>
-              <option value="3000">3000元</option>
-            </select>
-            <div
-              id="ecPay-btn"
-              class="btn btn-outline-warning align-self-center text-dark"
-            >
-              儲值
+          <div class="row">
+            <div id="change-pwd-btn" class="btn btn-outline-warning btn-sm col-4 align-self-center ms-4 mt-2 text-dark">
+              修改密碼</div>
+          </div>
+          <div class="row mt-2">
+            <label for="email" class="col-form-label col-1 px-0 text-end">Email:</label>
+            <div class="col-5">
+              <input type="text" readonly class="form-control-plaintext px-2" id="email" name="email" value="">
+            </div>
+            <div id="verify-email-btn" class="btn btn-outline-warning btn-sm col-2 align-self-center text-dark"
+              style="display: none;">
+              驗證Email</div>
+          </div>
+          <div
+            class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0 ms-2 me-5">
+            <span class="px-3 text-secondary bg-light user-select-none">以上必填</span>
+          </div>
+          <div class="row">
+            <label for="memName" class="col-form-label col-1 px-0 text-end">姓名:</label>
+            <div class="col-2">
+              <input type="text" readonly class="form-control-plaintext px-2" id="memName" name="memName" value="">
+            </div>
+            <label for="gender" class="col-form-label col-1 px-0 text-end">性別:</label>
+            <div class="col-2">
+              <select id="gender" name="gender" readonly class="form-control-plaintext"
+                aria-label="Default select example">
+                <option value="0" selected>選擇性別</option>
+                <option value="1">男</option>
+                <option value="2">女</option>
+              </select>
+            </div>
+            <label for="birthday" class="col-form-label col-1 px-0 text-end">生日:</label>
+            <div class="col-3">
+              <input type="date" readonly class="form-control-plaintext px-2" id="birthday" name="birthday" value="">
+            </div>
+          </div>
+          <div class="row mt-2">
+            <label for="address" class="col-form-label col-2 px-0 text-center">聯絡地址:</label>
+            <div class="col-8">
+              <input type="text" readonly class="form-control-plaintext px-2" id="address" name="address" value="">
             </div>
           </div>
           <div
-            id="edit-btn-group"
-            class="row my-2 justify-content-center"
-            style="display: none"
-          >
-            <input
-              type="submit"
-              class="btn btn-outline-warning col-2 text-black"
-              value="保存修改"
-            />
-            <div id="cancel-btn" class="btn btn-outline-danger col-1 ms-2">
-              取消
+            class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0 ms-2 me-5">
+            <span class="px-3 text-secondary bg-light user-select-none">其他登入方式</span>
+          </div>
+          <div class="row">
+            <div id="google-account" class="col-4 d-flex mb-3 justify-content-center">
+              <a class="btn p-3 border rounded-0" th:href="@{/member/google-login/addGoogle}">
+                <img class="h-35px" th:src="@{/images/googleLogo.png}" alt="">
+                <span>綁定Google帳號</span></a>
+            </div>
+            <div id="facebook-account" class="col-3 d-flex mb-3 justify-content-center">
+              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/facebook-login/addFacebook}">
+                <img class="h-35px" th:src="@{/images/FBlogo.webp}" alt="">
+                <span>綁定FB帳號</span></a>
+            </div>
+            <div id="twitter-account" class="col-4 d-flex mb-3 justify-content-center">
+              <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/twitter-login/addTwitter}">
+                <img class="h-35px" th:src="@{/images/twitter-logo.webp}" alt="">
+                <span>綁定twitter帳號</span></a>
             </div>
           </div>
-        </form>
-      </div>
+
+        </div>
+        <div class="photo-div ps-0 col-2 d-flex flex-column">
+          <img class="w-100 cursor-pointer rounded-2" src="http://localhost:8080/PlayCentric/imagesLib/image144">
+          <input type="file" name="photoFile" id="photoFile" style="display: none;">
+          <p id="points-box" class="mx-3 mt-5 ps-2 border border-2 rounded-2 cursor-pointer d-flex align-items-center">
+            <i class="fa-solid fa-sack-dollar"></i>
+            <span id="points" class="ms-2">[[${session.loginMember.points}]]</span>
+            <i class="ms-auto fs-5 me-1 fw-bold fa-solid fa-plus"></i>
+          </p>
+        </div>
+
+        <div id="edit-btn-group" class="row my-2 justify-content-center" style="display: none;">
+          <input type="submit" class="btn btn-outline-warning col-2 text-black" value="保存修改">
+          <div id="cancel-btn" class="btn btn-outline-danger col-1 ms-2">取消</div>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <script>
-      $(function () {
-        const findMemUrl = "/PlayCentric/member/personal/api/getInfo";
-        const updateMemUrl = "/PlayCentric/member/personal/api/updateSelf";
-        const changePwdUrl = "/PlayCentric/member/personal/api/sendPtUrl";
-        const verifiyEmailUrl = "/PlayCentric/member/personal/api/sendVerUrl";
-        const ecPayUrl = "/PlayCentric/member/personal/api/newRecharge";
-        const memId = Number.parseInt("[[${session.loginMember.memId}]]");
-        const redirectMsg = "[[${redirectMsg}]]";
-        let memInfo = {};
+  <script>
+    $(function () {
+      const findMemUrl = "/PlayCentric/member/personal/api/getInfo";
+      const updateMemUrl = "/PlayCentric/member/personal/api/updateSelf";
+      const changePwdUrl = "/PlayCentric/member/personal/api/sendPtUrl";
+      const verifiyEmailUrl = "/PlayCentric/member/personal/api/sendVerUrl";
+      const ecPayUrl = "/PlayCentric/member/personal/api/newRecharge";
+      const memId = Number.parseInt('[[${session.loginMember.memId}]]');
+      const redirectMsg = '[[${redirectMsg}]]';
+      let memInfo = {};
 
-        if (redirectMsg && redirectMsg.trim() != "") {
-          doAlert(redirectMsg);
+      if (redirectMsg && redirectMsg.trim() != "") {
+        doAlert(redirectMsg);
+      }
+
+
+      getMemInfo();
+
+
+      $('#points-box').click(function(){
+        window.location.href = "/PlayCentric/member/personal/recharge";
+      })
+
+      $('#ecPay-btn').click(function () {
+
+        const rechargeAmount = $('#recharge-amount').val();
+        if (rechargeAmount <= 0) {
+          doAlert('請選擇金額')
         }
-
-        getMemInfo();
-
-        $("#ecPay-btn").click(function () {
-          const rechargeAmount = $("#recharge-amount").val();
-          if (rechargeAmount <= 0) {
-            doAlert("請選擇金額");
-          }
-          axios({
-            method: "post",
-            url: ecPayUrl,
-            params: { rechargeAmount },
-          })
-            .then((res) => {
-              console.log(res.data);
-              if (res.data === "請重新登入") {
-                doAlert(res.data);
-                setTimeout(() => {
-                  window.location.href = "/PlayCentric/member/login";
-                }, 1000);
-              } else {
-                $("body").append(res.data);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              if (err.response && err.response.status === 401) {
-                window.location.href =
-                  "/PlayCentric/member/homeShowErr/" + err.response.data;
-              }
-            });
-        });
-
-        $("#verify-email-btn").click(function () {
-          if (memInfo.emailVerified) {
-            doAlert("信箱已驗證");
-            return;
-          }
-          axios({
-            method: "post",
-            url: verifiyEmailUrl,
-            params: { email: memInfo.email },
-          })
-            .then((res) => {
-              console.log(res);
-              doAlert(res.data);
-            })
-            .catch((err) => {
-              console.log(err);
-              if (err.response && err.response.status === 401) {
-                window.location.href =
-                  "/PlayCentric/member/homeShowErr/" + err.response.data;
-              }
-            });
-        });
-
-        $("#change-pwd-btn").click(function () {
-          if (!memInfo.emailVerified) {
-            doAlert("請先驗證信箱");
-            return;
-          }
-          axios({
-            method: "post",
-            url: changePwdUrl,
-            params: { memId: memInfo.memId },
-          })
-            .then((res) => {
-              console.log(res);
-              doAlert(res.data);
-            })
-            .catch((err) => {
-              console.log(err);
-              if (err.response && err.response.status === 401) {
-                window.location.href =
-                  "/PlayCentric/member/homeShowErr/" + err.response.data;
-              }
-            });
-        });
-
-        $("#memInfo").submit(function (e) {
-          e.preventDefault();
-
-          const formdataObject = new FormData(this);
-          formdataObject.set("memId", memInfo.memId);
-          formdataObject.set("role", memInfo.role);
-
-          axios
-            .post(updateMemUrl, formdataObject)
-            .then((res) => {
-              console.log(res);
-              if (res.data == "更新成功!") {
-                getMemInfo();
-              }
-              doAlert(res.data);
-            })
-            .catch((err) => {
-              console.log(err);
-              if (err.response && err.response.status === 401) {
-                window.location.href =
-                  "/PlayCentric/member/homeShowErr/" + err.response.data;
-              }
-            });
-        });
-
-        $(".photo-div").on("click", "img", function () {
-          $("#photoFile").click();
-        });
-
-        $("#photoFile").change(function () {
-          const file = this.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              // 設定圖片的 src 屬性為讀取的數據 URL
-              $(".photo-div>img").attr("src", e.target.result);
-            };
-            // 讀取文件為數據 URL
-            reader.readAsDataURL(file);
-            editOrNot();
-          }
-        });
-
-        $("[readonly]").mouseover(function () {
-          $(this)
-            .addClass("border")
-            .addClass("rounded-2")
-            .mouseout(function () {
-              $(this).removeClass("border").removeClass("rounded-2");
-            });
-        });
-
-        $("#cancel-btn").click(function () {
-          $("#memInfo")[0].reset();
-          showMemInfo(memInfo);
-        });
-
-        $("[readonly]").click(onFocus);
-        $("[readonly]").focus(onFocus);
-
-        function onFocus() {
-          $(this)
-            .removeAttr("readonly")
-            .removeClass("form-control-plaintext")
-            .addClass("form-control")
-            .blur(function () {
-              $(this)
-                .addClass("form-control-plaintext")
-                .removeClass("form-control")
-                .attr("readonly", true);
-            });
-        }
-
-        $(document).on("keydown", function (e) {
-          if (e.key === "Escape") {
-            // 檢查是否按下了 Esc 鍵
-            $("input:focus").blur(); // 使當前聚焦的輸入框失去焦點
-          }
-        });
-
-        $("#memInfo input").change(editOrNot);
-        $("#memInfo select").change(editOrNot);
-
-        function getMemInfo() {
-          axios({
-            method: "get",
-            url: findMemUrl,
-            params: { memId },
-          })
-            .then((res) => {
-              console.log(res);
-              showMemInfo(res.data);
-              memInfo = res.data;
-            })
-            .catch((err) => {
-              console.log(err);
-              if (err.response && err.response.status === 401) {
-                window.location.href =
-                  "/PlayCentric/member/homeShowErr/" + err.response.data;
-              }
-            });
-        }
-
-        function showMemInfo(data) {
-          $("#memInfo #memId").val(data.memId);
-          $("#memInfo #nickname").val(data.nickname);
-          $("#memInfo #account").val(data.account);
-          $("#memInfo #email").val(data.email);
-          $("#verify-email-btn").hide();
-          if (!data.emailVerified) {
-            $("#verify-email-btn").show();
-          }
-          $("#memInfo #memName").val(data.memName ? data.memName : "");
-          $("#memInfo #gender").val(data.gender ? data.gender : 0);
-          $("#memInfo #birthday").val(data.birthday ? data.birthday : "");
-          $("#memInfo #phone").val(data.phone ? data.phone : "");
-          $("#memInfo #address").val(data.address ? data.address : "");
-          if (data.role == 1) {
-            $("#role").show();
-          }
-          if (data.googeId) {
-            $("#memInfo #google-account")
-              .removeClass("col-4")
-              .addClass("col-3");
-            $("#memInfo #google-account span").text("已綁定✔️");
-            $("#memInfo #google-account .btn").addClass("disabled");
-          }
-          $("#memInfo .photo-div img").attr("src", data.photoUrl);
-          $("img#login-member-photo").attr("src", data.photoUrl);
-          $("#points").text(data.points);
-
-          $("#edit-btn-group").hide();
-        }
-
-        function editOrNot() {
-          console.log(memInfo);
-          const formDataOj = new FormData($("#memInfo")[0]);
-          for (const [key, value] of formDataOj) {
-            if (memInfo.hasOwnProperty(key) && memInfo[key] != null) {
-              if (memInfo[key].toString() === value) {
-                console.log(`${key} 的值匹配: ${memInfo[key]}`);
-              } else {
-                console.log(
-                  `${key} 的值不匹配: JSON 值為 ${memInfo[key]}，表單值為 ${value}`
-                );
-                $("#edit-btn-group").show();
-                return;
-              }
+        axios({
+          method: 'post',
+          url: ecPayUrl,
+          params: { rechargeAmount }
+        })
+          .then(res => {
+            console.log(res.data);
+            if (res.data === '請重新登入') {
+              doAlert(res.data)
+              setTimeout(() => {
+                window.location.href = "/PlayCentric/member/login";
+              }, 1000);
+            } else {
+              $('body').append(res.data)
             }
-          }
-          if ($("#photoFile")[0].files.length > 0) {
-            $("#edit-btn-group").show();
-            return;
-          }
-          $("#edit-btn-group").hide();
+          })
+          .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
+          })
+      })
+
+      $('#verify-email-btn').click(function () {
+        if (memInfo.emailVerified) {
+          doAlert('信箱已驗證')
+          return;
+        }
+        axios({
+          method: 'post',
+          url: verifiyEmailUrl,
+          params: { email: memInfo.email }
+        })
+          .then(res => {
+            console.log(res);
+            doAlert(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
+          })
+      })
+
+      $('#change-pwd-btn').click(function () {
+        if (!memInfo.emailVerified) {
+          doAlert('請先驗證信箱');
+          return;
+        }
+        axios({
+          method: 'post',
+          url: changePwdUrl,
+          params: { memId: memInfo.memId }
+        })
+          .then(res => {
+            console.log(res);
+            doAlert(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
+          })
+      })
+
+      $('#memInfo').submit(function (e) {
+        e.preventDefault();
+
+        const formdataObject = new FormData(this);
+        formdataObject.set('memId', memInfo.memId);
+        formdataObject.set('role', memInfo.role);
+
+        axios.post(updateMemUrl, formdataObject)
+          .then(res => {
+            console.log(res);
+            if (res.data == '更新成功!') {
+              getMemInfo();
+            } else if (res.data == 'anotherLogin') {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + res.data;
+            }
+            doAlert(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
+          })
+      })
+
+      $('.photo-div').on('click', 'img', function () {
+        $('#photoFile').click();
+      })
+
+      $('#photoFile').change(function () {
+        const file = this.files[0]
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            // 設定圖片的 src 屬性為讀取的數據 URL
+            $('.photo-div>img').attr('src', e.target.result);
+          };
+          // 讀取文件為數據 URL
+          reader.readAsDataURL(file);
+          editOrNot();
+        }
+      })
+
+      $('[readonly]').mouseover(function () {
+        $(this).addClass('border').addClass('rounded-2').mouseout(function () {
+          $(this).removeClass('border').removeClass('rounded-2');
+        });
+      })
+
+      $('#cancel-btn').click(function () {
+        $('#memInfo')[0].reset();
+        showMemInfo(memInfo);
+      })
+
+      $('[readonly]').click(onFocus)
+      $('[readonly]').focus(onFocus)
+
+      function onFocus() {
+        $(this).removeAttr('readonly').removeClass('form-control-plaintext').addClass('form-control').blur(function () {
+          $(this).addClass('form-control-plaintext').removeClass('form-control').attr('readonly', true)
+        })
+      }
+
+      $(document).on('keydown', function (e) {
+        if (e.key === "Escape") {  // 檢查是否按下了 Esc 鍵
+          $('input:focus').blur();  // 使當前聚焦的輸入框失去焦點
         }
       });
-    </script>
-  </body>
+
+      $('#memInfo input').change(editOrNot)
+      $('#memInfo select').change(editOrNot)
+
+      function getMemInfo() {
+        axios({
+          method: 'get',
+          url: findMemUrl,
+          params: { memId }
+        })
+          .then(res => {
+            console.log(res);
+            showMemInfo(res.data);
+            memInfo = res.data;
+          })
+          .catch(err => {
+            console.log(err)
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
+          })
+      }
+
+      function showMemInfo(data) {
+        $('#memInfo #memId').val(data.memId);
+        $('#memInfo #nickname').val(data.nickname);
+        $('#memInfo #account').val(data.account);
+        $('#memInfo #email').val(data.email);
+        $('#verify-email-btn').hide();
+        if (!data.emailVerified) {
+          $('#verify-email-btn').show();
+        }
+        $('#memInfo #memName').val(data.memName ? data.memName : '');
+        $('#memInfo #gender').val(data.gender ? data.gender : 0);
+        $('#memInfo #birthday').val(data.birthday ? data.birthday : '');
+        $('#memInfo #phone').val(data.phone ? data.phone : '');
+        $('#memInfo #address').val(data.address ? data.address : '');
+        if (data.role == 1) {
+          $('#role').show();
+        }
+        if (data.googeId) {
+          $('#memInfo #google-account').removeClass('col-4').addClass('col-3');
+          $('#memInfo #google-account span').text('已綁定✔️');
+          $('#memInfo #google-account .btn').addClass('disabled');
+        }
+        $('#memInfo .photo-div img').attr('src', data.photoUrl);
+        $('img#login-member-photo').attr('src', data.photoUrl);
+        $('#points').text(data.points);
+        console.log(data.points);
+
+        $('#edit-btn-group').hide();
+      }
+
+      function editOrNot() {
+        console.log(memInfo);
+        const formDataOj = new FormData($('#memInfo')[0]);
+        for (const [key, value] of formDataOj) {
+          if (memInfo.hasOwnProperty(key) && memInfo[key] != null) {
+            if (memInfo[key].toString() === value) {
+              console.log(`${key} 的值匹配: ${memInfo[key]}`);
+            } else {
+              console.log(`${key} 的值不匹配: JSON 值為 ${memInfo[key]}，表單值為 ${value}`);
+              $('#edit-btn-group').show();
+              return;
+            }
+          }
+        }
+        if ($('#photoFile')[0].files.length > 0) {
+          $('#edit-btn-group').show();
+          return;
+        }
+        $('#edit-btn-group').hide();
+      }
+    })
+  </script>
+</body>
+
 </html>

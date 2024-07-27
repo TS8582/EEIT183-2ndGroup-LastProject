@@ -11,11 +11,11 @@
 <body>
     <div th:replace="~{member/memInfoAside}"></div>
 
-    <div class="container">
+    <div class="container border">
         <th:block th:if="${games}" th:each="game,status:${games}">
             <div class="flex items-center px-6 py-5 game">
                 <div class="hidden gameId" th:text="${game.gameId}"></div>
-                <div class="flex w-4/5">
+                <div class="flex w-4/5 noscrollbar overflow-scroll">
                     <!-- 遊戲 -->
                     <div class="w-3/5 flex justify-center items-center">
                         <a class="text-black text-decoration-none" th:if="${!game.imageLibs.empty}"

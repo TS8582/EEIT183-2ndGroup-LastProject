@@ -173,7 +173,6 @@ public class TextsController {
 
 		Member member = memberService.findById(loginMember.getMemId());
 		texts.setMember(member);
-		
 
 		if (!files.isEmpty()) {
 			ForumPhoto forumPhoto = new ForumPhoto();
@@ -225,71 +224,89 @@ public class TextsController {
 	}
 
 	// 尋找修改ID
-	@GetMapping("/texts/findIdByTexts")
-	public String editTexts(@RequestParam Integer textsId, Model model) {
+	@GetMapping("/personal/texts/edit/{textsId}")
+	public String showEditForm(@PathVariable Integer textsId, Model model) {
 		Texts texts = textsService.findById(textsId);
+		if (texts == null) {
+			model.addAttribute("errorScript", "alert('找不到對應的文章，請確認文章ID是否正確。');");
+			return "forum/texts/edit";
+		}
 		model.addAttribute("texts", texts);
-		System.out.println(123);
 		List<Forum> arrayList = forumService.findAll();
 		model.addAttribute("arrayList", arrayList);
 		return "forum/texts/edit";
-
 	}
 
 	@PostMapping("/texts/update")
 	public String updateTexts(@RequestParam("textsContent") String textsContent, @RequestParam("title") String title,
 			@RequestParam("textsId") Integer textsId, @RequestParam("files") MultipartFile[] files,
-			@RequestParam("forumId") Integer forumId,
-			/* @RequestParam("memId") Integer memId, */ @RequestParam("hideTexts") Boolean hideTexts,
+			@RequestParam("forumId") Integer forumId, @RequestParam("hideTexts") Boolean hideTexts,
 			HttpSession httpSession, Model model) throws IOException {
-		// 從 session 中獲取 member 對象
+
+		// 從 session 中獲取登錄會員資訊
 		LoginMemDto loginMember = (LoginMemDto) httpSession.getAttribute("loginMember");
 
-		// 檢查 member 對象是否為 null
+		// 檢查用戶是否登錄
 		if (loginMember == null) {
-			// 如果 member 為 null，說明用戶未登入，重定向到登入頁面
-			return "redirect:/member/showLoginErr/notLogin"; // 確保你有一個處理 /login 的路由
+			// 如果未登錄，重定向到登錄錯誤頁面
+			return "redirect:/member/showLoginErr/notLogin";
 		}
 
-		Forum forum = forumService.findById(forumId);
+		// 根據 textsId 獲取現有的 Texts 對象
+		Texts texts = textsService.findById(textsId);
+		if (texts == null) {
+			model.addAttribute("errorScript", "alert('找不到對應的文章，請確認文章ID是否正確。');");
+			return "forum/texts/edit";
+		}
 
-		// 建立一個新的文章物件
-		Texts texts = new Texts();
+		// 更新論壇信息（如果有變化）
+		if (forumId != null && !forumId.equals(texts.getForum().getForumId())) {
+			Forum forum = forumService.findById(forumId);
+			texts.setForum(forum);
+		}
+
+		// 更新會員信息
+		Member member = memberService.findById(loginMember.getMemId());
+		texts.setMember(member);
+
+		// 更新文本內容
 		texts.setHideTexts(hideTexts);
-		texts.setTextsContent(textsContent); // 設置文章內容
-		texts.setUpdatedTime(new Timestamp(System.currentTimeMillis())); // 設置發佈日期
+		texts.setTextsContent(textsContent);
+		texts.setUpdatedTime(new Timestamp(System.currentTimeMillis()));
 		texts.setTitle(title);
-		texts.setTextsId(textsId);
-		texts.setForum(forum);
-		texts.setMemId(loginMember.getMemId());
 
-		// 如果有上傳的圖片，處理圖片上傳
+		// 處理文件上傳
 		if (files != null && files.length > 0) {
 			List<ForumPhoto> forumPhotosList = new ArrayList<>();
 
 			for (MultipartFile file : files) {
-				ForumPhoto forumPhoto = new ForumPhoto();
-				forumPhoto.setPhotoFile(file.getBytes());
-				forumPhoto.setTexts(texts); // 設置圖片對應的文章
-				forumPhotosList.add(forumPhoto);
+				if (!file.isEmpty()) {
+					ForumPhoto forumPhoto = new ForumPhoto();
+					forumPhoto.setPhotoFile(file.getBytes());
+					forumPhoto.setTexts(texts);
+					forumPhotosList.add(forumPhoto);
+				}
 			}
 
-			texts.setForumPhoto(forumPhotosList); // 將圖片列表設置到文章中
+			if (!forumPhotosList.isEmpty()) {
+				// 如果有新照片，更新文本的照片列表
+				texts.setForumPhoto(forumPhotosList);
+			}
 		}
 
-		textsService.insert(texts); // 儲存文章到資料庫
+		// 更新文本在數據庫中
+		textsService.update(texts);
 
-		// 發佈成功後重定向到成功頁面
-		return "redirect:/texts/listFront";
-
+		// 更新成功後重定向到前台列表頁面
+		return "redirect:/texts/findTextsById?textsId=" + textsId;
 	}
 
 	// 刪除文章
-	@GetMapping("/texts/delete")
+	@GetMapping("/personal/texts/delete")
 	public String deleteTexts(@RequestParam("textsId") Integer textsId) {
 		textsService.deleteTextsById(textsId);
 
-		return "redirect:/texts/page"; // 導入後台
+		return "redirect:/texts/page"; // 導入前台
 	}
 
 }
