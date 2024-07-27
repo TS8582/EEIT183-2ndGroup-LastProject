@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/utils/doAlertJS.css}">
     <link rel="stylesheet" th:href="@{/css/output.css}">
     <title>PlayCentric-後台管理-新增遊戲</title>
 </head>
@@ -98,14 +100,14 @@
                                     </th:block>
                                 </select>
 
-                                <input type="hidden" name="discountId" value="0">
+                                <!-- <input type="hidden" name="discountId" value="0"> -->
 
                                 <div th:if="${nowDiscount == null}" class="rateset hidden">
                                     <div class="flex flex-col">
                                         <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
 
                                         <input type="number" min="0.01" max="0.99" name="discountRate" id="discountRate"
-                                            value="0" step="0.01" class="text-input w-96" />
+                                            disabled step="0.01" class="text-input w-96" />
                                     </div>
                                 </div>
 
@@ -118,7 +120,7 @@
                                             name="discountRate" id="discountRate" th:value="${nowDiscount.discountRate}"
                                             step="0.01" class="text-input w-96 bg-gray-500" />
                                     </div>
-                                    <input th:if="${nowDiscount}" type="hidden" name="discountRate" value="0">
+                                    <input th:if="${nowDiscount}" type="hidden" name="discountRate" disabled>
                                 </div>
 
                             </div>
@@ -175,6 +177,7 @@
         </div>
     </div>
 
+    <script th:src="@{/js/utils/doAlertJS.js}"></script>
     <script th:src="@{/js/game/insert-game.js}"></script>
 
 </body>

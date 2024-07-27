@@ -52,81 +52,81 @@ async function handleScroll() {
 
     // 檢查是否滾動到底部
     if (windowHeight + scrollTop >= documentHeight && scrolltrigger && pgnum < totalPages - 1) {
-        if (typeId.length === 0 && minPrice.value === '' && maxPrice.value === '') {
+        if (typeId.length === 0) {
             spin.classList.remove('hidden');
             scrolltrigger = false;
             await nofilterplus();
             scrolltrigger = true; // 等待完成後重設 scrolltrigger
-        } else if (typeId.length !== 0 && minPrice.value === '' && maxPrice.value === '') {
+            minPrice.dispatchEvent(new Event('input'));
+        } else if (typeId.length !== 0) {
             spin.classList.remove('hidden');
             scrolltrigger = false;
             await typefilterplus();
             scrolltrigger = true; // 等待完成後重設 scrolltrigger
-        } else if (minPrice.value !== '' && maxPrice.value !== '' && typeId.length === 0) {
-            spin.classList.remove('hidden');
-            scrolltrigger = false;
-            await pricefilterplus();
-            scrolltrigger = true; // 等待完成後重設 scrolltrigger
-        } else if (minPrice.value !== '' && maxPrice.value !== '' && typeId.length !== 0) {
-            spin.classList.remove('hidden');
-            scrolltrigger = false;
-            await typeAndPriceFilterPlus();
-            scrolltrigger = true; // 等待完成後重設 scrolltrigger
+            minPrice.dispatchEvent(new Event('input'));
         }
     }
 }
 
 async function myEvent() {
     try {
-        if (typeId.length > 0 && minPrice.value === '' && maxPrice.value === '') {
+        if (typeId.length > 0) {
             main.innerHTML = '';
             spin.classList.remove('hidden');
             scrolltrigger = false;
             await typefilter();
             scrolltrigger = true;
-        } else if (typeId.length > 0 && minPrice.value !== '' && maxPrice.value !== '') {
-            if (!isNaN(minPrice.value) && !isNaN(maxPrice.value) && minPrice.value > 0 && maxPrice.value > 0) {
-                main.innerHTML = '';
-                spin.classList.remove('hidden');
-                scrolltrigger = false;
-                await typeAndPriceFilter();
-                scrolltrigger = true;
-            }
-            else {
-
-            }
-        } else if (minPrice.value !== '' && maxPrice.value !== '' && typeId.length === 0) {
-            if (!isNaN(minPrice.value) && !isNaN(maxPrice.value) && minPrice.value > 0 && maxPrice.value > 0) {
-                main.innerHTML = '';
-                spin.classList.remove('hidden');
-                scrolltrigger = false;
-                await pricefilter();
-                scrolltrigger = true;
-            }
-            else {
-
-            }
-        } else if (minPrice.value == '' && maxPrice.value == '' && typeId.length === 0) {
+        }
+        else if (typeId.length === 0) {
             main.innerHTML = '';
             spin.classList.remove('hidden');
             scrolltrigger = false;
             await nofilter();
             scrolltrigger = true;
         }
-        else {
-        }
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 }
 
+//價格篩選
 minPrice.addEventListener('input', handlePriceFilter);
 maxPrice.addEventListener('input', handlePriceFilter);
 
 async function handlePriceFilter() {
-    pgnum = 0; // 重置 pgnum 變數
-    // 清空主要內容區域
-    myEvent();
+    if (minPrice.value !== '' || maxPrice.value !== '') {
+        if (!((Number.isInteger(Number(minPrice.value)) || Number.isInteger(Number(maxPrice.value))) && (Number(minPrice.value) > 0 || Number(maxPrice.value) > 0))) {
+            minPrice.value = '';
+            maxPrice.value = '';
+            doAlert('價格欄位需填入正整數');
+        }
+    }
+    if (minPrice.value !== '' && maxPrice.value !== '') {
+        if (Number.isInteger(Number(minPrice.value)) && Number.isInteger(Number(maxPrice.value)) && Number(minPrice.value) > 0 && Number(maxPrice.value) > 0) {
+            if (Number(minPrice.value) < Number(maxPrice.value)) {
+                const prices = document.querySelectorAll('#price');
+                prices.forEach(elm => {
+                    if (Number(elm.innerHTML) <= Number(maxPrice.value) && Number(elm.innerHTML) >= Number(minPrice.value)) {
+                        elm.closest('.gameitem').classList.remove('hidden');
+                    }
+                    else {
+                        elm.closest('.gameitem').classList.add('hidden');
+                    }
+                });
+            }
+        }
+        else {
+            minPrice.value = '';
+            maxPrice.value = '';
+            doAlert('價格欄位需填入正整數');
+        }
+    }
+    else if (minPrice.value == '' && maxPrice.value == '') {
+        const items = document.querySelectorAll('.gameitem');
+        items.forEach(elm => {
+            elm.classList.remove('hidden');
+        });
+    }
 }
 
 typeselector.forEach(typecheck => {
@@ -439,15 +439,27 @@ function htmlmaker(game) {
         discountSpan.textContent = `-${100 - game.rate}%`;
         gamePrice.appendChild(discountSpan);
 
+        let div = document.createElement('div');
+        div.classList.add('price-tag', 'font-semibold');
+        let nt = document.createElement('span');
+        nt.textContent = 'NT$';
         let discountedPriceSpan = document.createElement('span');
-        discountedPriceSpan.classList.add('price-tag', 'font-semibold');
-        discountedPriceSpan.textContent = `NT$${game.discountedPrice}`;
-        gamePrice.appendChild(discountedPriceSpan);
+        discountedPriceSpan.id = 'price';
+        discountedPriceSpan.textContent = `${game.discountedPrice}`;
+        div.appendChild(nt);
+        div.appendChild(discountedPriceSpan);
+        gamePrice.appendChild(div);
     } else {
+        let div = document.createElement('div');
+        div.classList.add('price-tag', 'text-black', 'font-semibold');
+        let nt = document.createElement('span');
+        nt.textContent = 'NT$';
         let priceSpan = document.createElement('span');
-        priceSpan.classList.add('price-tag', 'text-black', 'font-semibold');
-        priceSpan.textContent = `NT$${game.price}`;
-        gamePrice.appendChild(priceSpan);
+        priceSpan.textContent = `${game.price}`;
+        priceSpan.id = 'price';
+        div.appendChild(nt);
+        div.appendChild(priceSpan);
+        gamePrice.appendChild(div);
     }
 
     // 加入購物車按鈕

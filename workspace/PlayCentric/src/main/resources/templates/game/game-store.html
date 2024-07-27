@@ -115,11 +115,15 @@
                             <span th:if="${game.rate}" class="price-tag font-semibold"
                                 th:text="'-' + ${100 -  game.rate} + '%'"></span>
                             <!-- 沒優惠顯示的價格 -->
-                            <span th:if="${game.rate == null}" class="price-tag text-black font-semibold"
-                                th:text=" 'NT$' + ${game.price}"></span>
+                            <div th:if="${game.rate == null}" class="price-tag text-black font-semibold">
+                                <span>NT$</span>
+                                <span id="price" th:text="${game.price}"></span>
+                            </div>
                             <!-- 有優惠顯示的價格 -->
-                            <span th:if="${game.rate}" class="price-tag font-semibold"
-                                th:text=" 'NT$' + ${game.discountedPrice}"></span>
+                            <div th:if="${game.rate}" class="price-tag font-semibold">
+                                <span>NT$</span>
+                                <span id="price" th:text="${game.discountedPrice}"></span>
+                            </div>
                         </div>
                         <div class="flex justify-center">
                             <a th:if="${session.loginMember == null}" th:href="@{/member/login}"

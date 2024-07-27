@@ -108,8 +108,8 @@ public class GameController {
 	// 進行新增遊戲
 	@PostMapping("/game/insertGame")
 	public String insertGame(@ModelAttribute Game game, @RequestParam List<Integer> typeId,
-			@RequestParam("photos") MultipartFile[] photos, @RequestParam BigDecimal discountRate,
-			@RequestParam Integer discountId,
+			@RequestParam("photos") MultipartFile[] photos, @RequestParam(defaultValue = "0") BigDecimal discountRate,
+			@RequestParam(defaultValue = "0") Integer discountId,
 			@RequestParam MultipartFile gameFiles) throws IOException {
 		// 設定遊戲分類
 		List<GameTypeLib> types = new ArrayList<>();
@@ -158,8 +158,8 @@ public class GameController {
 		// 進行修改遊戲
 		@PostMapping("/game/updateGame")
 		public String updateGame(@ModelAttribute Game game, @RequestParam List<Integer> typeId,
-				@RequestParam("photos") MultipartFile[] photos, @RequestParam BigDecimal discountRate,
-				@RequestParam Integer discountId,@RequestParam List<Integer> photoId) throws IOException {
+				@RequestParam("photos") MultipartFile[] photos, @RequestParam(defaultValue = "0") BigDecimal discountRate,
+				@RequestParam(defaultValue = "0") Integer discountId,@RequestParam List<Integer> photoId) throws IOException {
 			Game myGame = gService.findById(game.getGameId());
 			myGame.setGameName(game.getGameName());
 			myGame.setDescription(game.getDescription());
@@ -268,6 +268,7 @@ public class GameController {
 		return "game/game-store";
 	}
 	
+	//單一遊戲頁面
 	@GetMapping("/game/showGame")
 	public String showGame(@RequestParam Integer gameId,
 			Model model,@ModelAttribute("loginMember") LoginMemDto loginMember) {
@@ -281,6 +282,7 @@ public class GameController {
 		return "game/show-game";
 	}
 	
+	//會員遊戲收藏庫
 	@GetMapping("/personal/game/ownGame")
 	public String getMethodName(
 			@ModelAttribute("loginMember") LoginMemDto loginMember,
@@ -295,6 +297,7 @@ public class GameController {
 		return "game/owngame";
 	}
 	
+//	會員遊戲購買紀錄
 	@GetMapping("/game/buyRecord")
 	public String buyRecord(
 			Model model
