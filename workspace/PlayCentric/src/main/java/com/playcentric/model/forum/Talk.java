@@ -40,6 +40,9 @@ public class Talk {
 	@JoinColumn(name = "textsId")
 	private Texts texts;
 	
+	@Column(insertable = false, updatable = false)
+	private Integer textsId;
+	
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "memId", nullable = true)

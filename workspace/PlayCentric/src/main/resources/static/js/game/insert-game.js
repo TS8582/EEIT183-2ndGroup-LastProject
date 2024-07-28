@@ -33,13 +33,15 @@ if (oneimg.length > 0) {
 // 選擇優惠後跳出選擇折扣
 discountChooser.addEventListener('change', e => {
     const rateset = document.querySelector('.rateset');
-    if (discountChooser.value !== (0 || '')) {
+    const rateinput = document.querySelector('#discountRate');
+    if (discountChooser.value != 0) {
         rateset.classList.remove('hidden');
+        rateinput.disabled = false;
     }
     else {
-        const rateinput = document.querySelector('#discountRate');
         rateset.classList.add('hidden');
         rateinput.value = 0;
+        rateinput.disabled = true;
     }
 })
 
@@ -55,7 +57,7 @@ document.querySelector('form').addEventListener('submit', e => {
     updatefile();
 
     if (isCheck == false) {
-        alert('分類尚未選擇');
+        doAlert('分類尚未選擇');
         e.preventDefault();
     }
 
