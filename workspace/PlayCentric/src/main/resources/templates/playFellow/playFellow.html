@@ -121,29 +121,35 @@
 
 					<div class="swiper-slide py-5">
 						<div class="row banner-content align-items-center">
-							<div class="img-wrapper col-md-5">
-								<img src="images/playFellow/summer.png" class="img-fluid"
-									th:loading="lazy">
-							</div>
+							
 							<div class="content-wrapper col-md-7 p-5 mb-5">
 								<div class="secondary-font text-primary text-uppercase mb-4">遊戲有你有我</div>
 								<h2 class="banner-title display-1 fw-normal">
 									PlayCentric<span class="text-primary"> 找玩伴</span>
 								</h2>
 							</div>
+							<div class="img-wrapper col-md-5">
+								<img src="images/playFellow/9068966.jpg" class="img-fluid">
+							</div>
+							
+							
+							
 						</div>
 					</div>
 					<div class="swiper-slide py-5">
 						<div class="row banner-content align-items-center">
 							<div class="img-wrapper col-md-5">
+							
 								<a id="addPfMember" th:if="${session.loginMember != null}"
 									th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}">
-									<img src="images/playFellow/pftop2.png" class="img-fluid"
-									loading="lazy">
-								</a> <a id="loginAlert" th:if="${session.loginMember == null}"
+								</a> 
+								
+								<a id="loginAlert" th:if="${session.loginMember == null}"
 									href="javascript:void(0);" onclick="alertAndRedirect();"><img
-									src="images/playFellow/pftop2.png" class="img-fluid"
-									loading="lazy"> </a>
+									src="images/playFellow/7915283.jpg" class="img-fluid"
+									loading="lazy"> 
+									</a>
+									
 							</div>
 							<div class="content-wrapper col-md-7 p-5 mb-5">
 								<div class="secondary-font text-primary text-uppercase mb-4">PlayCentric</div>
@@ -253,12 +259,6 @@
 
 
 
-
-
-
-
-
-
 	<section id="clothing" class="container overflow-hidden"
 		style="margin-top: 50px;" loading="lazy">
 		<div class="pb-1">
@@ -278,12 +278,6 @@
 						style="overflow-y: auto; padding: 20px;">
 						<ul class="list-group" style="list-style-type: none; padding: 0;">
 
-							<a th:href="@{/playFellow}"
-								style="color: #3B89C7; text-decoration: none;"
-								onmouseover="this.style.color='#2A9D8F'; this.style.textDecoration='underline';"
-								onmouseout="this.style.color='#3B89C7'; this.style.textDecoration='none';">
-								<li style="border: none; padding: 10px 15px;">回伴遊首頁</li>
-							</a>
 
 							<li
 								style="border: none; color: #3B89C7; font-weight: bold; padding: 10px 15px;">
