@@ -421,7 +421,7 @@ function htmlmaker(game) {
         }
         else if (game.haveGame) {
             addToCartBtn = document.createElement('span');
-            addToCartBtn.classList.add('mybtn', 'mybtn-green', 'cart');
+            addToCartBtn.classList.add('mybtn', 'mybtn-green');
             addToCartBtn.textContent = '下載';
         }
         else if (!game.inCart) {
@@ -432,12 +432,11 @@ function htmlmaker(game) {
     }
     else {
         addToCartBtn = document.createElement('a');
-        addToCartBtn.classList.add('mybtn', 'mybtn-green', 'cart');
+        addToCartBtn.classList.add('mybtn', 'mybtn-green');
         addToCartBtn.textContent = '加入購物車';
         addToCartBtn.href = '/PlayCentric/member/login';
     }
 
-    addToCart();
 
     let gameIdContainer = document.createElement('div');
     gameIdContainer.classList.add('hidden', 'gameId');
@@ -456,6 +455,7 @@ function htmlmaker(game) {
     // 添加外層 div 到主要內容區域
     main.appendChild(gameItem);
     gameName.dispatchEvent(new Event('input'));
+    addToCart();
 }
 
 

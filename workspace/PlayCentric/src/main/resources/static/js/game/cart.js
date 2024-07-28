@@ -26,8 +26,8 @@ function addToCart() {
                         console.error(err);
                     })
             }, { once: true })
+            elm.classList.add('okk');
         }
-        elm.classList.add('okk');
 
     });
 }
