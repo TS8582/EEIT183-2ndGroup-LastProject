@@ -34,7 +34,7 @@ public class GameOrder {
 	private Integer memId;
 	private LocalDateTime createAt;
 	private LocalDateTime updateAt;
-	private Integer status;
+	private Integer status = 1;//1為成功購買 0為取消訂單
 	@Column(insertable=false, updatable=false)
 	private Integer paymentId;
 	private Integer total;

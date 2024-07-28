@@ -29,6 +29,7 @@ import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.ImageLibService;
 import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameDiscountSetService;
+import com.playcentric.service.game.GameOrderService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
 import com.playcentric.service.game.OwnGameLibService;
@@ -54,6 +55,8 @@ public class GameController {
 	private GameCartService gcService;
 	@Autowired
 	private OwnGameLibService oglService;
+	@Autowired
+	private GameOrderService goService;
 
 	// 遊戲管理後台
 	@GetMapping("/back/game")
@@ -290,11 +293,13 @@ public class GameController {
 	}
 	
 //	會員遊戲購買紀錄
-	@GetMapping("/game/buyRecord")
+	@GetMapping("/personal/game/buyRecord")
 	public String buyRecord(
+			@ModelAttribute("loginMember") LoginMemDto loginMember,
 			Model model
 			) {
 		List<Game> all = gService.findAll();
+		
 		model.addAttribute("games",all);
 		return "game/buy-record";
 	}
