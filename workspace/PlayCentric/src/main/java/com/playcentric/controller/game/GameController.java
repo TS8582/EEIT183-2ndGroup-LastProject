@@ -25,6 +25,8 @@ import com.playcentric.model.game.primary.GameDiscount;
 import com.playcentric.model.game.primary.GameDiscountSet;
 import com.playcentric.model.game.primary.GameTypeLib;
 import com.playcentric.model.game.secondary.OwnGameLib;
+import com.playcentric.model.game.transaction.GameOrder;
+import com.playcentric.model.game.transaction.GameOrderDetails;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.ImageLibService;
 import com.playcentric.service.game.GameCartService;
@@ -284,11 +286,11 @@ public class GameController {
 			Model model
 			) {
 		List<OwnGameLib> ownGames = oglService.findByMemId(loginMember.getMemId());
-		List<Game> games = new ArrayList<>();
-		for (OwnGameLib ownGameLib : ownGames) {
-			games.add(gService.findById(ownGameLib.getGameId()));
-		}
-		model.addAttribute("games",games);
+//		List<Game> games = new ArrayList<>();
+//		for (OwnGameLib ownGameLib : ownGames) {
+//			games.add(gService.findById(ownGameLib.getGameId()));
+//		}
+		model.addAttribute("ownGames",ownGames);
 		return "game/owngame";
 	}
 	
@@ -298,9 +300,16 @@ public class GameController {
 			@ModelAttribute("loginMember") LoginMemDto loginMember,
 			Model model
 			) {
-		List<Game> all = gService.findAll();
-		
-		model.addAttribute("games",all);
+		List<GameOrder> gameOrders = goService.findByMemId(loginMember.getMemId());
+		List<Game> games = new ArrayList<>();
+		for (GameOrder gameOrder : gameOrders) {
+			List<GameOrderDetails> orderDetails = goService.findDetailsByOrderId(gameOrder.getGameOrderId());
+			for (GameOrderDetails gameOrderDetails : orderDetails) {
+				Game game = gService.findById(gameOrderDetails.getGameId());
+				game.setBuyAt(gameOrder.getCreateAt());
+			}
+		}
+		model.addAttribute("games",games);
 		return "game/buy-record";
 	}
 	
