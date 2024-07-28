@@ -187,22 +187,33 @@ var swiper = new Swiper('.swiper-container', {
 		  		});
 				
 				
-				function loadImage(imageId, imgElement) {
-					    axios.get(`/PlayCentric/api/images/${imageId}`, { responseType: 'arraybuffer' })
-					        .then(response => {
-					            const base64Image = btoa(
-					                new Uint8Array(response.data)
-					                    .reduce((data, byte) => data + String.fromCharCode(byte), '')
-					            );
-					            const imageUrl = `data:image/jpeg;base64,${base64Image}`;
-					            if (imgElement) {
-					                imgElement.src = imageUrl;
-					            }
-					        })
-					        .catch(error => {
-					            console.error( error);
-					        });
-					}
+				async function loadImage(imageId, imgElement) {
+				    try {
+				        const response = await axios.get(`/PlayCentric/api/images/${imageId}`, 
+						{ responseType: 'arraybuffer' });
+
+				        const uint8Array = new Uint8Array(response.data);
+				        const base64Image = arrayBufferToBase64(uint8Array);
+
+				        const imageUrl = `data:image/jpeg;base64,${base64Image}`;
+				        if (imgElement) {
+				            imgElement.src = imageUrl;
+				        }
+				    } catch (error) {
+				        console.error(error);
+				    }
+				}
+
+				function arrayBufferToBase64(buffer) {
+				    let binary = '';
+				    const bytes = new Uint8Array(buffer);
+				    const len = bytes.byteLength;
+				    for (let i = 0; i < len; i++) {
+				        binary += String.fromCharCode(bytes[i]);
+				    }
+				    return btoa(binary);
+				}
+
 
 					document.addEventListener('DOMContentLoaded', () => {
 					    const imageElements = document.querySelectorAll('[data-image-id]');
