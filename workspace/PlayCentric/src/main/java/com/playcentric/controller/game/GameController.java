@@ -246,7 +246,7 @@ public class GameController {
 	@GetMapping("/game/gameStore")
 	public String gameStore(Model model,@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		PageRequest pgb = PageRequest.of(0, 9);
-		Page<Game> games = gService.findShowInStore(pgb);
+		Page<Game> games = gService.findByIsShowOrderByReleaseAtDesc(pgb);
 		List<GameTypeLib> allType = gtService.findAll();
 		for (Game game : games) {
 			gService.setRateAndDiscountPrice(game);

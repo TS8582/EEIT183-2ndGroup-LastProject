@@ -23,6 +23,14 @@ public class GameService {
 	@Autowired
 	private GameDiscountRepository gdRepo;
 	
+	public Page<Game> findByIsShowOrderByReleaseAtDesc(Pageable pgb) {
+		return gRepo.findByIsShowOrderByReleaseAtDesc(Boolean.TRUE, pgb);
+	}
+	
+	public List<Game> findByIsShowOrderByReleaseAtDesc() {
+		return gRepo.findByIsShowOrderByReleaseAtDesc(Boolean.TRUE);
+	}
+	
 	//商店展示的遊戲
 	public Page<Game> findShowInStore(Pageable pgb) {
 		return gRepo.findByIsShow(true,pgb);
