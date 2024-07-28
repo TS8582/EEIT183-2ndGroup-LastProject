@@ -1,8 +1,16 @@
 
 function alertAndRedirect() {
-    alert("請登入會員");
-    window.location.href = "http://localhost:8080/PlayCentric/member/login";
+    Swal.fire({
+        title: '請登入會員',
+        icon: 'warning',
+        confirmButtonText: '確定'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "http://localhost:8080/PlayCentric/member/login";
+        }
+    });
 }
+
 
 var swiper = new Swiper('.swiper-container', {
 			slidesPerView: 2,

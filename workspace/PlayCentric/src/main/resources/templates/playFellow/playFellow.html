@@ -23,6 +23,8 @@
 	th:href="@{/css/playfellow/playFellow.css}">
 <link rel="stylesheet" type="text/css"
 	th:href="@{/css/playfellow/swiper-bundle.min.css}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 
 <style>
 .swiper-container {
@@ -114,8 +116,8 @@
 	</div>
 
 	<section id="banner"
-		style="box-shadow: 0 4px 4px -3px rgba(0, 0, 0, 0.1); background-color: #ffffff;">
-		<div class="container">
+		style="box-shadow: 0 4px 4px -3px rgba(0, 0, 0, 0.1); background-color: #ffffff;" class="container">
+		<div >
 			<div class="swiper main-swiper">
 				<div class="swiper-wrapper">
 
@@ -141,7 +143,8 @@
 							<div class="img-wrapper col-md-5">
 							
 								<a id="addPfMember" th:if="${session.loginMember != null}"
-									th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}">
+									th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}">								
+									<img src="images/playFellow/7915283.jpg" class="img-fluid" loading="lazy"> 
 								</a> 
 								
 								<a id="loginAlert" th:if="${session.loginMember == null}"
@@ -166,8 +169,8 @@
 		</div>
 	</section>
 
-	<div class="col-5">
-		<button class="btn btn-gray" type="button" data-bs-toggle="offcanvas"
+	<div>
+		<button class="btn btn-gray container" type="button" data-bs-toggle="offcanvas"
 			data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
 			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
 				fill="currentColor" class="bi bi-list" viewBox="0 0 20 20">
@@ -490,6 +493,8 @@
 	<script th:src="@{/js/playfellow/isotope.pkgd.min.js}"></script>
 	<script th:src="@{/js/axios.min.js}"></script>
 	<script th:src="@{/js/jquery.min.js}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
 	
 	<script>
 	

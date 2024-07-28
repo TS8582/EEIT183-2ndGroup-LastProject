@@ -1,64 +1,70 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<div th:replace="~{layout/nav}"></div>
+	<meta charset="UTF-8">
+	<div th:replace="~{layout/nav}"></div>
 
-<title>伴遊遊戲</title>
-<!-- <link rel="stylesheet" -->
-<!-- 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<style>
-body {
-	background-color: #f8f9fa;
-	font-family: Arial, sans-serif;
-}
+	<title>伴遊遊戲</title>
+	<!-- <link rel="stylesheet" -->
+	<!-- 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<style>
+		body {
+			background-color: #f8f9fa;
+			font-family: Arial, sans-serif;
+		}
 
-.container {
-	width: 80%;
-	margin-top: 50px;
-	padding: 20px;
-	background-color: #fff;
-	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+		.container {
+			width: 80%;
+			margin-top: 50px;
+			padding: 20px;
+			background-color: #fff;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
 
-.h5 {
-	margin-bottom: 20px;
-	font-weight: bold;
-	color: #007bff;
-}
+		.h5 {
+			margin-bottom: 20px;
+			font-weight: bold;
+			color: #007bff;
+		}
 
-.btn-primary {
-	background-color: #007bff;
-	border: none;
-}
+		.btn-primary {
+			background-color: #007bff;
+			border: none;
+		}
 
-.btn-primary:hover {
-	background-color: #0056b3;
-}
+		.btn-primary:hover {
+			background-color: #0056b3;
+		}
 
-#pfGameList {
-	margin-top: 40px;
-}
+		#pfGameList {
+			margin-top: 40px;
+		}
 
-.custom-hr {
-	border: 0;
-	height: 1px;
-	background: #333;
-	background-image: linear-gradient(to right, #ccc, #333, #ccc);
-}
+		.custom-hr {
+			border: 0;
+			height: 1px;
+			background: #333;
+			background-image: linear-gradient(to right, #ccc, #333, #ccc);
+		}
 
-#loading {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(255, 255, 255, 0.8); /* 背景色半透明，讓 spinner 更顯眼 */
-}
-</style>
+		
+		.loading-visible {
+		    display: flex !important;
+		    justify-content: center;
+		    align-items: center;
+		    height: 100vh;
+		}
+
+		.loading-hidden {
+		    display: none !important;
+		}
+
+	</style>
 </head>
+
 <body>
 	<!-- 	<div th:replace="~{member/memInfoAside}"></div> -->
 
@@ -72,13 +78,11 @@ body {
 
 						<div class="col-sm-8">
 							<input id="playFellowId" class="form-control"
-								th:value="${pfGame.playFellowMember.playFellowId}"
-								style="display: none" />
+								th:value="${pfGame.playFellowMember.playFellowId}" style="display: none" />
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="gameSelect"
-							class="col-sm-4 col-form-label font-weight-bold">擅長遊戲</label>
+						<label for="gameSelect" class="col-sm-4 col-form-label font-weight-bold">擅長遊戲</label>
 						<div class="col-sm-8">
 							<select id="gameSelect" class="form-control">
 								<option value="" disabled selected>選擇遊戲</option>
@@ -89,8 +93,7 @@ body {
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="pricingCategory"
-							class="col-sm-4 col-form-label font-weight-bold">每場計價方式</label>
+						<label for="pricingCategory" class="col-sm-4 col-form-label font-weight-bold">每場計價方式</label>
 						<div class="col-sm-8">
 							<select id="pricingCategory" class="form-control">
 								<option value="小時計">小時計</option>
@@ -99,11 +102,9 @@ body {
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="amount"
-							class="col-sm-4 col-form-label font-weight-bold">單價</label>
+						<label for="amount" class="col-sm-4 col-form-label font-weight-bold">單價</label>
 						<div class="col-sm-8">
-							<input type="text" id="amount" class="form-control"
-								th:value="${pfGame.amount}" />
+							<input type="text" id="amount" class="form-control" th:value="${pfGame.amount}" />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -114,18 +115,17 @@ body {
 					</div>
 
 					<div class="form-group row">
-						<div class="col-sm-12 d-flex justify-content-between">
-							<a class="btn btn-secondary"
-								href="http://localhost:8080/PlayCentric/member/personal/Info"
+						<div class="col-sm-12 d-flex">
+							<a class="btn btn-secondary" href="http://localhost:8080/PlayCentric/member/personal/Info"
 								style="margin-top: 10px"> 返回 </a>
 
 
-							<button type="button" class="btn btn-success"
-								onclick="submitPfGameForm()" style="margin-top: 10px">新增</button>
+							<button type="button" class="btn btn-success" onclick="submitPfGameForm()"
+								style="margin-top: 10px">新增</button>
 
 							<button type="button" class="btn btn-primary ml-auto"
-								th:if="${pfGame.playFellowMember.pfstatus != 3}"
-								onclick="backToCms()">遞交審核</button>
+								th:if="${pfGame.playFellowMember.pfstatus != 3}" onclick="backToCms()"
+								style="margin-top: 10px;margin-left: 50%;">遞交審核</button>
 						</div>
 					</div>
 				</form>
@@ -134,14 +134,9 @@ body {
 			<div class="col-md-6">
 				<p class="h5">目前所有伴遊的遊戲</p>
 				<div id="pfGameList">
-
-
-
 					<div id="pfGameItems">
-					
-						<!-- Bootstrap spinner -->
-						<div id="loading"
-							class="d-flex justify-content-center align-items-center"
+						<!-- Loading Spinner -->
+						<div id="loading" class="d-flex justify-content-center align-items-center"
 							style="display: none; height: 100vh;">
 							<div class="spinner-border" role="status">
 								<span class="visually-hidden">Loading...</span>
@@ -151,107 +146,138 @@ body {
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</div>
 
 	<script>
-        document.getElementById('gameSelect').addEventListener('change', function() {
-            document.getElementById('gameId').value = this.value;
-        });
+		document.getElementById('gameSelect').addEventListener('change', function () {
+			document.getElementById('gameId').value = this.value;
+		});
 
-        function submitPfGameForm() {
-            const playFellowId = document.getElementById('playFellowId').value;
-            const gameId = document.getElementById('gameId').value;
-            const pricingCategory = document.getElementById('pricingCategory').value;
-            const amount = document.getElementById('amount').value;
-            const pfGameStatus = document.getElementById('pfGameStatus').value;
-
-            if (!gameId) {
-                alert('請選擇一個遊戲');
-                return;
-            }
-
-            const pfGame = {
-                playFellowMember: { playFellowId: parseInt(playFellowId) },
-                game: { gameId: parseInt(gameId) },
-                pricingCategory: pricingCategory,
-                amount: parseInt(amount),
-                pfGameStatus: parseInt(pfGameStatus)
-            };
-
-            axios.post('/PlayCentric/playFellow/pfGame/save', pfGame)
-                .then(response => {
-                    showAllPfGame(playFellowId);
-                })
-                .catch(error => {
-                    console.error('Error adding PfGame:', error);
-                    alert('新增失敗');
-                });
-        }
-
-        
-        function showAllPfGame(playFellowId) {
-            // 顯示 loading 圖示
-            const loading = document.getElementById('loading');
-//             loading.style.display = 'flex';
-
-            axios.get(`/PlayCentric/playFellow/pfGame/list/${playFellowId}`)
-                .then(response => {
-                    const pfGames = response.data;
-                    const pfGameItems = document.getElementById('pfGameItems');
-                    pfGameItems.innerHTML = '';
-                    pfGames.forEach(pfGame => {
-                        const card = document.createElement('div');
-                        card.className = 'card mb-3';
-                        card.innerHTML = `
-                            <div class="card-body text-center">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="card-title text-gray mb-0">${pfGame.gameName}</h5>
-                                    <button class="btn btn-outline-danger btn-sm" onclick="deletePfGame(${pfGame.pfGameId})">移除</button>
-                                </div>
-                                <p class="card-text mb-0">
-                                    <strong>計價方式:</strong> ${pfGame.pricingCategory}<br>
-                                    <strong>遊戲單價:</strong> $  ${pfGame.amount}元
-                                </p>
-                            </div>
-                        `;
-
-                        pfGameItems.appendChild(card);
-                    });
-                })
-                .catch(error => {
-                    console.error('錯誤', error);
-                })
-                .finally(() => {
-                    // 隱藏 loading 圖示
-                    loading.style.display = 'none';
-                });
-        }
+		function submitPfGameForm() {
+			const playFellowId = document.getElementById('playFellowId').value;
+			const gameId = document.getElementById('gameId').value;
+			const pricingCategory = document.getElementById('pricingCategory').value;
+			const amount = document.getElementById('amount').value;
+			const pfGameStatus = document.getElementById('pfGameStatus').value;
 
 
-        
+			if (!gameId) {
+				alert('請選擇一個遊戲');
+				return;
+			}
 
-        function deletePfGame(pfGameId) {
-                axios.delete(`/PlayCentric/playFellow/pfGame/${pfGameId}`)
-                    .then(response => {
-                        const playFellowId = document.getElementById('playFellowId').value;
-                        showAllPfGame(playFellowId);
-                    })
-                    .catch(error => {
-                        console.error('移除失敗:', error);
-                        alert('移除失敗');
-                    });
-            }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const playFellowId = document.getElementById('playFellowId').value;
-            showAllPfGame(playFellowId);
-        });
+			const pfGame = {
+				playFellowMember: {playFellowId: parseInt(playFellowId)},
+				game: {gameId: parseInt(gameId)},
+				pricingCategory: pricingCategory,
+				amount: parseInt(amount),
+				pfGameStatus: parseInt(pfGameStatus)
+			};
 
-        function backToCms() {
-            alert('您的申請須經後台管理人員審核，請耐心等候!');
-            window.location.href = '/PlayCentric/playFellow';
-        }
-    </script>
+
+
+			axios.post('/PlayCentric/playFellow/pfGame/save', pfGame)
+				.then(response => {
+
+					showAllPfGame(playFellowId);
+				})
+				.catch(error => {
+					console.error('Error adding PfGame:', error);
+					alert('新增失敗');
+				})
+
+		}
+
+		function showAllPfGame(playFellowId) {
+		    // 獲取 loading 和 loadingText 元素
+		    const loading = document.getElementById('loading');
+		    const pfGameItems = document.getElementById('pfGameItems');
+
+
+		    // 顯示 loading 圖示和文字
+		    if (loading) {
+		        console.log("顯示 loading 圖示");
+		        loading.classList.remove('loading-hidden');
+		        loading.classList.add('loading-visible');
+		    }
+
+
+		   
+
+
+		    axios.get(`/PlayCentric/playFellow/pfGame/list/${playFellowId}`)
+		        .then(response => {
+					pfGameItems.innerHTML = '';
+
+		            console.log('成功獲取 PfGame 列表');
+
+		            const pfGames = response.data;
+
+		            pfGames.forEach(pfGame => {
+		                const card = document.createElement('div');
+		                card.className = 'card mb-3';
+		                card.innerHTML = `
+		                    <div class="card-body text-center">
+		                        <div class="d-flex justify-content-between align-items-start mb-2">
+		                            <h5 class="card-title text-gray mb-0">${pfGame.gameName}</h5>
+		                            <button class="btn btn-outline-danger btn-sm" onclick="deletePfGame(${pfGame.pfGameId})">移除</button>
+		                        </div>
+		                        <p class="card-text mb-0">
+		                            <strong>計價方式:</strong> ${pfGame.pricingCategory}<br>
+		                            <strong>遊戲單價:</strong> $ ${pfGame.amount}元
+		                        </p>
+		                    </div>
+		                `;
+		                pfGameItems.appendChild(card);
+		            });
+		        })
+		        .catch(error => {
+		            console.error('錯誤', error);
+		        })
+		        .finally(() => {
+		            // 隱藏 loading 圖示和文字
+		            console.log("隱藏 loading 圖示和文字");
+		            if (loading) {
+		                loading.classList.remove('loading-visible');
+		                loading.classList.add('loading-hidden');
+		            }
+		           
+		        });
+		}
+
+
+
+
+
+
+
+
+
+		function deletePfGame(pfGameId) {
+			axios.delete(`/PlayCentric/playFellow/pfGame/${pfGameId}`)
+				.then(response => {
+					const playFellowId = document.getElementById('playFellowId').value;
+					showAllPfGame(playFellowId);
+				})
+				.catch(error => {
+					console.error('移除失敗:', error);
+					alert('移除失敗');
+				});
+		}
+
+		document.addEventListener('DOMContentLoaded', function () {
+			const playFellowId = document.getElementById('playFellowId').value;
+			showAllPfGame(playFellowId);
+		});
+
+		function backToCms() {
+			alert('您的申請須經後台管理人員審核，請耐心等候!');
+			window.location.href = '/PlayCentric/playFellow';
+		}
+	</script>
 </body>
+
 </html>
