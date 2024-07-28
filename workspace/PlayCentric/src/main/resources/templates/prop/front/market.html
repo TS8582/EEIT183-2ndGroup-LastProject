@@ -556,7 +556,7 @@
       function generateInventoryItems(memId, selectedGameId) {
         axios({
           method: "get",
-          url: "/PlayCentric/personal/api/prop/memberPropsbyMemId",
+          url: "/PlayCentric/prop/memberPropsbyMemId",
           params: { memId: memId },
         })
           .then((res) => {
@@ -573,10 +573,6 @@
           .catch((err) => {
             console.error("獲取倉庫資訊時出錯:", err);
             window.alert("請先登入");
-            if (err.response && err.response.status === 401) {
-              window.location.href =
-                "/PlayCentric/member/homeShowErr/" + err.response.data;
-            }
           });
       }
 
