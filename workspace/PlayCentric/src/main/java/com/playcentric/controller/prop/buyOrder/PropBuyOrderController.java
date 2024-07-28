@@ -64,7 +64,7 @@ public class PropBuyOrderController {
 //	}
 
 	// 購買道具
-	@PostMapping("/prop/front/buyProp")
+	@PostMapping("personal/api/prop/front/buyProp")
 	@ResponseBody
 	public String buyProp(@RequestParam("quantity") Integer quantity, @RequestParam("propId") Integer propId,
             @RequestParam("memId") Integer memId, @RequestParam("paymentId") Integer paymentId,

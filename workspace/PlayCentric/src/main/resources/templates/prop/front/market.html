@@ -556,7 +556,7 @@
       function generateInventoryItems(memId, selectedGameId) {
         axios({
           method: "get",
-          url: "/personal/api/PlayCentric/prop/memberPropsbyMemId",
+          url: "/PlayCentric/personal/api/prop/memberPropsbyMemId",
           params: { memId: memId },
         })
           .then((res) => {
@@ -571,7 +571,7 @@
             findInventorySellOrder(memId, selectedGameId);
           })
           .catch((err) => {
-            console.err("獲取倉庫資訊時出錯:", err);
+            console.error("獲取倉庫資訊時出錯:", err);
             window.alert("請先登入");
             if (err.response && err.response.status === 401) {
               window.location.href =
@@ -868,7 +868,7 @@
         if (window.confirm("確定購買商品?")) {
           axios({
             method: "post",
-            url: "/PlayCentric/prop/front/buyProp",
+            url: "/PlayCentric/personal/api/prop/front/buyProp",
             params: {
               selectedGameId: selectedGameId,
               quantity: buyTotalQuantity,
@@ -885,8 +885,12 @@
               // 重新載入商品
               findAllPropsByGameId(selectedGameId);
             })
-            .catch((error) => {
-              console.log("Error: " + error);
+            .catch((err) => {
+              console.log("Error: " + err);
+              if (err.response && err.response.status === 401) {
+                window.location.href =
+                  "/PlayCentric/member/homeShowErr/" + err.response.data;
+              }
             });
         }
       }
@@ -1092,7 +1096,6 @@
             console.error(err);
           });
       }
-
       // 呼叫gpt helper
       function gptHelper(selectedGameId, prompt) {
         axios({
