@@ -88,9 +88,12 @@ public class GameController {
 		model.addAttribute("allType", allType);
 		model.addAttribute("allDiscount", allDiscount);
 		
-		GameDiscount nowDiscount = gService.findNowDiscount(gameId);
-		
-		model.addAttribute("nowDiscount",nowDiscount);
+		GameDiscount nowDiscount1 = gService.findNowDiscount(gameId);
+		if (nowDiscount1 != null) {
+			GameDiscountSet nowDiscount = gdsService.findById(nowDiscount1.getGameDiscountId());
+			model.addAttribute("nowDiscount",nowDiscount);
+			model.addAttribute("nowDiscount1",nowDiscount1);
+			}
 		return "game/update-game";
 	}
 
