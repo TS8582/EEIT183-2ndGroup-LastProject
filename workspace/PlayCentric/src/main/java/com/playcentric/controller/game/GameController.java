@@ -286,10 +286,6 @@ public class GameController {
 			Model model
 			) {
 		List<OwnGameLib> ownGames = oglService.findByMemId(loginMember.getMemId());
-//		List<Game> games = new ArrayList<>();
-//		for (OwnGameLib ownGameLib : ownGames) {
-//			games.add(gService.findById(ownGameLib.getGameId()));
-//		}
 		model.addAttribute("ownGames",ownGames);
 		return "game/owngame";
 	}
@@ -306,7 +302,14 @@ public class GameController {
 			List<GameOrderDetails> orderDetails = goService.findDetailsByOrderId(gameOrder.getGameOrderId());
 			for (GameOrderDetails gameOrderDetails : orderDetails) {
 				Game game = gService.findById(gameOrderDetails.getGameId());
+				Integer unitPrice = gameOrderDetails.getUnitPrice();
+				BigDecimal discountRate = gameOrderDetails.getDiscountRate();
+				Integer amount = gameOrderDetails.getAmount();
+				double rate = Double.valueOf(discountRate.toString());
+				Integer discountedPrice = (int) (unitPrice * amount * rate);
+				game.setDiscountedPrice(discountedPrice);
 				game.setBuyAt(gameOrder.getCreateAt());
+				games.add(game);
 			}
 		}
 		model.addAttribute("games",games);
