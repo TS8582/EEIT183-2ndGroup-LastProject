@@ -46,7 +46,7 @@
     <title>PlayCentric-遊戲商店</title>
 </head>
 
-<body class="h-screen">
+<body class="">
     <div class="spin hidden">
         <div class="flex justify-center items-center h-4/5 w-full fixed">
             <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 shadow-md border-lime-500"></div>
@@ -101,7 +101,7 @@
                         </a>
                         <a class="h-full w-full" th:if="${game.imageLibs.empty}"
                             th:href="@{/game/showGame(gameId=${game.gameId})}">
-                            <img class="w-full h-full rounded-md" src="" alt="">
+                            <img class="w-full h-full rounded-md">
                         </a>
                     </div>
                     <div class="h-1/3 flex text-black flex-col items-center p-2">
@@ -115,11 +115,15 @@
                             <span th:if="${game.rate}" class="price-tag font-semibold"
                                 th:text="'-' + ${100 -  game.rate} + '%'"></span>
                             <!-- 沒優惠顯示的價格 -->
-                            <span th:if="${game.rate == null}" class="price-tag text-black font-semibold"
-                                th:text=" 'NT$' + ${game.price}"></span>
+                            <div th:if="${game.rate == null}" class="price-tag text-black font-semibold">
+                                <span>NT$</span>
+                                <span id="price" th:text="${game.price}"></span>
+                            </div>
                             <!-- 有優惠顯示的價格 -->
-                            <span th:if="${game.rate}" class="price-tag font-semibold"
-                                th:text=" 'NT$' + ${game.discountedPrice}"></span>
+                            <div th:if="${game.rate}" class="price-tag font-semibold">
+                                <span>NT$</span>
+                                <span id="price" th:text="${game.discountedPrice}"></span>
+                            </div>
                         </div>
                         <div class="flex justify-center">
                             <a th:if="${session.loginMember == null}" th:href="@{/member/login}"

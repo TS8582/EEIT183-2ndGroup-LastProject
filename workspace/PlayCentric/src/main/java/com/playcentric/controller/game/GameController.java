@@ -29,6 +29,7 @@ import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.ImageLibService;
 import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameDiscountSetService;
+import com.playcentric.service.game.GameOrderService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
 import com.playcentric.service.game.OwnGameLibService;
@@ -54,6 +55,8 @@ public class GameController {
 	private GameCartService gcService;
 	@Autowired
 	private OwnGameLibService oglService;
+	@Autowired
+	private GameOrderService goService;
 
 	// 遊戲管理後台
 	@GetMapping("/back/game")
@@ -88,28 +91,20 @@ public class GameController {
 		model.addAttribute("allType", allType);
 		model.addAttribute("allDiscount", allDiscount);
 		
-		GameDiscount nowDiscount = gService.findNowDiscount(gameId);
-		
-		model.addAttribute("nowDiscount",nowDiscount);
+		GameDiscount nowDiscount1 = gService.findNowDiscount(gameId);
+		if (nowDiscount1 != null) {
+			GameDiscountSet nowDiscount = gdsService.findById(nowDiscount1.getGameDiscountId());
+			model.addAttribute("nowDiscount",nowDiscount);
+			model.addAttribute("nowDiscount1",nowDiscount1);
+			}
 		return "game/update-game";
 	}
-	//遊戲上下架
-	@GetMapping("/game/isShow")
-	public String postMethodName(@RequestParam Integer gameId) {
-		Game game = gService.findById(gameId);
-		if (game.getIsShow() == true) game.setIsShow(false);
-		else game.setIsShow(true);
-		gService.save(game);
-			
-		return "redirect:/back/game";
-	}
-	
 
 	// 進行新增遊戲
 	@PostMapping("/game/insertGame")
 	public String insertGame(@ModelAttribute Game game, @RequestParam List<Integer> typeId,
-			@RequestParam("photos") MultipartFile[] photos, @RequestParam BigDecimal discountRate,
-			@RequestParam Integer discountId,
+			@RequestParam("photos") MultipartFile[] photos, @RequestParam(defaultValue = "0") BigDecimal discountRate,
+			@RequestParam(defaultValue = "0") Integer discountId,
 			@RequestParam MultipartFile gameFiles) throws IOException {
 		// 設定遊戲分類
 		List<GameTypeLib> types = new ArrayList<>();
@@ -158,8 +153,8 @@ public class GameController {
 		// 進行修改遊戲
 		@PostMapping("/game/updateGame")
 		public String updateGame(@ModelAttribute Game game, @RequestParam List<Integer> typeId,
-				@RequestParam("photos") MultipartFile[] photos, @RequestParam BigDecimal discountRate,
-				@RequestParam Integer discountId,@RequestParam List<Integer> photoId) throws IOException {
+				@RequestParam("photos") MultipartFile[] photos, @RequestParam(defaultValue = "0") BigDecimal discountRate,
+				@RequestParam(defaultValue = "0") Integer discountId,@RequestParam List<Integer> photoId) throws IOException {
 			Game myGame = gService.findById(game.getGameId());
 			myGame.setGameName(game.getGameName());
 			myGame.setDescription(game.getDescription());
@@ -254,7 +249,7 @@ public class GameController {
 	@GetMapping("/game/gameStore")
 	public String gameStore(Model model,@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		PageRequest pgb = PageRequest.of(0, 9);
-		Page<Game> games = gService.findShowInStore(pgb);
+		Page<Game> games = gService.findByIsShowOrderByReleaseAtDesc(pgb);
 		List<GameTypeLib> allType = gtService.findAll();
 		for (Game game : games) {
 			gService.setRateAndDiscountPrice(game);
@@ -268,6 +263,7 @@ public class GameController {
 		return "game/game-store";
 	}
 	
+	//單一遊戲頁面
 	@GetMapping("/game/showGame")
 	public String showGame(@RequestParam Integer gameId,
 			Model model,@ModelAttribute("loginMember") LoginMemDto loginMember) {
@@ -281,6 +277,7 @@ public class GameController {
 		return "game/show-game";
 	}
 	
+	//會員遊戲收藏庫
 	@GetMapping("/personal/game/ownGame")
 	public String getMethodName(
 			@ModelAttribute("loginMember") LoginMemDto loginMember,
@@ -295,11 +292,14 @@ public class GameController {
 		return "game/owngame";
 	}
 	
-	@GetMapping("/game/buyRecord")
+//	會員遊戲購買紀錄
+	@GetMapping("/personal/game/buyRecord")
 	public String buyRecord(
+			@ModelAttribute("loginMember") LoginMemDto loginMember,
 			Model model
 			) {
 		List<Game> all = gService.findAll();
+		
 		model.addAttribute("games",all);
 		return "game/buy-record";
 	}

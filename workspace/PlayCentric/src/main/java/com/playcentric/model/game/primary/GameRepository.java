@@ -14,6 +14,10 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
 	
 	Page<Game> findByIsShow(Boolean isShow,Pageable pgb);
 	
+	Page<Game> findByIsShowOrderByReleaseAtDesc(Boolean isShow,Pageable pgb);
+	
+	List<Game> findByIsShowOrderByReleaseAtDesc(Boolean isShow);
+	
 	List<Game> findByIsShow(Boolean isShow);
 	
 	Page<Game> findByPriceBetween(Integer minPrice,Integer maxPrice,Pageable pgb);

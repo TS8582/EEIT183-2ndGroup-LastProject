@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.playcentric.model.forum.Forum;
 import com.playcentric.model.forum.Talk;
 import com.playcentric.model.forum.Texts;
+import com.playcentric.model.member.LoginMemDto;
+import com.playcentric.model.member.Member;
 import com.playcentric.service.forum.TalkService;
 import com.playcentric.service.forum.TextsService;
 import com.playcentric.service.member.MemberService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class TalkController {
@@ -57,9 +65,21 @@ public class TalkController {
 		return "forum/texts/textsContent";
 	}
 
-	@PostMapping("/talk/addByTextsId")
-	public String createTalk(@RequestParam Integer textsId, @RequestParam String talkContent) {
+	@PostMapping("/personal/talk/addByTextsId")
+	public String createTalk(@RequestParam Integer textsId, @RequestParam String talkContent, HttpSession httpSession) {
 		Talk talk = new Talk();
+
+		// 從 session 中獲取登錄會員資訊
+		LoginMemDto loginMember = (LoginMemDto) httpSession.getAttribute("loginMember");
+
+		// 檢查用戶是否登錄
+		if (loginMember == null) {
+			// 如果未登錄，重定向到登錄錯誤頁面
+			return "redirect:/member/showLoginErr/notLogin";
+		}
+
+		Member member = memberService.findById(loginMember.getMemId());
+		talk.setMember(member);
 
 		talk.setTalkContent(talkContent);
 		Texts texts = new Texts();
@@ -99,23 +119,21 @@ public class TalkController {
 	}
 
 	// 更新談話
-    @PutMapping("/talk/update")
-    public String updateTalk(@RequestParam("talkId") Integer talkId,
-                             @RequestParam("talkContent") String talkContent,
-                             Model model) {
-        Talk talk = talkService.findTalkById(talkId);
-        if (talk != null) {
-            talk.setTalkContent(talkContent);
-            talkService.insert(talk);
-        }
-        return "redirect:/findAllTalk";
+	@PostMapping("/talk/editMessage")
+    public String editTalk(@RequestParam Integer textsId,@RequestParam Integer talkId, @RequestParam String talkContent) {
+    
+        // 保存更新后的留言
+        talkService.editTalk(talkId,talkContent);
+       
+        return "redirect:/texts/" + textsId + "/talk";
     }
 
-	// 刪除留言
-	@GetMapping("/talk/delete")
-	public String deleteTalk(@RequestParam Integer talkId) {
+	@DeleteMapping("/talk/delete")
+	public String deleteMsg(@RequestParam Integer talkId, @RequestParam Integer textsId) {
+
 		talkService.deleteTalkById(talkId);
-		return "redirect:/findAllTalk";
+
+		return "redirect:/texts/" + textsId + "/talk";
 	}
 
 	// 新增一筆後，回傳傳最新的前三筆(ajax)

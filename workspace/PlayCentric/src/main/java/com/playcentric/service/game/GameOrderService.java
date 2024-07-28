@@ -63,12 +63,20 @@ public class GameOrderService {
 	
 	private final AllInOne allInOne = new AllInOne("");
 	
-	public GameOrder save(GameOrder gameOrder) {
-		return oRepo.save(gameOrder);
+	public List<GameOrderDetails> findDetailsByOrderId(Integer orderId) {
+		return odRepo.findByGameOrderId(orderId);
 	}
 	
 	public GameOrderDetails saveDetails(GameOrderDetails orderDetails) {
 		return odRepo.save(orderDetails);
+	}
+	
+	public List<GameOrder> findByMemId(Integer memId) {
+		return oRepo.findByMemIdAndStatus(memId, 1);
+	}
+	
+	public GameOrder save(GameOrder gameOrder) {
+		return oRepo.save(gameOrder);
 	}
 	
 	public GameOrder findById(Integer gameOrderId) {
