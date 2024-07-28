@@ -23,27 +23,31 @@ gameName.addEventListener('input', e => {
     const name = document.querySelectorAll('.name');
     name.forEach(myname => {
         if (gameName.value != '') {
-            if (reg.test(myname.innerHTML)) {
 
-                if (minPrice.value !== '' && maxPrice.value !== '') {
-                    if (Number.isInteger(Number(minPrice.value)) && Number.isInteger(Number(maxPrice.value)) && Number(minPrice.value) > 0 && Number(maxPrice.value) > 0) {
-                        if (Number(minPrice.value) < Number(maxPrice.value)) {
-                            const price = myname.closest('.gameitem').querySelector('#price');
-                            if (Number(price.innerHTML) <= Number(maxPrice.value) && Number(price.innerHTML) >= Number(minPrice.value)) {
-                                price.closest('.gameitem').classList.remove('hidden');
-                            }
 
-                            else {
-                                price.closest('.gameitem').classList.add('hidden');
-                            }
+            if (minPrice.value !== '' && maxPrice.value !== '') {
+                if (Number.isInteger(Number(minPrice.value)) && Number.isInteger(Number(maxPrice.value)) && Number(minPrice.value) > 0 && Number(maxPrice.value) > 0) {
+                    if (Number(minPrice.value) < Number(maxPrice.value)) {
+                        const price = myname.closest('.gameitem').querySelector('#price');
+                        if (Number(price.innerHTML) <= Number(maxPrice.value) && Number(price.innerHTML) >= Number(minPrice.value) && reg.test(myname.innerHTML)) {
+                            price.closest('.gameitem').classList.remove('hidden');
+                        }
+
+                        else {
+                            price.closest('.gameitem').classList.add('hidden');
                         }
                     }
                 }
             }
-
             else {
-                myname.closest('.gameitem').classList.add('hidden');
+                if (reg.test(myname.innerHTML)) {
+                    myname.closest('.gameitem').classList.remove('hidden');
+                }
+                else {
+                    myname.closest('.gameitem').classList.add('hidden');
+                }
             }
+
         }
 
         else {
