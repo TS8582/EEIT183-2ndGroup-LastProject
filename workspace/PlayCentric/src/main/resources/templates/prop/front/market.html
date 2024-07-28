@@ -168,9 +168,9 @@
         class="section-header d-md-flex justify-content-between align-items-center"
       >
         <div class="mb-4 mb-md-0 d-flex justify-content-center w-100">
-          <p class="m-0">
-            <!-- 自動新增按鈕 -->
-          </p>
+          <div id="filterButtonsContainer" class="m-0">
+            <!-- 篩選按鈕將被插入這裡 -->
+          </div>
           <div class="m-3">
             <a
               href="#"
@@ -179,9 +179,8 @@
               data-bs-toggle="modal"
               data-bs-target="#inventory"
               style="font-weight: 700; padding: 0rem 2rem"
+              >倉庫</a
             >
-              倉庫
-            </a>
           </div>
         </div>
 
@@ -531,20 +530,23 @@
 
       // 生成篩選按鈕
       function generateFilterButtons(propTypes) {
-        const filterButtonsContainer = $(".m-0");
-        filterButtonsContainer.empty();
-        const allButton = $(
-          '<button class="filter-button me-4 active" data-filter="*" style="font-size: 2rem;">ALL</button>'
+        const filterButtonsContainer = document.getElementById(
+          "filterButtonsContainer"
         );
-        filterButtonsContainer.append(allButton);
+        filterButtonsContainer.innerHTML = ""; // 清空容器
+        const allButton = document.createElement("button");
+        allButton.className = "filter-button me-4 active";
+        allButton.setAttribute("data-filter", "*");
+        allButton.style.fontSize = "2rem";
+        allButton.textContent = "ALL";
+        filterButtonsContainer.appendChild(allButton);
         propTypes.forEach(function (propType) {
-          const button = $(
-            '<button class="filter-button me-4" style="font-size: 2rem;"></button>'
-          )
-            .attr("data-filter", `.${propType.propTypeId}`)
-            .text(propType.propType);
-          console.log(propType.propType);
-          filterButtonsContainer.append(button);
+          const button = document.createElement("button");
+          button.className = "filter-button me-4";
+          button.setAttribute("data-filter", `.${propType.propTypeId}`);
+          button.style.fontSize = "2rem";
+          button.textContent = propType.propType;
+          filterButtonsContainer.appendChild(button);
         });
       }
 
