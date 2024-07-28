@@ -4,13 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <div th:replace="~{/layout/nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
+    <style>
+        .h600px {
+            height: 600px;
+        }
+    </style>
     <title th:text="${session.loginMember} ? 'PlayCentric-' + ${session.loginMember.nickname} + 遊戲購買紀錄">遊戲購買紀錄</title>
 </head>
 
 <body>
-    <div></div>
+    <div th:replace="~{member/memInfoAside}"></div>
+    <div class="h600px overflow-scroll noscrollbar">
+        <table class="h-auto w-full text-center text-xl border rounded-xl">
+            <thead>
+                <tr>
+                    <th class="border h-auto">遊戲名稱</th>
+                    <th class="border h-auto">價格</th>
+                    <th class="border h-auto">購買時間</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="game:${games}">
+                    <td th:text="${game.gameName}" class="border h-auto"></td>
+                    <td th:text="${game.discountedPrice}" class="border h-auto"></td>
+                    <td th:text="${#temporals.format(game.buyAt,'yyyy年MM月dd日 HH:mm')}" class="border h-auto"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 </body>
 

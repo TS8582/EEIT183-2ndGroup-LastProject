@@ -59,7 +59,7 @@ public class GameOrderController {
 		if (loginMember != null) {
 			String tradeNo = "PCGO";
 			LocalDateTime now = LocalDateTime.now();
-			tradeNo += now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
+			tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
 			Random random = new Random();
 			int num = 100 + random.nextInt(900);
 			tradeNo += "T" + num;
@@ -86,9 +86,9 @@ public class GameOrderController {
 		LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
 		String myTradeNo = "PCGO";
 		LocalDateTime now = LocalDateTime.now();
-		myTradeNo += now.getYear() + now.getMonthValue() + now.getDayOfMonth();
+		myTradeNo = myTradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
 		Random random = new Random();
-		int num = 10000 + random.nextInt(90000);
+		int num = 100 + random.nextInt(900);
 		myTradeNo += "T" + num;
 		
 		goService.createOrder(loginMember,myTradeNo,2);
