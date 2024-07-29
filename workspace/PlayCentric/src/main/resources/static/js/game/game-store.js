@@ -10,6 +10,7 @@ let scrolltrigger = true;
 let runcount = 0;
 const gameName = document.querySelector('#gameName');
 
+//跳頁清空
 window.addEventListener('beforeunload', e => {
     minPrice.value = '';
     maxPrice.value = '';

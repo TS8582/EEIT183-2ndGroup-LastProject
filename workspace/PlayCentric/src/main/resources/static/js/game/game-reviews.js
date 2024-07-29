@@ -4,6 +4,39 @@ const reviewsContainer = document.querySelector('.reviewsContainer');
 const goReviews = document.querySelector('.goReviews');
 let gameId = document.querySelector('.gameId').innerHTML.trim();
 const addReviews = document.querySelector('.addReviews');
+const editReviews = document.querySelector('.editReviews');
+
+
+function edit(elm) {
+    if (elm.innerHTML.trim() == '修改') {
+
+    }
+    else {
+
+    }
+}
+
+//修改評論
+if (editReviews) {
+    editReviews.addEventListener('click', e => {
+        const originContent = editReviews.closest('.existReviews').querySelector('.reviewsContent').innerHTML.trim();
+        editReviews.classList.remove('mybtn', 'mybtn-sky');
+        editReviews.classList.add('mybtn-disabled');
+        axios.post('/PlayCentric/personal/api/gameReviews/add', {
+            gameId: gameId,
+            reviewsScore: starAmount,
+            reviewsContent: content
+        })
+            .then(res => {
+                const data = res.data;
+
+                console.log(res);
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    })
+}
 
 //提交評論
 if (goReviews) {
@@ -60,6 +93,10 @@ if (moreReviews) {
 // 新增評論選星星
 const star = document.querySelector('.star');
 if (star) {
+    chooseStar();
+}
+
+function chooseStar() {
     const starContainer = star.querySelectorAll('.star-container');
     starContainer.forEach((elm, i) => {
         elm.addEventListener('mouseenter', e => {

@@ -154,7 +154,7 @@
 
 
                 <div th:each="review:${reviews}" th:if="${reviews != null}"
-                    class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
+                    class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md">
                     <div class="flex items-center space-x-2 mb-2">
                         <img class="h-16 w-16 rounded-full" th:src="${review.member.photoUrl}" alt="">
                         <span th:text="${review.member.nickname}"></span>
@@ -166,8 +166,12 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div class="reviewsContent my-2">
                         <span th:text="${review.reviewsContent}"></span>
+                    </div>
+                    <div class="my-2" th:if="${memberReviews}">
+                        <span th:if="${memberReviews[0].gameReviewsId == review.gameReviewsId}"
+                            class="mybtn mybtn-sky editReviews">修改</span>
                     </div>
                 </div>
 
