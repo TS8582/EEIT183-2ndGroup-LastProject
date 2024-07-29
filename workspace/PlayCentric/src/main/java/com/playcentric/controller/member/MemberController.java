@@ -205,13 +205,7 @@ public class MemberController {
 	public Page<Member> searchMemberByPage(@RequestParam("page") Integer page,
 			@RequestParam("keyword") String keyword) {
 		Page<Member> memPage = memberService.findByKeyword(keyword, page);
-		for (Member member : memPage) {
-			member.setPhotoUrl(
-					member.getPhoto() != null
-							? ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image" + member.getPhoto()
-							: member.getGoogleLogin() != null ? member.getGoogleLogin().getPhoto()
-									: ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image144");
-		}
+
 		return memPage;
 	}
 
@@ -219,10 +213,7 @@ public class MemberController {
 	@ResponseBody
 	public Member getOneMember(@RequestParam("memId") Integer memId) {
 		Member member = memberService.findById(memId);
-		member.setPhotoUrl(
-				member.getPhoto() != null ? ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image" + member.getPhoto()
-						: member.getGoogleLogin() != null ? member.getGoogleLogin().getPhoto()
-								: ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image144");
+		
 		return member;
 	}
 

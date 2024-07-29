@@ -274,10 +274,7 @@ public class MemberService {
 		loginMember.setMemId(member.getMemId());
 		loginMember.setMemName(member.getMemName());
 		loginMember.setNickname(member.getNickname());
-		String photoPath = member.getPhoto() != null ? "/PlayCentric/imagesLib/image" + member.getPhoto()
-				: member.getGoogleLogin() != null ? member.getGoogleLogin().getPhoto()
-						: "/PlayCentric/imagesLib/image144";
-		loginMember.setPhoto(photoPath);
+		loginMember.setPhoto(member.getPhotoUrl());
 		loginMember.setPoints(member.getPoints());
 		loginMember.setRole(member.getRole());
 		loginMember.setLoginToken(member.getLoginToken());

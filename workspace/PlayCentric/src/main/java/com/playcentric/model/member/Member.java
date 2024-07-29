@@ -95,13 +95,14 @@ public class Member {
             this.registDate = new Date();
         }
         this.lastLogin = new Date();
-        initializeEmail();
+        initializeMember();
     }
 
     @PostLoad
-    public void initializeEmail() {
+    public void initializeMember() {
         setEmail(this.email);
         setEmailVerified(this.emailVerified);
+        setPhotoUrl();
     }
 
     public void setEmail(String email) {
@@ -110,6 +111,11 @@ public class Member {
 
     public void setEmailVerified(Boolean emailVerified) {
         this.emailVerified = emailVerified != null ? emailVerified : false;
-        System.err.println("重新設定email認證，emailVerified=" + this.emailVerified);
+    }
+
+    public void setPhotoUrl(){
+        this.photoUrl = this.getPhoto() != null ? "/PlayCentric/imagesLib/image" + this.getPhoto()
+        : this.getGoogleLogin() != null ? this.getGoogleLogin().getPhoto()
+                : "/PlayCentric/imagesLib/image144";
     }
 }
