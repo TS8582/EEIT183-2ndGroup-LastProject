@@ -24,6 +24,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
+        body {
+            background-image: url("[[@{/images/loginBG.jpg}]]");
+            background-size: cover;
+            /* 確保圖片覆蓋整個容器 */
+            background-position: center;
+            /* 確保圖片居中 */
+            margin: 0;
+            padding: 0;
+        }
+
         /* 調整 placeholder 的顏色 */
         ::placeholder {
             color: rgba(0, 0, 0, 0.329) !important;
@@ -48,41 +58,115 @@
         .d1 {
             display: flex;
         }
+
+        .d2 {
+            margin-left: 20% !important;
+        }
+
+        .fixed-container {
+            position: fixed;
+            right: 15%;
+            width: 550px !important;
+            margin-top: 25px !important;
+            margin-left: 9% !important;
+            max-height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .h1 {
+            color: rgb(121, 85, 252) !important;
+            border-bottom: 2px dashed black;
+            width: 780px;
+        }
+
+        .p1 {
+            background-color: rgba(255, 255, 255, 0.938);
+            border: 3px double black;
+            padding: 20px !important;
+            margin-top: 20px !important;
+            margin-bottom: 20px !important;
+            width: 100% !important;
+            border-radius: 10px;
+        }
+
+        .card-header {
+            font-size: larger;
+        }
+
+        .card-body {
+            background-color: rgba(128, 128, 128, 0.411);
+            max-height: calc(100vh - 200px);
+            /* 為卡片內容設置最大高度 */
+            overflow-y: auto;
+            /* 添加垂直滾動條 */
+        }
+
+        /* 自定義滾動條樣式（可選） */
+        .card-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .card-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .card-body::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .card-body::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .article-content img {
+            max-width: 800px;
+            max-height: 800px;
+            width: auto;
+            height: auto;
+        }
     </style>
 </head>
 
 <body>
     <div id="navbar1" th:replace="~{layout/nav}"></div>
 
-    <div>
-        <section class="py-3">
-            <div class="container">
-                <th:block th:if="${session.loginMember!=null && session.loginMember.role == 1}">
-                    <a th:href="@{/personal/texts/edit/{textsId}(textsId=${texts.textsId})}"
-                        class="btn btn-primary">編輯文章</a>
-                    <a th:href="@{/personal/texts/delete(textsId=${texts.textsId})}" class="btn btn-danger">刪除文章</a>
-                </th:block>
-                <div class="mt-5">
-                    <h1 class="page-title" th:text="${texts.title}">文章名稱</h1>
-                    <div class="post-meta">
-                        <div
-                            th:text="${texts != null ? #dates.format(texts.doneTime, 'yyyy年MM月dd日 HH:mm:ss EEEE') : ''}">
+    <div class="d1">
+        <section>
+            <div class="container d2">
+                <div class="p1">
+                    <div>
+                        <h1 class="page-title h1" th:text="${texts.title}">文章名稱</h1>
+                        <div class="post-meta">
+                            <div
+                                th:text="${texts != null ? #dates.format(texts.doneTime, 'yyyy年MM月dd日 HH:mm:ss EEEE') : ''}">
+                            </div>
                         </div>
+                        <br>
+                        <th:block th:if="${session.loginMember!=null && session.loginMember.role == 1}">
+                            <a th:href="@{/personal/texts/edit/{textsId}(textsId=${texts.textsId})}"
+                                class="btn btn-primary">編輯文章</a>
+                            <a th:href="@{/personal/texts/delete(textsId=${texts.textsId})}"
+                                class="btn btn-danger">刪除文章</a>
+                        </th:block>
+                        <div class="article-content">
+                            <p th:utext="${texts.textsContent}">文章內容</p>
+                        </div>
+
                     </div>
-                    <p th:utext="${texts.textsContent}">文章內容</p>
                 </div>
             </div>
 
         </section>
 
         <br>
-        <br>
 
-        <div class="container" with="10px">
+        <div class="container fixed-container" with="10px">
             <div class="card">
-                <div class="card-header">交流區</div>
+                <div class="card-header bg-dark text-light">交流區</div>
                 <div class="card-body">
-                    <ul class="list-group">
+                    <ul id="commentList" class="list-group">
                         <li class="list-group-item full-msg" th:each="talk : ${talk}">
                             <p th:text="${#dates.format(talk.talkTime, 'yyyy年MM月dd日 HH:mm:ss')}">留言時間</p>
                             <!-- 編輯表單(顯示) -->
@@ -91,7 +175,7 @@
                                     <p class="message" th:text="${talk.talkContent}">留言內容</p>
                                 </div>
                                 <th:block class="edit-btn"
-                                    th:if="${session.loginMember!=null && session.loginMember.role == 1}">
+                                    th:if="${session.loginMember != null && (session.loginMember.memId == talk.member.memId || session.loginMember.role == 1)}">
                                     <button class="btn btn-outline-success btn-sm"
                                         th:onclick="'showEditForm(' + ${talk.talkId} + ')'">編輯</button>
                                     <form th:action="@{/talk/delete}" method="post" style="display: inline;">
@@ -126,38 +210,39 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="js/jquery-1.11.0.min.js"></script>
-        <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
-        <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"
-            integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-            crossorigin="anonymous"></script>
-        <script src="js/plugins.js"></script>
-        <script src="js/script.js"></script>
-        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/script.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-        <script>
+    <script>
 
-            function showEditForm(messageId) {
-                $('#editForm-' + messageId).show();
-                $('#editContent-' + messageId).hide();
-            }
+        function showEditForm(messageId) {
+            $('#editForm-' + messageId).show();
+            $('#editContent-' + messageId).hide();
+        }
 
-            document.addEventListener('DOMContentLoaded', (event) => {
-                const textarea = document.getElementById('myTextarea');
-                const form = document.getElementById('talkForm');
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const textarea = document.getElementById('myTextarea');
+            const form = document.getElementById('talkForm');
 
-                textarea.addEventListener('keydown', function (e) {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        form.submit();
-                    }
-                });
-
-
+            textarea.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    form.submit();
+                }
             });
 
-        </script>
+
+        });
+
+    </script>
 </body>
 
 </html>
