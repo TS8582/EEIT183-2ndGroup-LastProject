@@ -3,6 +3,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.playcentric.model.prop.Props;
 import com.playcentric.model.prop.PropsRepository;
@@ -36,4 +39,9 @@ public class PropBuyOrderService2 {
 		List<PropBuyOrder2> buyOrders = propBuyOrderRepo.findAllByGameId(gameId);
 		return buyOrders;
 	}
+	
+//	根據memId查詢所有買單
+    public Page<PropBuyOrder2> findOrdersByMemId(int memId,Pageable  pageable) {
+        return propBuyOrderRepo.findAllByMemId(memId, pageable);
+    }
 }

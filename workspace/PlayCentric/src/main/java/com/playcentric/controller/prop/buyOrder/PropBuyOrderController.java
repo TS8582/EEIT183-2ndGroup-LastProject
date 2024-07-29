@@ -64,50 +64,57 @@ public class PropBuyOrderController {
 //	}
 
 	// 購買道具
-	@PostMapping("/prop/front/buyProp")
+	@PostMapping("personal/api/prop/front/buyProp")
 	@ResponseBody
 	public String buyProp(@RequestParam("quantity") Integer quantity, @RequestParam("propId") Integer propId,
-			@RequestParam("memId") Integer memId,@RequestParam("paymentId") Integer paymentId,@RequestParam("price") Integer price,@RequestParam("selectedGameId") Integer selectedGameId) {
-		
-	    // 1-1 儲存未被買之前的所有賣單的quantity
-	    List<PropSellOrder> sellOrders = propSellOrderService.findAllByGameIdAndStatus0(selectedGameId);
-	    Map<Integer, Integer> initialQuantities = sellOrders.stream()
-	        .collect(Collectors.toMap(PropSellOrder::getOrderId, PropSellOrder::getQuantity)); 
-	    
-	    // 2.找尋所有賣單由價格低到高排序後依購買quantity扣除賣單的quantity並修改賣單quantity為0的status
-	    propSellOrderService.buyProp(quantity, propId);
-	    
-	    // 1-2.檢查全部賣單若quantity有變動 memberPoint += amount*變動quantity
-	    for (PropSellOrder sellOrder : sellOrders) {
-	        int initialQuantity = initialQuantities.get(sellOrder.getOrderId());
-	        int finalQuantity = sellOrder.getQuantity();
-	        int quantityDifference = initialQuantity - finalQuantity;
-	        if (quantityDifference > 0) {
-	            Member seller = memberService.findById(sellOrder.getSellerMemId());
-	            int pointsToAdd = sellOrder.getAmount() * quantityDifference;
-	            seller.setPoints(seller.getPoints() + pointsToAdd);
-	            memberService.save(seller);
-	        }
-	    }
+            @RequestParam("memId") Integer memId, @RequestParam("paymentId") Integer paymentId,
+			@RequestParam("price") Integer price, @RequestParam("selectedGameId") Integer selectedGameId) {
 
-	    // 3.根據propId及memId雙主鍵增加買家倉庫的propQuantity
-	    memberPropInventoryService.findMemberPropByIdAndPlusQuantity(memId, propId, quantity);
-	    
-	    // 4.新增買單
-	    propBuyOrderService2.savePropBuyOrder(memId, quantity, paymentId, price, propId);
-	    
-	    // 5.扣除買家點數
-	    Member buyer = memberService.findById(memId);
-	    buyer.setPoints(buyer.getPoints() - price);
-	    memberService.save(buyer);
-	    memberService.setLoginDto(buyer);
+// 1-1 儲存未被買之前的所有賣單的 quantity
+List<PropSellOrder> sellOrders = propSellOrderService.findAllByGameIdAndStatus0(selectedGameId);
 
-	    return "購買完成";
-	}
+// 過濾掉 sellerMemId 等於 loginMemId 的賣單
+sellOrders = sellOrders.stream()
+                 .filter(order -> order.getSellerMemId() != memId)
+                 .collect(Collectors.toList());
+
+Map<Integer, Integer> initialQuantities = sellOrders.stream()
+  .collect(Collectors.toMap(PropSellOrder::getOrderId, PropSellOrder::getQuantity));
+
+// 2. 找尋所有賣單由價格低到高排序後依購買 quantity 扣除賣單的 quantity 並修改賣單 quantity 為 0 的 status
+propSellOrderService.buyProp(quantity, propId, memId);
+
+// 1-2. 檢查全部賣單若 quantity 有變動 memberPoint += amount * 變動 quantity
+for (PropSellOrder sellOrder : sellOrders) {
+int initialQuantity = initialQuantities.get(sellOrder.getOrderId());
+int finalQuantity = sellOrder.getQuantity();
+int quantityDifference = initialQuantity - finalQuantity;
+if (quantityDifference > 0) {
+  Member seller = memberService.findById(sellOrder.getSellerMemId());
+  int pointsToAdd = sellOrder.getAmount() * quantityDifference;
+  seller.setPoints(seller.getPoints() + pointsToAdd);
+  memberService.save(seller);
+}
+}
+
+// 3. 根據 propId 及 memId 雙主鍵增加買家倉庫的 propQuantity
+memberPropInventoryService.findMemberPropByIdAndPlusQuantity(memId, propId, quantity);
+
+// 4. 新增買單
+propBuyOrderService2.savePropBuyOrder(memId, quantity, paymentId, price, propId);
+
+// 5. 扣除買家點數
+Member buyer = memberService.findById(memId);
+buyer.setPoints(buyer.getPoints() - price);
+memberService.save(buyer);
+memberService.setLoginDto(buyer);
+
+return "購買完成";
+}
 	//根據memId找memName
-	@GetMapping("/prop/front/buyProp/findMenNameByMemId")
+	@GetMapping("/prop/front/buyProp/findAllByMemId")
 	@ResponseBody
-	public Member findMenNameByMemId(@RequestParam("memId") Integer memId) {
+	public Member findAllByMemId(@RequestParam("memId") Integer memId) {
 		return memberService.findById(memId);
 	}
 }

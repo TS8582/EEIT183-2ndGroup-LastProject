@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.playcentric.model.member.Member;
 import com.playcentric.model.prop.sellOrder.PropSellOrderDto;
 import com.playcentric.model.prop.sellOrder.PropSellOrderForMarketDto;
+import com.playcentric.service.member.MemberService;
 import com.playcentric.service.prop.sellOrder.PropSellOrderService;
 
 @Controller
@@ -19,17 +21,20 @@ public class MarketController {
 	@Autowired
 	private PropSellOrderService propSellOrderService;
 
+	@Autowired
+	private MemberService memberService;
+	
 	// 進入市場頁面
 	@GetMapping("prop/front/market")
 	public String showMarketPage() {
 		return "prop/front/market";
 	}
 
-	// 根據 propId 找賣單後以價格為區間顯示
+	// 根據 propId及排除當前loginMemId 找賣單後以價格為區間顯示
 	@GetMapping("prop/front/market/orders")
 	@ResponseBody
-	public List<PropSellOrderForMarketDto> findByPropId(@RequestParam("propId") Integer propId) {
-		return propSellOrderService.findByPropId(propId);
+	public List<PropSellOrderForMarketDto> findByPropId(@RequestParam("propId") Integer propId,@RequestParam("loginMemId") Integer loginMemId) {
+		return propSellOrderService.findByPropId(propId,loginMemId);
 	}
 
 	// 根據gameId及memId及Order=0(販賣中)找所有賣單
@@ -46,4 +51,13 @@ public class MarketController {
 	public Map calculateAverageAmountByPropId(@RequestParam("propId") Integer propId){
 	    return propSellOrderService.calculateAverageAmountByPropId(propId);
 	}
+	
+	//根據memId讀取會員點數
+	@GetMapping("prop/front/market/findMemPointsbyMemId")
+	@ResponseBody
+	public Integer findMemPointsbymemId(@RequestParam("memId") Integer memId ) {
+		Integer points = memberService.findById(memId).getPoints();
+		return points;
+	}
+	
 }
