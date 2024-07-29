@@ -24,6 +24,7 @@ import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.game.primary.GameDiscount;
 import com.playcentric.model.game.primary.GameDiscountSet;
 import com.playcentric.model.game.primary.GameTypeLib;
+import com.playcentric.model.game.secondary.GameReviews;
 import com.playcentric.model.game.secondary.OwnGameLib;
 import com.playcentric.model.game.transaction.GameOrder;
 import com.playcentric.model.game.transaction.GameOrderDetails;
@@ -32,6 +33,7 @@ import com.playcentric.service.ImageLibService;
 import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameDiscountSetService;
 import com.playcentric.service.game.GameOrderService;
+import com.playcentric.service.game.GameReviewsService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
 import com.playcentric.service.game.OwnGameLibService;
@@ -59,6 +61,8 @@ public class GameController {
 	private OwnGameLibService oglService;
 	@Autowired
 	private GameOrderService goService;
+	@Autowired
+	private GameReviewsService grService;
 
 	// 遊戲管理後台
 	@GetMapping("/back/game")
@@ -275,7 +279,9 @@ public class GameController {
 			gcService.setInCart(loginMember, game);
 			oglService.setHaveGame(loginMember, game);
 		}
+		GameReviews reviews = grService.findByGameIdTop1(gameId);
 		model.addAttribute("game",game);
+		model.addAttribute("reviews",reviews);
 		return "game/show-game";
 	}
 	

@@ -10,7 +10,7 @@ import java.util.List;
 public interface GameReviewsRepository extends JpaRepository<GameReviews,Integer> {
 	
 	@Query(value = "SELECT TOP 1 * FROM gameReviews Where gameId = :gameId ORDER BY reviewsAt DESC",nativeQuery = true)
-	List<GameReviews> findByGameIdTop1(@Param("gameId")Integer gameId);
+	GameReviews findByGameIdTop1(@Param("gameId")Integer gameId);
 	
 	List<GameReviews> findByGameId(Integer gameId);
 	

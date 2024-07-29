@@ -14,7 +14,7 @@ public class GameReviewsService {
 	@Autowired
 	private GameReviewsRepository grRepo;
 	
-	public List<GameReviews> findByGameIdTop1(Integer gameId) {
+	public GameReviews findByGameIdTop1(Integer gameId) {
 		return grRepo.findByGameIdTop1(gameId);
 	}
 	

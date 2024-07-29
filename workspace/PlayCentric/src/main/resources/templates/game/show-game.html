@@ -154,18 +154,18 @@
 
                 <div class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
                     <div class="flex items-center space-x-2">
-                        <img class="h-16 w-16 rounded-full"
-                            th:src="@{/imagesLib/image{id}(id=${game.imageLibs[0].imageId})}" alt="">
-                        <span>會員名稱</span>
+                        <img class="h-16 w-16 rounded-full" th:src="${reviews.member.photoUrl}" alt="">
+                        <span th:text="${reviews.memId}"></span>
                         <div class="existStar select-none">
                             <div class="star-container">
-                                <div class="filled" style="width: 80%;">★★★★★</div>
+                                <div class="filled" th:style="'width:' + ${reviews.reviewsScore * 20} + '%;'">★★★★★
+                                </div>
                                 <div class="unfilled">★★★★★</div>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <span>自從他的古代清晰每次友情交易更新避免要有成員五年轎車，觀察在這歲月，想法計算機德國，祝福財務一番語言液晶檢索戰爭是一個，三大版面特別是衝擊批評不行設置引擎特性多年，接口收入協助眼裡工作那時，也不分別。</span>
+                        <span th:text="${reviews.reviewsContent}"></span>
                     </div>
                 </div>
 
@@ -189,7 +189,6 @@
         const addReviews = document.querySelector('.addReviews');
 
         goReviews.addEventListener('click', e => {
-            addReviews.remove();
             const content = reviews.value;
             if (starAmount != 0 && content != '') {
                 axios.post('/PlayCentric/personal/api/gameReviews/add', {
@@ -198,6 +197,7 @@
                     reviewsContent: content
                 })
                     .then(res => {
+                        addReviews.remove();
                         console.log(res)
                     })
                     .catch(err => {
