@@ -40,7 +40,10 @@
                     </div>
                 </div>
                 <div class="w-1/5 font-semibold text-lg flex justify-end">
-                    <span class="mybtn mybtn-sky download">下載</span>
+                    <span th:if="${owngame.game.gameFile != null} ? ${owngame.game.gameFile.length > 0}"
+                        class="mybtn mybtn-sky download">下載</span>
+                    <span th:if="${owngame.game.gameFile == null || owngame.game.gameFile.length == 0}"
+                        class="mybtn-disabled">尚未開放下載</span>
                 </div>
             </div>
             <div th:if="${status.index != ownGames.size() - 1}" class="h-1 w-full bg-black"></div>

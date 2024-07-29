@@ -110,9 +110,12 @@
                         <span th:if="${session.loginMember} ? ${game.isInCart}" class="mybtn-disabled">已加入購物車</span>
                         <span th:if="${session.loginMember} ? ${!game.isInCart && !game.isHaveGame}"
                             class="mybtn mybtn-green cart">加入購物車</span>
-                        <span th:if="${session.loginMember} ? ${game.isHaveGame}"
-                            class="mybtn mybtn-sky download">下載</span>
-                        <div class="hidden gameId" th:text="${game.gameId}"></div>
+                        <th:block th:if="${session.loginMember} ? ${game.isHaveGame}">
+                            <span th:if="${game.gameFile != null} ? ${game.gameFile.length > 0}"
+                                class="mybtn mybtn-sky download">下載</span>
+                            <span th:if="${game.gameFile == null || game.gameFile.length == 0}"
+                                class="mybtn-disabled">尚未開放下載</span>
+                        </th:block>
 
                     </div>
                     <div class="hidden gameId" th:text="${game.gameId}"></div>
@@ -141,13 +144,32 @@
                         <span id="star-5" class="star-container">★</span>
                     </div>
                     <div class="">
-                        <textarea id="reviews" class="w-full h-28 border-2" style="resize: none;"
-                            maxlength="30"></textarea>
+                        <textarea id="reviews" class="w-full h-28 border-2" style="resize: none;" maxlength="100"
+                            placeholder="請輸入評論內容...(限100字)"></textarea>
                         <div class="flex items-center justify-center">
-                            <span class="mybtn mybtn-sky inline-block">提交評論</span>
+                            <span class="mybtn mybtn-sky inline-block goReviews">提交評論</span>
                         </div>
                     </div>
                 </div>
+
+                <div class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
+                    <div class="flex items-center space-x-2">
+                        <img class="h-16 w-16 rounded-full"
+                            th:src="@{/imagesLib/image{id}(id=${game.imageLibs[0].imageId})}" alt="">
+                        <span>會員名稱</span>
+                        <div class="existStar select-none">
+                            <div class="star-container">
+                                <div class="filled" style="width: 80%;">★★★★★</div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span>自從他的古代清晰每次友情交易更新避免要有成員五年轎車，觀察在這歲月，想法計算機德國，祝福財務一番語言液晶檢索戰爭是一個，三大版面特別是衝擊批評不行設置引擎特性多年，接口收入協助眼裡工作那時，也不分別。</span>
+                    </div>
+                </div>
+
+
             </div>
 
         </div>
@@ -162,7 +184,31 @@
         let starAmount = 0;
         const reviews = document.querySelector('#reviews');
         const reviewsContainer = document.querySelector('.reviewsContainer');
-        const starContainer = reviewsContainer.querySelectorAll('.star-container');
+        const goReviews = document.querySelector('.goReviews');
+        let gameId = document.querySelector('.gameId').innerHTML.trim();
+        const addReviews = document.querySelector('.addReviews');
+
+        goReviews.addEventListener('click', e => {
+            addReviews.remove();
+            const content = reviews.value;
+            if (starAmount != 0 && content != '') {
+                axios.post('/PlayCentric/personal/api/gameReviews/add', {
+                    gameId: gameId,
+                    reviewsScore: starAmount,
+                    reviewsContent: content
+                })
+                    .then(res => {
+                        console.log(res)
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+            }
+        }, { once: true })
+
+        // 新增評論選星星
+        const star = document.querySelector('.star');
+        const starContainer = star.querySelectorAll('.star-container');
         starContainer.forEach((elm, i) => {
             elm.addEventListener('mouseenter', e => {
                 if (i < (starAmount - 1)) {
