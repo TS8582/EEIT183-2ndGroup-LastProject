@@ -47,12 +47,13 @@ public class EventSignupService {
                 return new RuntimeException("活動不存在");
             });
 
-        if (event.getEventSignupDeadLine().isBefore(LocalDateTime.now())) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(event.getEventSignupDeadLine())) {
             logger.error("報名已截止，活動ID: {}", event.getEventId());
             throw new RuntimeException("報名已截止");
         }
 
-        eventSignup.setSignupTime(LocalDateTime.now());
+        eventSignup.setSignupTime(now);
         eventSignup.setVoteCount(0);
         eventSignup.setEventSignupStatus(1);
         EventSignup savedSignup = eventSignupRepository.save(eventSignup);
