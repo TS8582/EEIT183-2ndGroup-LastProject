@@ -51,7 +51,7 @@ public class PfOrder {
 	
 	private String transactionID;//交易ID
 	
-	private Integer paymentStatus;//付款狀態 INT 1:交易中 2交易完成 3交易失敗(或取消)
+	private Integer paymentStatus;//付款狀態 INT 1:交易中 2完成交易，尚未接單 3完成接單 4交易失敗(或取消) 
 	
 	
 

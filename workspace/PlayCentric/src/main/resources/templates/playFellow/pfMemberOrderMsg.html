@@ -169,6 +169,9 @@ html, body {
 									</tr>
 								</thead>
 								<tbody id="orderBody">
+									<tr th:if="${#lists.isEmpty(pfOrder)}">
+																		                           <td colspan="8" class="text-center">尚無資料</td>
+																		                       </tr>
 									<!-- 訂單資料 -->
 									<tr th:each="order : ${pfOrder}" class="small">
 										<td th:text="${order.pfOrderId}"></td>
@@ -182,10 +185,10 @@ html, body {
 											th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
 										<td
 											th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-										<td
-											th:text="${order.paymentStatus == 1 ? '尚未付款' : (order.paymentStatus == 2 ? '付款成功' : '交易失敗或取消')}"
-											th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}">
-										</td>
+											<td th:text="${order.paymentStatus == 1 ? '尚未付款' : (order.paymentStatus == 2 or order.paymentStatus == 3 ? '付款成功' : '交易失敗或取消')}"
+											    th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 or order.paymentStatus == 3 ? 'status-completed' : 'status-failed')}">
+											</td>
+
 									</tr>
 								</tbody>
 							</table>
@@ -215,6 +218,10 @@ html, body {
 									</tr>
 								</thead>
 								<tbody id="orderBody">
+									
+									<tr th:if="${#lists.isEmpty(orders)}">
+									                           <td colspan="8" class="text-center">尚無資料</td>
+									                       </tr>
 									<!-- 訂單資料 -->
 									<tr th:each="order : ${orders}" class="text-center">
 										<td th:text="${order.pfGame.pfGameId}"></td>
@@ -226,13 +233,13 @@ html, body {
 											th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
 										<td
 											th:text="${order.paymentStatus == 1 ? '交易中' : (order.paymentStatus == 2 ? '完成付款，尚未接單' : (order.paymentStatus == 3 ? '完成接單' : '取消訂單'))}"
-											th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : (order.paymentStatus == 3 ? 'status-accepted' : 'status-failed'))}">
+											th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 or order.paymentStatus == 3 ? 'status-completed' : 'status-failed')}">
 										</td>
 
 										<td class="text-center">
 											<button class="btn btn-warning complete-order-button"
-												th:data-playfellow-id="${order.pfGame.playFellowMember.playFellowId}"
-												data-pfstatus="3">接單完成</button>
+												th:data-playfellow-id="${order.pfGame.playFellowMember.playFellowId}" th:data-pfOrderId="${order.pfOrderId}"
+												data-pfstatus="3" th:if="${order.paymentStatus ==2}">接單完成</button>
 										</td>
 
 
@@ -243,6 +250,7 @@ html, body {
 						</div>
 					</div>
 				</div>
+				
 			</div>
 		</main>
 	</div>
@@ -282,43 +290,53 @@ html, body {
         });
     });
 
-    function completeOrder(button) {
-        const playFellowId = button.getAttribute('data-playfellow-id');
-        const pfstatus = button.getAttribute('data-pfstatus');
+	function completeOrder(button) {
+	    const playFellowId = button.getAttribute('data-playfellow-id');
+	    const pfstatus = button.getAttribute('data-pfstatus');
+	    const pfOrderId = button.getAttribute('data-pfOrderId'); // 確保這裡的屬性名稱與HTML一致
 
-        Swal.fire({
-            title: '確認完成訂單？',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: '是的，完成',
-            cancelButtonText: '取消'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const formData = new FormData();
-                formData.append('playFellowId', playFellowId);
-                formData.append('pfstatus', 3);
+	    Swal.fire({
+	        title: '確認完成接單？',
+	        icon: 'warning',
+	        showCancelButton: true,
+	        confirmButtonText: '是的，完成',
+	        cancelButtonText: '取消'
+	    }).then((result) => {
+	        if (result.isConfirmed) {
+	            const formData = new FormData();
+	            formData.append('playFellowId', playFellowId);
+	            formData.append('pfstatus', pfstatus);
 
-                axios.post('/PlayCentric/playFellow/reviewPfstatus', formData)
-                    .then(response => {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '訂單完成',
-                            text: '狀態更新成功'
-                        }).then(() => {
-                            location.reload(); // 重載頁面以反映更改
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error calling reviewPfstatus:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: '錯誤',
-                            text: '無法更新狀態'
-                        });
-                    });
-            }
-        });
-    }
+	            const firstRequest = axios.post('/PlayCentric/playFellow/reviewPfstatus', formData);
+
+	            const secondRequestData = new URLSearchParams();
+	            secondRequestData.append('pfOrderId', pfOrderId);
+	            secondRequestData.append('paymentStatus', 3);
+	            const secondRequest = axios.post('/PlayCentric/playFellow/currentPaymentStatus', secondRequestData);
+
+	            Promise.all([firstRequest, secondRequest])
+	                .then(responses => {
+	                    Swal.fire({
+	                        icon: 'success',
+	                        title: '訂單完成',
+	                        text: '狀態和付款更新成功'
+	                    }).then(() => {
+	                        location.reload(); // 重載頁面以反映更改
+	                    });
+	                })
+	                .catch(errors => {
+	                    console.error(errors);
+	                    Swal.fire({
+	                        icon: 'error',
+	                        title: '錯誤',
+	                        text: '無法更新狀態或付款狀態'
+	                    });
+	                });
+	        }
+	    });
+	}
+
+
 
 
 
