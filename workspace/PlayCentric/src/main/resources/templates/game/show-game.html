@@ -132,17 +132,20 @@
 
             <div class="col-span-1 my-3 mx-1 border-2 border-black px-4 py-2 rounded-md reviewsContainer">
                 <h1 class="text-2xl text-center font-semibold">評論</h1>
-                <div class="star select-none">
-                    <span id="star-1" class="star-container">★</span>
-                    <span id="star-2" class="star-container">★</span>
-                    <span id="star-3" class="star-container">★</span>
-                    <span id="star-4" class="star-container">★</span>
-                    <span id="star-5" class="star-container">★</span>
-                </div>
-                <div class="">
-                    <textarea id="reviews" class="w-full h-28 border-2" style="resize: none;" maxlength="30"></textarea>
-                    <div class="flex items-center justify-center">
-                        <span class="mybtn mybtn-sky inline-block">提交評論</span>
+                <div th:if="${session.loginMember}" class="addReviews">
+                    <div class="star select-none">
+                        <span id="star-1" class="star-container">★</span>
+                        <span id="star-2" class="star-container">★</span>
+                        <span id="star-3" class="star-container">★</span>
+                        <span id="star-4" class="star-container">★</span>
+                        <span id="star-5" class="star-container">★</span>
+                    </div>
+                    <div class="">
+                        <textarea id="reviews" class="w-full h-28 border-2" style="resize: none;"
+                            maxlength="30"></textarea>
+                        <div class="flex items-center justify-center">
+                            <span class="mybtn mybtn-sky inline-block">提交評論</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -156,7 +159,8 @@
     <script th:src="@{/js/utils/doAlertJs.js}"></script>
     <script th:src="@{/js/game/cart.js}"></script>
     <script>
-        let starAmount = 1;
+        let starAmount = 0;
+        const reviews = document.querySelector('#reviews');
         const reviewsContainer = document.querySelector('.reviewsContainer');
         const starContainer = reviewsContainer.querySelectorAll('.star-container');
         starContainer.forEach((elm, i) => {
@@ -175,8 +179,10 @@
                 for (let j = 0; j <= i; j++) {
                     starContainer[j].classList.remove('color-gold');
                 }
-                for (let j = 0; j <= (starAmount - 1); j++) {
-                    starContainer[j].classList.add('color-gold');
+                if (starAmount != 0) {
+                    for (let j = 0; j <= (starAmount - 1); j++) {
+                        starContainer[j].classList.add('color-gold');
+                    }
                 }
             })
 

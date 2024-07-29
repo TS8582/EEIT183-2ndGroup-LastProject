@@ -51,7 +51,7 @@ function htmlMaker(data, table) {
         orderStatusText = "已售完";
         break;
       case 2:
-        orderStatusText = "已到期";
+        orderStatusText = "已下架";
         break;
       default:
         orderStatusText = "未知";

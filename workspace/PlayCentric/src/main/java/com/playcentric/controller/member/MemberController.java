@@ -143,13 +143,14 @@ public class MemberController {
 	@PostMapping("/login")
 	@ResponseBody
 	public String loginPost(@RequestParam String account, @RequestParam String password,
-			@RequestParam(required = false) Boolean addCookie, Model model,
+			@RequestParam(required = false,defaultValue = "false") Boolean addCookie, Model model,
 			RedirectAttributes redirectAttributes, HttpServletResponse response) {
-		System.err.println("是否存入Cookie?" + addCookie);
 		if (model.getAttribute("loginMember") != null) {
 			redirectAttributes.addFlashAttribute("redirectMsg", "已登入，請先登出!");
 			return "redirect:/";
 		}
+		System.err.println(account);
+		System.err.println(password);
 		Member loginMember = memberService.checkLogin(account, password);
 		if (loginMember == null) {
 			// model.addAttribute("errorMsg", "登入失敗");
@@ -205,13 +206,7 @@ public class MemberController {
 	public Page<Member> searchMemberByPage(@RequestParam("page") Integer page,
 			@RequestParam("keyword") String keyword) {
 		Page<Member> memPage = memberService.findByKeyword(keyword, page);
-		for (Member member : memPage) {
-			member.setPhotoUrl(
-					member.getPhoto() != null
-							? ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image" + member.getPhoto()
-							: member.getGoogleLogin() != null ? member.getGoogleLogin().getPhoto()
-									: ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image144");
-		}
+
 		return memPage;
 	}
 
@@ -219,10 +214,7 @@ public class MemberController {
 	@ResponseBody
 	public Member getOneMember(@RequestParam("memId") Integer memId) {
 		Member member = memberService.findById(memId);
-		member.setPhotoUrl(
-				member.getPhoto() != null ? ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image" + member.getPhoto()
-						: member.getGoogleLogin() != null ? member.getGoogleLogin().getPhoto()
-								: ngrokConfig.getUrl() + "/PlayCentric/imagesLib/image144");
+		
 		return member;
 	}
 

@@ -143,7 +143,7 @@ html, body {
 										<td><span th:if="${pfmember.member.gender == 1}">男生</span><span th:if="${pfmember.member.gender == 2}">女生</span></td>
 										<td th:text="${pfmember.member.birthday}"></td>
 										<td th:text="${pfmember.pfcreatedTime}"></td>
-										<td th:text="${pfmember.pfstatus == 1 ? '待審核' : (pfmember.pfstatus == 2 ? '審核不成功' : (pfmember.pfstatus == 3 ? '開啟' : '關閉'))}" th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : (pfmember.pfstatus == 2 ? 'status-failed' : (pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}"></td>
+										<td th:text="${pfmember.pfstatus == 1 ? '待審核' : (pfmember.pfstatus == 2 ? '審核不成功' : (pfmember.pfstatus == 3 ? '開啟' : '關閉或接單中'))}" th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : (pfmember.pfstatus == 2 ? 'status-failed' : (pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}"></td>
 										<td><a th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}"><i class="fas fa-file-invoice fa-2x" style="color: rgb(60, 150, 128);"></i></a></td>
 										<td><i class="fas fa-trash-alt delete-icon fa-2x" th:attr="data-playfellow-id=${pfmember.playFellowId}"></i></td>
 									</tr>
@@ -236,9 +236,7 @@ html, body {
 	
 
 	<script>
-		$(document).on('click', '#review', function () {
-			window.location.href = '/PlayCentric/playFellow/reviewpfMember';
-		});
+		
 
 		$(document).ready(function () {
 			$("#home-tab").click();
@@ -354,7 +352,7 @@ html, body {
 	                data: {
 	                    labels: labels,
 	                    datasets: [{
-	                        label: '每日伴遊收日',
+	                        label: '每日伴遊收入',
 	                        data: data,
 	                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
 	                        borderColor: 'rgba(75, 192, 192, 1)',

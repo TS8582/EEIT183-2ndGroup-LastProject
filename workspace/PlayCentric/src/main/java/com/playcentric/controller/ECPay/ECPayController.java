@@ -82,7 +82,7 @@ public class ECPayController {
             rechargeResult = ecPayService.getRechargeResult(loginMember.getMemId());
         }
         redirectAttributes.addFlashAttribute("redirectMsg", rechargeResult);
-        return "redirect:/member/personal/Info";
+        return "redirect:/member/personal/recharge";
     }
 
     @GetMapping("/personal/api/rechargeHis")

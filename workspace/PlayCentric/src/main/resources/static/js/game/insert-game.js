@@ -8,6 +8,15 @@ let imgChooser = document.querySelector('.img-choose');
 chooserAct();
 let imgcount = 0;
 
+const importdata = document.querySelector('#import');
+if (importdata) {
+    importdata.addEventListener('click', e => {
+
+    })
+}
+
+
+
 let oneimg = document.querySelectorAll('.one-img');
 if (oneimg.length > 0) {
     imgcount = oneimg.length;

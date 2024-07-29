@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PostLoad;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -44,12 +45,12 @@ public class Member {
     private String nickname;
     private String memName;
 
-	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.DATE)
-	private Date birthday;
-	
-	@Column(columnDefinition = "CHAR")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
+    private Date birthday;
+
+    @Column(columnDefinition = "CHAR")
     private String phone;
     private String address;
 
@@ -59,15 +60,15 @@ public class Member {
     private String twitterId;
     private Integer totalSpent;
 
-	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.DATE)
-	private Date registDate;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
+    private Date registDate;
 
-	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastLogin;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLogin;
     private Short role;
     private Integer photo;
     @Transient
@@ -84,25 +85,37 @@ public class Member {
     private String loginToken;
 
     @JsonIgnore
-	@OneToOne(/* fetch = FetchType.LAZY, */ cascade = CascadeType.ALL)
+    @OneToOne(/* fetch = FetchType.LAZY, */ cascade = CascadeType.ALL)
     @JoinColumn(name = "googeId")
     private GoogleLogin googleLogin;
-    
-    
+
     @PrePersist // 當物件要轉換成 persistent 以前，先執行以下方法
-	public void onCreate() {
-		if (this.registDate == null) {
-			this.registDate = new Date();
-		}
-		this.lastLogin = new Date();
-	}
- 
-    public void setEmail(String email){
+    public void onCreate() {
+        if (this.registDate == null) {
+            this.registDate = new Date();
+        }
+        this.lastLogin = new Date();
+        initializeMember();
+    }
+
+    @PostLoad
+    public void initializeMember() {
+        setEmail(this.email);
+        setEmailVerified(this.emailVerified);
+        setPhotoUrl();
+    }
+
+    public void setEmail(String email) {
         this.email = email.toLowerCase();
     }
 
-    public void setEmailVerified(Boolean emailVerified){
-        this.emailVerified = emailVerified!=null? emailVerified:false;
-        System.err.println("重新設定email認證，emailVerified="+this.emailVerified);
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified != null ? emailVerified : false;
+    }
+
+    public void setPhotoUrl(){
+        this.photoUrl = this.getPhoto() != null ? "/PlayCentric/imagesLib/image" + this.getPhoto()
+        : this.getGoogleLogin() != null ? this.getGoogleLogin().getPhoto()
+                : "/PlayCentric/imagesLib/image144";
     }
 }
