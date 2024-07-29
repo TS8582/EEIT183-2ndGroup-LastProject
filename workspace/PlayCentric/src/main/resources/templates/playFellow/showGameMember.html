@@ -63,7 +63,7 @@
 							<path fill-rule="evenodd"
 								d="M2.5 12.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5z" />
 						</svg>
-					更多遊戲伴遊</button>
+						更多遊戲伴遊</button>
 				</div>
 
 				<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSidebar"
@@ -212,12 +212,14 @@
 
 						<div class="card-body pl-1">
 							<span class="card-title pt-2 m-0" th:text="${pfgame.playFellowMember.pfnickname}"></span>
-							<span class="card-title pt-2 m-0"> <span
+							<span class="card-title pt-2 m-0"> 
+							<span
 									th:if="${pfgame.playFellowMember.member.gender == 1}"
 									style="background-color: rgb(0, 191, 255); color: white; padding: 2px 8px; border-radius: 25%; font-size: 10px; margin-left: 10px;">♂️</span>
 								<span th:if="${pfgame.playFellowMember.member.gender == 2}"
 									style="background-color: rgb(221, 73, 97); color: white; padding: 2px 8px; border-radius: 25%; font-size: 10px; margin-left: 10px;">♀️</span></span>
-
+<span th:text="${pfgame.playFellowMember.member.birthday}"
+									class="member-birthday"></span>
 							<div class="card-text">
 								<div class="card-body pt-0">
 									<div class="marquee-container">
