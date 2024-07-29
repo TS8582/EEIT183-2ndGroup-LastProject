@@ -1,7 +1,7 @@
 let allData = document.querySelectorAll('tbody tr');
 const search = document.querySelector('#search');
 const isShow = document.querySelectorAll('.isShow');
-
+//上下架功能
 isShow.forEach(elm => {
     const handleClick = () => {
         if (elm.innerHTML === '上架') {
@@ -78,8 +78,9 @@ allData.forEach(elm => {
 
 //簡易模糊查詢
 search.addEventListener('keyup', () => {
+    const reg = new RegExp(search.value, 'i');
     allData.forEach(data => {
-        if (!data.innerText.includes(search.value)) {
+        if (!reg.test(data.innerText)) {
             data.classList.add('hidden');
         }
         else {
