@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/utils/doAlertJS.css}">
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <title>PlayCentric-後台管理-新增遊戲</title>
+    <title>PlayCentric-後台管理-修改遊戲</title>
 </head>
 
 <body>
@@ -71,18 +71,18 @@
                         <div class="showDiscount">
                             <div class="flex flex-col">
                                 <label for="discountId" class="text-lg me-2">優惠選擇：</label>
+
                                 <select th:if="${nowDiscount == null}"
                                     class="w-96 border-2 focus:outline-2 focus:outline-cyan-200" name="discountId"
                                     id="discount-chooser">
                                     <option value="0">無</option>
+
                                     <th:block th:each="discount:${allDiscount}">
-                                        <option th:if="${nowDiscount}" selected th:value="${discount.gameDiscountId}"
-                                            th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
-                                        </option>
-                                        <option th:if="${nowDiscount == null}" th:value="${discount.gameDiscountId}"
+                                        <option th:value="${discount.gameDiscountId}"
                                             th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
                                         </option>
                                     </th:block>
+
                                 </select>
 
 
@@ -90,14 +90,9 @@
                                     class="w-96 bg-gray-500 border-2 focus:outline-2 focus:outline-cyan-200"
                                     name="discountId" id="discount-chooser">
                                     <option value="0">無</option>
-                                    <th:block th:each="discount:${allDiscount}">
-                                        <option th:if="${nowDiscount}" selected th:value="${discount.gameDiscountId}"
-                                            th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
-                                        </option>
-                                        <option th:if="${nowDiscount == null}" th:value="${discount.gameDiscountId}"
-                                            th:text="${discount.gameDiscountName} + ${#temporals.format(discount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(discount.endAt,'yyyy-MM-dd HH:mm')}">
-                                        </option>
-                                    </th:block>
+                                    <option th:if="${nowDiscount}" selected th:value="${nowDiscount.gameDiscountId}"
+                                        th:text="${nowDiscount.gameDiscountName} + ${#temporals.format(nowDiscount.startAt,'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(nowDiscount.endAt,'yyyy-MM-dd HH:mm')}">
+                                    </option>
                                 </select>
 
                                 <!-- <input type="hidden" name="discountId" value="0"> -->
@@ -117,10 +112,10 @@
 
 
                                         <input th:if="${nowDiscount}" type="number" disabled min="0.01" max="0.99"
-                                            name="discountRate" id="discountRate" th:value="${nowDiscount.discountRate}"
-                                            step="0.01" class="text-input w-96 bg-gray-500" />
+                                            name="discountRate" id="discountRate"
+                                            th:value="${nowDiscount1.discountRate}" step="0.01"
+                                            class="text-input w-96 bg-gray-500" />
                                     </div>
-                                    <input th:if="${nowDiscount}" type="hidden" name="discountRate" disabled>
                                 </div>
 
                             </div>

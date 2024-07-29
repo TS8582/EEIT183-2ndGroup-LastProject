@@ -63,12 +63,20 @@ public class GameOrderService {
 	
 	private final AllInOne allInOne = new AllInOne("");
 	
-	public GameOrder save(GameOrder gameOrder) {
-		return oRepo.save(gameOrder);
+	public List<GameOrderDetails> findDetailsByOrderId(Integer orderId) {
+		return odRepo.findByGameOrderId(orderId);
 	}
 	
 	public GameOrderDetails saveDetails(GameOrderDetails orderDetails) {
 		return odRepo.save(orderDetails);
+	}
+	
+	public List<GameOrder> findByMemId(Integer memId) {
+		return oRepo.findByMemIdAndStatus(memId, 1);
+	}
+	
+	public GameOrder save(GameOrder gameOrder) {
+		return oRepo.save(gameOrder);
 	}
 	
 	public GameOrder findById(Integer gameOrderId) {
@@ -82,7 +90,7 @@ public class GameOrderService {
 
         String tradeNo = "PCGO";
 		LocalDateTime now = LocalDateTime.now();
-		tradeNo += now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
+		tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
 		Random random = new Random();
 		int num = 100 + random.nextInt(900);
 		tradeNo += "T" + num;
@@ -119,7 +127,6 @@ public class GameOrderService {
 		Integer total = 0;
 //		設定訂單屬性
 		GameOrder gameOrder = new GameOrder();
-		gameOrder.setStatus(0);
 		gameOrder.setPaymentId(1);
 		gameOrder.setPayment(pService.findById(1));
 		gameOrder.setMemId(loginMember.getMemId());
