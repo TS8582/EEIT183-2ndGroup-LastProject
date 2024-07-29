@@ -225,9 +225,10 @@ html, body {
 										<td
 											th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
 										<td
-											th:text="${order.paymentStatus == 1 ? '尚未付款' : (order.paymentStatus == 2 ? '已完成下訂' : '交易失敗或取消')}"
-											th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}">
+											th:text="${order.paymentStatus == 1 ? '交易中' : (order.paymentStatus == 2 ? '完成付款，尚未接單' : (order.paymentStatus == 3 ? '完成接單' : '取消訂單'))}"
+											th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : (order.paymentStatus == 3 ? 'status-accepted' : 'status-failed'))}">
 										</td>
+
 										<td class="text-center">
 											<button class="btn btn-warning complete-order-button"
 												th:data-playfellow-id="${order.pfGame.playFellowMember.playFellowId}"
