@@ -110,23 +110,18 @@
                             <table id="myTable" class="display cell-border stripe nowrap" style="width: 100%">
                                 <thead>
                                     <tr>
+                                        <th>會員Id</th>
                                         <th>留言Id</th>
                                         <th>留言內容</th>
                                         <th>發佈日期</th>
-                                        <!-- <th>會員Id</th> -->
-                                        <th>狀態</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:each="talk : ${arrayList}">
+                                        <td th:text="${talk.memId}"></td>
                                         <td th:text="${talk.talkId}"></td>
                                         <td th:text="${talk.talkContent}" class="text-area"></td>
                                         <td th:text="${talk.talkTime}"></td>
-                                        <!-- <td th:text="${post.memberId}"></td> -->
-                                        <td th:text="${talk.hideTalk} ? '是' : '否'"></td>
-                                        <td><a th:href="@{/talk/edit(talkId=${talk.talkId})}">修改</a></td>
-                                        <td><a class="delete" th:href="@{/talk/delete(talkId=${talk.talkId})}"
-                                                onclick="return confirm('你確定要刪除這個主題嗎？');">刪除</a></td>
                                     </tr>
                                 </tbody>
                             </table>
