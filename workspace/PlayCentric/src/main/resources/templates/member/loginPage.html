@@ -8,9 +8,9 @@
   <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
   <script th:src="@{/js/axios.min.js}"></script>
   <script th:src="@{/js/utils/doAlertJQ.js}"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-		integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-		crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>PlayCentric-登入頁面</title>
   <style>
     html,
@@ -42,7 +42,7 @@
       margin-top: 150px !important;
     }
 
-    .cursor-pointer{
+    .cursor-pointer {
       cursor: pointer;
     }
   </style>
@@ -78,7 +78,7 @@
                 <label for="password" class="form-label">密碼</label>
                 <input type="password" class="form-control" name="password" required>
               </div>
-              <div class="">
+              <div>
                 <input type="checkbox" class="form-check-input" name="addCookie" id="addCookie">
                 <label for="addCookie" class="form-label">保持登入</label>
               </div>
@@ -100,6 +100,10 @@
                 <label class="form-check-label" for="googleAddCookie">保持登入</label>
               </div>
             </div>
+            <div class="d-flex my-4 justify-content-center align-items-center border border-secondary-subtle h-0">
+              <span class="px-3 text-secondary bg-white user-select-none">快速登入</span>
+            </div>
+            
           </div>
           <!-- 註冊框內容 -->
           <div class="tab-pane fade border border-top-0 border-bottom-0 p-2 rounded-bottom-2" id="nav-profile"
@@ -107,11 +111,11 @@
             <form id="registForm">
               <div class="input-group mb-1">
                 <label for="nickname" class="input-group-text">暱稱*</label>
-                <input type="text" class="form-control" id="nickname" name="nickname" required>
+                <input type="text" class="form-control" id="nickname" name="nickname" maxlength="20" required>
               </div>
               <div class="input-group mb-1">
                 <label for="account" class="input-group-text">帳號*</label>
-                <input type="text" class="form-control" id="account" name="account" required>
+                <input type="text" class="form-control" id="account" name="account" maxlength="20" required>
               </div>
               <div class="input-group mb-1 password">
                 <label for="password" class="input-group-text">輸入密碼*</label>
@@ -131,7 +135,7 @@
               <hr class="my-2">
               <div class="input-group mb-1">
                 <label for="memName" class="input-group-text">姓名</label>
-                <input type="text" class="form-control" id="memName" name="memName">
+                <input type="text" class="form-control" id="memName" name="memName" maxlength="20">
               </div>
               <div class="input-group mb-1">
                 <label for="gender" class="input-group-text">姓別</label>
@@ -151,11 +155,11 @@
               </div>
               <div class="input-group mb-1">
                 <label for="address" class="input-group-text">住址</label>
-                <textarea class="form-control" id="address" name="address"></textarea>
+                <textarea class="form-control" id="address" name="address" maxlength="30"></textarea>
               </div>
               <div class="input-group mb-1">
                 <label for="photoFile" class="input-group-text">照片</label>
-                <input type="file" class="form-control" id="photoFile" name="photoFile">
+                <input type="file" class="form-control" id="photoFile" name="photoFile" accept="image/*">
               </div>
               <div class="form-btn d-flex mt-4">
                 <button type="submit" class="btn btn-primary ms-auto me-2">註冊</button>
@@ -174,7 +178,8 @@
                 <form id="modalForm">
                   <h1 class="my-3 text-center">忘記密碼</h1>
                   <div class="d-flex my-4">
-                    <input type="text" class="form-control" id="accOrEmail" name="accOrEmail" placeholder="請輸入會員 帳號 或 Email" required>
+                    <input type="text" class="form-control" id="accOrEmail" name="accOrEmail"
+                      placeholder="請輸入會員 帳號 或 Email" required>
                   </div>
                   <div class="d-flex">
                     <button type="submit" class="btn btn-primary ms-auto">送出</button>
@@ -182,14 +187,14 @@
                   </div>
                 </form>
                 <!-- loading -->
-                 <div id="emailSending" style="display: none;">
-                   <div class="d-flex justify-content-center align-items-center">
-                     <span class="spinner-grow text-success" role="status">
-                       <span class="visually-hidden"></span>
-                     </span>
-                     <span class="ms-2">信件發送中。。。</span>
-                   </div>
-                 </div>
+                <div id="emailSending" style="display: none;">
+                  <div class="d-flex justify-content-center align-items-center">
+                    <span class="spinner-grow text-success" role="status">
+                      <span class="visually-hidden"></span>
+                    </span>
+                    <span class="ms-2">信件發送中。。。</span>
+                  </div>
+                </div>
                 <!-- 信件已發送 -->
                 <div id="emailSent" style="display: none;">
                   <i class="fa-solid fa-arrow-left cursor-pointer fs-3"></i>
@@ -218,6 +223,7 @@
       const loginTab = new bootstrap.Tab(document.querySelector('#login-tab'));
       const forgetPwdModal = new bootstrap.Modal('#forgetPwdModal');
       const redirectMsg = '[[${redirectMsg}]]'
+      const input = document.querySelector('#photoFile');
 
       if (redirectMsg && redirectMsg.trim() != "") {
         doAlert(redirectMsg);
@@ -233,11 +239,42 @@
         forgetPwdModal.show();
       })
 
-      $('#emailSent i').click(function(){
+      $('#emailSent i').click(function () {
         console.log(123);
         $('#emailSent').hide();
         $('#modalForm').show();
       })
+
+      //快捷鍵填入資料
+      $(document).on('keydown', function (event) {
+        if (event.key === 'F2') {
+          $('#registForm #nickname').val('新註冊帳號');
+          $('#registForm #account').val('jane_smith');
+          $('#registForm #password').val('Js#2024!');
+          $('#registForm #password-confirm').val('Js#2024!');
+          $('#registForm #email').val('jane.smith@example.com');
+          $('#registForm #memName').val('林美芳');
+          $('#registForm #gender').val(2);
+          $('#registForm #birthday').val('1992-06-15');
+          $('#registForm #phone').val('0928123456');
+          $('#registForm #address').val('台中市西屯區台灣大道三段99號7樓');
+          insertImg();
+          doAlert('已填入資料');
+        }
+      });
+
+      function insertImg() {
+        fetch('/PlayCentric/images/logo3.png')
+          .then(res => res.blob())
+          .then(blob => {
+            const file = new File([blob], 'fastImg.png', { type: blob.type })
+            console.log(file);
+            let trans = new DataTransfer();
+            trans.items.add(file)
+            input.files = trans.files;
+            console.log(input.files);
+          })
+      }
 
       //自動確認密碼是否相同
       $('#registForm #password-confirm').blur(function () {
@@ -284,8 +321,8 @@
             console.log(err);
           })
 
-          $('#modalForm').hide();
-          $('#emailSending').show();
+        $('#modalForm').hide();
+        $('#emailSending').show();
       })
 
       $('#login-form').submit(function (e) {
@@ -323,19 +360,21 @@
 
         const formdataObject = new FormData(this);
         formdataObject.set('role', 0)
+        console.log(formdataObject.get('photoFile'));
+        
 
-        axios.post(registUrl, formdataObject)
-          .then(res => {
-            console.log(res);
-            doAlert(res.data);
-            if (res.data == '註冊成功!') {
-              loginTab.show();
-              this.reset();
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          })
+        // axios.post(registUrl, formdataObject)
+        //   .then(res => {
+        //     console.log(res);
+        //     doAlert(res.data);
+        //     if (res.data == '註冊成功!') {
+        //       loginTab.show();
+        //       this.reset();
+        //     }
+        //   })
+        //   .catch(err => {
+        //     console.log(err);
+        //   })
       })
 
       $('#cancelRegist').click(function () {
