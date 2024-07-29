@@ -64,14 +64,14 @@ public class Game {
 	
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "game")
 	private List<GameDiscount> gameDiscounts;
-	@JsonProperty
 	@Transient
 	private Integer rate;
-	@JsonProperty
 	@Transient
 	private Integer discountedPrice;
 	@Transient
 	private boolean haveGame = false;
 	@Transient
 	private boolean inCart = false;
+	@Transient
+	private LocalDateTime buyAt;
 }

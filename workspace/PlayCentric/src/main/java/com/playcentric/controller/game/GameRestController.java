@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,7 +42,7 @@ public class GameRestController {
 	@GetMapping("/game/getGamePage")
 	public Page<Game> getGamePage(@RequestParam Integer pg,@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		Pageable pgb = PageRequest.of(pg, 9);
-		Page<Game> findGames = gService.findShowInStore(pgb);
+		Page<Game> findGames = gService.findByIsShowOrderByReleaseAtDesc(pgb);
 		for (Game game : findGames) {
 			gService.setRateAndDiscountPrice(game);
 			if (loginMember != null) {
@@ -58,7 +59,7 @@ public class GameRestController {
 	                                    @RequestParam List<Integer> typeId,
 	                                    @ModelAttribute("loginMember") LoginMemDto loginMember) {
 	    Pageable pgb = PageRequest.of(pg, 9);
-	    List<Game> gamePage = gService.findByIsShow().stream()
+	    List<Game> gamePage = gService.findByIsShowOrderByReleaseAtDesc().stream()
 	            .filter(game -> game.getGameTypeLibs().stream()
 	                    .map(GameTypeLib::getGameTypeId)
 	                    .collect(Collectors.toSet())
@@ -99,7 +100,7 @@ public class GameRestController {
 			@ModelAttribute("loginMember") LoginMemDto loginMember
 			) {
 		Pageable pgb = PageRequest.of(pg, 9);
-		List<Game> gamelist = gService.findAll().stream()
+		List<Game> gamelist = gService.findByIsShowOrderByReleaseAtDesc().stream()
 				.filter(game -> {
 					Integer discountedPrice = game.getPrice();
 					Integer myDiscountPrice = gService.setRateAndDiscountPrice(game);
@@ -134,7 +135,7 @@ public class GameRestController {
 			@ModelAttribute("loginMember") LoginMemDto loginMember) {
 	    Pageable pgb = PageRequest.of(pg, 9);
 	    // 根據條件查詢遊戲
-	    List<Game> gamePage = gService.findAll().stream()
+	    List<Game> gamePage = gService.findByIsShowOrderByReleaseAtDesc().stream()
 	            .filter(game -> game.getGameTypeLibs().stream()
 	                    .map(GameTypeLib::getGameTypeId)
 	                    .collect(Collectors.toSet())
@@ -168,6 +169,13 @@ public class GameRestController {
 	    }
 	}
 
-	
+	//遊戲上下架
+	@GetMapping("/game/isShow")
+	public void postMethodName(@RequestParam Integer gameId) {
+		Game game = gService.findById(gameId);
+		if (game.getIsShow() == true) game.setIsShow(false);
+		else game.setIsShow(true);
+		gService.save(game);
+	}
 	
 }

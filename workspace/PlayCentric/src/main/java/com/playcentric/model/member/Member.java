@@ -96,5 +96,13 @@ public class Member {
 		}
 		this.lastLogin = new Date();
 	}
-    
+ 
+    public void setEmail(String email){
+        this.email = email.toLowerCase();
+    }
+
+    public void setEmailVerified(Boolean emailVerified){
+        this.emailVerified = emailVerified!=null? emailVerified:false;
+        System.err.println("重新設定email認證，emailVerified="+this.emailVerified);
+    }
 }

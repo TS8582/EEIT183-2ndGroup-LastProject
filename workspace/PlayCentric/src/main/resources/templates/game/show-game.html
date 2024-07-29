@@ -7,13 +7,35 @@
     <div th:replace="~{/layout/nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
     <link rel="stylesheet" th:href="@{/css/utils/doAlertJs.css}">
+    <style>
+        .star-container {
+            position: relative;
+            display: inline-block;
+            font-size: 2em;
+            color: #ccc;
+            /* 灰色星星 */
+        }
+
+        .star-container .filled {
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            color: gold;
+        }
+
+        .color-gold {
+            color: gold;
+        }
+    </style>
     <title th:text="${game.gameName}"></title>
 </head>
 
 <body class="bg-gray-100 w-screen">
     <div class="px-0 py-2 lg:px-15 text-end w-full fixed">
         <!-- 購物車按鈕 -->
-        <a th:if="${session.loginMember}" th:href="@{/gamecart/get}" class="mybtn mybtn-green mx-5 showcarts">購物車</a>
+        <a th:if="${session.loginMember}" th:href="@{/personal/gamecart/get}"
+            class="mybtn mybtn-green mx-5 showcarts">購物車</a>
     </div>
     <main class="container">
 
@@ -83,7 +105,7 @@
                             th:text=" 'NT$' + ${game.discountedPrice}"></span>
                     </div>
                     <div class="flex sm:justify-center lg:justify-start">
-                        <a th:if="${session.loginMember == null}" th:href="@{/member/login}"
+                        <a th:if="${session.loginMember == null}" th:href="@{/member/homeShowErr/notLogin}"
                             class="mybtn mybtn-green">加入購物車</a>
                         <span th:if="${session.loginMember} ? ${game.isInCart}" class="mybtn-disabled">已加入購物車</span>
                         <span th:if="${session.loginMember} ? ${!game.isInCart && !game.isHaveGame}"
@@ -108,9 +130,21 @@
                 </div>
             </div>
 
-            <div class="col-span-1 my-3 mx-1 border-2 border-black px-4 py-2 rounded-md">
-
-
+            <div class="col-span-1 my-3 mx-1 border-2 border-black px-4 py-2 rounded-md reviewsContainer">
+                <h1 class="text-2xl text-center font-semibold">評論</h1>
+                <div class="star select-none">
+                    <span id="star-1" class="star-container">★</span>
+                    <span id="star-2" class="star-container">★</span>
+                    <span id="star-3" class="star-container">★</span>
+                    <span id="star-4" class="star-container">★</span>
+                    <span id="star-5" class="star-container">★</span>
+                </div>
+                <div class="">
+                    <textarea id="reviews" class="w-full h-28 border-2" style="resize: none;" maxlength="30"></textarea>
+                    <div class="flex items-center justify-center">
+                        <span class="mybtn mybtn-sky inline-block">提交評論</span>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -121,6 +155,43 @@
     <script th:src="@{/js/axios.min.js}"></script>
     <script th:src="@{/js/utils/doAlertJs.js}"></script>
     <script th:src="@{/js/game/cart.js}"></script>
+    <script>
+        let starAmount = 1;
+        const reviewsContainer = document.querySelector('.reviewsContainer');
+        const starContainer = reviewsContainer.querySelectorAll('.star-container');
+        starContainer.forEach((elm, i) => {
+            elm.addEventListener('mouseenter', e => {
+                if (i < (starAmount - 1)) {
+                    for (let g = i + 1; g < starContainer.length; g++) {
+                        starContainer[g].classList.remove('color-gold');
+                    }
+                }
+                for (let j = 0; j <= i; j++) {
+                    starContainer[j].classList.add('color-gold');
+                }
+            })
+
+            elm.addEventListener('mouseleave', e => {
+                for (let j = 0; j <= i; j++) {
+                    starContainer[j].classList.remove('color-gold');
+                }
+                for (let j = 0; j <= (starAmount - 1); j++) {
+                    starContainer[j].classList.add('color-gold');
+                }
+            })
+
+            elm.addEventListener('click', e => {
+                starContainer.forEach(el => {
+                    el.classList.remove('color-gold');
+                });
+                for (let j = 0; j <= i; j++) {
+                    starContainer[j].classList.add('color-gold');
+                    starAmount = i + 1;
+                }
+            })
+
+        });
+    </script>
 </body>
 
 </html>

@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/utils/doAlertJS.css}">
     <link rel="stylesheet" th:href="@{/css/output.css}">
     <title>PlayCentric-後台管理-新增遊戲</title>
 </head>
@@ -49,7 +51,7 @@
 
                     <div class="flex flex-col">
                         <label for="publisher" class="select-none text-lg me-2">上傳遊戲程式：</label>
-                        <input required type="file" name="gameFiles" accept=".exe">
+                        <input type="file" name="gameFiles" accept=".exe">
                     </div>
 
                     <div class="flex flex-col">
@@ -87,8 +89,8 @@
                                     <div class="flex flex-col">
                                         <label for="discountRate" class="text-lg me-2">優惠折扣：</label>
 
-                                        <input type="number" min="0" max="0.99" name="discountRate" id="discountRate"
-                                            value="0" step="0.01" class="text-input w-96" />
+                                        <input type="number" min="0.01" max="0.99" name="discountRate" id="discountRate"
+                                            disabled step="0.01" class="text-input w-96" />
                                     </div>
                                 </div>
 
@@ -126,6 +128,7 @@
         </div>
     </div>
 
+    <script th:src="@{/js/utils/doAlertJS.js}"></script>
     <script th:src="@{/js/game/insert-game.js}"></script>
 
 </body>

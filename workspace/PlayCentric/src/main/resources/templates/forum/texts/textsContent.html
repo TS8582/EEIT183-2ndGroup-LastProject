@@ -21,10 +21,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
         /* 調整 placeholder 的顏色 */
         ::placeholder {
             color: rgba(0, 0, 0, 0.329) !important;
+        }
+
+        .container {
+            overflow: hidden;
+        }
+
+        .edit-mode .talk-content {
+            display: none;
+        }
+
+        .edit-mode .edit-form {
+            display: block;
+        }
+
+        .edit-form {
+            display: none;
+        }
+
+        .d1 {
+            display: flex;
         }
     </style>
 </head>
@@ -35,8 +57,12 @@
     <div>
         <section class="py-3">
             <div class="container">
+                <th:block th:if="${session.loginMember!=null && session.loginMember.role == 1}">
+                    <a th:href="@{/personal/texts/edit/{textsId}(textsId=${texts.textsId})}"
+                        class="btn btn-primary">編輯文章</a>
+                    <a th:href="@{/personal/texts/delete(textsId=${texts.textsId})}" class="btn btn-danger">刪除文章</a>
+                </th:block>
                 <div class="mt-5">
-                    <h1 class="page-title">文章名稱</h1>
                     <h1 class="page-title" th:text="${texts.title}">文章名稱</h1>
                     <div class="post-meta">
                         <div
@@ -54,18 +80,45 @@
 
         <div class="container" with="10px">
             <div class="card">
-                <div class="card-header">
-                    交流區
-                </div>
+                <div class="card-header">交流區</div>
                 <div class="card-body">
                     <ul class="list-group">
-                        <li class="list-group-item" th:each="talk : ${talk}">
+                        <li class="list-group-item full-msg" th:each="talk : ${talk}">
                             <p th:text="${#dates.format(talk.talkTime, 'yyyy年MM月dd日 HH:mm:ss')}">留言時間</p>
-                            <p th:text="${talk.talkContent}">留言內容</p>
+                            <!-- 編輯表單(顯示) -->
+                            <div th:id="'editContent-'+${talk.talkId}">
+                                <div class="talk-content">
+                                    <p class="message" th:text="${talk.talkContent}">留言內容</p>
+                                </div>
+                                <th:block class="edit-btn"
+                                    th:if="${session.loginMember!=null && session.loginMember.role == 1}">
+                                    <button class="btn btn-outline-success btn-sm"
+                                        th:onclick="'showEditForm(' + ${talk.talkId} + ')'">編輯</button>
+                                    <form th:action="@{/talk/delete}" method="post" style="display: inline;">
+                                        <input name="talkId" th:value="${talk.talkId}" type="hidden" />
+                                        <input name="textsId" th:value="${texts.textsId}" type="hidden" />
+                                        <input name="_method" value="DELETE" type="hidden" />
+                                        <input type="submit" value="刪除" onclick="return confirm('確定刪除嗎??')"
+                                            class="btn btn-outline-danger btn-sm">
+                                    </form>
+                                </th:block>
+
+                            </div>
+
+                            <!-- 編輯表單(隱藏) -->
+                            <form th:id="'editForm-'+${talk.talkId}" method="post" th:action="@{/talk/editMessage}"
+                                style="display: none;">
+                                <textarea class="form-control" name="talkContent" required
+                                    th:text="${talk.talkContent}"></textarea>
+                                <input type="hidden" name="talkId" th:value="${talk.talkId}" />
+                                <input name="textsId" th:value="${texts.textsId}" type="hidden" />
+                                <button type="submit" class="btn btn-primary mt-2">儲存</button>
+
+                            </form>
                         </li>
                     </ul>
                     <br>
-                    <form th:action="@{/talk/addByTextsId}" method="post" id="talkForm">
+                    <form th:action="@{/personal/talk/addByTextsId}" method="post" id="talkForm">
                         <textarea id="myTextarea" class="form-control" name="talkContent" placeholder="寫下你的看法吧~"
                             required></textarea>
                         <input type="hidden" name="textsId" th:value="${textsId}" />
@@ -73,37 +126,38 @@
                 </div>
             </div>
         </div>
-    </div>
+
+        <script src="js/jquery-1.11.0.min.js"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"
+            integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+            crossorigin="anonymous"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/script.js"></script>
+        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+        <script>
+
+            function showEditForm(messageId) {
+                $('#editForm-' + messageId).show();
+                $('#editContent-' + messageId).hide();
+            }
+
+            document.addEventListener('DOMContentLoaded', (event) => {
+                const textarea = document.getElementById('myTextarea');
+                const form = document.getElementById('talkForm');
+
+                textarea.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        form.submit();
+                    }
+                });
 
 
-
-    <!-- <div class="footer">
-        <div th:replace="~{layout/footer}"></div>
-    </div> -->
-
-
-    <script src="js/jquery-1.11.0.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0-alpha3/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/script.js"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const textarea = document.getElementById('myTextarea');
-            const form = document.getElementById('talkForm');
-
-            textarea.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault(); // 阻止默認的換行行為
-                    form.submit(); // 提交表單
-                }
             });
-        });
-    </script>
+
+        </script>
 </body>
 
 </html>

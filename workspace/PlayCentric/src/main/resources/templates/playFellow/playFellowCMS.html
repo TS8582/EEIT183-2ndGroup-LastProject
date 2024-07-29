@@ -42,7 +42,8 @@ html, body {
 	color: #DC3545 !important;
 }
 
-.status-open {
+.status-open,
+.status-completed {
 	color: #28A745 !important;
 }
 
@@ -101,16 +102,20 @@ html, body {
 		<div th:replace="~{/playFellow/playFellowAside}"></div>
 		<main class="w-100 p-3">
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
-				<li class="nav-item" role="presentation" style="margin-right: 10px;">
+				<li class="nav-item" role="presentation" style="margin-right: 6px;">
 					<button class="nav-link text-secondary" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">伴遊者列表</button>
 				</li>
 				<li class="nav-item" role="presentation">
 					<button class="nav-link text-secondary" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">交易明細</button>
 				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link text-secondary" id="profile-tab" data-bs-toggle="tab" data-bs-target="#third-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">營收情況</button>
+				</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
 				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
 					<!-- 這裡放TABLE內容  PlayFellowMember-->
+					
 					<br>
 					<div class="container">
 						<div class="table-container">
@@ -133,7 +138,7 @@ html, body {
 									<tr th:each="pfmember : ${PlayFellowMember}" >
 										<td th:text="${pfmember.playFellowId}"></td>
 										<td th:text="${pfmember.pfnickname}"></td>
-										<td><span th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...' : pfmember.pfdescription}"></span></td>
+										<td><span th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '....' : pfmember.pfdescription}"></span></td>
 										<td th:text="${pfmember.member.memId}"></td>
 										<td><span th:if="${pfmember.member.gender == 1}">男生</span><span th:if="${pfmember.member.gender == 2}">女生</span></td>
 										<td th:text="${pfmember.member.birthday}"></td>
@@ -160,10 +165,10 @@ html, body {
 									<tr>
 										<th>訂單編號</th>
 										<th>伴遊遊戲編號</th>
+										<th>伴遊遊戲</th>
 										<th>下訂會員</th>
 										<th>單數</th>
 										<th>總金額</th>
-										<th>交易序號</th>
 										<th>付款時間</th>
 										<th>創建時間</th>
 										<th>狀態</th>
@@ -174,13 +179,14 @@ html, body {
 									<tr th:each="order : ${PfOrder}" class="small">
 										<td th:text="${order.pfOrderId}"></td>
 										<td th:text="${order.pfGame.pfGameId}"></td>
+										<td th:text="${order.pfGame.game.gameName}"></td>
 										<td th:text="${order.member.memId}"></td>
 										<td th:text="${order.quantity}"></td>
 										<td th:text="${order.totalAmount}"></td>
-										<td th:text="${order.transactionID}"></td>
 										<td th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
 										<td th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
 										<td th:text="${order.paymentStatus == 1 ? '交易中' : (order.paymentStatus == 2 ? '交易完成' : '交易失敗或取消')}" th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 ? 'status-completed' : 'status-failed')}"></td>
+									
 									</tr>
 								</tbody>
 							</table>
@@ -191,7 +197,17 @@ html, body {
 						</ul>
 					</div>
 				</div>
+				
+				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="third-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+										    <canvas id="orderChart" width="360" height="160"></canvas>
+					
+				</div>
 			</div>
+			
+			
+			
+			
+			
 			<!-- 刪除跳窗 -->
 			<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
@@ -215,7 +231,9 @@ html, body {
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 	<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
-	<script th:src="@{/js/layout/nav.js}"></script>
+	<script th:src="@{/js/layout/nav.js}"></script>  
+	  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	
 
 	<script>
 		$(document).on('click', '#review', function () {
@@ -269,6 +287,9 @@ html, body {
 			});
 		}
 
+		
+		
+		
 		function setupPagination(tableId, tbodyId, itemsPerPage) {
 			let table = document.getElementById(tableId);
 			let tbody = document.getElementById(tbodyId);
@@ -302,6 +323,53 @@ html, body {
 
 			showPage(0);
 		}
+		
+		 document.addEventListener('DOMContentLoaded', () => {
+	            const orders = [];
+	            
+	            // 提取表格中的訂單資料
+	            const rows = document.querySelectorAll('#orderBody tr');
+	            rows.forEach(row => {
+	                const paymentTime = row.children[6].innerText;
+	                const totalAmount = parseFloat(row.children[5].innerText);
+	                orders.push({ paymentTime, totalAmount });
+	            });
+
+	            // 處理數據：將數據按日期整理，並計算每個日期的總金額
+	            const orderData = {};
+	            orders.forEach(order => {
+	                const date = order.paymentTime.split(' ')[0]; // 只取日期部分
+	                if (!orderData[date]) {
+	                    orderData[date] = 0;
+	                }
+	                orderData[date] += order.totalAmount;
+	            });
+
+	            const labels = Object.keys(orderData);
+	            const data = Object.values(orderData);
+
+	            const ctx = document.getElementById('orderChart').getContext('2d');
+	            const orderChart = new Chart(ctx, {
+	                type: 'bar',
+	                data: {
+	                    labels: labels,
+	                    datasets: [{
+	                        label: '每日伴遊收日',
+	                        data: data,
+	                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+	                        borderColor: 'rgba(75, 192, 192, 1)',
+	                        borderWidth: 1
+	                    }]
+	                },
+	                options: {
+	                    scales: {
+	                        y: {
+	                            beginAtZero: true
+	                        }
+	                    }
+	                }
+	            });
+	        });
 	</script>
 </body>
 </html>

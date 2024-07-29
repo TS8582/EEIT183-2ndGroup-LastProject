@@ -63,12 +63,20 @@ public class GameOrderService {
 	
 	private final AllInOne allInOne = new AllInOne("");
 	
-	public GameOrder save(GameOrder gameOrder) {
-		return oRepo.save(gameOrder);
+	public List<GameOrderDetails> findDetailsByOrderId(Integer orderId) {
+		return odRepo.findByGameOrderId(orderId);
 	}
 	
 	public GameOrderDetails saveDetails(GameOrderDetails orderDetails) {
 		return odRepo.save(orderDetails);
+	}
+	
+	public List<GameOrder> findByMemId(Integer memId) {
+		return oRepo.findByMemIdAndStatus(memId, 1);
+	}
+	
+	public GameOrder save(GameOrder gameOrder) {
+		return oRepo.save(gameOrder);
 	}
 	
 	public GameOrder findById(Integer gameOrderId) {
@@ -80,13 +88,12 @@ public class GameOrderService {
         SimpleDateFormat sdf = new SimpleDateFormat(merchantTradeDateFormat);
         String currentDate = sdf.format(new Date());
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(merchantTradeDateFormat);
-        String tradeNo = "PLCTCGO";
+        String tradeNo = "PCGO";
 		LocalDateTime now = LocalDateTime.now();
-		tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth();
+		tradeNo = tradeNo + now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getMinute() + now.getSecond();
 		Random random = new Random();
-		int ran = 100 + random.nextInt(900);
-		tradeNo = tradeNo + "T" + ran;
+		int num = 100 + random.nextInt(900);
+		tradeNo += "T" + num;
 		int total = 0;
 		String itemname = "";
 		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
@@ -114,13 +121,12 @@ public class GameOrderService {
         return form;
 	}
 	
-	public void createOrder(LoginMemDto loginMember,String tradeNo) {
+	public void createOrder(LoginMemDto loginMember,String tradeNo,Integer paymentId) {
 		List<GameCarts> carts = gcService.findByMemId(loginMember.getMemId());
 		Member member = mService.findById(loginMember.getMemId());
 		Integer total = 0;
 //		設定訂單屬性
 		GameOrder gameOrder = new GameOrder();
-		gameOrder.setStatus(0);
 		gameOrder.setPaymentId(1);
 		gameOrder.setPayment(pService.findById(1));
 		gameOrder.setMemId(loginMember.getMemId());
@@ -162,9 +168,11 @@ public class GameOrderService {
 		}
 		myorder.setTotal(total);
 		save(myorder);
-		member.setPoints(member.getPoints() - total);
-		loginMember.setPoints(member.getPoints() - total);
-		mService.save(member);
+		if (paymentId == 1) {
+			member.setPoints(member.getPoints() - total);
+			loginMember.setPoints(member.getPoints() - total);
+			mService.save(member);
+		}
 	}
 	
 }

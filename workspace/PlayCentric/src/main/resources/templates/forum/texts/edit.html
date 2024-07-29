@@ -4,39 +4,187 @@
 <head>
     <meta charset="UTF-8">
     <title>編輯文章</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script th:src="@{/tinymce/js/tinymce/tinymce.min.js}"></script>
+    <script th:src="@{/tinymce/langs/zh_TW.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <style>
+        h1 {
+            color: rgb(52, 0, 148) !important;
+        }
+
+        .b1 {
+            background-image: url("[[@{/images/loginBG.jpg}]]");
+            background-size: cover;
+            /* 確保圖片覆蓋整個容器 */
+            background-position: center;
+            /* 確保圖片居中 */
+            margin: 0;
+            padding: 0;
+        }
+
+        label {
+            margin-bottom: 15px !important;
+        }
+
+        .d1 {
+            width: 75% !important;
+            height: auto !important;
+            margin-top: 20px !important;
+            padding: 30px !important;
+
+        }
+
+        #postForum div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        table {
+            display: flex;
+            justify-content: start;
+        }
+
+        td label {
+            margin-left: 240px;
+        }
+
+        .btn1 {
+            background-color: yellow;
+            border: 5px outset rgb(202, 199, 2);
+            color: black;
+            font-size: larger;
+            width: 500px;
+            transition: transform 0.2s;
+        }
+
+        .btn1:hover {
+            background-color: rgb(255, 30, 30);
+            border: 5px outset rgb(179, 10, 10);
+            color: rgb(255, 255, 255);
+            transform: translateY(4px);
+        }
+
+        .btn1:active {
+            transform: translateY(2px);
+            background-color: rgb(172, 16, 16);
+            border: 5px inset rgb(116, 8, 8);
+        }
+    </style>
 </head>
 
-<body>
-    <div th:replace="~{/forum/layout/navbarForum}"></div>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-8">
-                <h1 class="mt-5">編輯文章</h1>
-                <div class="card">
-                    <div class="card-body">
-                        <form th:action="@{/texts/edit}" th:object="${texts}" method="post">
-                            <input type="hidden" th:field="*{textsId}" />
-                            <input type="hidden" th:field="*{doneTime}" />
-                            <div class="form-group">
-                                <label for="title">標題</label>
-                                <input type="text" class="form-control" th:field="*{title}" required>
+<body class="b1">
+    <div th:replace="~{layout/nav}"></div>
+
+    <div class="container bg-light rounded-2 d1">
+        <div class="row">
+            <h1 class="my-2 d-flex justify-content-center">編輯文章</h1>
+            <br>
+            <form id="postForm" th:action="@{/texts/update}" method="post" enctype="multipart/form-data">
+
+                <!-- Hidden field to store the article ID -->
+                <input type="hidden" id="textsId" name="textsId" th:value="${texts.textsId}">
+                <input type="hidden" id="memId" name="memId" th:value="${texts.memId}">
+                <input type="hidden" id="hideTexts" name="hideTexts" th:value="${texts.hideTexts}">
+                <input type="hidden" id="updatedTime" name="updatedTime" th:value="${texts.updatedTime}">
+
+                <table>
+                    <tr>
+                        <td>
+                            <div>
+                                <label for="title">文章標題：</label>
+                                <input type="text" id="title" name="title" th:value="${texts.title}" required>
                             </div>
-                            <div class="form-group">
-                                <label for="textsContent">內容</label>
-                                <textarea class="form-control" id="textsContent" th:field="*{textsContent}" rows="10"
-                                    required></textarea>
+                        </td>
+                        <br>
+                        <td>
+                            <div>
+                                <label for="forumId">主題類型：</label>
+                                <select id="forumId" name="forumId" required>
+                                    <option value="" disabled selected>請選擇</option>
+                                    <!-- Iterate over 'arrayList' to populate options -->
+                                    <option th:each="forum : ${arrayList}" th:value="${forum.forumId}"
+                                        th:text="${forum.forumName}">
+                                    </option>
+                                </select>
                             </div>
-                            <button type="submit" class="btn btn-outline-primary">儲存</button>
-                        </form>
-                    </div>
+                        </td>
+                    </tr>
+                </table>
+                <textarea id="textsContent" name="textsContent" th:text="${texts.textsContent}"></textarea>
+                <br>
+                <div class="d-flex justify-content-start">
+                    <label for="files">選擇文章展示圖片：</label><br>
+                    <input type="file" id="files" name="files" multiple>
                 </div>
-            </div>
+                <div class="d-flex justify-content-center">
+                    <button class="btn1" type="submit">上傳</button>
+                </div>
+            </form>
         </div>
-    </div>
+        <script th:if="${errorScript}" th:utext="${errorScript}"></script>
+        <script>
+            tinymce.init({
+                selector: '#textsContent',
+                height: 500,
+                plugins: [
+                    'advlist', 'autolink', 'lists', 'image', 'charmap', 'preview',
+                    'anchor', 'searchreplace', 'visualblocks', 'fullscreen',
+                    'media', 'help', 'wordcount'
+                ],
+                toolbar: 'undo redo | blocks | ' +
+                    'bold italic backcolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'removeformat | help',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+                language_url: '/static/langs/zh_TW.js',
+                language: 'zh_TW',
+                images_upload_url: '/PlayCentric/photos/uploadPost', // 替換為後端處理圖片上傳的 URL
+                images_upload_base_path: '/uploads',
+                images_upload_handler: function (blobInfo, success, failure) {
+                    var formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://localhost:8081/comPETnion/photos/uploadPost', // 替換為後端處理圖片上傳的 URL
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (!data || typeof data.location !== 'string') {
+                                failure('Invalid response from server');
+                            } else {
+                                success(data.location);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            failure('Image upload failed. Status: ' + xhr.status);
+                        }
+                    });
+                }
+            });
+
+            // 下拉式選擇類型主題
+            $(document).ready(function () {
+                $.ajax({
+                    url: '/findAllforumInTexts', // 修改为你实际的后端接口路径
+                    method: 'POST',
+                    success: function (data) {
+                        data.forEach(function (forum) {
+                            $('#forumId').append('<option value="' + forum.forumId + '">' + forum.forumName + '</option>');
+                            console.log(data)
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching forums:', error);
+                        console.log(123)
+                    }
+                });
+            });
+        </script>
+
+
 </body>
 
 </html>

@@ -45,7 +45,7 @@ function htmlMaker(data) {
     tbody.innerHTML += `<tr>
                             <td class="border p-3 title">
                               <a href="/PlayCentric/anno/showOneAnno?annoId=${data.annoId}"
-                               class="text-center">${data.title}</a>
+                               class="text-center mylink">${data.title}</a>
                                </td>
                               <td
                                  class="border p-3 title text-center">
@@ -55,9 +55,9 @@ function htmlMaker(data) {
                                   <td class="text-center border p-3 lastEditAt">${data.lastEditAt}</td>
                                 <td class="text-center border p-3">
                                    <a href="/PlayCentric/anno/getUpdatAnnoannoId=${data.annoId}"
-                                 class="btn btn-sky rounded-md me-2 block md:inline">修改</a>
+                                 class="mybtn mybtn-sky rounded-md me-2 block md:inline">修改</a>
                                  <a href="/PlayCentric/anno/deleteAnno?annoId=${data.annoId}"
-                                  class="btn btn-danger rounded-md me-2 block md:inline">刪除</a>
+                                  class="mybtn mybtn-danger rounded-md me-2 block md:inline">刪除</a>
                                     </td>
                                 </tr>
 			`;

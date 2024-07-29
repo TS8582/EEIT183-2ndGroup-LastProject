@@ -2,6 +2,8 @@ package com.playcentric.controller.forum;
 
 import java.util.List;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,17 +13,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.forum.Forum;
 import com.playcentric.model.forum.ForumPhoto;
 import com.playcentric.model.forum.Texts;
+import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
 import com.playcentric.service.forum.ForumService;
+import com.playcentric.service.forum.PhotoService;
 import com.playcentric.service.forum.TextsService;
 import com.playcentric.service.member.MemberService;
 
@@ -38,6 +45,20 @@ public class TextsController {
 
 	@Autowired
 	private MemberService memberService;
+
+	@Autowired
+	private PhotoService photoService;
+
+	// 更新Status
+	@ResponseBody
+	@PostMapping("/texts/updateTextsShowStatus")
+	public Texts updatePostShowStatus(@RequestBody Texts texts) {
+		System.out.println("Received request to update texts status");
+		System.out.println("Texts ID: " + texts.getTextsId());
+		System.out.println("Hide Texts: " + texts.getHideTexts());
+
+		return textsService.updateTextsShowStatus(texts.getTextsId(), texts.getHideTexts());
+	}
 
 	// 顯示當前主題文章
 	@GetMapping("/texts/findTextsByForumId")
@@ -56,20 +77,30 @@ public class TextsController {
 	}
 
 	// 處理文章發布與圖片上傳
-	@PostMapping("/texts/publish")
+	@PostMapping("/personal/texts/publish")
 	public String publish(@RequestParam("textsContent") String textsContent, @RequestParam("title") String title,
-			@RequestParam("files") MultipartFile[] files, @RequestParam("forumId") Integer forumId, @RequestParam("memId") Integer memId, HttpSession session,
-			Model model) throws IOException {
+			@RequestParam("files") MultipartFile[] files, @RequestParam("forumId") Integer forumId,
+			HttpSession httpSession, Model model) throws IOException {
+
+		// 從 session 中獲取 member 對象
+		LoginMemDto loginMember = (LoginMemDto) httpSession.getAttribute("loginMember");
+
+		// 檢查 member 對象是否為 null
+//		if (loginMember == null) {
+//			// 如果 member 為 null，說明用戶未登入，重定向到登入頁面
+//			return "redirect:/member/showLoginErr/notLogin"; // 確保你有一個處理 /login 的路由
+//		}
 
 		Forum forum = forumService.findById(forumId);
-		Member member = memberService.findById(memId);
 
 		// 建立一個新的文章物件
 		Texts texts = new Texts();
-		texts.setTitle(title);
+		texts.setHideTexts(null);
 		texts.setTextsContent(textsContent); // 設置文章內容
+		texts.setDoneTime(new Timestamp(System.currentTimeMillis())); // 設置發佈日期
+		texts.setTitle(title);
 		texts.setForum(forum);
-		texts.setMember(member);
+		texts.setMemId(loginMember.getMemId());
 
 		// 如果有上傳的圖片，處理圖片上傳
 		if (files != null && files.length > 0) {
@@ -111,8 +142,20 @@ public class TextsController {
 
 	}
 
+	// 查詢名稱
+	@PostMapping("/member/findByNameTexts")
+	public String findByNameTexts(@RequestParam("title") String title, Model model) {
+
+		List<Texts> arrayList = textsService.findAllTexts(title);
+		System.out.println(arrayList);
+
+		model.addAttribute("arrayList", arrayList);
+
+		return "forum/texts/listFront";
+	}
+
 	// TinyMCE新增
-	@GetMapping("/texts/insertTexts2")
+	@GetMapping("/personal/texts/insertTexts2")
 	public String insertTexts2(Model model) {
 		List<Forum> arrayList = forumService.findAll();
 		model.addAttribute("arrayList", arrayList);
@@ -120,11 +163,27 @@ public class TextsController {
 	}
 
 	@PostMapping("/texts/insertTextsData2")
-	public String insertTextsData2(@RequestParam("textsContent") String textsContent, Model model,
-			HttpSession httpSession) {
+	public String insertTextsData2(@ModelAttribute Texts texts, @RequestParam("files") MultipartFile files, Model model,
+			HttpSession httpSession) throws IOException {
 
-		Texts texts = new Texts();
-		texts.setTextsContent(textsContent);
+		LoginMemDto loginMember = (LoginMemDto) httpSession.getAttribute("loginMember");
+
+		Forum forum = forumService.findById(texts.getForumId());
+		texts.setForum(forum);
+
+		Member member = memberService.findById(loginMember.getMemId());
+		texts.setMember(member);
+
+		if (!files.isEmpty()) {
+			ForumPhoto forumPhoto = new ForumPhoto();
+			forumPhoto.setPhotoFile(files.getBytes());
+			forumPhoto.setTexts(texts);
+			ArrayList<ForumPhoto> photoList = new ArrayList<>();
+			photoList.add(forumPhoto);
+			texts.setForumPhoto(photoList);
+//			forumPhoto = photoService.insertPhoto(forumPhoto);
+		}
+
 		textsService.insert(texts);
 
 		Texts lastestTexts = textsService.findLastestMsg();
@@ -164,30 +223,90 @@ public class TextsController {
 		return "forum/texts/listFront";
 	}
 
-	// 編輯文章
-	@GetMapping("/texts/update")
-	public String showEditForum(@RequestParam("textsId") int textsId, Model model) {
+	// 尋找修改ID
+	@GetMapping("/personal/texts/edit/{textsId}")
+	public String showEditForm(@PathVariable Integer textsId, Model model) {
 		Texts texts = textsService.findById(textsId);
-		if (texts != null) {
-			model.addAttribute("texts", texts);
-			return "texts/edit"; // 對應的 Thymeleaf 模板名稱
-		} else {
+		if (texts == null) {
+			model.addAttribute("errorScript", "alert('找不到對應的文章，請確認文章ID是否正確。');");
 			return "forum/texts/edit";
 		}
+		model.addAttribute("texts", texts);
+		List<Forum> arrayList = forumService.findAll();
+		model.addAttribute("arrayList", arrayList);
+		return "forum/texts/edit";
 	}
 
-	@PutMapping("/texts/edit")
-	public String editTexts(@ModelAttribute Texts texts) {
+	@PostMapping("/texts/update")
+	public String updateTexts(@RequestParam("textsContent") String textsContent, @RequestParam("title") String title,
+			@RequestParam("textsId") Integer textsId, @RequestParam("files") MultipartFile[] files,
+			@RequestParam("forumId") Integer forumId, @RequestParam("hideTexts") Boolean hideTexts,
+			HttpSession httpSession, Model model) throws IOException {
+
+		// 從 session 中獲取登錄會員資訊
+		LoginMemDto loginMember = (LoginMemDto) httpSession.getAttribute("loginMember");
+
+		// 檢查用戶是否登錄
+		if (loginMember == null) {
+			// 如果未登錄，重定向到登錄錯誤頁面
+			return "redirect:/member/showLoginErr/notLogin";
+		}
+
+		// 根據 textsId 獲取現有的 Texts 對象
+		Texts texts = textsService.findById(textsId);
+		if (texts == null) {
+			model.addAttribute("errorScript", "alert('找不到對應的文章，請確認文章ID是否正確。');");
+			return "forum/texts/edit";
+		}
+
+		// 更新論壇信息（如果有變化）
+		if (forumId != null && !forumId.equals(texts.getForum().getForumId())) {
+			Forum forum = forumService.findById(forumId);
+			texts.setForum(forum);
+		}
+
+		// 更新會員信息
+		Member member = memberService.findById(loginMember.getMemId());
+		texts.setMember(member);
+
+		// 更新文本內容
+		texts.setHideTexts(hideTexts);
+		texts.setTextsContent(textsContent);
+		texts.setUpdatedTime(new Timestamp(System.currentTimeMillis()));
+		texts.setTitle(title);
+
+		// 處理文件上傳
+		if (files != null && files.length > 0) {
+			List<ForumPhoto> forumPhotosList = new ArrayList<>();
+
+			for (MultipartFile file : files) {
+				if (!file.isEmpty()) {
+					ForumPhoto forumPhoto = new ForumPhoto();
+					forumPhoto.setPhotoFile(file.getBytes());
+					forumPhoto.setTexts(texts);
+					forumPhotosList.add(forumPhoto);
+				}
+			}
+
+			if (!forumPhotosList.isEmpty()) {
+				// 如果有新照片，更新文本的照片列表
+				texts.setForumPhoto(forumPhotosList);
+			}
+		}
+
+		// 更新文本在數據庫中
 		textsService.update(texts);
-		return "redirect:/findAllTexts"; // 後台
+
+		// 更新成功後重定向到前台列表頁面
+		return "redirect:/texts/findTextsById?textsId=" + textsId;
 	}
 
 	// 刪除文章
-	@GetMapping("/texts/delete")
+	@GetMapping("/personal/texts/delete")
 	public String deleteTexts(@RequestParam("textsId") Integer textsId) {
 		textsService.deleteTextsById(textsId);
 
-		return "redirect:/findAllTexts"; // 導入後台
+		return "redirect:/texts/page"; // 導入前台
 	}
 
 }

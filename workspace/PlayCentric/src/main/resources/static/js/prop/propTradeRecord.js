@@ -35,18 +35,23 @@ $(document).ready(function () {
           const memberName = await fetchMemberNameById(buyOrder.buyerMemId);
 
           // 格式化購買時間
-          const orderTime = new Date(buyOrder.orderTime).toLocaleString("zh-TW", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false
-          }).replace(/\//g, '-').replace(',', '');
+          const orderTime = new Date(buyOrder.orderTime)
+            .toLocaleString("zh-TW", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: false,
+            })
+            .replace(/\//g, "-")
+            .replace(",", "");
 
           // 检查并获取付款方式名称
-          const paymentName = buyOrder.payment ? buyOrder.payment.paymentName : 'N/A';
+          const paymentName = buyOrder.payment
+            ? buyOrder.payment.paymentName
+            : "N/A";
 
           myTable.row
             .add([
@@ -79,7 +84,7 @@ $(document).ready(function () {
 async function fetchMemberNameById(memId) {
   try {
     const res = await axios.get(
-      "http://localhost:8080/PlayCentric/prop/front/buyProp/findMenNameByMemId",
+      "/PlayCentric/prop/front/buyProp/findAllByMemId",
       {
         params: { memId: memId },
       }

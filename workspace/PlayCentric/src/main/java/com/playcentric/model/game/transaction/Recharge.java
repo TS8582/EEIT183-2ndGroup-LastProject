@@ -2,6 +2,7 @@ package com.playcentric.model.game.transaction;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.playcentric.model.member.Member;
 
@@ -28,6 +29,7 @@ public class Recharge {
 	private Integer memId;
 	private Integer paymentId;
 	private Integer amount;
+	@JsonFormat(timezone = "GMT+8", pattern = "yyyy年MM月dd日 HH:mm")
 	private LocalDateTime rechargeAt;
 	private Short status;
 	@JsonIgnore

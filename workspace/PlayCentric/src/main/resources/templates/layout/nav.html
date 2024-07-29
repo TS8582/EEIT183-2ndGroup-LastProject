@@ -1,124 +1,266 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+      .collapse {
+        visibility: visible !important;
+      }
 
-	<style>
-		.collapse {
-			visibility: visible !important;
-		}
+      .navbar-dark .navbar-nav .nav-link {
+        color: white;
+      }
 
-		.navbar-dark .navbar-nav .nav-link {
-			color: white;
-		}
-
-		body,
+      /* body,
 		html {
 			height: 100vh;
 			min-height: 100vh;
-		}
+		} */
 
-		.rounded-buttom-150px {
-			border-radius: 0 0 150px 150px;
-		}
+      .rounded-buttom-150px {
+        border-radius: 0 0 150px 150px;
+      }
 
-		.h35px {
-			height: 35px;
-		}
+      .h35px {
+        height: 35px;
+      }
 
-		.w35px {
-			width: 35px;
-		}
-	</style>
-</head>
+      .w35px {
+        width: 35px;
+      }
+    </style>
+  </head>
 
-<body>
+  <body>
+    <nav class="navbar navbar-expand-lg sticky sticky-top navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+          <img
+            th:src="@{/images/MyLogo.png}"
+            alt="Logo"
+            width="100"
+            height="100"
+            class="d-inline-block align-text-top img-fluid"
+          />
+          <span class="ms-2 display-4">PlayCentric</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav ms-auto" th:switch="${session.loginMember}">
+            <!-- "管理介面"之後要移掉，已經放到會員下拉式選單 -->
+            <li class="nav-item">
+              <a
+                class="nav-link fs-4"
+                thif="${session.loginMember!=null && session.loginMember.role == 1}"
+                th:href="@{/back/anno}"
+                >管理介面</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fs-4" th:href="@{/game/gameStore}">
+                遊戲商店
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle fs-4"
+                href="#"
+                id="tradeDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                道具交易
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+                aria-labelledby="tradeDropdown"
+              >
+                <li>
+                  <a class="dropdown-item fs-5" th:href="@{/prop/front/market}"
+                    >拍賣場</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle fs-4"
+                href="#"
+                id="escortDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                伴遊
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+                aria-labelledby="escortDropdown"
+              >
+                <li>
+                  <a class="dropdown-item fs-5" th:href="@{/playFellow}"
+                    >找玩伴</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item fs-5"
+                    id="addPfMember"
+                    th:if="${session.loginMember != null}"
+                    th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}"
+                  >
+                    加入伴遊
+                  </a>
+                  <a
+                    class="dropdown-item fs-5"
+                    id="loginAlert"
+                    th:if="${session.loginMember == null}"
+                    href="javascript:void(0);"
+                    onclick="alertAndRedirect();"
+                  >
+                    加入伴遊
+                  </a>
+                </li>
+              </ul>
+            </li>
 
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle fs-4"
+                href="#"
+                id="eventDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                活動
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+                aria-labelledby="eventDropdown"
+              >
+                <li>
+                  <a class="dropdown-item fs-5" th:href="@{/events/public/list}"
+                    >活動列表</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle fs-4"
+                href="#"
+                id="forumDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                討論區
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+                aria-labelledby="forumDropdown"
+              >
+                <li>
+                  <a class="dropdown-item fs-5" th:href="@{/findAllForum}"
+                    >討論串</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item fs-5" th:href="@{/texts/page}"
+                    >文章總覽</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li th:case="null" class="nav-item">
+              <a
+                th:href="@{/member/login}"
+                class="btn btn-sm btn-primary me-3 fs-4"
+                >登入/註冊</a
+              >
+            </li>
+            <li th:case="*" class="nav-item dropdown">
+              <a
+                class="d-flex fs-4 nav-link"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img
+                  id="login-member-photo"
+                  class="rounded-circle h35px w35px"
+                  th:src="${session.loginMember.photo}"
+                />
+                <span
+                  class="mx-1 text-light"
+                  th:text="${session.loginMember.nickname}"
+                ></span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    th:href="@{/member/personal/recharge}"
+                  >
+                    <p class="m-0 ps-2 w-100 border border-2 rounded-2 fs-5">
+                      <i class="fa-solid fa-sack-dollar"></i>
+                      <span
+                        id="points"
+                        class="ms-2"
+                        th:text="${session.loginMember.points}"
+                      ></span>
+                    </p>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item fs-5"
+                    th:href="@{/member/personal/Info}"
+                    >個人資訊</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item fs-5"
+                    th:if="${session.loginMember.role == 1}"
+                    th:href="@{/back/anno}"
+                    >管理介面</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item fs-5" th:href="@{/member/logout}"
+                    >登出</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-	<nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
-		<div class="container-fluid">
-			<a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-				<img th:src="@{/images/MyLogo.png}" alt="Logo" width="100" height="100"
-					class="d-inline-block align-text-top img-fluid">
-				<span class="ms-2 display-4">PlayCentric</span>
-			</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-				aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNavDropdown">
-				<ul class="navbar-nav ms-auto" th:switch="${session.loginMember}">
-					<li class="nav-item"><a class="nav-link fs-4" thif="${session.loginMember!=null && session.loginMember.role == 1}" th:href="@{/back/anno}">管理介面</a></li>
-					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle fs-4" href="#" id="storeDropdown"
-							role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							遊戲商店 </a>
-						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="storeDropdown">
-							<li><a class="dropdown-item fs-5" href="#">熱門遊戲</a></li>
-							<li><a class="dropdown-item fs-5" href="#">新遊戲</a></li>
-						</ul>
-					</li>
-					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle fs-4" href="#" id="tradeDropdown"
-							role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							道具交易 </a>
-						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="tradeDropdown">
-							<li><a class="dropdown-item fs-5" th:href="@{/prop/front/market}">拍賣場</a></li>
-						</ul>
-					</li>
-					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle fs-4" href="#" id="escortDropdown"
-							role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							伴遊 </a>
-						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="escortDropdown">
-							<li><a class="dropdown-item fs-5" th:href="@{/playFellow}">找玩伴</a></li>
-							<li>
-								<a class="dropdown-item fs-5" id="addPfMember" th:if="${session.loginMember != null}"
-									th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}">
-									加入伴遊
-								</a>
-								<a class="dropdown-item fs-5" id="loginAlert" th:if="${session.loginMember == null}"
-									href="javascript:void(0);" onclick="alertAndRedirect();">
-									加入伴遊
-								</a>
-							</li>
-						</ul>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle fs-4" href="#" id="eventDropdown" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false">
-							活動
-						</a>
-						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="eventDropdown">
-							<li><a class="dropdown-item fs-5" th:href="@{/events/public/list}">活動列表</a></li>
-						</ul>
-					</li>
-					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle fs-4" href="#" id="forumDropdown"
-							role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							討論區 </a>
-						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="forumDropdown">
-							<li><a class="dropdown-item fs-5" th:href="@{/findAllForum}">討論串</a></li>
-							<li><a class="dropdown-item fs-5" th:href="@{/texts/page}">文章總覽</a></li>
-						</ul>
-					</li>
-					<li th:case="null" class="nav-item"><a th:href="@{/member/login}"
-							class="btn btn-sm btn-primary me-3 fs-4">登入/註冊</a></li>
-					<li th:case="*" class="nav-item dropdown"><a class="d-flex nav-link fs-4" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false"> <img id="login-member-photo"
-								class="rounded-circle h35px w35px" th:src="${session.loginMember.photo}"> <span
-								class="mx-1 text-light" th:text="${session.loginMember.nickname}"></span>
-						</a>
-						<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-							<li><a class="dropdown-item fs-5" th:href="@{/member/personal/Info}">個人資訊</a></li>
-							<li><a class="dropdown-item fs-5" th:href="@{/member/logout}">登出</a></li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-
-	<script th:src="@{/js/bootstrap.bundle.js}"></script>
-
-</body>
-
+    <script th:src="@{/js/bootstrap.bundle.js}"></script>
+  </body>
 </html>
