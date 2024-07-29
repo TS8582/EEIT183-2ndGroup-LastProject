@@ -117,6 +117,25 @@
                                 class="mybtn-disabled">尚未開放下載</span>
                         </th:block>
 
+                        <div class="flex items-center" th:if="${game.totalReviews != 0}">
+                            <div class="star-container ms-2">
+                                <div class="filled"
+                                    th:style="'width:' + ${game.totalScore / game.totalReviews * 20} + '%;'">★★★★★
+                                </div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                            <div class="inline-block ms-2" th:text="${game.totalScore / game.totalReviews}"></div>
+                        </div>
+
+                        <div class="flex items-center" th:if="${game.totalReviews == 0}">
+                            <div class="star-container ms-2">
+                                <div class="filled" style="width:0%;">★★★★★
+                                </div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                            <div class="inline-block ms-2">0</div>
+                        </div>
+
                     </div>
                     <div class="hidden gameId" th:text="${game.gameId}"></div>
                 </div>

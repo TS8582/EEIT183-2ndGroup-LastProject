@@ -3,6 +3,7 @@ package com.playcentric.controller.game;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.game.secondary.GameReviews;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.game.GameReviewsService;
@@ -40,8 +41,12 @@ public class GameReviewsRestController {
 			@RequestBody GameReviews gameReviews
 			) {
 		if (loginMember != null) {
+			Game game = gService.findById(gameReviews.getGameId());
+			game.setTotalReviews(game.getTotalReviews() + 1);
+			game.setTotalScore(game.getTotalScore() + gameReviews.getReviewsScore());
+			gService.save(game);
 			gameReviews.setMemId(loginMember.getMemId());
-			gameReviews.setGame(gService.findById(gameReviews.getGameId()));
+			gameReviews.setGame(game);
 			gameReviews.setMember(mService.findById(loginMember.getMemId()));
 			grService.save(gameReviews);
 			return "成功";
