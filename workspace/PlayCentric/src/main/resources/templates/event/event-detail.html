@@ -13,24 +13,24 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- 自定義 CSS -->
     <style>
-        /* 基本樣式 */
+        /* 基本樣式：設置整體頁面的背景色、字體和文字顏色 */
         body {
             background-color: #f4f7f6;
             font-family: 'Noto Sans TC', sans-serif;
             color: #333;
         }
 
-        /* 活動標題區域樣式 */
+        /* 活動標題區域樣式：設置漸變背景、文字顏色和內邊距 */
         .event-header {
             background: linear-gradient(45deg, #1a2a6c, #b21f1f, #fdbb2d);
             color: white;
-            padding: 4rem 0;
-            margin-bottom: 3rem;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
         }
 
-        /* 動畫背景 */
+        /* 動畫背景：創建一個動態的背景效果 */
         .event-header::before {
             content: '';
             position: absolute;
@@ -42,33 +42,33 @@
             animation: headerAnimation 20s linear infinite;
         }
 
+        /* 定義背景動畫 */
         @keyframes headerAnimation {
-            0% {
-                transform: translateX(0) translateY(0);
-            }
-
-            100% {
-                transform: translateX(-25%) translateY(-25%);
-            }
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-25%) translateY(-25%); }
         }
 
+        /* 活動標題文字樣式 */
         .event-title {
             font-size: 3.5rem;
             font-weight: 700;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 1;
+            margin-bottom: 0;
         }
 
-        .event-description {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 1rem auto;
-            position: relative;
-            z-index: 1;
+        /* 活動描述卡片樣式：與其他卡片保持一致 */
+        .event-description-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+            margin-bottom: 2rem;
         }
 
-        /* 卡片樣式 */
+        /* 卡片樣式：設置邊框、圓角和陰影效果 */
         .card {
             border: 1px solid #e0e0e0;
             border-radius: 15px;
@@ -78,11 +78,13 @@
             background-color: #ffffff;
         }
 
+        /* 卡片懸停效果 */
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
+        /* 卡片標題欄樣式 */
         .card-header {
             background-color: #1a2a6c;
             color: white;
@@ -90,6 +92,7 @@
             border-bottom: none;
         }
 
+        /* 卡片底部樣式 */
         .card-footer {
             background-color: transparent;
             border-top: none;
@@ -101,16 +104,19 @@
             margin-bottom: 30px;
         }
 
+        /* 參賽作品圖片樣式 */
         .entry-image {
             height: 200px;
             object-fit: cover;
             transition: transform 0.3s ease;
         }
 
+        /* 參賽作品圖片懸停效果 */
         .entry-card:hover .entry-image {
             transform: scale(1.05);
         }
 
+        /* 參賽作品標題樣式 */
         .entry-title {
             font-size: 1.1rem;
             font-weight: 600;
@@ -118,6 +124,7 @@
             color: #1a2a6c;
         }
 
+        /* 參賽作品描述樣式 */
         .entry-description {
             font-size: 0.9rem;
             color: #666;
@@ -135,23 +142,27 @@
             transition: all 0.3s ease;
         }
 
+        /* 主要按鈕樣式 */
         .btn-primary {
             background-color: #1a2a6c;
             border-color: #1a2a6c;
             color: white;
         }
 
+        /* 主要按鈕懸停和焦點效果 */
         .btn-primary:hover,
         .btn-primary:focus {
             background-color: #0f1d4e;
             border-color: #0f1d4e;
         }
 
+        /* 輪廓按鈕樣式 */
         .btn-outline-primary {
             color: #1a2a6c;
             border-color: #1a2a6c;
         }
 
+        /* 輪廓按鈕懸停和焦點效果 */
         .btn-outline-primary:hover,
         .btn-outline-primary:focus {
             background-color: #1a2a6c;
@@ -171,6 +182,7 @@
             box-shadow: 0 4px 6px rgba(253, 187, 45, 0.3);
         }
 
+        /* 報名按鈕懸停效果 */
         .btn-signup:hover {
             background: linear-gradient(45deg, #b21f1f, #fdbb2d);
             transform: translateY(-2px);
@@ -190,7 +202,6 @@
             .event-title {
                 font-size: 2.5rem;
             }
-
             .event-description {
                 font-size: 1rem;
             }
@@ -208,8 +219,6 @@
         <div class="event-header text-center">
             <div class="container">
                 <h1 class="event-title" data-aos="fade-down" th:text="${event.eventName}">活動名稱</h1>
-                <p class="event-description" data-aos="fade-up" data-aos-delay="200"
-                    th:text="${event.eventDescription}">活動描述</p>
             </div>
         </div>
 
@@ -221,31 +230,37 @@
             </div>
 
             <div class="row">
-                <!-- 左側：活動詳情 -->
+                <!-- 左側：活動描述和詳情 -->
                 <div class="col-lg-8">
+                    <!-- 活動描述區域 -->
+                    <div class="card event-description-card mb-4" data-aos="fade-up">
+                        <div class="card-header">
+                            <h5 class="mb-0">活動描述</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text" th:text="${event.eventDescription}">活動描述內容</p>
+                        </div>
+                    </div>
+
                     <!-- 活動詳細信息卡片 -->
                     <div class="card mb-4" data-aos="fade-up">
                         <div class="card-header">
-                            <h5 class="mb-0">活動詳情</h5>
+                            <h5 class="mb-0">活動時間</h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-unstyled">
                                 <li><i class="far fa-calendar-alt mr-2"></i> <strong>開始時間：</strong>
-                                    <span
-                                        th:text="${#temporals.format(event.eventStartTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                                    <span th:text="${#temporals.format(event.eventStartTime, 'yyyy年MM月dd日 HH:mm')}"></span>
                                 </li>
                                 <li><i class="far fa-calendar-check mr-2"></i> <strong>結束時間：</strong>
-                                    <span
-                                        th:text="${#temporals.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                                    <span th:text="${#temporals.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm')}"></span>
                                 </li>
                                 <li><i class="far fa-clock mr-2"></i> <strong>報名截止時間：</strong>
-                                    <span
-                                        th:text="${#temporals.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm')}"></span>
+                                    <span th:text="${#temporals.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm')}"></span>
                                 </li>
                                 <li><i class="fas fa-info-circle mr-2"></i> <strong>狀態：</strong>
-                                    <span
-                                        th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"
-                                        th:class="${event.eventStatus == 0 ? 'badge badge-warning' : (event.eventStatus == 1 ? 'badge badge-success' : 'badge badge-secondary')}">
+                                    <span th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"
+                                          th:class="${event.eventStatus == 0 ? 'badge badge-warning' : (event.eventStatus == 1 ? 'badge badge-success' : 'badge badge-secondary')}">
                                     </span>
                                 </li>
                             </ul>
@@ -274,15 +289,14 @@
                     </div>
                 </div>
 
-<!-- 右側區域 -->
-<div class="col-lg-4">
-    <!-- 報名按鈕 -->
-    <button id="signupButton" class="btn btn-signup btn-lg btn-block mb-4"
-            data-aos="fade-left"
-            th:disabled="${event.eventStatus == 2}"
-            th:text="${event.eventStatus == 2 ? '活動已結束' : '我要報名'}">
-        我要報名
-    </button>
+                <!-- 右側區域 -->
+                <div class="col-lg-4">
+                    <!-- 報名按鈕 -->
+                    <button id="signupButton" class="btn btn-signup btn-lg btn-block mb-4" data-aos="fade-left"
+                        th:disabled="${event.eventStatus == 2 || session.loginMember == null}"
+                        th:text="${event.eventStatus == 2 ? '活動已結束' : (session.loginMember == null ? '請先登入' : '我要報名')}">
+                        我要報名
+                    </button>
 
                     <!-- 活動倒計時 -->
                     <div class="card mb-4" data-aos="fade-left" data-aos-delay="200">
@@ -403,6 +417,55 @@
 const eventId = /*[[${event.eventId}]]*/ null;
 const eventStatus = /*[[${event.eventStatus}]]*/ null;
 const userId = /*[[${session.loginMember?.memId}]]*/ null;
+const eventEndTime = new Date(/*[[${event.eventEndTime}]]*/).getTime();
+const eventSignupDeadline = new Date(/*[[${event.eventSignupDeadLine}]]*/).getTime();
+let userHasSignedUp = false; // 用於追踪用戶是否已報名
+// 全局變量來存儲預加載的數據
+let preloadedEntries = {};
+
+/**
+ * 檢查是否已過報名截止時間
+ */
+function isSignupClosed() {
+    return new Date().getTime() > eventSignupDeadline;
+}
+
+/**
+ * 檢查用戶是否已報名
+ */
+function checkUserSignup() {
+    if (userId) {
+        $.ajax({
+            url: `/PlayCentric/eventSignup/api/checkSignup/${eventId}/${userId}`,
+            method: 'GET',
+            success: function(response) {
+                userHasSignedUp = response;
+                updateSignupButton();
+            },
+            error: function(xhr, status, error) {
+                console.error("檢查用戶報名狀態時發生錯誤:", error);
+            }
+        });
+    } else {
+        updateSignupButton(); // 如果用戶未登錄，仍然更新按鈕狀態
+    }
+}
+
+/**
+ * 更新報名按鈕狀態
+ */
+function updateSignupButton() {
+    const $signupButton = $('#signupButton');
+    if (eventStatus == 2 || isSignupClosed()) {
+        $signupButton.prop('disabled', true).text('報名已截止');
+    } else if (!userId) {
+        $signupButton.prop('disabled', false).text('請先登入');
+    } else if (userHasSignedUp) {
+        $signupButton.prop('disabled', true).text('已報名');
+    } else {
+        $signupButton.prop('disabled', false).text('我要報名');
+    }
+}
 
 /**
  * 載入參賽作品的函數
@@ -450,33 +513,61 @@ function loadEntries() {
     });
 }
 
+// 預加載所有作品詳情
+function preloadEntries() {
+    $.ajax({
+        url: '/PlayCentric/eventSignup/api/event/' + eventId,
+        method: 'GET',
+        success: function (entries) {
+            entries.forEach(entry => {
+                preloadedEntries[entry.signupId] = entry;
+            });
+            console.log("預加載完成");
+        },
+        error: function (error) {
+            console.error("預加載失敗:", error);
+        }
+    });
+}
+
 /**
  * 顯示作品詳情的函數
  * @param {number} signupId - 報名ID
  */
 function showEntryDetail(signupId) {
-    $.ajax({
-        url: '/PlayCentric/eventSignup/api/' + signupId,
-        method: 'GET',
-        success: function (entry) {
-            const detailContent = `
-                <img src="/PlayCentric/eventSignup/image/${entry.signupId}" class="img-fluid mb-3" alt="${entry.workTitle}">
-                <h3>${entry.workTitle}</h3>
-                <p>${entry.workDescription}</p>
-                <p>作者：${entry.member.nickname}</p>
-                <p class="text-muted">目前票數：<span class="vote-count" data-signup-id="${entry.signupId}">${entry.voteCount}</span></p>
-            `;
-            
-            $('#entryDetailContent').html(detailContent);
-            $('#entryDetailModal').modal('show');
+    // 顯示加載動畫
+    $('#entryDetailContent').html('<div class="text-center"><i class="fas fa-spinner fa-spin fa-3x"></i></div>');
+    $('#entryDetailModal').modal('show');
 
-            $(`.vote-count[data-signup-id="${entry.signupId}"]`).text(entry.voteCount);
-        },
-        error: function (xhr, status, error) {
-            console.error("載入作品詳情時發生錯誤:", error);
-            alert("載入作品詳情失敗，請稍後再試。");
-        }
-    });
+    if (preloadedEntries[signupId]) {
+        // 使用預加載的數據
+        renderEntryDetail(preloadedEntries[signupId]);
+    } else {
+        // 如果沒有預加載數據，則發送請求
+        $.ajax({
+            url: '/PlayCentric/eventSignup/api/' + signupId,
+            method: 'GET',
+            success: function (entry) {
+                renderEntryDetail(entry);
+            },
+            error: function (xhr, status, error) {
+                console.error("載入作品詳情時發生錯誤:", error);
+                $('#entryDetailContent').html('<p class="text-danger">載入失敗，請稍後再試。</p>');
+            }
+        });
+    }
+}
+
+// 渲染作品詳情
+function renderEntryDetail(entry) {
+    const detailContent = `
+        <img src="/PlayCentric/eventSignup/image/${entry.signupId}" class="img-fluid mb-3" alt="${entry.workTitle}">
+        <h3>${entry.workTitle}</h3>
+        <p>${entry.workDescription}</p>
+        <p>作者：${entry.member.nickname}</p>
+        <p class="text-muted">目前票數：<span class="vote-count" data-signup-id="${entry.signupId}">${entry.voteCount}</span></p>
+    `;
+    $('#entryDetailContent').html(detailContent);
 }
 
 /**
@@ -522,8 +613,7 @@ function vote(signupId) {
  */
 function updateCountdown() {
     const now = new Date().getTime();
-    const endTime = new Date(/*[[${event.eventEndTime}]]*/).getTime();
-    const timeLeft = endTime - now;
+    const timeLeft = eventEndTime - now;
 
     if (timeLeft > 0) {
         const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
@@ -535,16 +625,16 @@ function updateCountdown() {
     } else {
         document.getElementById("countdown").innerHTML = "活動已結束";
         $('#signupButton').prop('disabled', true).text('活動已結束');
+        updateEventStatus(); 
     }
 }
 
 /**
  * 更新活動狀態的函數
- * @param {Object} event - 活動對象
  */
-function updateEventStatus(event) {
-    if (event.eventStatus === 1 && new Date(event.eventEndTime) < new Date()) {
-        event.eventStatus = 2; // 更新狀態為已結束
+function updateEventStatus() {
+    if (eventStatus === 1 && new Date().getTime() >= eventEndTime) {
+        eventStatus = 2;
         $('#eventStatus').text('已結束').removeClass('badge-success').addClass('badge-secondary');
         $('#signupButton').prop('disabled', true).text('活動已結束');
     }
@@ -557,20 +647,28 @@ $(document).ready(function () {
         duration: 1000,
         once: true
     });
-    
-    // 獲取活動數據並更新狀態
-    const event = /*[[${event}]]*/ null;
-    if (event) {
-        updateEventStatus(event);
-    }
+
+    // 檢查用戶報名狀態
+    checkUserSignup();
 
     // 載入參賽作品
     loadEntries();
+    
+    //預加載作品詳情
+    preloadEntries();
 
     // 綁定報名按鈕點擊事件
     $('#signupButton').click(function () {
-        if (eventStatus == 2) {
-            alert("活動已結束，無法報名");
+        if (eventStatus == 2 || isSignupClosed()) {
+            alert("報名已截止，無法報名");
+            return;
+        }
+        if (!userId) {
+            alert("請先登入後再報名");
+            return;
+        }
+        if (userHasSignedUp) {
+            alert("您已經報名過此活動");
             return;
         }
         $('#signupModal').modal('show');
@@ -579,8 +677,15 @@ $(document).ready(function () {
     // 綁定報名表單提交事件
     $('#signupForm').submit(function (e) {
         e.preventDefault();
-        if (eventStatus == 2) {
-            alert("活動已結束，無法報名");
+        if (eventStatus == 2 || isSignupClosed()) {
+            alert("報名已截止，無法報名");
+            return;
+        }
+        
+        // 再次檢查用戶是否已報名，以防在打開模態框後用戶狀態發生變化
+        if (userHasSignedUp) {
+            alert("您已經報名過此活動");
+            $('#signupModal').modal('hide');
             return;
         }
         let formData = new FormData(this);
@@ -593,10 +698,16 @@ $(document).ready(function () {
             success: function (response) {
                 alert('報名成功！');
                 $('#signupModal').modal('hide');
+                userHasSignedUp = true;
+                updateSignupButton();
                 loadEntries(); // 重新加載作品列表
             },
             error: function (xhr, status, error) {
-                alert('報名失敗，請稍後再試。');
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    alert(xhr.responseJSON.message);
+                } else {
+                    alert('報名失敗，請稍後再試。');
+                }
             }
         });
     });
@@ -615,9 +726,8 @@ $(document).ready(function () {
     setInterval(updateCountdown, 1000);
 
     // 初始檢查活動狀態
-    if (eventStatus == 2) {
-        $('#signupButton').prop('disabled', true).text('活動已結束');
-    }
+    updateEventStatus();
+    updateSignupButton();
 });
 /*]]>*/
 </script>
