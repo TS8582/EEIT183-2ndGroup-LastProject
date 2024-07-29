@@ -44,8 +44,9 @@ replay_pid*
 .ionide
 
 ### OAuth2 ###
-googleOAuth2.properties
+
 /.metadata/
 
 ### gpt.properties ###
-gpt.properties
+workspace/PlayCentric/src/main/resources/gpt.properties
+workspace/PlayCentric/src/main/resources/googleOAuth2.properties
