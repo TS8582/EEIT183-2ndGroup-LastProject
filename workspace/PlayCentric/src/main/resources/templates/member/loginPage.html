@@ -8,9 +8,9 @@
   <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
   <script th:src="@{/js/axios.min.js}"></script>
   <script th:src="@{/js/utils/doAlertJQ.js}"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-		integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-		crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>PlayCentric-登入頁面</title>
   <style>
     html,
@@ -42,7 +42,7 @@
       margin-top: 150px !important;
     }
 
-    .cursor-pointer{
+    .cursor-pointer {
       cursor: pointer;
     }
   </style>
@@ -107,11 +107,11 @@
             <form id="registForm">
               <div class="input-group mb-1">
                 <label for="nickname" class="input-group-text">暱稱*</label>
-                <input type="text" class="form-control" id="nickname" name="nickname" required>
+                <input type="text" class="form-control" id="nickname" name="nickname" maxlength="20" required>
               </div>
               <div class="input-group mb-1">
                 <label for="account" class="input-group-text">帳號*</label>
-                <input type="text" class="form-control" id="account" name="account" required>
+                <input type="text" class="form-control" id="account" name="account" maxlength="20" required>
               </div>
               <div class="input-group mb-1 password">
                 <label for="password" class="input-group-text">輸入密碼*</label>
@@ -131,7 +131,7 @@
               <hr class="my-2">
               <div class="input-group mb-1">
                 <label for="memName" class="input-group-text">姓名</label>
-                <input type="text" class="form-control" id="memName" name="memName">
+                <input type="text" class="form-control" id="memName" name="memName" maxlength="20">
               </div>
               <div class="input-group mb-1">
                 <label for="gender" class="input-group-text">姓別</label>
@@ -151,11 +151,11 @@
               </div>
               <div class="input-group mb-1">
                 <label for="address" class="input-group-text">住址</label>
-                <textarea class="form-control" id="address" name="address"></textarea>
+                <textarea class="form-control" id="address" name="address" maxlength="30"></textarea>
               </div>
               <div class="input-group mb-1">
                 <label for="photoFile" class="input-group-text">照片</label>
-                <input type="file" class="form-control" id="photoFile" name="photoFile">
+                <input type="file" class="form-control" id="photoFile" name="photoFile" accept="image/*">
               </div>
               <div class="form-btn d-flex mt-4">
                 <button type="submit" class="btn btn-primary ms-auto me-2">註冊</button>
@@ -174,7 +174,8 @@
                 <form id="modalForm">
                   <h1 class="my-3 text-center">忘記密碼</h1>
                   <div class="d-flex my-4">
-                    <input type="text" class="form-control" id="accOrEmail" name="accOrEmail" placeholder="請輸入會員 帳號 或 Email" required>
+                    <input type="text" class="form-control" id="accOrEmail" name="accOrEmail"
+                      placeholder="請輸入會員 帳號 或 Email" required>
                   </div>
                   <div class="d-flex">
                     <button type="submit" class="btn btn-primary ms-auto">送出</button>
@@ -182,14 +183,14 @@
                   </div>
                 </form>
                 <!-- loading -->
-                 <div id="emailSending" style="display: none;">
-                   <div class="d-flex justify-content-center align-items-center">
-                     <span class="spinner-grow text-success" role="status">
-                       <span class="visually-hidden"></span>
-                     </span>
-                     <span class="ms-2">信件發送中。。。</span>
-                   </div>
-                 </div>
+                <div id="emailSending" style="display: none;">
+                  <div class="d-flex justify-content-center align-items-center">
+                    <span class="spinner-grow text-success" role="status">
+                      <span class="visually-hidden"></span>
+                    </span>
+                    <span class="ms-2">信件發送中。。。</span>
+                  </div>
+                </div>
                 <!-- 信件已發送 -->
                 <div id="emailSent" style="display: none;">
                   <i class="fa-solid fa-arrow-left cursor-pointer fs-3"></i>
@@ -233,11 +234,28 @@
         forgetPwdModal.show();
       })
 
-      $('#emailSent i').click(function(){
+      $('#emailSent i').click(function () {
         console.log(123);
         $('#emailSent').hide();
         $('#modalForm').show();
       })
+
+      //快捷鍵填入資料
+      $(document).on('keydown', function (event) {
+        if (event.key === 'F2') {
+          $('#registForm #nickname').val('新註冊帳號');
+          $('#registForm #account').val('jane_smith');
+          $('#registForm #password').val('Js#2024!');
+          $('#registForm #password-confirm').val('Js#2024!');
+          $('#registForm #email').val('jane.smith@example.com');
+          $('#registForm #memName').val('林美芳');
+          $('#registForm #gender').val(2);
+          $('#registForm #birthday').val('1992-06-15');
+          $('#registForm #phone').val('0928-123-456');
+          $('#registForm #address').val('台中市西屯區台灣大道三段99號7樓');
+          doAlert('已填入資料');
+        }
+      });
 
       //自動確認密碼是否相同
       $('#registForm #password-confirm').blur(function () {
@@ -284,8 +302,8 @@
             console.log(err);
           })
 
-          $('#modalForm').hide();
-          $('#emailSending').show();
+        $('#modalForm').hide();
+        $('#emailSending').show();
       })
 
       $('#login-form').submit(function (e) {

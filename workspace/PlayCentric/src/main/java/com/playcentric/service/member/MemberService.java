@@ -154,7 +154,7 @@ public class MemberService {
 
 	public Page<Member> findByKeyword(String keyword, Integer pageNum) {
 		PageRequest pageable = PageRequest.of(pageNum - 1, 6, Sort.Direction.ASC, "memId");
-		return memberRepository.findByKeyword("%" + keyword.toLowerCase() + "%", pageable);
+		return memberRepository.findByKeyword("%" + keyword.toLowerCase() + "%","%" + keyword.toLowerCase() + "%@%", pageable);
 	}
 
 	public Page<Member> findByPage(Integer pageNum) {
