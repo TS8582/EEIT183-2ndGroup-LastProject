@@ -54,7 +54,7 @@
           <div class="row mt-2">
             <label for="email" class="col-form-label col-1 px-0 text-end">Email:</label>
             <div class="col-5">
-              <input type="text" readonly class="form-control-plaintext px-2" id="email" name="email" value="">
+              <input type="email" readonly class="form-control-plaintext px-2" id="email" name="email" value="">
             </div>
             <div id="verify-email-btn" class="btn btn-outline-warning btn-sm col-2 align-self-center text-dark"
               style="display: none;">
@@ -99,7 +99,7 @@
                 <img class="h-35px" th:src="@{/images/googleLogo.png}" alt="">
                 <span>綁定Google帳號</span></a>
             </div>
-            <div id="facebook-account" class="col-3 d-flex mb-3 justify-content-center">
+            <!-- <div id="facebook-account" class="col-3 d-flex mb-3 justify-content-center">
               <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/facebook-login/addFacebook}">
                 <img class="h-35px" th:src="@{/images/FBlogo.webp}" alt="">
                 <span>綁定FB帳號</span></a>
@@ -108,13 +108,13 @@
               <a class="btn p-3 border rounded-0 disabled" th:href="@{/member/twitter-login/addTwitter}">
                 <img class="h-35px" th:src="@{/images/twitter-logo.webp}" alt="">
                 <span>綁定twitter帳號</span></a>
-            </div>
+            </div> -->
           </div>
 
         </div>
         <div class="photo-div ps-0 col-2 d-flex flex-column">
           <img class="w-100 cursor-pointer rounded-2" src="http://localhost:8080/PlayCentric/imagesLib/image144">
-          <input type="file" name="photoFile" id="photoFile" style="display: none;">
+          <input type="file" name="photoFile" id="photoFile" accept="image/*" style="display: none;">
           <p id="points-box" class="mx-3 mt-5 ps-2 border border-2 rounded-2 cursor-pointer d-flex align-items-center">
             <i class="fa-solid fa-sack-dollar"></i>
             <span id="points" class="ms-2">[[${session.loginMember.points}]]</span>
@@ -149,7 +149,30 @@
       getMemInfo();
 
 
-      $('#points-box').click(function(){
+      //快捷鍵填入資料
+      $(document).on('keydown', function (event) {
+        switch (event.key) {
+          case 'F2':
+            $('#memInfo #nickname').val('豆漿');
+            $('#memInfo #account').val('john_doe');
+            $('#memInfo #email').val('john.doe@example.com');
+            $('#memInfo #memName').val('何志強');
+            $('#memInfo #gender').val(1);
+            $('#memInfo #birthday').val('1988-11-23');
+            $('#memInfo #phone').val('0934567890');
+            $('#memInfo #address').val('新北市板橋區文化路一段98巷10號');
+            editOrNot();
+            doAlert('已填入資料');
+            break;
+
+          // case 'Escape':
+          //   $('#memInfo')[0].reset();
+          //   showMemInfo(memInfo);
+          //   break;
+        }
+      });
+
+      $('#points-box').click(function () {
         window.location.href = "/PlayCentric/member/personal/recharge";
       })
 
@@ -229,6 +252,10 @@
 
       $('#memInfo').submit(function (e) {
         e.preventDefault();
+
+        if (!editOrNot()) {
+          return;
+        }
 
         const formdataObject = new FormData(this);
         formdataObject.set('memId', memInfo.memId);
@@ -364,9 +391,10 @@
         }
         if ($('#photoFile')[0].files.length > 0) {
           $('#edit-btn-group').show();
-          return;
+          return true;
         }
         $('#edit-btn-group').hide();
+        return false;
       }
     })
   </script>
