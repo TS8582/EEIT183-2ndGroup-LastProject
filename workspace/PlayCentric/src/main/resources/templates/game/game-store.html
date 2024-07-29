@@ -126,7 +126,7 @@
                             </div>
                         </div>
                         <div class="flex justify-center">
-                            <a th:if="${session.loginMember == null}" th:href="@{/member/login}"
+                            <a th:if="${session.loginMember == null}" th:href="@{/member/homeShowErr/notLogin}"
                                 class="mybtn mybtn-green">加入購物車</a>
                             <span th:if="${session.loginMember} ? ${game.isInCart}" class="mybtn-disabled">已加入購物車</span>
                             <span th:if="${session.loginMember} ? ${!game.isInCart && !game.isHaveGame}"
