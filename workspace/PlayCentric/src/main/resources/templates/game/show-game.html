@@ -152,10 +152,11 @@
                     </div>
                 </div>
 
-                <div class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
+                <div th:if="${reviews != null}"
+                    class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
                     <div class="flex items-center space-x-2">
                         <img class="h-16 w-16 rounded-full" th:src="${reviews.member.photoUrl}" alt="">
-                        <span th:text="${reviews.memId}"></span>
+                        <span th:text="${reviews.member.nickname}"></span>
                         <div class="existStar select-none">
                             <div class="star-container">
                                 <div class="filled" th:style="'width:' + ${reviews.reviewsScore * 20} + '%;'">★★★★★
