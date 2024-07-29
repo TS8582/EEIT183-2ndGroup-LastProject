@@ -144,15 +144,15 @@
         </div>
         <div class="hidden memId" th:text="${session.loginMember} ? ${session.loginMember.memId}"></div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 w-full">
-            <div class="sm:col-span-1 lg:col-span-2 m-3 h-full">
-                <div class="sm:col-span-1 lg:col-span-2 border-2 border-black p-10 space-y-4 rounded-md">
+        <div class="p-4 w-full">
+            <div class="h-full">
+                <div class="border-2 p-5 border-black space-y-4 rounded-md">
                     <h1 class="text-3xl font-bold">遊戲介紹</h1>
                     <p class="text-justify font-semibold text-lg" th:text="${game.description}"></p>
                 </div>
             </div>
 
-            <div class="col-span-1 my-3 mx-1 border-2 border-black px-4 py-2 rounded-md reviewsContainer">
+            <div class="my-3 border-2 border-black px-4 py-2 rounded-md reviewsContainer">
                 <h1 class="text-2xl text-center font-semibold">評論</h1>
                 <div th:if="${session.loginMember}" class="addReviews">
                     <div class="star select-none">
@@ -171,26 +171,27 @@
                     </div>
                 </div>
 
-                <div th:if="${reviews != null}"
+
+                <div th:each="review:${reviews}" th:if="${reviews != null}"
                     class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
                     <div class="flex items-center space-x-2">
-                        <img class="h-16 w-16 rounded-full" th:src="${reviews.member.photoUrl}" alt="">
-                        <span th:text="${reviews.member.nickname}"></span>
+                        <img class="h-16 w-16 rounded-full" th:src="${review.member.photoUrl}" alt="">
+                        <span th:text="${review.member.nickname}"></span>
                         <div class="existStar select-none">
                             <div class="star-container">
-                                <div class="filled" th:style="'width:' + ${reviews.reviewsScore * 20} + '%;'">★★★★★
+                                <div class="filled" th:style="'width:' + ${review.reviewsScore * 20} + '%;'">★★★★★
                                 </div>
                                 <div class="unfilled">★★★★★</div>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <span th:text="${reviews.reviewsContent}"></span>
+                        <span th:text="${review.reviewsContent}"></span>
                     </div>
                 </div>
 
-
             </div>
+
 
         </div>
 

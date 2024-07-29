@@ -279,7 +279,7 @@ public class GameController {
 			gcService.setInCart(loginMember, game);
 			oglService.setHaveGame(loginMember, game);
 		}
-		GameReviews reviews = grService.findByGameIdTop1(gameId);
+		List<GameReviews> reviews = grService.findByGameId(gameId);
 		model.addAttribute("game",game);
 		model.addAttribute("reviews",reviews);
 		return "game/show-game";
