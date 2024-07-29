@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" xmlns:th="http://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div th:replace="~{/layout/nav}"></div>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" th:href="@{/css/game/star.css}">
+    <title th:text=" 'PlayCentric-' + ${game.gameName} + '-所有評論'"></title>
+</head>
+
+<body>
+    <div class="hidden gameId" th:text="${game.gameId}"></div>
+
+    <div class="flex justify-center">
+        <div class="my-3 sm:w-11/12 lg:w-3/5">
+            <div class="my-3 border-2 border-black px-4 py-2 rounded-md reviewsContainer">
+                <h1 th:text="${game.gameName} + '-所有評論'" class="text-2xl text-center font-semibold"></h1>
+                <div th:if="${session.loginMember != null && memberReviews.size() < 1}" class="addReviews">
+                    <div class="star select-none">
+                        <span id="star-1" class="star-container">★</span>
+                        <span id="star-2" class="star-container">★</span>
+                        <span id="star-3" class="star-container">★</span>
+                        <span id="star-4" class="star-container">★</span>
+                        <span id="star-5" class="star-container">★</span>
+                    </div>
+                    <div class="">
+                        <textarea id="reviews" class="w-full h-28 border-2" style="resize: none;" maxlength="100"
+                            placeholder="請輸入評論內容...(限100字)"></textarea>
+                        <div class="flex items-center justify-center">
+                            <span class="mybtn mybtn-sky inline-block goReviews">提交評論</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div th:each="review:${reviews}" th:if="${reviews != null}"
+                    class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <img class="h-16 w-16 rounded-full" th:src="${review.member.photoUrl}" alt="">
+                        <span th:text="${review.member.nickname}"></span>
+                        <div class="existStar select-none">
+                            <div class="star-container">
+                                <div class="filled" th:style="'width:' + ${review.reviewsScore * 20} + '%;'">★★★★★
+                                </div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span th:text="${review.reviewsContent}"></span>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script th:src="@{/js/game/game-reviews.js}"></script>
+</body>
+
+</html>

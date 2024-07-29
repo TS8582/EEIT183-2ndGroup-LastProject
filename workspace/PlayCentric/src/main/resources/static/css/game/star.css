@@ -1,0 +1,19 @@
+ .star-container {
+     position: relative;
+     display: inline-block;
+     font-size: 2em;
+     color: #ccc;
+     /* 灰色星星 */
+ }
+
+ .star-container .filled {
+     position: absolute;
+     top: 0;
+     left: 0;
+     overflow: hidden;
+     color: gold;
+ }
+
+ .color-gold {
+     color: gold;
+ }

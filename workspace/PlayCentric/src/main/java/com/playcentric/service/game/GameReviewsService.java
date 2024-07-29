@@ -14,16 +14,20 @@ public class GameReviewsService {
 	@Autowired
 	private GameReviewsRepository grRepo;
 	
-	public GameReviews findByGameIdTop1(Integer gameId) {
-		return grRepo.findByGameIdTop1(gameId);
+	public List<GameReviews> findByGameIdTop5(Integer gameId) {
+		return grRepo.findByGameIdTop5(gameId);
 	}
 	
 	public List<GameReviews> findByGameId(Integer gameId) {
-		return grRepo.findByGameId(gameId);
+		return grRepo.findByGameIdOrderByReviewsAtDesc(gameId);
 	}
 	
 	public GameReviews save(GameReviews gameReviews) {
 		return grRepo.save(gameReviews);
+	}
+	
+	public List<GameReviews> findByGameIdAndMemId(Integer gameId, Integer memId) {
+		return grRepo.findByGameIdAndMemId(gameId, memId);
 	}
 	
 }

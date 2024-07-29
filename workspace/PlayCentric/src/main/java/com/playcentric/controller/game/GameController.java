@@ -275,11 +275,17 @@ public class GameController {
 			Model model,@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		Game game = gService.findById(gameId);
 		gService.setRateAndDiscountPrice(game);
+		double totalReviews = (double)game.getTotalReviews();
+		Integer totalScore = game.getTotalScore();
+		double score = totalScore / totalReviews;
 		if (loginMember != null) {
 			gcService.setInCart(loginMember, game);
 			oglService.setHaveGame(loginMember, game);
+			List<GameReviews> memberReviews = grService.findByGameIdAndMemId(gameId, loginMember.getMemId());
+			model.addAttribute("memberReviews",memberReviews);
 		}
-		List<GameReviews> reviews = grService.findByGameId(gameId);
+		List<GameReviews> reviews = grService.findByGameIdTop5(gameId);
+		model.addAttribute("score",score);
 		model.addAttribute("game",game);
 		model.addAttribute("reviews",reviews);
 		return "game/show-game";

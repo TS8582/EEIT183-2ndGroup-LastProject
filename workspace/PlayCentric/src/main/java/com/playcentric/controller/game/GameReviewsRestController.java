@@ -36,7 +36,7 @@ public class GameReviewsRestController {
 	}
 	
 	@PostMapping("/add")
-	public String postMethodName(
+	public GameReviews postMethodName(
 			@ModelAttribute("loginMember") LoginMemDto loginMember,
 			@RequestBody GameReviews gameReviews
 			) {
@@ -48,10 +48,9 @@ public class GameReviewsRestController {
 			gameReviews.setMemId(loginMember.getMemId());
 			gameReviews.setGame(game);
 			gameReviews.setMember(mService.findById(loginMember.getMemId()));
-			grService.save(gameReviews);
-			return "成功";
+			return grService.save(gameReviews);
 		}
-		return "失敗";
+		return null;
 	}
 	
 	
