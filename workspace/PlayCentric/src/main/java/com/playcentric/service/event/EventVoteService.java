@@ -37,6 +37,13 @@ public class EventVoteService {
      * @return 創建的投票記錄
      * @throws RuntimeException 如果不滿足投票條件
      */
+    /**
+     * 創建新的投票，包含投票限制和時間限制檢查
+     * @param memberId 會員ID
+     * @param signupId 報名ID
+     * @return 創建的投票記錄
+     * @throws RuntimeException 如果不滿足投票條件
+     */
     @Transactional
     public EventVote createVote(Integer memberId, Integer signupId) {
         EventSignup eventSignup = eventSignupRepository.findById(signupId)
@@ -49,9 +56,9 @@ public class EventVoteService {
             throw new RuntimeException("當前不是投票階段");
         }
 
-        // 檢查是否在投票時間範圍內
+        // 檢查是否在投票時間範圍內（報名截止後至活動結束前）
         LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(event.getEventStartTime()) || now.isAfter(event.getEventEndTime())) {
+        if (now.isBefore(event.getEventSignupDeadLine()) || now.isAfter(event.getEventEndTime())) {
             throw new RuntimeException("不在投票時間範圍內");
         }
 

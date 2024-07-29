@@ -1,5 +1,6 @@
 package com.playcentric.controller.event;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import com.playcentric.model.ImageLib;
 import com.playcentric.model.event.Event;
 import com.playcentric.service.ImageLibService;
 import com.playcentric.service.event.EventService;
+import com.playcentric.service.event.EventSignupService;
 
 @Controller
 @RequestMapping("/events")
@@ -36,6 +38,9 @@ public class EventController {
 
     @Autowired
     private ImageLibService imageLibService;
+    
+    @Autowired
+    private EventSignupService eventSignupService;
 
     // ======== 網頁視圖相關方法 ========
 
@@ -80,7 +85,13 @@ public class EventController {
         
         eventService.updateSpecificEventStatus(eventId);
         
+        LocalDateTime now = LocalDateTime.now();
+        boolean isVotingPeriod = now.isAfter(event.getEventSignupDeadLine()) && now.isBefore(event.getEventEndTime());
+        model.addAttribute("isVotingPeriod", isVotingPeriod);
+        
         model.addAttribute("event", event);
+        // 只獲取已審核的報名
+        model.addAttribute("approvedSignups", eventSignupService.getApprovedSignupsByEventId(eventId));
         logger.info("成功獲取並顯示活動詳情，活動ID: {}", eventId);
         return "event/event-detail";
     }
@@ -237,7 +248,7 @@ public class EventController {
             // 保留原始的 eventType
             event.setEventType(original.getEventType());
             
-            // 处理图片更新
+            // 處理圖片更新
             if (photoFile != null && !photoFile.isEmpty()) {
                 ImageLib imageLib = new ImageLib();
                 imageLib.setImageFile(photoFile.getBytes());
@@ -247,7 +258,7 @@ public class EventController {
                 event.setEventImage(original.getEventImage());
             }
             
-            // 确保 eventStatus 不为 null
+            // 確保 eventStatus 不為 null
             if (event.getEventStatus() == null) {
                 event.setEventStatus(useAutoStatus ? event.calculateEventStatus() : original.getEventStatus());
             }

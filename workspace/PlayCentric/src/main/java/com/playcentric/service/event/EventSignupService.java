@@ -3,6 +3,7 @@ package com.playcentric.service.event;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,7 +115,7 @@ public class EventSignupService {
         eventSignupRepository.deleteById(signupId);
         logger.info("成功刪除報名，報名ID: {}", signupId);
     }
-
+    
     // ======== 報名查詢相關方法 ========
 
     /**
@@ -166,6 +167,18 @@ public class EventSignupService {
         EventSignup signup = eventSignupRepository.findById(signupId)
             .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
         return signup.getWorkImage();
+    }
+    
+    /**
+     * 根據活動ID獲取已審核的報名
+     * @param eventId 活動ID
+     * @return 指定活動的所有已審核報名
+     */
+    public List<EventSignup> getApprovedSignupsByEventId(Integer eventId) {
+        logger.info("獲取活動的所有已審核報名，活動ID: {}", eventId);
+        return eventSignupRepository.findByEvent_EventId(eventId).stream()
+            .filter(signup -> signup.getEventSignupStatus() == 1) // 假設1表示已審核
+            .collect(Collectors.toList());
     }
     
     /**
