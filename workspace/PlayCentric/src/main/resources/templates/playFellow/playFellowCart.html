@@ -265,7 +265,6 @@
 					title: '帳戶成功付款',
 					text: response.data
 				}).then(() => {
-					// 调用 reviewPfstatus 控制器
 					const formData = new FormData();
 					formData.append('playFellowId', playFellowId);
 					formData.append('pfstatus', 4);
@@ -275,7 +274,7 @@
 							window.location.href = 'http://localhost:8080/PlayCentric/member/personal/Info';
 						})
 						.catch(error => {
-							console.error('半由系統錯誤', error);
+							console.error('伴遊系統錯誤', error);
 							Swal.fire({
 								icon: 'error',
 								title: '錯誤',
