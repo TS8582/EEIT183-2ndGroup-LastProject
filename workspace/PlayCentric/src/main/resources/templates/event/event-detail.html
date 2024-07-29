@@ -11,285 +11,265 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <!-- 引入 AOS 動畫庫 -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- 自定義 CSS -->
     <style>
-        /* 基本樣式：設置整體頁面的背景色、字體和文字顏色 */
-        body {
-            background-color: #f4f7f6;
-            font-family: 'Noto Sans TC', sans-serif;
-            color: #333;
-            font-size: 16px;
-        }
+    /* 基本樣式：設置整體頁面的背景色、字體和文字顏色 */
+    body {
+        background-color: #f4f7f6;
+        font-family: 'Noto Sans TC', sans-serif;
+        color: #333;
+        font-size: 16px;
+    }
 
-        /* 調整主內容區域寬度，減少右側 padding */
+    /* 調整主內容區域寬度，減少右側 padding */
+    .container {
+        max-width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    /* 活動標題區域樣式：設置漸變背景、文字顏色和內邊距 */
+    .event-header {
+        background: linear-gradient(45deg, #1a2a6c, #b21f1f, #fdbb2d);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* 動畫背景：創建一個動態的背景效果 */
+    .event-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: repeating-linear-gradient(45deg, #ffffff11, #ffffff11 10px, #ffffff22 10px, #ffffff22 20px);
+        animation: headerAnimation 20s linear infinite;
+    }
+
+    /* 定義背景動畫 */
+    @keyframes headerAnimation {
+        0% { transform: translateX(0) translateY(0); }
+        100% { transform: translateX(-25%) translateY(-25%); }
+    }
+
+    /* 活動標題文字樣式 */
+    .event-title {
+        font-size: 3rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 1;
+    }
+
+    /* 活動描述卡片樣式 */
+    .event-description-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        background-color: #ffffff;
+        margin-bottom: 2rem;
+    }
+
+    /* 卡片樣式：設置邊框、圓角和陰影效果 */
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        background-color: #ffffff;
+        height: 100%; /* 確保所有卡片高度一致 */
+    }
+
+    /* 卡片懸停效果 */
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 卡片標題欄樣式 */
+    .card-header {
+        background-color: #1a2a6c;
+        color: white;
+        font-weight: bold;
+        border-bottom: none;
+        padding: 0.75rem 1rem;
+    }
+
+    /* 卡片底部樣式 */
+    .card-footer {
+        background-color: transparent;
+        border-top: none;
+        padding: 0.75rem 1rem;
+    }
+
+    /* 參賽作品卡片樣式 */
+    .entry-card {
+        margin-bottom: 20px;
+    }
+
+    /* 參賽作品圖片樣式 */
+    .entry-image {
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    /* 參賽作品圖片懸停效果 */
+    .entry-card:hover .entry-image {
+        transform: scale(1.05);
+    }
+
+    /* 調整卡片內容樣式 */
+    .card-body {
+        padding: 0.75rem;
+    }
+
+    /* 參賽作品標題樣式 */
+    .card-title {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #1a2a6c;
+    }
+
+    /* 參賽作品描述樣式 */
+    .card-text {
+        font-size: 0.8rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+
+    /* 調整投票數樣式 */
+    .text-muted {
+        font-weight: bold;
+        font-size: 0.8rem;
+    }
+
+    /* 按鈕樣式 */
+    .btn {
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* 主要按鈕樣式 */
+    .btn-primary {
+        background-color: #1a2a6c;
+        border-color: #1a2a6c;
+        color: white;
+    }
+
+    /* 主要按鈕懸停和焦點效果 */
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: #0f1d4e;
+        border-color: #0f1d4e;
+    }
+
+    /* 輪廓按鈕樣式 */
+    .btn-outline-primary {
+        color: #1a2a6c;
+        border-color: #1a2a6c;
+    }
+
+    /* 輪廓按鈕懸停和焦點效果 */
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus {
+        background-color: #1a2a6c;
+        color: white;
+    }
+
+    /* 報名按鈕特殊樣式 */
+    .btn-signup {
+        background: linear-gradient(45deg, #fdbb2d, #b21f1f);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(253, 187, 45, 0.3);
+    }
+
+    /* 報名按鈕懸停效果 */
+    .btn-signup:hover {
+        background: linear-gradient(45deg, #b21f1f, #fdbb2d);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(178, 31, 31, 0.4);
+    }
+
+    /* 調整按鈕樣式 */
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    /* 倒計時樣式 */
+    #countdown {
+        font-size: 2.2rem;
+        font-weight: 700;
+        text-align: center;
+        color: #1a2a6c;
+    }
+
+    /* 新增：左側和右側區域樣式 */
+    .left-column {
+        flex: 0 0 70%;
+        max-width: 70%;
+        padding-right: 15px;
+    }
+
+    .right-column {
+        flex: 0 0 30%;
+        max-width: 30%;
+        padding-left: 15px;
+    }
+
+    /* 新增：確保報名按鈕在所有狀態下都有邊框 */
+    #signupButton {
+        border: 1px solid transparent;
+    }
+
+    #signupButton:disabled {
+        border: 1px solid #6c757d;
+    }
+
+    /* 響應式設計調整 */
+    @media (max-width: 1200px) {
         .container {
-            max-width: 100%;
-            padding-right: 220px;
-            /* 減少右側 padding，為作品留出更多空間 */
+            padding-right: 15px;
+            padding-left: 15px;
         }
+    }
 
-        /* 活動標題區域樣式：設置漸變背景、文字顏色和內邊距 */
-        .event-header {
-            background: linear-gradient(45deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: white;
-            padding: 3rem 0;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* 動畫背景：創建一個動態的背景效果 */
-        .event-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(45deg, #ffffff11, #ffffff11 10px, #ffffff22 10px, #ffffff22 20px);
-            animation: headerAnimation 20s linear infinite;
-        }
-
-        /* 定義背景動畫 */
-        @keyframes headerAnimation {
-            0% {
-                transform: translateX(0) translateY(0);
-            }
-
-            100% {
-                transform: translateX(-25%) translateY(-25%);
-            }
-        }
-
-        /* 活動標題文字樣式 */
+    @media (max-width: 992px) {
         .event-title {
-            font-size: 3rem;
-            /* 稍微減小標題大小 */
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1;
-            margin-bottom: 0;
+            font-size: 2.5rem;
         }
-
-        /* 調整側欄樣式 */
-        .sidebar {
-            width: 200px;
-            max-height: 70vh;
-            /* 限制側欄最大高度 */
-            overflow-y: auto;
-            /* 如果內容超出，添加滾動條 */
+        .left-column, .right-column {
+            flex: 0 0 100%;
+            max-width: 100%;
         }
+    }
 
-        /* 活動描述卡片樣式 */
-        .event-description-card {
-            border: 1px solid #e0e0e0;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            background-color: #ffffff;
-            margin-bottom: 2rem;
+    @media (max-width: 768px) {
+        .event-title {
+            font-size: 2rem;
         }
+    }
 
-        /* 卡片樣式：設置邊框、圓角和陰影效果 */
-        .card {
-            border: 1px solid #e0e0e0;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            overflow: hidden;
-            background-color: #ffffff;
-            height: 100%;
-            /* 確保所有卡片高度一致 */
+    @media (max-width: 576px) {
+        .event-title {
+            font-size: 1.8rem;
         }
-
-        /* 卡片懸停效果 */
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        /* 卡片標題欄樣式 */
-        .card-header {
-            background-color: #1a2a6c;
-            color: white;
-            font-weight: bold;
-            border-bottom: none;
-            padding: 0.75rem 1rem;
-            /* 減少上下 padding */
-        }
-
-        /* 卡片底部樣式 */
-        .card-footer {
-            background-color: transparent;
-            border-top: none;
-            padding: 0.75rem 1rem;
-            /* 減少上下 padding */
-        }
-
-        /* 參賽作品卡片樣式 */
-        .entry-card {
-            margin-bottom: 20px;
-        }
-
-        /* 參賽作品圖片樣式 */
-        .entry-image {
-            height: 200px;
-            /* 減小圖片高度 */
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        /* 參賽作品圖片懸停效果 */
-        .entry-card:hover .entry-image {
-            transform: scale(1.05);
-        }
-
-        /* 調整卡片內容樣式 */
-        .card-body {
-            padding: 0.75rem;
-            /* 減少內邊距 */
-        }
-
-        /* 參賽作品標題樣式 */
-        .card-title {
-            font-size: 1rem;
-            /* 減小標題字體 */
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #1a2a6c;
-        }
-
-        /* 參賽作品描述樣式 */
-        .card-text {
-            font-size: 0.8rem;
-            /* 減小描述字體 */
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-
-        /* 調整投票數樣式 */
-        .text-muted {
-            font-weight: bold;
-            font-size: 0.8rem;
-            /* 減小票數字體 */
-        }
-
-        /* 按鈕樣式 */
-        .btn {
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* 主要按鈕樣式 */
-        .btn-primary {
-            background-color: #1a2a6c;
-            border-color: #1a2a6c;
-            color: white;
-        }
-
-        /* 主要按鈕懸停和焦點效果 */
-        .btn-primary:hover,
-        .btn-primary:focus {
-            background-color: #0f1d4e;
-            border-color: #0f1d4e;
-        }
-
-        /* 輪廓按鈕樣式 */
-        .btn-outline-primary {
-            color: #1a2a6c;
-            border-color: #1a2a6c;
-        }
-
-        /* 輪廓按鈕懸停和焦點效果 */
-        .btn-outline-primary:hover,
-        .btn-outline-primary:focus {
-            background-color: #1a2a6c;
-            color: white;
-        }
-
-        /* 報名按鈕特殊樣式 */
-        .btn-signup {
-            background: linear-gradient(45deg, #fdbb2d, #b21f1f);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            /* 稍微減小 padding */
-            font-size: 1.1rem;
-            /* 稍微減小字體 */
-            font-weight: bold;
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(253, 187, 45, 0.3);
-        }
-
-        /* 報名按鈕懸停效果 */
-        .btn-signup:hover {
-            background: linear-gradient(45deg, #b21f1f, #fdbb2d);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(178, 31, 31, 0.4);
-        }
-
-        /* 調整按鈕樣式 */
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
-        }
-
-        /* 倒計時樣式 */
-        #countdown {
-            font-size: 2.2rem;
-            /* 稍微減小字體 */
-            font-weight: 700;
-            text-align: center;
-            color: #1a2a6c;
-        }
-
-        /* 響應式設計調整 */
-        @media (max-width: 1200px) {
-            .container {
-                padding-right: 15px;
-                /* 在小屏幕上恢復正常 padding */
-            }
-
-            .col-lg-3 {
-                flex: 0 0 25%;
-                max-width: 25%;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .col-lg-3 {
-                flex: 0 0 33.333333%;
-                max-width: 33.333333%;
-            }
-
-            .event-title {
-                font-size: 2.5rem;
-                /* 在中等屏幕上進一步減小標題 */
-            }
-        }
-
-        @media (max-width: 768px) {
-            .col-lg-3 {
-                flex: 0 0 50%;
-                max-width: 50%;
-            }
-
-            .event-title {
-                font-size: 2rem;
-                /* 在小屏幕上更小的標題 */
-            }
-        }
-
-        @media (max-width: 576px) {
-            .col-lg-3 {
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
-        }
+    }
     </style>
 </head>
 
@@ -308,14 +288,12 @@
 
         <div class="container">
             <!-- 顯示成功或錯誤消息 -->
-            <div th:if="${successMessage}" class="alert alert-success fade-in" role="alert" th:text="${successMessage}">
-            </div>
-            <div th:if="${errorMessage}" class="alert alert-danger fade-in" role="alert" th:text="${errorMessage}">
-            </div>
+            <div th:if="${successMessage}" class="alert alert-success fade-in" role="alert" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger fade-in" role="alert" th:text="${errorMessage}"></div>
 
             <div class="row">
                 <!-- 左側：活動描述和詳情 -->
-                <div class="col-lg-8">
+                <div class="col-lg-8 left-column">
                     <!-- 活動描述區域 -->
                     <div class="card event-description-card mb-4" data-aos="fade-up">
                         <div class="card-header">
@@ -334,25 +312,18 @@
                         <div class="card-body">
                             <ul class="list-unstyled">
                                 <li><i class="far fa-calendar-alt mr-2"></i> <strong>開始時間：</strong>
-                                    <span
-                                        th:text="${#temporals.format(event.eventStartTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                                    <span th:text="${#temporals.format(event.eventStartTime, 'yyyy年MM月dd日 HH:mm')}"></span>
                                 </li>
+                                <li><i class="far fa-clock mr-2"></i> <strong>報名截止：</strong>
+                                    <span th:text="${#temporals.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm')}"></span>
+                                </li>                                
                                 <li><i class="far fa-calendar-check mr-2"></i> <strong>結束時間：</strong>
-                                    <span
-                                        th:text="${#temporals.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                                    <span th:text="${#temporals.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm')}"></span>
                                 </li>
-                                <li><i class="far fa-clock mr-2"></i> <strong>報名截止時間：</strong>
-                                    <span
-                                        th:text="${#temporals.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm')}"></span>
-                                </li>
-                                <!-- 新增投票時間說明 -->
-                                <li><i class="fas fa-vote-yea mr-2"></i> <strong>投票時間：</strong>
-                                    報名截止後至活動結束
-                                </li>
+                                <li><i class="fas fa-vote-yea mr-2"></i> <strong>投票時間：</strong>報名截止後至活動結束</li>
                                 <li><i class="fas fa-info-circle mr-2"></i> <strong>狀態：</strong>
-                                    <span
-                                        th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"
-                                        th:class="${event.eventStatus == 0 ? 'badge badge-warning' : (event.eventStatus == 1 ? 'badge badge-success' : 'badge badge-secondary')}">
+                                    <span th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"
+                                          th:class="${event.eventStatus == 0 ? 'badge badge-warning' : (event.eventStatus == 1 ? 'badge badge-success' : 'badge badge-secondary')}">
                                     </span>
                                 </li>
                             </ul>
@@ -376,17 +347,27 @@
 
                     <!-- 參賽作品區域 -->
                     <h2 class="mb-4">參賽作品</h2>
-                    <div id="entries-list" class="row">
-                        <!-- 動態加載參賽作品 -->
+                    
+                    <!-- 新增：排序選項 -->
+                    <div class="mb-3">
+                        <label for="sortOption">排序方式：</label>
+                        <select id="sortOption" class="form-control" onchange="sortEntries()">
+                            <option value="newest">投稿時間</option>
+                            <option value="mostVoted">最多票數</option>
+                        </select>
+                    </div>
+                    
+                    <div id="entries-list" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+<!-- 參賽作品將動態加載到這裡 -->
                     </div>
                 </div>
 
                 <!-- 右側區域 -->
-                <div class="col-lg-4">
+                <div class="col-lg-4 right-column">
                     <!-- 報名按鈕 -->
                     <button id="signupButton" class="btn btn-signup btn-lg btn-block mb-4" data-aos="fade-left"
-                        th:disabled="${event.eventStatus == 2 || session.loginMember == null}"
-                        th:text="${event.eventStatus == 2 ? '活動已結束' : (session.loginMember == null ? '請先登入' : '我要報名')}">
+                            th:disabled="${event.eventStatus == 2 || session.loginMember == null}"
+                            th:text="${event.eventStatus == 2 ? '活動已結束' : (session.loginMember == null ? '請先登入' : '我要報名')}">
                         我要報名
                     </button>
 
@@ -410,8 +391,7 @@
                                 <div class="card">
                                     <div class="card-header" id="headingOne">
                                         <h2 class="mb-0">
-                                            <button class="btn btn-link" type="button" data-toggle="collapse"
-                                                data-target="#collapseOne">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne">
                                                 如何參與活動？
                                             </button>
                                         </h2>
@@ -443,8 +423,7 @@
     </div>
 
     <!-- 作品詳情模態框 -->
-    <div class="modal fade" id="entryDetailModal" tabindex="-1" role="dialog" aria-labelledby="entryDetailModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="entryDetailModal" tabindex="-1" role="dialog" aria-labelledby="entryDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -461,8 +440,7 @@
     </div>
 
     <!-- 報名模態框 -->
-    <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -473,8 +451,7 @@
                 </div>
                 <div class="modal-body">
                     <!-- 報名表單 -->
-                    <form id="signupForm" th:action="@{/eventSignup/create}" method="post"
-                        enctype="multipart/form-data">
+                    <form id="signupForm" th:action="@{/eventSignup/create}" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="eventId" th:value="${event.eventId}">
                         <div class="form-group">
                             <label for="workTitle">作品標題</label>
@@ -482,8 +459,7 @@
                         </div>
                         <div class="form-group">
                             <label for="workDescription">作品描述</label>
-                            <textarea class="form-control" id="workDescription" name="workDescription" rows="3"
-                                required></textarea>
+                            <textarea class="form-control" id="workDescription" name="workDescription" rows="3" required></textarea>
                         </div>
                         <div class="form-group">
                             <label for="photoFile">上傳作品圖片</label>
@@ -503,374 +479,349 @@
     <!-- 引入 AOS 動畫庫 JavaScript -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        // 定義全局變量
-        const eventId = /*[[${event.eventId}]]*/ null;
-        const eventStatus = /*[[${event.eventStatus}]]*/ null;
-        const userId = /*[[${session.loginMember?.memId}]]*/ null;
-        const eventEndTime = new Date(/*[[${event.eventEndTime}]]*/).getTime();
-        const eventSignupDeadline = new Date(/*[[${event.eventSignupDeadLine}]]*/).getTime();
-        let userHasSignedUp = false; // 用於追踪用戶是否已報名
-        // 全局變量來存儲預加載的數據
-        let preloadedEntries = {};
+<script th:inline="javascript">
+/*<![CDATA[*/
+// 定義全局變量
+const eventId = /*[[${event.eventId}]]*/ null;
+const eventStatus = /*[[${event.eventStatus}]]*/ null;
+const userId = /*[[${session.loginMember?.memId}]]*/ null;
+const eventEndTime = new Date(/*[[${event.eventEndTime}]]*/).getTime();
+const eventSignupDeadline = new Date(/*[[${event.eventSignupDeadLine}]]*/).getTime();
+let userHasSignedUp = false; // 用於追踪用戶是否已報名
+let allEntries = []; // 存儲所有參賽作品
 
-        /**
-         * 檢查是否已過報名截止時間
-         */
-        function isSignupClosed() {
-            return new Date().getTime() > eventSignupDeadline;
-        }
+/**
+ * 檢查是否已過報名截止時間
+ */
+function isSignupClosed() {
+    return new Date().getTime() > eventSignupDeadline;
+}
 
-        /**
-         * 檢查用戶是否已報名
-         */
-        function checkUserSignup() {
-            if (userId) {
-                $.ajax({
-                    url: `/PlayCentric/eventSignup/api/checkSignup/${eventId}/${userId}`,
-                    method: 'GET',
-                    success: function (response) {
-                        userHasSignedUp = response;
-                        updateSignupButton();
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("檢查用戶報名狀態時發生錯誤:", error);
-                    }
-                });
-            } else {
-                updateSignupButton(); // 如果用戶未登錄，仍然更新按鈕狀態
+/**
+ * 檢查用戶是否已報名
+ */
+function checkUserSignup() {
+    if (userId) {
+        $.ajax({
+            url: `/PlayCentric/eventSignup/api/checkSignup/${eventId}/${userId}`,
+            method: 'GET',
+            success: function (response) {
+                userHasSignedUp = response;
+                updateSignupButton();
+            },
+            error: function (xhr, status, error) {
+                console.error("檢查用戶報名狀態時發生錯誤:", error);
             }
+        });
+    } else {
+        updateSignupButton(); // 如果用戶未登錄，仍然更新按鈕狀態
+    }
+}
+
+/**
+ * 更新報名按鈕狀態
+ */
+function updateSignupButton() {
+    const $signupButton = $('#signupButton');
+    if (eventStatus == 2 || isSignupClosed()) {
+        $signupButton.prop('disabled', true).text('報名已截止');
+    } else if (!userId) {
+        $signupButton.prop('disabled', false).text('請先登入');
+    } else if (userHasSignedUp) {
+        $signupButton.prop('disabled', true).text('已報名');
+    } else {
+        $signupButton.prop('disabled', false).text('我要報名');
+    }
+}
+
+/**
+ * 載入參賽作品的函數
+ */
+function loadEntries() {
+    $('#entries-list').html('<p class="text-center">載入中，請稍候...</p>');
+
+    $.ajax({
+        url: '/PlayCentric/eventSignup/api/event/' + eventId,
+        method: 'GET',
+        success: function (entries) {
+            allEntries = entries;
+            sortAndDisplayEntries();
+        },
+        error: function (xhr, status, error) {
+            console.error("載入參賽作品時發生錯誤:", error);
+            $('#entries-list').html('<p class="col-12 text-danger">載入參賽作品時發生錯誤，請<a href="javascript:void(0);" onclick="loadEntries()">重試</a>。</p>');
         }
+    });
+}
 
-        /**
-         * 更新報名按鈕狀態
-         */
-        function updateSignupButton() {
-            const $signupButton = $('#signupButton');
-            if (eventStatus == 2 || isSignupClosed()) {
-                $signupButton.prop('disabled', true).text('報名已截止');
-            } else if (!userId) {
-                $signupButton.prop('disabled', false).text('請先登入');
-            } else if (userHasSignedUp) {
-                $signupButton.prop('disabled', true).text('已報名');
-            } else {
-                $signupButton.prop('disabled', false).text('我要報名');
-            }
-        }
+/**
+ * 排序並顯示作品
+ */
+function sortAndDisplayEntries() {
+    const sortOption = $('#sortOption').val();
+    let sortedEntries = [...allEntries];
 
-        /**
-         * 載入參賽作品的函數
-         */
-        /**
-     * 載入參賽作品的函數
-     */
-        function loadEntries() {
-            $('#entries-list').html('<p class="text-center">載入中，請稍候...</p>');
+    if (sortOption === 'mostVoted') {
+        sortedEntries.sort((a, b) => b.voteCount - a.voteCount);
+    } else {
+        sortedEntries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
 
-            $.ajax({
-                url: '/PlayCentric/eventSignup/api/event/' + eventId,
-                method: 'GET',
-                success: function (entries) {
-                    console.log("接收到的參賽作品:", entries);
-                    const entriesList = $('#entries-list');
-                    entriesList.empty();
+    displayEntries(sortedEntries);
+}
 
-                    if (entries.length === 0) {
-                        entriesList.append('<p class="col-12">目前還沒有參賽作品。</p>');
-                    } else {
-                        const now = new Date();
-                        const signupDeadline = new Date(/*[[${event.eventSignupDeadLine}]]*/ '');
-                        const eventEndTime = new Date(/*[[${event.eventEndTime}]]*/ '');
-                        const isVotingPeriod = now > signupDeadline && now < eventEndTime;
+/**
+ * 顯示作品
+ * @param {Array} entries - 要顯示的作品數組
+ */
+function displayEntries(entries) {
+    const entriesList = $('#entries-list');
+    entriesList.empty();
 
-                        entries.forEach(function (entry) {
-                            let voteButtonHtml = '';
-                            if (now <= signupDeadline) {
-                                voteButtonHtml = '<button class="btn btn-secondary btn-sm w-100" disabled>投票未開始</button>';
-                            } else if (isVotingPeriod) {
-                                voteButtonHtml = `<button onclick="vote(${entry.signupId})" class="btn btn-primary btn-sm w-100 vote-button">投票</button>`;
-                            } else {
-                                voteButtonHtml = '<button class="btn btn-secondary btn-sm w-100" disabled>投票已結束</button>';
-                            }
+    if (entries.length === 0) {
+        entriesList.append('<p class="col-12">目前還沒有參賽作品。</p>');
+    } else {
+        const now = new Date();
+        const signupDeadline = new Date(/*[[${event.eventSignupDeadLine}]]*/ '');
+        const eventEndTime = new Date(/*[[${event.eventEndTime}]]*/ '');
+        const isVotingPeriod = now > signupDeadline && now < eventEndTime;
 
-                            entriesList.append(`
-                <div class="col-6 col-md-4 col-lg-3 entry-card mb-3">
-                    <div class="card h-100">
+        entries.forEach(function (entry) {
+            let voteButtonHtml = generateVoteButton(entry, isVotingPeriod);
+
+            entriesList.append(`
+                <div class="col mb-4">
+                    <div class="card h-100 entry-card">
                         <img src="/PlayCentric/eventSignup/image/${entry.signupId}" class="card-img-top entry-image" alt="${entry.workTitle}">
                         <div class="card-body">
                             <h5 class="card-title">${entry.workTitle}</h5>
-                            <p class="card-text">${entry.workDescription.substring(0, 30)}...</p>
+                            <p class="card-text">${entry.workDescription.substring(0, 50)}...</p>
                             <p class="text-muted">票數：<span class="vote-count" data-signup-id="${entry.signupId}">${entry.voteCount}</span></p>
                         </div>
-                        <div class="card-footer p-1">
+                        <div class="card-footer">
                             <button onclick="showEntryDetail(${entry.signupId})" class="btn btn-info btn-sm w-100 mb-1">查看詳情</button>
                             ${voteButtonHtml}
                         </div>
                     </div>
                 </div>
-                             `);
-                        });
-
-                        updateVoteButtonStatus();
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("載入參賽作品時發生錯誤:", error);
-                    $('#entries-list').html('<p class="col-12 text-danger">載入參賽作品時發生錯誤，請<a href="javascript:void(0);" onclick="loadEntries()">重試</a>。</p>');
-                }
-            });
-        }
-
-        // 預加載所有作品詳情
-        function preloadEntries() {
-            $.ajax({
-                url: '/PlayCentric/eventSignup/api/event/' + eventId,
-                method: 'GET',
-                success: function (entries) {
-                    entries.forEach(entry => {
-                        preloadedEntries[entry.signupId] = entry;
-                    });
-                    console.log("預加載完成");
-                },
-                error: function (error) {
-                    console.error("預加載失敗:", error);
-                }
-            });
-        }
-
-        /**
-         * 顯示作品詳情的函數
-         * @param {number} signupId - 報名ID
-         */
-        function showEntryDetail(signupId) {
-            // 顯示加載動畫
-            $('#entryDetailContent').html('<div class="text-center"><i class="fas fa-spinner fa-spin fa-3x"></i></div>');
-            $('#entryDetailModal').modal('show');
-
-            if (preloadedEntries[signupId]) {
-                // 使用預加載的數據
-                renderEntryDetail(preloadedEntries[signupId]);
-            } else {
-                // 如果沒有預加載數據，則發送請求
-                $.ajax({
-                    url: '/PlayCentric/eventSignup/api/' + signupId,
-                    method: 'GET',
-                    success: function (entry) {
-                        renderEntryDetail(entry);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("載入作品詳情時發生錯誤:", error);
-                        $('#entryDetailContent').html('<p class="text-danger">載入失敗，請稍後再試。</p>');
-                    }
-                });
-            }
-        }
-
-        // 渲染作品詳情
-        function renderEntryDetail(entry) {
-            const detailContent = `
-        <img src="/PlayCentric/eventSignup/image/${entry.signupId}" class="img-fluid mb-3" alt="${entry.workTitle}">
-        <h3>${entry.workTitle}</h3>
-        <p>${entry.workDescription}</p>
-        <p>作者：${entry.member.nickname}</p>
-        <p class="text-muted">目前票數：<span class="vote-count" data-signup-id="${entry.signupId}">${entry.voteCount}</span></p>
-    `;
-            $('#entryDetailContent').html(detailContent);
-        }
-
-        /**
-         * 投票函數
-         * @param {number} signupId - 報名ID
-         */
-        function vote(signupId) {
-            if (!userId) {
-                alert("請先登入後再投票");
-                return;
-            }
-
-            const now = new Date();
-            const signupDeadline = new Date(/*[[${event.eventSignupDeadLine}]]*/ '');
-            const eventEndTime = new Date(/*[[${event.eventEndTime}]]*/ '');
-
-            if (now <= signupDeadline) {
-                alert("投票尚未開始");
-                return;
-            }
-
-            if (now >= eventEndTime) {
-                alert("投票已結束");
-                return;
-            }
-
-            $.ajax({
-                url: '/PlayCentric/eventVotes/api/create',
-                method: 'POST',
-                data: { memberId: userId, signupId: signupId },
-                success: function (response) {
-                    if (response.success) {
-                        alert("投票成功！");
-                        $(`.vote-count[data-signup-id="${signupId}"]`).text(response.updatedVoteCount);
-                    } else {
-                        alert(response.message || "投票失敗，請稍後再試。");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("投票錯誤詳情:", xhr.responseJSON);
-                    let errorMessage = "投票時發生錯誤，請稍後再試。";
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-                    alert(errorMessage);
-                }
-            });
-        }
-
-        // 檢查是否可以投票
-        function updateVoteButtonStatus() {
-            const now = new Date();
-            const signupDeadline = new Date(/*[[${event.eventSignupDeadLine}]]*/ '');
-            const eventEndTime = new Date(/*[[${event.eventEndTime}]]*/ '');
-            const canVote = now > signupDeadline && now < eventEndTime;
-
-            $('.vote-button').prop('disabled', !canVote);
-            if (!canVote) {
-                if (now <= signupDeadline) {
-                    $('.vote-button').attr('title', '投票尚未開始，請等待報名截止後');
-                } else {
-                    $('.vote-button').attr('title', '投票已結束');
-                }
-            } else {
-                $('.vote-button').attr('title', '點擊投票');
-            }
-        }
-
-        /**
-         * 更新倒計時的函數
-         */
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const timeLeft = eventEndTime - now;
-
-            if (timeLeft > 0) {
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-                document.getElementById("countdown").innerHTML = `${days}天 ${hours}時 ${minutes}分 ${seconds}秒`;
-            } else {
-                document.getElementById("countdown").innerHTML = "活動已結束";
-                $('#signupButton').prop('disabled', true).text('活動已結束');
-                updateEventStatus();
-            }
-        }
-
-        /**
-         * 更新活動狀態的函數
-         */
-        function updateEventStatus() {
-            if (eventStatus === 1 && new Date().getTime() >= eventEndTime) {
-                eventStatus = 2;
-                $('#eventStatus').text('已結束').removeClass('badge-success').addClass('badge-secondary');
-                $('#signupButton').prop('disabled', true).text('活動已結束');
-            }
-        }
-
-        // 頁面加載完成後執行的函數
-        $(document).ready(function () {
-            // 初始化 AOS 動畫
-            AOS.init({
-                duration: 1000,
-                once: true
-            });
-
-            // 檢查用戶報名狀態
-            checkUserSignup();
-
-            // 載入參賽作品
-            loadEntries();
-
-            //預加載作品詳情
-            preloadEntries();
-
-            updateVoteButtonStatus();
-            setInterval(updateVoteButtonStatus, 60000); // 每分鐘更新一次按鈕狀態
-
-            // 綁定報名按鈕點擊事件
-            $('#signupButton').click(function () {
-                if (eventStatus == 2 || isSignupClosed()) {
-                    alert("報名已截止，無法報名");
-                    return;
-                }
-                if (!userId) {
-                    alert("請先登入後再報名");
-                    return;
-                }
-                if (userHasSignedUp) {
-                    alert("您已經報名過此活動");
-                    return;
-                }
-                $('#signupModal').modal('show');
-            });
-
-            // 綁定報名表單提交事件
-            $('#signupForm').submit(function (e) {
-                e.preventDefault();
-                if (eventStatus == 2 || isSignupClosed()) {
-                    alert("報名已截止，無法報名");
-                    return;
-                }
-
-                // 再次檢查用戶是否已報名，以防在打開模態框後用戶狀態發生變化
-                if (userHasSignedUp) {
-                    alert("您已經報名過此活動");
-                    $('#signupModal').modal('hide');
-                    return;
-                }
-                let formData = new FormData(this);
-                $.ajax({
-                    url: $(this).attr('action'),
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        alert('報名成功！');
-                        $('#signupModal').modal('hide');
-                        userHasSignedUp = true;
-                        updateSignupButton();
-                        loadEntries(); // 重新加載作品列表
-                    },
-                    error: function (xhr, status, error) {
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            alert(xhr.responseJSON.message);
-                        } else {
-                            alert('報名失敗，請稍後再試。');
-                        }
-                    }
-                });
-            });
-
-            // 修正模態框關閉問題
-            $('.modal').on('hidden.bs.modal', function () {
-                $(this).find('form').trigger('reset');
-            });
-
-            // 確保模態框可以正確關閉
-            $('.close').click(function () {
-                $(this).closest('.modal').modal('hide');
-            });
-
-            // 啟動倒計時
-            setInterval(updateCountdown, 1000);
-
-            // 初始檢查活動狀態
-            updateEventStatus();
-            updateSignupButton();
+            `);
         });
-        /*]]>*/
-    </script>
-</body>
+    }
+}
 
+/**
+ * 生成投票按鈕HTML
+ * @param {Object} entry - 作品對象
+ * @param {boolean} isVotingPeriod - 是否在投票期間
+ * @returns {string} 投票按鈕HTML
+ */
+function generateVoteButton(entry, isVotingPeriod) {
+    if (!isVotingPeriod) {
+        return '<button class="btn btn-secondary btn-sm w-100" disabled>投票未開始</button>';
+    } else {
+        return `<button onclick="vote(${entry.signupId})" class="btn btn-primary btn-sm w-100 vote-button">投票</button>`;
+    }
+}
+
+/**
+ * 顯示作品詳情的函數
+ * @param {number} signupId - 報名ID
+ */
+function showEntryDetail(signupId) {
+    $('#entryDetailContent').html('<div class="text-center"><i class="fas fa-spinner fa-spin fa-3x"></i></div>');
+    $('#entryDetailModal').modal('show');
+
+    $.ajax({
+        url: '/PlayCentric/eventSignup/api/' + signupId,
+        method: 'GET',
+        success: function (entry) {
+            const detailContent = `
+                <img src="/PlayCentric/eventSignup/image/${entry.signupId}" class="img-fluid mb-3" alt="${entry.workTitle}">
+                <h3>${entry.workTitle}</h3>
+                <p>${entry.workDescription}</p>
+                <p>作者：${entry.member.nickname}</p>
+                <p class="text-muted">目前票數：<span class="vote-count" data-signup-id="${entry.signupId}">${entry.voteCount}</span></p>
+            `;
+            $('#entryDetailContent').html(detailContent);
+        },
+        error: function (xhr, status, error) {
+            console.error("載入作品詳情時發生錯誤:", error);
+            $('#entryDetailContent').html('<p class="text-danger">載入失敗，請稍後再試。</p>');
+        }
+    });
+}
+
+/**
+ * 投票函數
+ * @param {number} signupId - 報名ID
+ */
+function vote(signupId) {
+    if (!userId) {
+        alert("請先登入後再投票");
+        return;
+    }
+
+    const now = new Date();
+    if (now <= eventSignupDeadline) {
+        alert("投票尚未開始");
+        return;
+    }
+
+    if (now >= eventEndTime) {
+        alert("投票已結束");
+        return;
+    }
+
+    $.ajax({
+        url: '/PlayCentric/eventVotes/api/create',
+        method: 'POST',
+        data: { memberId: userId, signupId: signupId },
+        success: function (response) {
+            if (response.success) {
+                alert("投票成功！");
+                $(`.vote-count[data-signup-id="${signupId}"]`).text(response.updatedVoteCount);
+                // 更新 allEntries 中的投票數
+                const entry = allEntries.find(e => e.signupId === signupId);
+                if (entry) {
+                    entry.voteCount = response.updatedVoteCount;
+                }
+                sortAndDisplayEntries(); // 重新排序和顯示作品
+            } else {
+                alert(response.message || "投票失敗，請稍後再試。");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("投票錯誤詳情:", xhr.responseJSON);
+            let errorMessage = "投票時發生錯誤，請稍後再試。";
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            }
+            alert(errorMessage);
+        }
+    });
+}
+
+/**
+ * 更新倒計時的函數
+ */
+function updateCountdown() {
+    const now = new Date().getTime();
+    const timeLeft = eventEndTime - now;
+
+    if (timeLeft > 0) {
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById("countdown").innerHTML = `${days}天 ${hours}時 ${minutes}分 ${seconds}秒`;
+    } else {
+        document.getElementById("countdown").innerHTML = "活動已結束";
+        $('#signupButton').prop('disabled', true).text('活動已結束');
+        updateEventStatus();
+    }
+}
+
+/**
+ * 更新活動狀態的函數
+ */
+function updateEventStatus() {
+    if (eventStatus === 1 && new Date().getTime() >= eventEndTime) {
+        eventStatus = 2;
+        $('#eventStatus').text('已結束').removeClass('badge-success').addClass('badge-secondary');
+        $('#signupButton').prop('disabled', true).text('活動已結束');
+    }
+}
+
+// 頁面加載完成後執行的函數
+$(document).ready(function () {
+    // 初始化 AOS 動畫
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+
+    // 檢查用戶報名狀態
+    checkUserSignup();
+
+    // 載入參賽作品
+    loadEntries();
+
+    // 綁定排序選項變更事件
+    $('#sortOption').change(sortAndDisplayEntries);
+
+    // 綁定報名按鈕點擊事件
+    $('#signupButton').click(function () {
+        if (eventStatus == 2 || isSignupClosed()) {
+            alert("報名已截止，無法報名");
+            return;
+        }
+        if (!userId) {
+            alert("請先登入後再報名");
+            return;
+        }
+        if (userHasSignedUp) {
+            alert("您已經報名過此活動");
+            return;
+        }
+        $('#signupModal').modal('show');
+    });
+
+    // 綁定報名表單提交事件
+    $('#signupForm').submit(function (e) {
+        e.preventDefault();
+        if (eventStatus == 2 || isSignupClosed()) {
+            alert("報名已截止，無法報名");
+            return;
+        }
+
+        if (userHasSignedUp) {
+            alert("您已經報名過此活動");
+            $('#signupModal').modal('hide');
+            return;
+        }
+        let formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alert('報名成功！');
+                $('#signupModal').modal('hide');
+                userHasSignedUp = true;
+                updateSignupButton();
+                loadEntries(); // 重新加載作品列表
+            },
+            error: function (xhr, status, error) {
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    alert(xhr.responseJSON.message);
+                } else {
+                    alert('報名失敗，請稍後再試。');
+                }
+            }
+        });
+    });
+
+    // 修正模態框關閉問題
+    $('.modal').on('hidden.bs.modal', function () {
+        $(this).find('form').trigger('reset');
+    });
+
+    // 確保模態框可以正確關閉
+    $('.close').click(function () {
+        $(this).closest('.modal').modal('hide');
+    });
+
+    // 啟動倒計時
+    setInterval(updateCountdown, 1000);
+
+    // 初始檢查活動狀態
+    updateEventStatus();
+    updateSignupButton();
+});
+/*]]>*/
+</script>
+</body>
 </html>
