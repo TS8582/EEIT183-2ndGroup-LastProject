@@ -82,38 +82,44 @@ public class EventSignupController {
 	 */
 	@PostMapping("/create")
 	public String createSignup(@ModelAttribute EventSignup eventSignup,
-			@RequestParam("photoFile") MultipartFile photoFile, @RequestParam("eventId") Integer eventId,
-			HttpSession session, RedirectAttributes redirectAttributes) {
-		logger.info("開始處理報名請求，活動ID: {}", eventId);
-		try {
-			LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
-			if (loginMember == null) {
-				redirectAttributes.addFlashAttribute("errorMessage", "請先登錄");
-				return "redirect:/member/login";
-			}
+	        @RequestParam("photoFile") MultipartFile photoFile, @RequestParam("eventId") Integer eventId,
+	        HttpSession session, RedirectAttributes redirectAttributes) {
+	    logger.info("開始處理報名請求，活動ID: {}", eventId);
+	    try {
+	        LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
+	        if (loginMember == null) {
+	            redirectAttributes.addFlashAttribute("errorMessage", "請先登錄");
+	            return "redirect:/member/login";
+	        }
 
-			Member member = memberService.findById(loginMember.getMemId());
-			Event event = eventService.getEvent(eventId).orElseThrow(() -> new RuntimeException("活動不存在"));
+	        Member member = memberService.findById(loginMember.getMemId());
+	        Event event = eventService.getEvent(eventId).orElseThrow(() -> new RuntimeException("活動不存在"));
 
-			// 檢查用戶是否已經報名過這個活動
-			if (eventSignupService.hasUserSignedUp(member.getMemId(), eventId)) {
-				redirectAttributes.addFlashAttribute("errorMessage", "您已經報名過這個活動了");
-				return "redirect:/events/public/detail/" + eventId;
-			}
+	        // 檢查用戶是否已經報名過這個活動
+	        if (eventSignupService.hasUserSignedUp(member.getMemId(), eventId)) {
+	            redirectAttributes.addFlashAttribute("errorMessage", "您已經報名過這個活動了");
+	            return "redirect:/events/public/detail/" + eventId;
+	        }
 
-			eventSignup.setMember(member);
-			eventSignup.setEvent(event);
-			eventSignup.setWorkImage(photoFile.getBytes());
-			eventSignup.setWorkUploadTime(LocalDateTime.now());
+	        // 檢查是否已過報名截止時間
+	        if (LocalDateTime.now().isAfter(event.getEventSignupDeadLine())) {
+	            redirectAttributes.addFlashAttribute("errorMessage", "報名已截止");
+	            return "redirect:/events/public/detail/" + eventId;
+	        }
 
-			EventSignup createdSignup = eventSignupService.createSignup(eventSignup);
-			logger.info("報名成功，報名ID: {}", createdSignup.getSignupId());
-			redirectAttributes.addFlashAttribute("successMessage", "報名成功！");
-		} catch (Exception e) {
-			logger.error("報名過程中發生錯誤", e);
-			redirectAttributes.addFlashAttribute("errorMessage", "報名失敗: " + e.getMessage());
-		}
-		return "redirect:/events/public/detail/" + eventId;
+	        eventSignup.setMember(member);
+	        eventSignup.setEvent(event);
+	        eventSignup.setWorkImage(photoFile.getBytes());
+	        eventSignup.setWorkUploadTime(LocalDateTime.now());
+
+	        EventSignup createdSignup = eventSignupService.createSignup(eventSignup);
+	        logger.info("報名成功，報名ID: {}", createdSignup.getSignupId());
+	        redirectAttributes.addFlashAttribute("successMessage", "報名成功！");
+	    } catch (Exception e) {
+	        logger.error("報名過程中發生錯誤", e);
+	        redirectAttributes.addFlashAttribute("errorMessage", "報名失敗: " + e.getMessage());
+	    }
+	    return "redirect:/events/public/detail/" + eventId;
 	}
 
 	// ======== API 相關方法 ========
@@ -135,7 +141,7 @@ public class EventSignupController {
 			dto.setWorkDescription(signup.getWorkDescription());
 			dto.setVoteCount(eventVoteService.getVoteCountForSignup(signup.getSignupId()));
 			dto.setMember(signup.getMember());
-			dto.setEventSignupStatus(signup.getEventSignupStatus()); // 設置狀態
+			dto.setEventSignupStatus(signup.getEventSignupStatus()); 
 			return ResponseEntity.ok(dto);
 		}).orElseGet(() -> {
 			logger.warn("未找到指定的報名記錄");
@@ -200,19 +206,32 @@ public class EventSignupController {
 	@GetMapping("/api/event/{eventId}")
 	@ResponseBody
 	public ResponseEntity<List<EventSignupDTO>> getEventSignups(@PathVariable Integer eventId) {
-		List<EventSignup> signups = eventSignupService.getSignupsByEventId(eventId);
-		List<EventSignupDTO> dtos = signups.stream().map(signup -> {
-			EventSignupDTO dto = new EventSignupDTO();
-			dto.setSignupId(signup.getSignupId());
-			dto.setWorkTitle(signup.getWorkTitle());
-			dto.setWorkDescription(signup.getWorkDescription());
-			dto.setVoteCount(eventVoteService.getVoteCountForSignup(signup.getSignupId()));
-			dto.setMember(signup.getMember());
-			return dto;
-		}).collect(Collectors.toList());
-		return ResponseEntity.ok(dtos);
+	    try {
+	        List<EventSignup> signups = eventSignupService.getSignupsByEventId(eventId);
+	        List<EventSignupDTO> dtos = signups.stream().map(signup -> {
+	            EventSignupDTO dto = new EventSignupDTO();
+	            dto.setSignupId(signup.getSignupId());
+	            dto.setWorkTitle(signup.getWorkTitle());
+	            dto.setWorkDescription(signup.getWorkDescription());
+	            dto.setVoteCount(eventVoteService.getVoteCountForSignup(signup.getSignupId()));
+	            dto.setMember(signup.getMember());
+	            return dto;
+	        }).collect(Collectors.toList());
+	        return ResponseEntity.ok(dtos);
+	    } catch (Exception e) {
+	        logger.error("獲取活動報名時發生錯誤", e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	    }
 	}
-
+	
+	
+    //檢查用戶是否已經報名
+    @GetMapping("/api/checkSignup/{eventId}/{userId}")
+    @ResponseBody
+    public boolean hasUserSignedUp(@PathVariable Integer eventId, @PathVariable Integer userId) {
+        return eventSignupService.hasUserSignedUp(userId, eventId);
+    }
+    
 	/**
 	 * 獲取報名圖片（REST API）
 	 * 
