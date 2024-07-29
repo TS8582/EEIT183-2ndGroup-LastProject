@@ -231,58 +231,84 @@
 		});
 
 		function submitOrder() {
-			const pfGameId = '[[${pfGame.pfGameId}]]';
-			const loginMember = '[[${session.loginMember}]]';
-			const memId = '[[${session.loginMember.memId}]]';
-			const quantity = parseInt($('#quantity').val());
-			const totalAmount = parseInt($('#total-amount').text().replace('$', ''));
+	const pfGameId = '[[${pfGame.pfGameId}]]';
+	const playFellowId = '[[${pfGame.playFellowMember.playFellowId}]]';
+	const loginMember = '[[${session.loginMember}]]';
+	const memId = '[[${session.loginMember.memId}]]';
+	const quantity = parseInt($('#quantity').val());
+	const totalAmount = parseInt($('#total-amount').text().replace('$', ''));
 
-			if (!memId) {
+	if (!memId) {
+		Swal.fire({
+			icon: 'error',
+			title: '未登入會員',
+			text: '請先登入會員',
+		});
+		window.location.href = 'http://localhost:8080/PlayCentric/member/personal/Info';
+		return;
+	}
+
+	const order = {
+		pfGameId: pfGameId,
+		memId: memId,
+		transactionID: null,
+		paymentStatus: 2,
+		quantity: quantity,
+		totalAmount: totalAmount
+	};
+
+	axios.post('/PlayCentric/playFellow/addPfOrder', order)
+		.then(response => {
+			if (response.data === '付款成功') {
 				Swal.fire({
-					icon: 'error',
-					title: '未登入會員',
-					text: '請先登入會員',
-				});
-				window.location.href = 'http://localhost:8080/PlayCentric/member/personal/Info';
-				return;
-			}
+					icon: 'success',
+					title: '帳戶成功付款',
+					text: response.data
+				}).then(() => {
+					// 调用 reviewPfstatus 控制器
+					const formData = new FormData();
+					formData.append('playFellowId', playFellowId);
+					formData.append('pfstatus', 4);
 
-			const order = {
-				pfGameId: pfGameId,
-				memId: memId,
-				transactionID: null,
-				paymentStatus: 2,
-				quantity: quantity,
-				totalAmount: totalAmount
-			};
-
-			axios.post('/PlayCentric/playFellow/addPfOrder', order)
-				.then(response => {
-					if (response.data === '付款成功') {
-						Swal.fire({
-							icon: 'success',
-							title: '帳戶成功付款',
-							text: response.data
-						}).then(() => {
+					axios.post('/PlayCentric/playFellow/reviewPfstatus', formData)
+						.then(() => {
 							window.location.href = 'http://localhost:8080/PlayCentric/member/personal/Info';
+						})
+						.catch(error => {
+							console.error('半由系統錯誤', error);
+							Swal.fire({
+								icon: 'error',
+								title: '錯誤',
+								text: '無法更新狀態'
+							});
 						});
-					} else {
-						Swal.fire({
-							icon: 'info',
-							title: '帳戶餘額不足',
-							text: response.data,
-							showCancelButton: true,
-							confirmButtonText: '前往儲值',
-							cancelButtonText: '取消'
-						}).then((result) => {
-							if (result.isConfirmed) {
-								window.location.href = 'http://localhost:8080/PlayCentric/member/personal/Info'; 
-							}
-						});
-
+				});
+			} else {
+				Swal.fire({
+					icon: 'info',
+					title: '帳戶餘額不足',
+					text: response.data,
+					showCancelButton: true,
+					confirmButtonText: '前往儲值',
+					cancelButtonText: '取消'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = 'http://localhost:8080/PlayCentric/member/personal/recharge'; 
 					}
-				})
-		}
+				});
+			}
+		})
+		.catch(error => {
+			console.error('Error submitting order:', error);
+			Swal.fire({
+				icon: 'error',
+				title: '錯誤',
+				text: '無法提交訂單'
+			});
+		});
+}
+
+
 	</script>
 
 </body>

@@ -154,7 +154,8 @@
 					<span>審核:</span><br>
 					<div class="passStatusOrNot d-flex justify-content-between">
 						<i class="fas fa-check passIcon" style="color: rgb(0, 255, 157)"
-							th:attr="data-playfellow-id=${pfmember.playFellowId} " data-pfstatus='3'></i> <i
+							th:attr="data-playfellow-id=${pfmember.playFellowId} " data-pfstatus='3'></i>
+							 <i
 							class="fas fa-solid fa-xmark failIcon" style="color: rgb(255, 0, 0)"
 							th:attr="data-playfellow-id=${pfmember.playFellowId} " data-pfstatus='2'></i>
 					</div>
@@ -206,11 +207,11 @@
 					console.log('playFellowId:', playFellowId);
 					console.log('pfstatus:', pfstatus);
 
-					const photoMsg = new URLSearchParams();
-					photoMsg.append('playFellowId', playFellowId);
-					photoMsg.append('pfstatus', pfstatus);
+					const reviewMsg = new URLSearchParams();
+					reviewMsg.append('playFellowId', playFellowId);
+					reviewMsg.append('pfstatus', pfstatus);
 
-					axios.post('/PlayCentric/playFellow/reviewPfstatus', photoMsg, {
+					axios.post('/PlayCentric/playFellow/reviewPfstatus', reviewMsg, {
 						headers: {
 							'Content-Type': 'application/x-www-form-urlencoded'
 						}
