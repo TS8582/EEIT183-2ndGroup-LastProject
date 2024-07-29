@@ -131,8 +131,12 @@
                             <span th:if="${session.loginMember} ? ${game.isInCart}" class="mybtn-disabled">已加入購物車</span>
                             <span th:if="${session.loginMember} ? ${!game.isInCart && !game.isHaveGame}"
                                 class="mybtn mybtn-green cart">加入購物車</span>
-                            <span th:if="${session.loginMember} ? ${game.isHaveGame}"
-                                class="mybtn mybtn-sky download">下載</span>
+                            <th:block th:if="${session.loginMember} ? ${game.isHaveGame}">
+                                <span th:if="${game.gameFile != null} ? ${game.gameFile.length > 0}"
+                                    class="mybtn mybtn-sky download">下載</span>
+                                <span th:if="${game.gameFile == null || game.gameFile.length == 0}"
+                                    class="mybtn-disabled">尚未開放下載</span>
+                            </th:block>
                             <div class="hidden gameId" th:text="${game.gameId}"></div>
                         </div>
                     </div>

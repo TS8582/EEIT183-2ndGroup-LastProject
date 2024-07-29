@@ -170,7 +170,7 @@ public class GameOrderService {
 		save(myorder);
 		if (paymentId == 1) {
 			member.setPoints(member.getPoints() - total);
-			loginMember.setPoints(member.getPoints() - total);
+			loginMember.setPoints(loginMember.getPoints() - total);
 			mService.save(member);
 		}
 	}
