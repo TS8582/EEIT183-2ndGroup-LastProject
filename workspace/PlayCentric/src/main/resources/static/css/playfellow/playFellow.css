@@ -236,6 +236,28 @@ body {
   color: var(--bs-btn-color);
   border-color: var(--bs-btn-border-color);
 }
+.btn-show-playfellow-gameList {
+  transition: all 0.3s ease-in;
+/*   padding: 1.2rem 3rem; */
+  letter-spacing: 0.02375rem;
+  text-transform: uppercase;
+  --bs-btn-color: rgb(0, 0, 0);
+/*  --bs-btn-border-color: #41403E;*/
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: rgb(192, 192, 192);
+  --bs-btn-hover-border-color: #41403E;
+  --bs-btn-focus-shadow-rgb: 33, 37, 41;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #41403E;
+  --bs-btn-active-border-color: #41403E;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #41403E;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #41403E;
+  --bs-gradient: none;
+  color: var(--bs-btn-color);
+  border-color: var(--bs-btn-border-color);
+}
 
 .btn-outline-shop:hover, .btn-outline-shop:focus, .btn-outline-shop:active {
   color: var(--bs-btn-hover-color) !important;
