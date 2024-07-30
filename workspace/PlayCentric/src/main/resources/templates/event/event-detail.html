@@ -320,7 +320,7 @@
                                 <li><i class="far fa-calendar-check mr-2"></i> <strong>結束時間：</strong>
                                     <span th:text="${#temporals.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm')}"></span>
                                 </li>
-                                <li><i class="fas fa-vote-yea mr-2"></i> <strong>投票時間：</strong>報名截止後至活動結束</li>
+                                <li><i class="fas fa-vote-yea mr-2"></i> <strong>投票時間：</strong>報名截止至活動結束</li>
                                 <li><i class="fas fa-info-circle mr-2"></i> <strong>狀態：</strong>
                                     <span th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}"
                                           th:class="${event.eventStatus == 0 ? 'badge badge-warning' : (event.eventStatus == 1 ? 'badge badge-success' : 'badge badge-secondary')}">
