@@ -4,6 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .mh-100px{
+            max-height: 100px;
+        }
+    </style>
     <title>PlayCentric-收藏文章</title>
 </head>
 
@@ -14,9 +19,10 @@
         <div class="h4 ps-3">收藏文章</div>
         <ul class="list-group container mb-4" id="output">
             <li class="list-group-item d-flex">
-                <div class="col-3 fw-bold ms-auto">文章名稱</div>
-                <div class="col-3 fw-bold">討論區</div>
-                <div class="col-5 fw-bold">文章發布時間</div>
+                <img src="/PlayCentric/photo/showPhoto2?textsId=38" class="col-3">
+                <div class="col-3 fw-bold text-center">文章</div>
+                <div class="col-2 fw-bold text-center">討論區</div>
+                <div class="col-4 fw-bold text-center">文章發布時間</div>
             </li>
         </ul>
         <div id="pageBtn">
@@ -31,6 +37,7 @@
       $(function () {
         const keepListUrl = "[[@{/personal/api/texts/keepList}]]"
         const textsUrl = "[[@{/texts/id/talk}]]"
+        const textsPhotoUrl = "[[@{/photo/showPhoto2?textsId=}]]"
         const forumUrl = "[[@{/texts/findTextsByForumId?forumId=}]]"
         const params = { pageNum:1 }
         const redirectMsg = '[[${redirectMsg}]]';
@@ -77,16 +84,19 @@
           }
           
           $('#output').append(`<li class="list-group-item d-flex">
-                                <div class="col-3 fw-bold ms-auto">文章名稱</div>
-                                <div class="col-3 fw-bold">討論區</div>
-                                <div class="col-5 fw-bold">文章發布時間</div>
+                                <div class="col-6 fw-bold text-center">文章</div>
+                                <div class="col-2 fw-bold text-center">討論區</div>
+                                <div class="col-4 fw-bold text-center">文章發布時間</div>
                               `)
   
           data.content.forEach((element) => {
-            const dataHtml = `<li class="list-group-item d-flex">
+            const dataHtml = `<li class="list-group-item d-flex align-items-center">
+                                <a href="${textsUrl.replace('id',element.texts.textsId)}"
+                                 class="col-3 d-flex justify-content-center p-2">
+                                <img src="${textsPhotoUrl+element.texts.textsId}" class="mh-100px"></a>
                                 <a href="${textsUrl.replace('id',element.texts.textsId)}" class="text-dark col-3 ms-auto">${element.texts.title}</a>
-                                <a href="${forumUrl+element.texts.forum.forumId}" class="text-dark col-3">${element.texts.forum.forumName}</a>
-                                <div class="col-5">${element.texts.doneTime}</div>
+                                <a href="${forumUrl+element.texts.forum.forumId}" class="text-dark col-2 text-center">${element.texts.forum.forumName}</a>
+                                <div class="col-4 text-center">${element.texts.doneTime}</div>
                               </li>`
             $('#output').append(dataHtml);
             $('[role=1]').addClass('bg-manager-blue');
