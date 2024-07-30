@@ -69,7 +69,7 @@
 				<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSidebar"
 					aria-labelledby="offcanvasSidebarLabel" style="background-color:#F1FAEE;">
 					<div class="offcanvas-header">
-						<h5 class="offcanvas-title" id="offcanvasSidebarLabel">更多遊戲伴遊</h5>
+						<h5 class="offcanvas-title fw-bolder" id="offcanvasSidebarLabel">更多遊戲伴遊</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 					</div>
 
@@ -120,9 +120,9 @@
 				<h2 class="display-6 fw-normal" th:text="${game.gameName}"></h2>
 				<div class="mb-4 mb-md-0">
 					<p class="m-0">
-						<button class="filter-button me-4" data-filter="*">所有伴遊</button>
-						<button class="filter-button me-4" data-filter=".male">男生</button>
-						<button class="filter-button me-4" data-filter=".female">女生</button>
+						<button class="filter-button me-4 fw-bold" data-filter="*">所有伴遊</button>
+						<button class="filter-button me-4 fw-bold" data-filter=".male">男生</button>
+						<button class="filter-button me-4 fw-bold" data-filter=".female">女生</button>
 					</p>
 				</div>
 			</div>
@@ -154,7 +154,7 @@
 
 						<div class="card-body pl-5">
 							<div class="d-flex align-items-center" style="white-space: nowrap;">
-								<span class="card-title pt-2 m-0" th:text="${pfgame.playFellowMember.pfnickname}"
+								<span class="card-title pt-2 m-0 fw-bold" th:text="${pfgame.playFellowMember.pfnickname}"
 									style="display: inline;"></span>
 								<span th:if="${pfgame.playFellowMember.member.gender == 1}"
 									style="background-color: rgb(0, 191, 255); color: white; padding: 2px 8px; border-radius: 25%; font-size: 6px; margin-left: 10px; display: inline;">♂️</span>
@@ -173,7 +173,7 @@
 									</div>
 								</div>
 
-								<h6 class="secondary-font text-primary pt-0"
+								<h6 class="secondary-font text-primary pt-0 fw-bold"
 									th:text="'$'+${pfgame.amount}+'元' +'/'+${pfgame.pricingCategory}"></h6>
 								<div class="d-flex flex-wrap mt-3">
 									<form action="/PlayCentric/playFellow/playFellowCart" method="GET">
