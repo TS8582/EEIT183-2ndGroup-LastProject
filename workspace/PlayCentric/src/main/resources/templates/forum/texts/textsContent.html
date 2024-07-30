@@ -23,14 +23,22 @@
     <script th:src="@{/js/utils/doAlertJQ.js}"></script>
 
     <style>
-        body {
-            background-image: url("[[@{/images/loginBG.jpg}]]");
-            background-size: cover;
-            /* 確保圖片覆蓋整個容器 */
-            background-position: center;
-            /* 確保圖片居中 */
-            margin: 0;
-            padding: 0;
+        /*動畫*/
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animated-card {
+            animation: fadeIn 1s ease-in-out forwards;
         }
 
         /* 調整 placeholder 的顏色 */
@@ -75,12 +83,12 @@
 
         .h1 {
             color: rgb(121, 85, 252) !important;
-            border-bottom: 2px dashed black;
+            border-bottom: 2px dashed rgb(2, 15, 43);
             width: 780px;
         }
 
         .p1 {
-            background-color: rgba(255, 255, 255, 0.938);
+            background-color: rgba(121, 85, 252, 0.089);
             border: 3px double black;
             padding: 20px !important;
             margin-top: 20px !important;
@@ -91,10 +99,11 @@
 
         .card-header {
             font-size: larger;
+            background-color: rgb(121, 85, 252) !important;
         }
 
         .card-body {
-            background-color: rgba(128, 128, 128, 0.411);
+            background-color: rgba(121, 85, 252, 0.089);
             max-height: calc(100vh - 200px);
             /* 為卡片內容設置最大高度 */
             overflow-y: auto;
@@ -111,12 +120,12 @@
         }
 
         .card-body::-webkit-scrollbar-thumb {
-            background: #888;
+            background: #ad83f134;
             border-radius: 4px;
         }
 
         .card-body::-webkit-scrollbar-thumb:hover {
-            background: #555;
+            background: #8b3ed498;
         }
 
         .article-content img {
@@ -129,6 +138,14 @@
         #favoriteBtn.active {
             background-color: #f8fc0c;
             color: white;
+        }
+
+        .btn1 {
+            display: flex;
+        }
+
+        .btn1 button {
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -173,11 +190,11 @@
         <br>
 
         <div class="container fixed-container" with="10px">
-            <div class="card">
-                <div class="card-header bg-dark text-light">交流區</div>
+            <div class="card animated-card">
+                <div class="card-header text-light">交流區</div>
                 <div class="card-body">
                     <ul id="commentList" class="list-group">
-                        <li class="list-group-item full-msg" th:each="talk : ${talk}">
+                        <li class="list-group-item full-msg my-2 rounded-1" th:each="talk : ${talk}">
                             <p th:text="${#dates.format(talk.talkTime, 'yyyy年MM月dd日 HH:mm:ss')}">留言時間</p>
                             <!-- 編輯表單(顯示) -->
                             <div th:id="'editContent-'+${talk.talkId}">
@@ -209,6 +226,7 @@
                                 <button type="submit" class="btn btn-primary mt-2">儲存</button>
 
                             </form>
+
                         </li>
                     </ul>
                     <br>
