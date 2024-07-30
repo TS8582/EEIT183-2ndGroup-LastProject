@@ -16,27 +16,6 @@ function edit(elm) {
     }
 }
 
-//修改評論
-if (editReviews) {
-    editReviews.addEventListener('click', e => {
-        const originContent = editReviews.closest('.existReviews').querySelector('.reviewsContent').innerHTML.trim();
-        editReviews.classList.remove('mybtn', 'mybtn-sky');
-        editReviews.classList.add('mybtn-disabled');
-        axios.post('/PlayCentric/personal/api/gameReviews/add', {
-            gameId: gameId,
-            reviewsScore: starAmount,
-            reviewsContent: content
-        })
-            .then(res => {
-                const data = res.data;
-
-                console.log(res);
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    })
-}
 
 //提交評論
 if (goReviews) {
@@ -52,10 +31,11 @@ if (goReviews) {
                     addReviews.remove();
                     const data = res.data;
                     let title = document.createElement('h2');
-                    title.classList.add('text-2xl', 'text-center', 'font-seminold');
+                    title.classList.add('text-2xl', 'text-center', 'font-semibold');
                     title.innerHTML = '評論';
                     let existReviews1 = document.createElement('div');
                     existReviews1.classList.add('existReviews');
+
                     const html = `
                     <div class="flex items-center space-x-2 mb-2">
                     <img class="h-16 w-16 rounded-full" src="${data.member.photoUrl}" alt="">
@@ -72,9 +52,19 @@ if (goReviews) {
                     <span>${data.reviewsContent}</span>
                     </div>
                     `;
+                    let myReviewTitle = document.createElement('h2');
+                    myReviewTitle.classList.add('text-xl', 'font-semibold', 'text-center');
+                    myReviewTitle.innerHTML = '我的評論';
                     existReviews1.innerHTML = html;
-                    document.querySelector('.noReview').remove();
-                    reviewsContainer.querySelector('h2').remove();
+                    existReviews1.prepend(myReviewTitle);
+                    let noReview = document.querySelector('.noReview');
+                    let h22 = reviewsContainer.querySelector('h2');
+                    if (noReview) {
+                        noReview.remove();
+                    }
+                    if (h22) {
+                        h22.remove();
+                    }
                     reviewsContainer.prepend(existReviews1);
                     reviewsContainer.prepend(title);
                 })

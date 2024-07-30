@@ -1,5 +1,7 @@
 package com.playcentric.controller.game;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import com.playcentric.model.game.secondary.GameReviews;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.service.game.GameReviewsService;
 import com.playcentric.service.game.GameService;
+import com.playcentric.service.game.OwnGameLibService;
 
 
 @Controller
@@ -30,6 +33,9 @@ public class GameReviewsController {
 	private GameReviewsService grService;
 	
 	@Autowired
+	private OwnGameLibService oglService;
+	
+	@Autowired
 	private GameService gService;
 	
 	@GetMapping("/gameReviews/show")
@@ -37,9 +43,23 @@ public class GameReviewsController {
 			@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		Game game = gService.findById(gameId);
 		List<GameReviews> reviews = grService.findByGameId(gameId);
+		List<GameReviews> memberReviews = new ArrayList<>();
 		if (loginMember != null) {
-			List<GameReviews> memberReviews = grService.findByGameIdAndMemId(gameId, loginMember.getMemId());
+			oglService.setHaveGame(loginMember, game);
+			memberReviews = grService.findByGameIdAndMemId(gameId, loginMember.getMemId());
 			model.addAttribute("memberReviews",memberReviews);
+		}
+		if (reviews != null && reviews.size() > 0) {
+			Iterator<GameReviews> iterator = reviews.iterator();
+			while (iterator.hasNext()) {
+			    GameReviews gameReviews = iterator.next();
+			    if (memberReviews != null && memberReviews.size() > 0) {
+			        if (gameReviews.getMemId() == memberReviews.get(0).getMemId()) {
+			            iterator.remove();
+			        }
+			    }
+			}
+
 		}
 		model.addAttribute("reviews",reviews);
 		model.addAttribute("game",game);
