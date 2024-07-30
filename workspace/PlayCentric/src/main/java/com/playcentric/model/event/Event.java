@@ -44,6 +44,9 @@ public class Event {
     @JoinColumn(name = "eventImage")
     private ImageLib eventImage;
     
+    @Column(name = "reviewStatus")
+    private Integer reviewStatus = 0; // 預設值為0,表示未審核
+    
     /**
      * 計算活動當前狀態
      * @return 0: 未開始, 1: 進行中, 2: 已結束
@@ -63,4 +66,5 @@ public class Event {
     public Integer getEventStatusSafe() {
         return eventStatus != null ? eventStatus : 0;
     }
+    
 }

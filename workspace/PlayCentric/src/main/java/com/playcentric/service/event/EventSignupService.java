@@ -33,7 +33,7 @@ public class EventSignupService {
 
     @Autowired
     private EventRepository eventRepository;
-    
+
     @Autowired
     private EventVoteRepository eventVoteRepository;
 
@@ -44,6 +44,7 @@ public class EventSignupService {
 
     /**
      * 創建新的報名
+     * 
      * @param eventSignup 新的報名數據
      * @return 創建成功的報名數據
      * @throws RuntimeException 如果活動不存在或報名已截止
@@ -51,10 +52,10 @@ public class EventSignupService {
     public EventSignup createSignup(EventSignup eventSignup) {
         logger.info("開始創建新的報名");
         Event event = eventRepository.findById(eventSignup.getEvent().getEventId())
-            .orElseThrow(() -> {
-                logger.error("活動不存在，活動ID: {}", eventSignup.getEvent().getEventId());
-                return new RuntimeException("活動不存在");
-            });
+                .orElseThrow(() -> {
+                    logger.error("活動不存在，活動ID: {}", eventSignup.getEvent().getEventId());
+                    return new RuntimeException("活動不存在");
+                });
 
         LocalDateTime now = LocalDateTime.now();
         if (now.isAfter(event.getEventSignupDeadLine())) {
@@ -64,7 +65,7 @@ public class EventSignupService {
 
         eventSignup.setSignupTime(now);
         eventSignup.setVoteCount(0);
-        eventSignup.setEventSignupStatus(1);
+        eventSignup.setEventSignupStatus(0); // 設置初始狀態為待審核
         EventSignup savedSignup = eventSignupRepository.save(eventSignup);
         logger.info("成功創建新的報名，報名ID: {}", savedSignup.getSignupId());
         return savedSignup;
@@ -72,6 +73,7 @@ public class EventSignupService {
 
     /**
      * 更新報名信息
+     * 
      * @param eventSignup 更新的報名數據
      * @return 更新後的報名數據
      * @throws RuntimeException 如果報名記錄不存在
@@ -80,7 +82,7 @@ public class EventSignupService {
     public EventSignup updateSignup(EventSignup eventSignup) {
         logger.info("開始更新報名信息，報名ID: {}", eventSignup.getSignupId());
         EventSignup existingSignup = eventSignupRepository.findById(eventSignup.getSignupId())
-            .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
+                .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
 
         // 檢查是否已有投票
         if (eventVoteRepository.existsByEventSignup_SignupId(eventSignup.getSignupId())) {
@@ -104,15 +106,16 @@ public class EventSignupService {
 
     /**
      * 刪除報名
+     * 
      * @param signupId 報名ID
-     * @throws RuntimeException 如果報名記錄不存在
+     * @throws RuntimeException      如果報名記錄不存在
      * @throws IllegalStateException 如果報名已有投票
      */
     @Transactional
     public void deleteSignup(Integer signupId) {
         logger.info("開始刪除報名，報名ID: {}", signupId);
         EventSignup signup = eventSignupRepository.findById(signupId)
-            .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
+                .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
 
         // 檢查是否已有投票
         if (eventVoteRepository.existsByEventSignup_SignupId(signupId)) {
@@ -123,11 +126,12 @@ public class EventSignupService {
         eventSignupRepository.deleteById(signupId);
         logger.info("成功刪除報名，報名ID: {}", signupId);
     }
-    
+
     // ======== 報名查詢相關方法 ========
 
     /**
      * 根據ID獲取報名信息
+     * 
      * @param signupId 報名ID
      * @return 包含報名信息的Optional
      */
@@ -138,6 +142,7 @@ public class EventSignupService {
 
     /**
      * 獲取所有報名
+     * 
      * @return 所有報名的列表
      */
     public List<EventSignup> getAllSignups() {
@@ -147,6 +152,7 @@ public class EventSignupService {
 
     /**
      * 根據活動ID獲取報名
+     * 
      * @param eventId 活動ID
      * @return 指定活動的所有報名
      */
@@ -157,6 +163,7 @@ public class EventSignupService {
 
     /**
      * 根據會員ID獲取報名
+     * 
      * @param memberId 會員ID
      * @return 指定會員的所有報名
      */
@@ -164,34 +171,37 @@ public class EventSignupService {
         logger.info("獲取會員的所有報名，會員ID: {}", memberId);
         return eventSignupRepository.findByMember_MemId(memberId);
     }
-    
+
     /**
      * 根據報名ID獲取報名圖片
+     * 
      * @param signupId 報名ID
      * @return 報名圖片的字節數組
      * @throws RuntimeException 如果找不到指定的報名記錄
      */
     public byte[] getSignupImage(Integer signupId) {
         EventSignup signup = eventSignupRepository.findById(signupId)
-            .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
+                .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
         return signup.getWorkImage();
     }
-    
+
     /**
      * 根據活動ID獲取已審核的報名
+     * 
      * @param eventId 活動ID
      * @return 指定活動的所有已審核報名
      */
     public List<EventSignup> getApprovedSignupsByEventId(Integer eventId) {
         logger.info("獲取活動的所有已審核報名，活動ID: {}", eventId);
         return eventSignupRepository.findByEvent_EventId(eventId).stream()
-            .filter(signup -> signup.getEventSignupStatus() == 1) // 假設1表示已審核
-            .collect(Collectors.toList());
+                .filter(signup -> signup.getEventSignupStatus() == 1) // 假設1表示已審核
+                .collect(Collectors.toList());
     }
-    
+
     /**
      * 檢查用戶是否已經報名過特定活動
-     * @param memId 會員ID
+     * 
+     * @param memId   會員ID
      * @param eventId 活動ID
      * @return 如果已經報名則返回true，否則返回false
      */
@@ -199,9 +209,29 @@ public class EventSignupService {
         return eventSignupRepository.existsByMember_MemIdAndEvent_EventId(memId, eventId);
     }
 
-    public Page<EventSignup> getRecord(Integer memId, Integer pageNum){
+    /**
+     * 更新報名審核狀態
+     * 
+     * @param signupId     報名ID
+     * @param reviewStatus 新的審核狀態
+     * @return 更新後的報名對象
+     * @throws RuntimeException 如果報名記錄不存在
+     */
+    @Transactional
+    public EventSignup updateSignupReviewStatus(Integer signupId, Integer reviewStatus) {
+        logger.info("開始更新報名審核狀態，報名ID: {}, 新狀態: {}", signupId, reviewStatus);
+        EventSignup signup = eventSignupRepository.findById(signupId)
+                .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
+
+        signup.setEventSignupStatus(reviewStatus);
+        EventSignup updatedSignup = eventSignupRepository.save(signup);
+        logger.info("成功更新報名審核狀態，報名ID: {}, 新狀態: {}", signupId, reviewStatus);
+        return updatedSignup;
+    }
+
+    public Page<EventSignup> getRecord(Integer memId, Integer pageNum) {
         Member member = memberRepository.findById(memId).get();
-		PageRequest pageable = PageRequest.of(pageNum - 1, 6, Sort.Direction.DESC, "workUploadTime");
-		return eventSignupRepository.findByMember(member, pageable);
+        PageRequest pageable = PageRequest.of(pageNum - 1, 6, Sort.Direction.DESC, "workUploadTime");
+        return eventSignupRepository.findByMember(member, pageable);
     }
 }

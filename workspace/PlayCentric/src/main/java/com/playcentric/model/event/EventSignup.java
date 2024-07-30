@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.playcentric.model.member.Member;
 
 import jakarta.persistence.Entity;
@@ -53,6 +54,7 @@ public class EventSignup {
 //    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime workUploadTime;
 
+    @JsonIgnore
     @Lob
     private byte[] workImage;
     private Integer voteCount;
