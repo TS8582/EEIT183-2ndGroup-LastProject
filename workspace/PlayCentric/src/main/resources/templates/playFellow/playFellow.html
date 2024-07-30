@@ -20,6 +20,7 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/css/playfellow/playFellow.css}">
 	<link rel="stylesheet" type="text/css" th:href="@{/css/playfellow/swiper-bundle.min.css}">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	
 
 
 	<style>
@@ -90,10 +91,29 @@
 			-ms-overflow-style: none;
 			scrollbar-width: none;
 		}
+		.loading-spinner {
+		            display: flex;
+		            justify-content: center;
+		            align-items: center;
+		            height: 250px; /* 與內容高度一致 */
+		        }
+		        .content {
+		            display: none;
+		        }
+		
+		
+		
+		
+		
+		
 	</style>
 </head>
 
 <body>
+	
+	
+	
+	
 
 	<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart"
 		aria-labelledby="My Cart">
@@ -169,7 +189,13 @@
 
 	<section class="container mt-3 showThisMsg" style="background-color: #FFFFFF; border-radius: 10px; padding: 20px;">
 		<h4 class="fw-normal fw-bolder">伴遊新星🌟</h4>
-		<div class="swiper-container mySwiper">
+			<!-- Loading Spinner -->
+				    <div class="loading-spinner">
+				        <div class="spinner-border text-primary" role="status">
+				            <span class="visually-hidden">Loading...</span>
+				        </div>
+				    </div>
+		<div class="swiper-container mySwiper content" >
 			<div class="swiper-wrapper">
 				<div class="swiper-slide" th:each="members : ${TopFiveReviewSuccessMembers}">
 					<div class="card mb-3" id="playFellowCard"
@@ -529,6 +555,10 @@
 			</div>
 		</div>
 	</div>
+	
+	
+	
+	
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
@@ -541,28 +571,33 @@
 
 
 	<script>
-		var swiper = new Swiper('.gameSwiper', {
-			slidesPerView: 9,
-			spaceBetween: 10,
-			loop: true,
-			autoplay: {
-				delay: 15000,
-				disableOnInteraction: false,
-			},
-			pagination: {
-				el: '.swiper-pagination',
-				clickable: true,
-			},
-			navigation: {
-				nextEl: '.swiper-button-next',
-				prevEl: '.swiper-button-prev',
-			},
-		});
+		document.addEventListener("DOMContentLoaded", function() {
+		       // 模擬加載時間
+		       setTimeout(function() {
+		           document.querySelector('.loading-spinner').style.display = 'none';
+		           document.querySelector('.content').style.display = 'block';
 
-
-
-
-
+		           var swiper = new Swiper('.mySwiper', {
+		               slidesPerView: 6,
+		               spaceBetween: 10,
+		               loop: true,
+		               autoplay: {
+		                   delay: 1500,
+		                   disableOnInteraction: false,
+		               },
+		               pagination: {
+		                   el: '.swiper-pagination',
+		                   clickable: true,
+		               },
+		               navigation: {
+		                   nextEl: '.swiper-button-next',
+		                   prevEl: '.swiper-button-prev',
+		               },
+		           });
+		       }, 1000); // 這裡設置為1秒，可以根據實際情況調整
+		   });
+		
+		
 
 	</script>
 
