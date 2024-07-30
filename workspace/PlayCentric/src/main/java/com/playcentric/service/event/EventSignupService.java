@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,8 @@ import com.playcentric.model.event.EventRepository;
 import com.playcentric.model.event.EventSignup;
 import com.playcentric.model.event.EventSignupRepository;
 import com.playcentric.model.event.EventVoteRepository;
+import com.playcentric.model.member.Member;
+import com.playcentric.model.member.MemberRepository;
 
 @Service
 @Transactional
@@ -31,6 +36,9 @@ public class EventSignupService {
     
     @Autowired
     private EventVoteRepository eventVoteRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     // ======== 報名管理相關方法 ========
 
@@ -189,5 +197,11 @@ public class EventSignupService {
      */
     public boolean hasUserSignedUp(Integer memId, Integer eventId) {
         return eventSignupRepository.existsByMember_MemIdAndEvent_EventId(memId, eventId);
+    }
+
+    public Page<EventSignup> getRecord(Integer memId, Integer pageNum){
+        Member member = memberRepository.findById(memId).get();
+		PageRequest pageable = PageRequest.of(pageNum - 1, 6, Sort.Direction.DESC, "workUploadTime");
+		return eventSignupRepository.findByMember(member, pageable);
     }
 }

@@ -1,7 +1,13 @@
 package com.playcentric.model.event;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.playcentric.model.member.Member;
+
 
 public interface EventSignupRepository extends JpaRepository<EventSignup, Integer> {
     /**
@@ -25,4 +31,6 @@ public interface EventSignupRepository extends JpaRepository<EventSignup, Intege
      * @return 如果已經報名則返回true，否則返回false
      */
     boolean existsByMember_MemIdAndEvent_EventId(Integer memId, Integer eventId);
+
+    Page<EventSignup> findByMember(Member member, Pageable pageable);
 }

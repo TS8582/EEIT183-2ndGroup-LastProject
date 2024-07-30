@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .mh-100px {
+      max-height: 100px;
+    }
+  </style>
+  <title>PlayCentric-活動報名紀錄</title>
+</head>
+
+<body>
+  <div th:replace="~{member/memInfoAside}"></div>
+
+  <div class="mt-3">
+    <div class="h4 ps-3">活動報名紀錄</div>
+    <ul class="list-group container mb-4" id="output">
+    </ul>
+    <div id="pageBtn">
+      <div class="d-flex justify-content-center align-items-end">
+        <ul class="pagination">
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(function () {
+      const signUpListUrl = "[[@{/personal/api/eventSignup/record}]]"
+      const eventUrlPath = "[[@{/events/public/detail/}]]"
+      const signUpImgUrl = "[[@{/eventSignup/image/}]]"
+      const params = { pageNum: 1 }
+      const redirectMsg = '[[${redirectMsg}]]';
+
+      if (redirectMsg && redirectMsg.trim() != "") {
+        doAlert(redirectMsg);
+      }
+
+      getMemKeepList();
+
+
+      $('#pageBtn').on('click', '.page-item', function () {
+        console.log($(this).text());
+        if (params.pageNum != $(this).text()) {
+          params.pageNum = $(this).text();
+          getMemKeepList();
+        }
+      })
+
+      function getMemKeepList() {
+        axios({
+          method: 'get',
+          url: signUpListUrl,
+          params
+        })
+          .then(res => {
+            console.log(res);
+            htmlMaker(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status === 401) {
+              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
+            }
+          })
+      }
+
+      function htmlMaker(data) {
+        $('#output').text('')
+
+        if (data.empty) {
+          $('#output')[0].innerHTML = '<li class="list-group-item">暫無報名活動!</li>'
+          return
+        }
+
+        $('#output').append(`<li class="list-group-item d-flex">
+                                <div class="col-6 fw-bold text-center">作品</div>
+                                <div class="col-2 fw-bold text-center">活動</div>
+                                <div class="col-4 fw-bold text-center">活動報名時間</div>
+                              `)
+
+        data.content.forEach((element) => {
+          let eventUrl = eventUrlPath + element.eventSignup.event.eventId;
+          const dataHtml = `<li class="list-group-item d-flex align-items-center">
+                                <a href="${eventUrl}"
+                                 class="col-3 d-flex justify-content-center p-2">
+                                <img src="${signUpImgUrl + element.eventSignup.signupId}" class="mh-100px"></a>
+                                <a href="${eventUrl}" class="text-dark col-3 ms-auto">${element.eventSignup.workTitle}</a>
+                                <a href="${eventUrl}" class="text-dark col-2 text-center">${element.eventSignup.event.eventName}</a>
+                                <div class="col-4 text-center">${element.eventSignup.signupTime}</div>
+                              </li>`
+          $('#output').append(dataHtml);
+          $('[role=1]').addClass('bg-manager-blue');
+        });
+
+        $('#pageBtn').hide();
+        if (data.totalPages > 1) {
+          $('#pageBtn').show();
+          $('.pagination').text('')
+          for (let index = 1; index <= data.totalPages; index++) {
+            if (index != params.pageNum) {
+              $('.pagination').append(`<li class="page-item cursor-pointer"><a class="page-link">${index}</a></li>`)
+              continue;
+            }
+            $('.pagination').append(`<li class="page-item active cursor-default"><a class="page-link">${index}</a></li>`)
+          }
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

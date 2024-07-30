@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -38,7 +39,8 @@ import com.playcentric.service.member.MemberService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/eventSignup")
+@SessionAttributes("loginMember")
+// @RequestMapping("/eventSignup")
 public class EventSignupController {
 
 	private static final Logger logger = LoggerFactory.getLogger(EventSignupController.class);
@@ -63,7 +65,7 @@ public class EventSignupController {
 	 * @param model Spring MVC Model
 	 * @return 報名管理頁面視圖
 	 */
-	@GetMapping("/manage")
+	@GetMapping("/eventSignup/manage")
 	public String manageSignups(Model model) {
 		List<EventSignup> signups = eventSignupService.getAllSignups();
 		model.addAttribute("signups", signups);
@@ -80,7 +82,7 @@ public class EventSignupController {
 	 * @param redirectAttributes 重定向屬性
 	 * @return 重定向到活動詳情頁面
 	 */
-	@PostMapping("/create")
+	@PostMapping("/eventSignup/create")
 	public String createSignup(@ModelAttribute EventSignup eventSignup,
 	        @RequestParam("photoFile") MultipartFile photoFile, @RequestParam("eventId") Integer eventId,
 	        HttpSession session, RedirectAttributes redirectAttributes) {
@@ -130,7 +132,7 @@ public class EventSignupController {
 	 * @param signupId 報名ID
 	 * @return 報名詳情或404錯誤
 	 */
-	@GetMapping("/api/{signupId}")
+	@GetMapping("/eventSignup/api/{signupId}")
 	@ResponseBody
 	public ResponseEntity<?> getSignup(@PathVariable Integer signupId) {
 		logger.info("獲取報名詳情，報名ID: {}", signupId);
@@ -156,7 +158,7 @@ public class EventSignupController {
 	 * @param eventSignup 更新的報名數據
 	 * @return 更新後的報名信息或錯誤信息
 	 */
-	@PutMapping("/api/{signupId}")
+	@PutMapping("/eventSignup/api/{signupId}")
 	@ResponseBody
 	public ResponseEntity<?> updateSignup(@PathVariable Integer signupId, @RequestBody EventSignup eventSignup) {
 	    logger.info("開始更新報名信息，報名ID: {}", signupId);
@@ -180,7 +182,7 @@ public class EventSignupController {
 	 * @param signupId 報名ID
 	 * @return 成功響應或錯誤信息
 	 */
-	@DeleteMapping("/api/{signupId}")
+	@DeleteMapping("/eventSignup/api/{signupId}")
 	@ResponseBody
 	public ResponseEntity<?> deleteSignup(@PathVariable Integer signupId) {
 	    logger.info("開始刪除報名，報名ID: {}", signupId);
@@ -203,7 +205,7 @@ public class EventSignupController {
 	 * @param eventId 活動ID
 	 * @return 該活動的所有報名列表
 	 */
-	@GetMapping("/api/event/{eventId}")
+	@GetMapping("/eventSignup/api/event/{eventId}")
 	@ResponseBody
 	public ResponseEntity<List<EventSignupDTO>> getEventSignups(@PathVariable Integer eventId) {
 	    try {
@@ -226,7 +228,7 @@ public class EventSignupController {
 	
 	
     //檢查用戶是否已經報名
-    @GetMapping("/api/checkSignup/{eventId}/{userId}")
+    @GetMapping("/eventSignup/api/checkSignup/{eventId}/{userId}")
     @ResponseBody
     public boolean hasUserSignedUp(@PathVariable Integer eventId, @PathVariable Integer userId) {
         return eventSignupService.hasUserSignedUp(userId, eventId);
@@ -238,7 +240,7 @@ public class EventSignupController {
 	 * @param signupId 報名ID
 	 * @return 報名圖片的ResponseEntity
 	 */
-	@GetMapping("/image/{signupId}")
+	@GetMapping("/eventSignup/image/{signupId}")
 	public ResponseEntity<byte[]> getSignupImage(@PathVariable Integer signupId) {
 		try {
 			byte[] imageBytes = eventSignupService.getSignupImage(signupId);
@@ -247,5 +249,16 @@ public class EventSignupController {
 			logger.error("獲取報名圖片失敗", e);
 			return ResponseEntity.notFound().build();
 		}
+	}
+
+	@GetMapping("/personal/eventSignup/record")
+	public String signUpList() {
+		return "member/memberSignUpPage";
+	}
+	
+	@GetMapping("/personal/api/eventSignup/record")
+	@ResponseBody
+	public Page<EventSignup> signUpList(@RequestParam Integer pageNum,@ModelAttribute("loginMember") LoginMemDto loginMember) {
+		return eventSignupService.getRecord(loginMember.getMemId(), pageNum);
 	}
 }
