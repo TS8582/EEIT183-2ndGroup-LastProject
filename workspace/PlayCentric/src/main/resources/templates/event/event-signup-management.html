@@ -19,13 +19,13 @@
     /* 側邊欄樣式 */
     .sidebar {
         position: fixed;
-        top: 100px; /* 調整此值使其等於或略大於頂部導航欄的高度 */
+        top: 100px;
         left: 0;
         bottom: 0;
         width: 200px;
         padding-top: 20px;
         background-color: #343a40;
-        z-index: 99; /* 確保側欄在導航欄下方但在主內容上方 */
+        z-index: 99;
     }
 
     /* 側邊欄鏈接樣式 */
@@ -43,7 +43,7 @@
 
     /* 主內容區域樣式 */
     .content-wrapper {
-        margin-left: 200px; /* 與側邊欄寬度相同 */
+        margin-left: 200px;
         padding: 20px;
     }
 
@@ -74,75 +74,6 @@
         margin-bottom: 20px;
     }
 
-    /* 搜尋輸入框樣式 */
-    .search-form input {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-    }
-
-    /* 搜尋按鈕樣式 */
-    .search-form button {
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-    }
-
-    /* 狀態標籤樣式 - 成功 */
-    .badge-success {
-        color: #155724 !important;
-        background-color: #d4edda !important;
-    }
-
-    /* 狀態標籤樣式 - 警告 */
-    .badge-warning {
-        color: #856404 !important;
-        background-color: #fff3cd !important;
-    }
-
-    /* 模態框內容樣式 */
-    .modal-content {
-        border-radius: 8px;
-        border: none;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    }
-
-    /* 模態框標題欄樣式 */
-    .modal-header {
-        border-bottom: 1px solid #e9ecef;
-        padding: 1rem;
-    }
-
-    /* 模態框標題文字樣式 */
-    .modal-title {
-        font-weight: bold;
-    }
-
-    /* 模態框關閉按鈕樣式 */
-    .modal-header .close {
-        padding: 1rem;
-        margin: -1rem -1rem -1rem auto;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        opacity: 0.5;
-        transition: opacity 0.15s;
-    }
-
-    /* 模態框關閉按鈕懸停效果 */
-    .modal-header .close:hover {
-        opacity: 1;
-    }
-
-    /* 模態框主體樣式 */
-    .modal-body {
-        padding: 1rem;
-    }
-
-    /* 模態框底部樣式 */
-    .modal-footer {
-        border-top: 1px solid #e9ecef;
-        padding: 1rem;
-    }
-
     /* 搜尋表單組樣式 */
     .search-form .input-group {
         width: 100%;
@@ -168,6 +99,36 @@
         min-width: 120px;
         max-width: 150px;
     }
+
+    /* 審核狀態下拉選單樣式 */
+    .review-status {
+        width: 100%;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: 0.2rem;
+        appearance: auto;
+    }
+
+    /* 不同審核狀態的字體顏色 */
+    .review-status option.status-pending {
+        color: #ffc107;
+    }
+
+    .review-status option.status-approved {
+        color: #28a745;
+    }
+
+    .review-status option.status-rejected {
+        color: #dc3545;
+    }
+
+    /* 預覽圖片樣式 */
+    .preview-image {
+        max-width: 50px;
+        max-height: 50px;
+        object-fit: cover;
+    }
 </style>
 </head>
 
@@ -181,7 +142,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/PlayCentric/eventSignup/manage">
+            <a class="nav-link active" href="/PlayCentric/eventSignup/manage">
                 <i class="fas fa-users mr-2"></i>報名管理
             </a>
         </li>
@@ -201,7 +162,6 @@
             <div class="input-group">
                 <select class="form-control col-md-2" id="searchField">
                     <option value="all">全部欄位</option>
-                    <option value="signupId">報名ID</option>
                     <option value="memName">會員名稱</option>
                     <option value="eventName">活動名稱</option>
                     <option value="workTitle">作品標題</option>
@@ -220,27 +180,33 @@
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>報名ID</th>
+                <th>預覽圖</th>
                 <th>會員名稱</th>
                 <th>活動名稱</th>
                 <th>報名時間</th>
                 <th>作品標題</th>
-                <th>狀態</th>
+                <th>審核狀態</th>
                 <th>操作</th>
             </tr>
         </thead>
         <tbody id="signupList">
             <!-- Thymeleaf 迭代器，顯示報名列表 -->
             <tr th:each="signup : ${signups}">
-                <td th:text="${signup.signupId}"></td>
+                <td>
+                    <img th:src="@{/eventSignup/image/{id}(id=${signup.signupId})}" 
+                         alt="作品預覽" class="preview-image">
+                </td>
                 <td th:text="${signup.member.memName}"></td>
                 <td th:text="${signup.event.eventName}"></td>
                 <td th:text="${#temporals.format(signup.signupTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                 <td th:text="${signup.workTitle}"></td>
                 <td>
-                    <span th:class="${signup.eventSignupStatus == 1 ? 'badge badge-success' : 'badge badge-warning'}"
-                          th:text="${signup.eventSignupStatus == 1 ? '已報名' : '待審核'}">
-                    </span>
+                    <!-- 修改審核狀態下拉選單 -->
+                    <select class="form-control form-control-sm review-status" th:data-signup-id="${signup.signupId}">
+                        <option class="status-pending" value="0" th:selected="${signup.eventSignupStatus == 0}">待審核</option>
+                        <option class="status-approved" value="1" th:selected="${signup.eventSignupStatus == 1}">審核通過</option>
+                        <option class="status-rejected" value="2" th:selected="${signup.eventSignupStatus == 2}">審核拒絕</option>
+                    </select>
                 </td>
                 <td class="actions">
                     <!-- 編輯按鈕 (包含查看功能) -->
@@ -279,10 +245,11 @@
                         <textarea class="form-control" id="editWorkDescription" name="workDescription" rows="3" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="editEventSignupStatus">狀態</label>
+                        <label for="editEventSignupStatus">審核狀態</label>
                         <select class="form-control" id="editEventSignupStatus" name="eventSignupStatus">
-                            <option value="1">已報名</option>
                             <option value="0">待審核</option>
+                            <option value="1">審核通過</option>
+                            <option value="2">審核拒絕</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -305,88 +272,181 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script th:src="@{/js/axios.min.js}"></script>
 
-   <script th:inline="javascript">
+<script th:inline="javascript">
     // 後端 API URL
     const findSignupUrl = "/PlayCentric/eventSignup/api/";
     const updateSignupUrl = "/PlayCentric/eventSignup/api/";
     const deleteSignupUrl = "/PlayCentric/eventSignup/api/";
+    const updateReviewStatusUrl = "/PlayCentric/eventSignup/api/updateReviewStatus";
+
+    // 顯示報名詳情
+    function showSignupDetail(signupId) {
+        axios.get(`${findSignupUrl}${signupId}`)
+            .then(response => {
+                const signup = response.data;
+                const detailContent = `
+                    <p><strong>會員名稱:</strong> ${signup.member.memName}</p>
+                    <p><strong>活動名稱:</strong> ${signup.event.eventName}</p>
+                    <p><strong>作品標題:</strong> ${signup.workTitle}</p>
+                    <p><strong>作品描述:</strong> ${signup.workDescription}</p>
+                    <p><strong>報名時間:</strong> ${new Date(signup.signupTime).toLocaleString()}</p>
+                    <p><strong>審核狀態:</strong> ${getStatusText(signup.eventSignupStatus)}</p>
+                    <img src="/PlayCentric/eventSignup/image/${signup.signupId}" alt="作品圖片" class="img-fluid">
+                `;
+                $('#signupDetailContent').html(detailContent);
+                $('#signupDetailModal').modal('show');
+            })
+            .catch(error => {
+                console.error('獲取報名詳情失敗:', error);
+                alert('獲取報名詳情失敗，請稍後再試');
+            });
+    }
 
     // 編輯報名
     function editSignup(signupId) {
-        axios.get(findSignupUrl + signupId)
+        axios.get(`${findSignupUrl}${signupId}`)
             .then(response => {
-                const data = response.data;
-                $('#editSignupId').val(data.signupId);
-                $('#editWorkTitle').val(data.workTitle);
-                $('#editWorkDescription').val(data.workDescription);
-                $('#editEventSignupStatus').val(data.eventSignupStatus);
-                $('#editWorkImage').attr('src', `/PlayCentric/eventSignup/image/${data.signupId}`);
+                const signup = response.data;
+                $('#editSignupId').val(signup.signupId);
+                $('#editWorkTitle').val(signup.workTitle);
+                $('#editWorkDescription').val(signup.workDescription);
+                $('#editEventSignupStatus').val(signup.eventSignupStatus);
+                $('#editWorkImage').attr('src', `/PlayCentric/eventSignup/image/${signup.signupId}`);
                 $('#editSignupModal').modal('show');
             })
             .catch(error => {
-                console.error("獲取報名信息失敗:", error);
-                alert("獲取報名信息失敗，請稍後再試");
+                console.error('獲取報名信息失敗:', error);
+                alert('獲取報名信息失敗，請稍後再試');
             });
     }
 
-// 提交編輯表單
-function submitEditForm() {
-    const formData = {
-        signupId: $('#editSignupId').val(),
-        workTitle: $('#editWorkTitle').val(),
-        workDescription: $('#editWorkDescription').val(),
-        eventSignupStatus: $('#editEventSignupStatus').val()
-    };
+    // 提交編輯表單
+    function submitEditForm() {
+        const formData = {
+            signupId: $('#editSignupId').val(),
+            workTitle: $('#editWorkTitle').val(),
+            workDescription: $('#editWorkDescription').val(),
+            eventSignupStatus: $('#editEventSignupStatus').val()
+        };
 
-    axios.put(updateSignupUrl + formData.signupId, formData)
-        .then(response => {
-            alert('報名信息已更新');
-            $('#editSignupModal').modal('hide');
-            location.reload();
-        })
-        .catch(error => {
-            console.error("更新報名信息失敗:", error);
-            alert(error.response.data || '更新失敗，請稍後再試');
-        });
-}
-
-// 刪除報名
-function deleteSignup(signupId) {
-    if (confirm('確定要刪除這條報名記錄嗎？')) {
-        axios.delete(deleteSignupUrl + signupId)
+        axios.put(`${updateSignupUrl}${formData.signupId}`, formData)
             .then(response => {
-                alert('報名記錄已刪除');
+                alert('報名信息已更新');
+                $('#editSignupModal').modal('hide');
                 location.reload();
             })
             .catch(error => {
-                console.error("刪除報名記錄失敗:", error);
-                alert(error.response.data || '刪除失敗，請稍後再試');
+                console.error('更新報名信息失敗:', error);
+                alert(error.response.data || '更新失敗，請稍後再試');
             });
     }
-}
 
-        // 搜尋報名
-        function searchSignups() {
-            let searchQuery = $('#searchInput').val().toLowerCase();
-            let searchField = $('#searchField').val();
-            $('#signupList tr').each(function () {
-                let row = $(this);
-                let show = false;
-                if (searchField === 'all') {
-                    show = row.text().toLowerCase().includes(searchQuery);
-                } else {
-                    let index = {
-                        'signupId': 0,
-                        'memName': 1,
-                        'eventName': 2,
-                        'workTitle': 4
-                    }[searchField];
-                    let cellText = row.find('td').eq(index).text().toLowerCase();
-                    show = cellText.includes(searchQuery);
-                }
-                row.toggle(show);
-            });
+    // 刪除報名
+    function deleteSignup(signupId) {
+        if (confirm('確定要刪除這條報名記錄嗎？')) {
+            axios.delete(`${deleteSignupUrl}${signupId}`)
+                .then(response => {
+                    alert('報名記錄已刪除');
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error("刪除報名記錄失敗:", error);
+                    alert(error.response.data || '刪除失敗，請稍後再試');
+                });
         }
+    }
+
+    // 搜尋報名
+    function searchSignups() {
+        let searchQuery = $('#searchInput').val().toLowerCase();
+        let searchField = $('#searchField').val();
+        $('#signupList tr').each(function () {
+            let row = $(this);
+            let show = false;
+            if (searchField === 'all') {
+                show = row.text().toLowerCase().includes(searchQuery);
+            } else {
+                let index = {
+                    'memName': 1,
+                    'eventName': 2,
+                    'workTitle': 4
+                }[searchField];
+                let cellText = row.find('td').eq(index).text().toLowerCase();
+                show = cellText.includes(searchQuery);
+            }
+            row.toggle(show);
+        });
+    }
+
+    // 更新審核狀態UI的函數
+    function updateReviewStatusUI(selectElement) {
+        selectElement.find('option').each(function() {
+            $(this).removeClass('status-pending status-approved status-rejected');
+            if ($(this).val() == 0) {
+                $(this).addClass('status-pending');
+            } else if ($(this).val() == 1) {
+                $(this).addClass('status-approved');
+            } else if ($(this).val() == 2) {
+                $(this).addClass('status-rejected');
+            }
+        });
+
+        // 設置選中選項的顏色
+        const selectedValue = selectElement.val();
+        let color = '';
+        if (selectedValue == 0) {
+            color = '#ffc107';
+        } else if (selectedValue == 1) {
+            color = '#28a745';
+        } else if (selectedValue == 2) {
+            color = '#dc3545';
+        }
+        selectElement.css('color', color);
+    }
+
+    // 更新審核狀態的函數
+    function updateReviewStatus(signupId, newStatus, selectElement) {
+        axios.post(updateReviewStatusUrl, {
+            signupId: signupId,
+            reviewStatus: newStatus
+        })
+        .then(function (response) {
+            if (response.data.success) {
+                // 更新成功，顯示提示訊息
+                alert('審核狀態更新成功');
+                // 更新選擇框的顏色
+                updateReviewStatusUI(selectElement);
+            } else {
+                alert('審核狀態更新失敗：' + response.data.message);
+            }
+        })
+        .catch(function (error) {
+            console.error('更新審核狀態時發生錯誤:', error);
+            alert('更新審核狀態時發生錯誤，請稍後再試');
+        });
+    }
+
+    // 獲取狀態文字
+    function getStatusText(status) {
+        switch(parseInt(status)) {
+            case 0: return '待審核';
+            case 1: return '審核通過';
+            case 2: return '審核拒絕';
+            default: return '未知狀態';
+        }
+    }
+
+    // 頁面加載完成後執行
+    $(document).ready(function () {
+        // 確保所有模態框可以正確關閉
+        $('.modal').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        });
+
+        // 為所有關閉按鈕添加事件監聽器
+        $('.modal .close, .modal .btn-secondary').click(function() {
+            $(this).closest('.modal').modal('hide');
+        });
 
         // 處理 Enter 鍵搜尋
         $('#searchInput').keypress(function (event) {
@@ -396,19 +456,18 @@ function deleteSignup(signupId) {
             }
         });
 
-        // 頁面加載完成後執行
-        $(document).ready(function () {
-            // 確保所有模態框可以正確關閉
-            $('.modal').on('hidden.bs.modal', function () {
-                $(this).find('form').trigger('reset');
-            });
-
-            // 為所有關閉按鈕添加事件監聽器
-            $('.modal .close, .modal .btn-secondary').click(function() {
-                $(this).closest('.modal').modal('hide');
-            });
+        // 初始化每個下拉選單的字體顏色
+        $('.review-status').each(function() {
+            updateReviewStatusUI($(this));
         });
-    </script>
-</body>
 
+        // 處理審核狀態更新
+        $('.review-status').change(function() {
+            const signupId = $(this).data('signup-id');
+            const newStatus = $(this).val();
+            updateReviewStatus(signupId, newStatus, $(this));
+        });
+    });
+</script>
+</body>
 </html>

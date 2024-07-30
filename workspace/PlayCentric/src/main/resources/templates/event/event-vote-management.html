@@ -167,23 +167,23 @@
         </div>
 
         <!-- 搜索表單 -->
-        <form class="search-form mb-3" onsubmit="searchVotes(); return false;">
-            <div class="input-group">
-                <select class="form-control col-md-2" id="searchField">
-                    <option value="all">全部欄位</option>
-                    <option value="voteId">投票ID</option>
-                    <option value="memberName">會員名稱</option>
-                    <option value="eventName">活動名稱</option>
-                    <option value="signupName">報名作品</option>
-                </select>
-                <input type="text" class="form-control" id="searchInput" placeholder="輸入搜尋關鍵字">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="submit">
-                        <i class="fas fa-search"></i> 搜尋
-                    </button>
-                </div>
-            </div>
-        </form>
+<form class="search-form mb-3" onsubmit="searchVotes(); return false;">
+    <div class="input-group">
+        <select class="form-control col-md-2" id="searchField">
+            <option value="all">全部欄位</option>
+            <option value="voteId">投票ID</option>
+            <option value="memberName">會員名稱</option>
+            <option value="eventName">活動名稱</option>
+            <option value="signupName">報名作品</option>
+        </select>
+        <input type="text" class="form-control" id="searchInput" placeholder="輸入搜尋關鍵字">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="fas fa-search"></i> 搜尋
+            </button>
+        </div>
+    </div>
+</form>
 
         <!-- 投票列表 -->
         <div class="table-responsive">

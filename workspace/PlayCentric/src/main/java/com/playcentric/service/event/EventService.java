@@ -3,12 +3,14 @@ package com.playcentric.service.event;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.playcentric.model.event.Event;
 import com.playcentric.model.event.EventRepository;
 
@@ -116,7 +118,7 @@ public class EventService {
      * @return 進行中活動的列表
      */
     public List<Event> getOngoingEvents() {
-        List<Event> events = eventRepository.findByEventStatus(1);
+        List<Event> events = eventRepository.findByEventStatusAndReviewStatus(1, 1);
         events.forEach(this::updateEventStatus);
         return events.stream()
             .filter(e -> e.getEventStatus() == 1)
@@ -128,7 +130,7 @@ public class EventService {
      * @return 已結束活動的列表
      */
     public List<Event> getCompletedEvents() {
-        List<Event> events = eventRepository.findByEventStatus(2);
+        List<Event> events = eventRepository.findByEventStatusAndReviewStatus(2, 1);
         events.forEach(this::updateEventStatus);
         return events.stream()
             .filter(e -> e.getEventStatus() == 2)
@@ -198,5 +200,19 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
             .orElseThrow(() -> new RuntimeException("找不到指定的活動"));
         updateEventStatus(event);
+    }
+    
+    /**
+     * 更新活動的審核狀態
+     * @param eventId 活動ID
+     * @param reviewStatus 新的審核狀態
+     * @return 更新後的活動
+     */
+    @Transactional
+    public Event updateEventReviewStatus(Integer eventId, Integer reviewStatus) {
+        Event event = eventRepository.findById(eventId)
+            .orElseThrow(() -> new RuntimeException("找不到指定的活動"));
+        event.setReviewStatus(reviewStatus);
+        return eventRepository.save(event);
     }
 }

@@ -30,4 +30,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * 根據狀態查找活動
      */
     List<Event> findByEventStatus(Integer status);
+    
+    List<Event> findByEventStatusAndReviewStatus(Integer eventStatus, Integer reviewStatus);
 }

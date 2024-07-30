@@ -1,8 +1,10 @@
 package com.playcentric.controller.event;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +64,13 @@ public class EventController {
     @GetMapping("/public/list")
     public String publicEventList(Model model) {
         logger.info("接收到顯示公開活動列表的請求");
-        List<Event> ongoingEvents = eventService.getOngoingEvents();
-        List<Event> completedEvents = eventService.getCompletedEvents();
+        // 只獲取審核通過的活動
+        List<Event> ongoingEvents = eventService.getOngoingEvents().stream()
+            .filter(e -> e.getReviewStatus() == 1)
+            .collect(Collectors.toList());
+        List<Event> completedEvents = eventService.getCompletedEvents().stream()
+            .filter(e -> e.getReviewStatus() == 1)
+            .collect(Collectors.toList());
         model.addAttribute("ongoingEvents", ongoingEvents);
         model.addAttribute("completedEvents", completedEvents);
         logger.info("成功獲取公開活動列表，進行中: {}，已完成: {}", ongoingEvents.size(), completedEvents.size());
@@ -281,5 +288,31 @@ public class EventController {
         return eventService.getNextEndingEvent()
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
+    }
+    
+    /**
+     * 更新活動的審核狀態
+     * @param payload 包含活動ID和新審核狀態的Map
+     * @return 操作結果
+     */
+    @PostMapping("/updateReviewStatus")
+    @ResponseBody
+    public Map<String, Object> updateReviewStatus(@RequestBody Map<String, Object> payload) {
+        Integer eventId = Integer.valueOf(payload.get("eventId").toString());
+        Integer reviewStatus = Integer.valueOf(payload.get("reviewStatus").toString());
+        
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            Event updatedEvent = eventService.updateEventReviewStatus(eventId, reviewStatus);
+            response.put("success", true);
+            response.put("message", "審核狀態更新成功");
+            response.put("newReviewStatus", updatedEvent.getReviewStatus());
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "審核狀態更新失敗: " + e.getMessage());
+        }
+        
+        return response;
     }
 }

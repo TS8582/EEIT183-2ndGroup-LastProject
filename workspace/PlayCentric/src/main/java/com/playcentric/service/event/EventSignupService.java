@@ -56,7 +56,7 @@ public class EventSignupService {
 
         eventSignup.setSignupTime(now);
         eventSignup.setVoteCount(0);
-        eventSignup.setEventSignupStatus(1);
+        eventSignup.setEventSignupStatus(0); // 設置初始狀態為待審核
         EventSignup savedSignup = eventSignupRepository.save(eventSignup);
         logger.info("成功創建新的報名，報名ID: {}", savedSignup.getSignupId());
         return savedSignup;
@@ -189,5 +189,24 @@ public class EventSignupService {
      */
     public boolean hasUserSignedUp(Integer memId, Integer eventId) {
         return eventSignupRepository.existsByMember_MemIdAndEvent_EventId(memId, eventId);
+    }
+
+    /**
+     * 更新報名審核狀態
+     * @param signupId 報名ID
+     * @param reviewStatus 新的審核狀態
+     * @return 更新後的報名對象
+     * @throws RuntimeException 如果報名記錄不存在
+     */
+    @Transactional
+    public EventSignup updateSignupReviewStatus(Integer signupId, Integer reviewStatus) {
+        logger.info("開始更新報名審核狀態，報名ID: {}, 新狀態: {}", signupId, reviewStatus);
+        EventSignup signup = eventSignupRepository.findById(signupId)
+            .orElseThrow(() -> new RuntimeException("報名記錄不存在"));
+
+        signup.setEventSignupStatus(reviewStatus);
+        EventSignup updatedSignup = eventSignupRepository.save(signup);
+        logger.info("成功更新報名審核狀態，報名ID: {}, 新狀態: {}", signupId, reviewStatus);
+        return updatedSignup;
     }
 }
