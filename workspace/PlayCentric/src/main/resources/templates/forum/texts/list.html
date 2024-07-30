@@ -172,6 +172,7 @@
                                 <thead>
                                     <tr>
                                         <th>會員Id</th>
+                                        <th>討論區Id</th>
                                         <th>文章Id</th>
                                         <th>文章名稱</th>
                                         <th>文章內容</th>
@@ -182,6 +183,7 @@
                                 <tbody>
                                     <tr th:each="texts : ${arrayList}">
                                         <td th:text="${texts.memId}"></td>
+                                        <td th:text="${texts.forumId}"></td>
                                         <td th:text="${texts.textsId}"></td>
                                         <td th:text="${texts.title}"></td>
 

@@ -1,6 +1,7 @@
 package com.playcentric.service.game;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,5 +110,19 @@ public class GameService {
 		return game.getPrice();
 	}
 	
+	//找銷量前五遊戲
+	public List<Game> findTop5() {
+		List<Integer> top5 = gRepo.findTop5();
+		List<Game> games = new ArrayList<>();
+		for (Integer integer : top5) {
+			Game game = gRepo.findById(integer).get();
+			games.add(game);
+		}
+		return games;
+	}
+	
+	public List<Game> findNew5() {
+		return gRepo.findNew5();
+	}
 	
 }
