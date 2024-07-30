@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -278,13 +279,26 @@ public class GameController {
 		double totalReviews = (double)game.getTotalReviews();
 		Integer totalScore = game.getTotalScore();
 		double score = totalScore / totalReviews;
+		List<GameReviews> memberReviews = new ArrayList<>();
 		if (loginMember != null) {
 			gcService.setInCart(loginMember, game);
 			oglService.setHaveGame(loginMember, game);
-			List<GameReviews> memberReviews = grService.findByGameIdAndMemId(gameId, loginMember.getMemId());
+			memberReviews = grService.findByGameIdAndMemId(gameId, loginMember.getMemId());
 			model.addAttribute("memberReviews",memberReviews);
 		}
-		List<GameReviews> reviews = grService.findByGameIdTop5(gameId);
+		List<GameReviews> reviews = grService.findByGameId(gameId);
+		if (reviews != null && reviews.size() > 0) {
+			Iterator<GameReviews> iterator = reviews.iterator();
+			while (iterator.hasNext()) {
+			    GameReviews gameReviews = iterator.next();
+			    if (memberReviews != null && memberReviews.size() > 0) {
+			        if (gameReviews.getMemId() == memberReviews.get(0).getMemId()) {
+			            iterator.remove();
+			        }
+			    }
+			}
+
+		}
 		model.addAttribute("score",score);
 		model.addAttribute("game",game);
 		model.addAttribute("reviews",reviews);

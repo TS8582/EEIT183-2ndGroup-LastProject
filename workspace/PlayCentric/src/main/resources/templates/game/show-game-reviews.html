@@ -17,7 +17,12 @@
         <div class="my-3 sm:w-11/12 lg:w-3/5">
             <div class="my-3 border-2 border-black px-4 py-2 rounded-md reviewsContainer">
                 <h1 th:text="${game.gameName} + '-所有評論'" class="text-2xl text-center font-semibold"></h1>
-                <div th:if="${session.loginMember != null && memberReviews.size() < 1}" class="addReviews">
+                <div th:if="${reviews != null} ? ${reviews.size() == 0}"
+                    class="noReview text-lg flex justify-center items-center">
+                    <span>目前沒有任何評論！</span>
+                </div>
+                <div th:if="${session.loginMember != null && memberReviews.size() < 1 && game.isHaveGame}"
+                    class="addReviews">
                     <div class="star select-none">
                         <span id="star-1" class="star-container">★</span>
                         <span id="star-2" class="star-container">★</span>
@@ -34,7 +39,26 @@
                     </div>
                 </div>
 
+                <!-- 登入使用者評論 -->
+                <div th:each="review:${memberReviews}" th:if="${memberReviews != null && memberReviews.size() > 0}"
+                    class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <img class="h-16 w-16 rounded-full" th:src="${review.member.photoUrl}" alt="">
+                        <span th:text="${review.member.nickname}"></span>
+                        <div class="existStar select-none">
+                            <div class="star-container">
+                                <div class="filled" th:style="'width:' + ${review.reviewsScore * 20} + '%;'">★★★★★
+                                </div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span th:text="${review.reviewsContent}"></span>
+                    </div>
+                </div>
 
+                <!-- 多評論顯示 -->
                 <div th:each="review:${reviews}" th:if="${reviews != null}"
                     class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
                     <div class="flex items-center space-x-2 mb-2">

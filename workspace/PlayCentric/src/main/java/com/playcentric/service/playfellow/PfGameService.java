@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.playcentric.model.ImageLib;
@@ -72,7 +73,7 @@ public class PfGameService {
 
 	// 這個只有審核通過 沒分性別
 	public List<PfGame> getAllPlayFellowMembersByGameId(Integer gameId) {
-		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
+        List<PfGame> pfGames = pfGameRepository.findByGameId(gameId, Sort.by(Sort.Direction.DESC, "pfGameId"));
 
 		List<PfGame> reviewSusscessPfmem = new ArrayList<>();
 		for (PfGame pfGame : pfGames) {
@@ -86,7 +87,7 @@ public class PfGameService {
 
 	
 	public List<PfGame> getAllPlayFellowMembersByGameIdAndMale(Integer gameId) {
-		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
+        List<PfGame> pfGames = pfGameRepository.findByGameId(gameId, Sort.by(Sort.Direction.DESC, "pfGameId"));
 		List<PfGame> reviewSuccessPfmem = new ArrayList<>();
 		for (PfGame pfGame : pfGames) {
 			if (pfGame.getPlayFellowMember() != null && pfGame.getPlayFellowMember().getPfstatus() == 3
@@ -100,7 +101,7 @@ public class PfGameService {
 	
 
 	public List<PfGame> getAllPlayFellowMembersByGameIdAndFemale(Integer gameId) {
-		List<PfGame> pfGames = pfGameRepository.findByGameId(gameId);
+        List<PfGame> pfGames = pfGameRepository.findByGameId(gameId, Sort.by(Sort.Direction.DESC, "pfGameId"));
 		List<PfGame> reviewSuccessPfmem = new ArrayList<>();
 		for (PfGame pfGame : pfGames) {
 			if (pfGame.getPlayFellowMember() != null && pfGame.getPlayFellowMember().getPfstatus() == 3
@@ -110,6 +111,7 @@ public class PfGameService {
 		}
 		return reviewSuccessPfmem;
 	}
+	
 
 	@Transactional
 	public void deletePfGame(Integer pfGameId) {

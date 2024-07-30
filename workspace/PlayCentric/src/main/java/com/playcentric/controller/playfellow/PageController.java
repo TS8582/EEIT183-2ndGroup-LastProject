@@ -125,7 +125,7 @@ public class PageController {
 
 	
 	
-	@PostMapping("/playFellow/{gameId}")
+	@GetMapping("/playFellow/{gameId}")
 	public String showGameMember(@PathVariable("gameId") Integer gameId, Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
 
