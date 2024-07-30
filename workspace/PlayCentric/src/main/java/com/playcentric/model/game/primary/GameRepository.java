@@ -25,4 +25,9 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
 	
 	List<Game> findByPriceBetween(Integer minPrice,Integer maxPrice);
 	
+	@Query(value = "SELECT TOP 5 gameId from gameOrderDetails group by gameId order by count(gameId) desc",nativeQuery = true)
+	List<Integer> findTop5();
+	
+	@Query(value = "select top 5 * from game order by releaseAt desc",nativeQuery = true)
+	List<Game> findNew5();
 }

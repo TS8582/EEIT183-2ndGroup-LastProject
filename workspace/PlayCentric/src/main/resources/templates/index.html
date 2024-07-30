@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div th:replace="~{layout/nav}"></div>
+    <div th:replace="~{layout/header}"></div>
     <link rel="stylesheet" th:href="@{css/output.css}">
     <title>PlayCentric Home</title>
 </head>
 
 <body class="h-screen box-border">
-    <div th:replace="~{layout/nav}"></div>
-    <div th:replace="~{layout/header}"></div>
 
     <div class="bg-white p-3 rounded-md relative z-30">
         <div class="grid sgrid-cols-12 md:grid-cols-8 mt-5">
@@ -52,38 +52,118 @@
         </div>
     </div>
 
-    <div id="carouselExampleIndicators" class="carousel slide  bg-gray-500 rounded-md" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <!-- 動態生成指示器 -->
-            <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
-                <button type="button"
-                    th:attr="data-bs-target='#carouselExampleIndicators', data-bs-slide-to=${st.index}"
-                    th:class="${st.index == 0} ? 'active' : ''" aria-current="true"
-                    aria-label="Slide ${st.index + 1}"></button>
-            </th:block>
+    <div>
+        <div>
+            <h2 class="text-center text-3xl font-semibold mb-3">新品TOP5</h2>
         </div>
-        <div class="carousel-inner">
-            <!-- 動態生成輪播項目 -->
-            <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
-                <div th:class="${st.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                    <img class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto"
-                        th:src="@{/imagesLib/image{id}(id=${photo.imageId})}" alt="">
+        <div class="w-full flex justify-center">
+            <div class="sm:w-11/12 lg:w-1/2">
+                <div id="carouselExampleIndicators" class="carousel slide  bg-gray-400 shadow-xl border-2 rounded-md"
+                    data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <!-- 動態生成指示器 -->
+                        <th:block th:if="${newGames != null} ? ${newGames.size() > 0}" th:each="game,st:${newGames}">
+                            <button type="button"
+                                th:attr="data-bs-target='#carouselExampleIndicators', data-bs-slide-to=${st.index}"
+                                th:class="${st.index == 0} ? 'active' : ''" aria-current="true"
+                                aria-label="Slide ${st.index + 1}"></button>
+                        </th:block>
+                    </div>
+                    <div class="carousel-inner">
+                        <!-- 動態生成輪播項目 -->
+                        <th:block th:if="${newGames != null} ? ${newGames.size() > 0}" th:each="game,st:${newGames}">
+                            <div th:class="${st.index == 0} ? 'carousel-item active my-3' : 'carousel-item my-3'">
+                                <a th:if="${game.imageLibs.size == 0}"
+                                    th:href="@{/game/showGame(gameId=${game.gameId})}">
+                                    <img class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto">
+                                </a>
+                                <a th:if="${game.imageLibs.size > 0}"
+                                    th:href="@{/game/showGame(gameId=${game.gameId})}">
+                                    <img class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto"
+                                        th:src="@{/imagesLib/image{id}(id=${game.imageLibs[0].imageId})}" alt="">
+                                </a>
+
+                                <div class="flex justify-center items-start mt-1 mb-3">
+                                    <a th:href="@{/game/showGame(gameId=${game.gameId})}">
+                                        <span class="text-xl font-semibold" th:text="${game.gameName}"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
-            </th:block>
-            <img th:if="${game.imageLibs.empty}"
-                class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto" src="" alt="">
+            </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
     </div>
+    <div class="h-3"></div>
+
+
+    <div>
+        <div>
+            <h2 class="text-center text-3xl font-semibold mb-3">熱銷TOP5</h2>
+        </div>
+        <div class="w-full flex justify-center">
+            <div class="sm:w-11/12 lg:w-1/2">
+                <div id="carouselExampleIndicators" class="carousel slide  bg-gray-400 shadow-xl border-2 rounded-md"
+                    data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <!-- 動態生成指示器 -->
+                        <th:block th:if="${soldGames != null} ? ${soldGames.size() > 0}" th:each="game,st:${soldGames}">
+                            <button type="button"
+                                th:attr="data-bs-target='#carouselExampleIndicators', data-bs-slide-to=${st.index}"
+                                th:class="${st.index == 0} ? 'active' : ''" aria-current="true"
+                                aria-label="Slide ${st.index + 1}"></button>
+                        </th:block>
+                    </div>
+                    <div class="carousel-inner">
+                        <!-- 動態生成輪播項目 -->
+                        <th:block th:if="${soldGames != null} ? ${soldGames.size() > 0}" th:each="game,st:${soldGames}">
+                            <div th:class="${st.index == 0} ? 'carousel-item active my-3' : 'carousel-item my-3'">
+                                <a th:if="${game.imageLibs.size == 0}"
+                                    th:href="@{/game/showGame(gameId=${game.gameId})}">
+                                    <img class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto">
+                                </a>
+                                <a th:if="${game.imageLibs.size > 0}"
+                                    th:href="@{/game/showGame(gameId=${game.gameId})}">
+                                    <img class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto"
+                                        th:src="@{/imagesLib/image{id}(id=${game.imageLibs[0].imageId})}" alt="">
+                                </a>
+
+                                <div class="flex justify-center items-start mt-1 mb-3">
+                                    <a th:href="@{/game/showGame(gameId=${game.gameId})}">
+                                        <span class="text-xl font-semibold" th:text="${game.gameName}"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="h-3"></div>
+
+
 
     <script th:src="@{/js/axios.min.js}"></script>
     <script th:src="@{/js/announcement/index-anno.js}"></script>
