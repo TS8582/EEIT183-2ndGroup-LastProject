@@ -18,10 +18,17 @@
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 
     <style>
-        body {
-            background-image: url("[[@{/images/loginBG.jpg}]]");
-            background-size: cover;
-            background-position: center;
+        /* 新增動畫效果 */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .dataTables_wrapper .dataTables_filter {
@@ -36,9 +43,11 @@
         }
 
         .container {
-            background-color: rgb(252, 243, 232);
+            animation: fadeIn 1s ease-in-out forwards;
+            background-color: rgb(189, 139, 255);
             border-radius: 15px;
-            padding: 70px !important;
+            padding: 40px !important;
+            box-shadow: 10px 7px 5px rgba(0, 0, 0, 0.2);
         }
 
         .description {
@@ -97,6 +106,55 @@
         table .btn-delete:active {
             background-color: #791616 !important;
         }
+
+        .dataTables_filter input {
+            background-color: white !important;
+            color: black !important;
+            /* 確保文字顏色與背景形成對比 */
+        }
+
+        .dataTables_length select {
+            background-color: white !important;
+            color: black !important;
+            border: 1px solid #ccc;
+            /* 添加邊框以提高可見度 */
+        }
+
+        .dataTable thead th {
+            background-color: white !important;
+            color: black !important;
+            border-bottom: 2px solid #ddd;
+            /* 添加底部邊框以區分標題和內容 */
+        }
+
+        .dataTables_paginate .paginate_button {
+            background-color: white !important;
+            color: black !important;
+            border: 1px solid #ccc !important;
+            padding: 5px 10px !important;
+            margin: 0 2px !important;
+            cursor: pointer !important;
+        }
+
+        .dataTables_paginate .paginate_button.current {
+            background-color: #f0f0f0 !important;
+            font-weight: bold !important;
+        }
+
+        .dataTables_paginate .previous,
+        .dataTables_paginate .next {
+            background-color: white !important;
+            color: black !important;
+            border: 1px solid #ccc !important;
+            padding: 5px 10px !important;
+        }
+
+        /* 為了確保背景色不受 DataTables 默認樣式影響 */
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+        .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+            background-color: #e0e0e0 !important;
+            color: black !important;
+        }
     </style>
 </head>
 
@@ -106,7 +164,7 @@
     <div th:replace="~{forum/layout/backnavbar}"> </div>
 
     <div>
-        <section id="Wishlist" class="py-5 my-5">
+        <section id="Wishlist" class="my-5">
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container">
