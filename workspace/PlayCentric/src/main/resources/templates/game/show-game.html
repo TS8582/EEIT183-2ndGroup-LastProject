@@ -11,7 +11,7 @@
     <title th:text="${game.gameName}"></title>
 </head>
 
-<body class="bg-gray-100 w-screen">
+<body class="bg-gray-100">
     <div class="px-0 py-2 lg:px-15 text-end w-full fixed">
         <!-- 購物車按鈕 -->
         <a th:if="${session.loginMember}" th:href="@{/personal/gamecart/get}"
@@ -136,7 +136,8 @@
 
             <div class="my-3 border-2 border-black px-4 py-2 rounded-md reviewsContainer">
                 <h2 class="text-2xl text-center font-semibold">評論</h2>
-                <div class="noReview text-lg flex justify-center items-center">
+                <div th:if="${reviews != null} ? ${reviews.size() == 0}"
+                    class="noReview text-lg flex justify-center items-center">
                     <span>目前沒有任何評論！</span>
                 </div>
                 <div th:if="${memberReviews != null} ? ${session.loginMember != null && memberReviews.size() < 1 && game.isHaveGame}"
@@ -158,7 +159,30 @@
                 </div>
 
 
-                <div th:each="review:${reviews}" th:if="${reviews != null} ? ${reviews.size() > 0}"
+                <!-- 登入使用者評論 -->
+                <div th:each="review:${memberReviews}" th:if="${memberReviews != null && memberReviews.size() > 0}"
+                    class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
+
+                    <h2 class="text-xl font-semibold text-center">我的評論</h2>
+
+                    <div class="flex items-center space-x-2 mb-2">
+                        <img class="h-16 w-16 rounded-full" th:src="${review.member.photoUrl}" alt="">
+                        <span th:text="${review.member.nickname}"></span>
+                        <div class="existStar select-none">
+                            <div class="star-container">
+                                <div class="filled" th:style="'width:' + ${review.reviewsScore * 20} + '%;'">★★★★★
+                                </div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span th:text="${review.reviewsContent}"></span>
+                    </div>
+                </div>
+
+                <!-- 多評論顯示 -->
+                <div th:each="review,st:${reviews}" th:if="${reviews != null && reviews.size() > 0 && st.index < 5}"
                     class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md">
                     <div class="flex items-center space-x-2 mb-2">
                         <img class="h-16 w-16 rounded-full" th:src="${review.member.photoUrl}" alt="">
@@ -174,13 +198,10 @@
                     <div class="reviewsContent my-2">
                         <span th:text="${review.reviewsContent}"></span>
                     </div>
-                    <div class="my-2" th:if="${memberReviews != null} ? ${memberReviews.size() > 0}">
-                        <span th:if="${memberReviews[0].gameReviewsId == review.gameReviewsId}"
-                            class="mybtn mybtn-sky editReviews">修改</span>
-                    </div>
+
                 </div>
 
-                <div th:if="${reviews != null} ? ${reviews.size() > 5}" class="flex justify-center items-center my-3">
+                <div th:if="${reviews != null && reviews.size() > 5}" class="flex justify-center items-center my-3">
                     <span class="mylink cursor-pointer select-none moreReviews">更多評論...</span>
                 </div>
 
