@@ -141,36 +141,28 @@
             <div class="container d2">
                 <div class="p1">
                     <div>
-                        <<<<<<< Updated upstream <h1 class="page-title h1 d-flex align-items-center">
+                        <h1 class="page-title h1 d-flex align-items-center">
                             <span class="" th:text="${texts.title}">文章名稱</span>
                             <i id="keep-btn"
                                 th:class="'fa-solid fa-tag fs-4 d-flex align-items-center btn btn-'+${textKept? 'primary':'secondary'}+' ms-auto'">
                                 <span id="keepNum" class="fs-5 ms-3" th:text="${keepNum}"></span>
                             </i>
-                            </h1>
-                            =======
-                            <h1 class="page-title h1" th:text="${texts.title}">文章名稱</h1>
-                            <button id="favoriteBtn" class="btn btn-outline-primary"
-                                th:attr="data-texts-id=${texts.textsId}"
-                                th:classappend="${isFavorited} ? 'active' : ''">
-                                <i class="fas fa-star"></i> 收藏
-                            </button>
-                            >>>>>>> Stashed changes
-                            <div class="post-meta">
-                                <div
-                                    th:text="${texts != null ? #dates.format(texts.doneTime, 'yyyy年MM月dd日 HH:mm:ss EEEE') : ''}">
-                                </div>
+                        </h1>
+                        <div class="post-meta">
+                            <div
+                                th:text="${texts != null ? #dates.format(texts.doneTime, 'yyyy年MM月dd日 HH:mm:ss EEEE') : ''}">
                             </div>
-                            <br>
-                            <th:block th:if="${session.loginMember!=null && session.loginMember.role == 1}">
-                                <a th:href="@{/personal/texts/edit/{textsId}(textsId=${texts.textsId})}"
-                                    class="btn btn-primary">編輯文章</a>
-                                <a th:href="@{/personal/texts/delete(textsId=${texts.textsId})}"
-                                    class="btn btn-danger">刪除文章</a>
-                            </th:block>
-                            <div class="article-content">
-                                <p th:utext="${texts.textsContent}">文章內容</p>
-                            </div>
+                        </div>
+                        <br>
+                        <th:block th:if="${session.loginMember!=null && session.loginMember.role == 1}">
+                            <a th:href="@{/personal/texts/edit/{textsId}(textsId=${texts.textsId})}"
+                                class="btn btn-primary">編輯文章</a>
+                            <a th:href="@{/personal/texts/delete(textsId=${texts.textsId})}"
+                                class="btn btn-danger">刪除文章</a>
+                        </th:block>
+                        <div class="article-content">
+                            <p th:utext="${texts.textsContent}">文章內容</p>
+                        </div>
 
                     </div>
                 </div>
