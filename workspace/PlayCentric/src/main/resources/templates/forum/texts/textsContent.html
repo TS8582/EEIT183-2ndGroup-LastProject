@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
     <script th:src="@{/js/axios.min.js}"></script>
@@ -124,6 +125,11 @@
             width: auto;
             height: auto;
         }
+
+        #favoriteBtn.active {
+            background-color: #f8fc0c;
+            color: white;
+        }
     </style>
 </head>
 
@@ -135,28 +141,36 @@
             <div class="container d2">
                 <div class="p1">
                     <div>
-                        <h1 class="page-title h1 d-flex align-items-center">
+                        <<<<<<< Updated upstream <h1 class="page-title h1 d-flex align-items-center">
                             <span class="" th:text="${texts.title}">文章名稱</span>
                             <i id="keep-btn"
                                 th:class="'fa-solid fa-tag fs-4 d-flex align-items-center btn btn-'+${textKept? 'primary':'secondary'}+' ms-auto'">
                                 <span id="keepNum" class="fs-5 ms-3" th:text="${keepNum}"></span>
                             </i>
-                        </h1>
-                        <div class="post-meta">
-                            <div
-                                th:text="${texts != null ? #dates.format(texts.doneTime, 'yyyy年MM月dd日 HH:mm:ss EEEE') : ''}">
+                            </h1>
+                            =======
+                            <h1 class="page-title h1" th:text="${texts.title}">文章名稱</h1>
+                            <button id="favoriteBtn" class="btn btn-outline-primary"
+                                th:attr="data-texts-id=${texts.textsId}"
+                                th:classappend="${isFavorited} ? 'active' : ''">
+                                <i class="fas fa-star"></i> 收藏
+                            </button>
+                            >>>>>>> Stashed changes
+                            <div class="post-meta">
+                                <div
+                                    th:text="${texts != null ? #dates.format(texts.doneTime, 'yyyy年MM月dd日 HH:mm:ss EEEE') : ''}">
+                                </div>
                             </div>
-                        </div>
-                        <br>
-                        <th:block th:if="${session.loginMember!=null && session.loginMember.role == 1}">
-                            <a th:href="@{/personal/texts/edit/{textsId}(textsId=${texts.textsId})}"
-                                class="btn btn-primary">編輯文章</a>
-                            <a th:href="@{/personal/texts/delete(textsId=${texts.textsId})}"
-                                class="btn btn-danger">刪除文章</a>
-                        </th:block>
-                        <div class="article-content">
-                            <p th:utext="${texts.textsContent}">文章內容</p>
-                        </div>
+                            <br>
+                            <th:block th:if="${session.loginMember!=null && session.loginMember.role == 1}">
+                                <a th:href="@{/personal/texts/edit/{textsId}(textsId=${texts.textsId})}"
+                                    class="btn btn-primary">編輯文章</a>
+                                <a th:href="@{/personal/texts/delete(textsId=${texts.textsId})}"
+                                    class="btn btn-danger">刪除文章</a>
+                            </th:block>
+                            <div class="article-content">
+                                <p th:utext="${texts.textsContent}">文章內容</p>
+                            </div>
 
                     </div>
                 </div>
