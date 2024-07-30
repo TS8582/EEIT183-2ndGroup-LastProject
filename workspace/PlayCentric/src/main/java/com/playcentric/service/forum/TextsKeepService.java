@@ -1,9 +1,11 @@
 package com.playcentric.service.forum;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.playcentric.model.forum.Texts;
@@ -57,8 +59,9 @@ public class TextsKeepService {
         return textsKeepRepository.findByTexts(texts).size();
     }
 
-    public List<TextsKeep> getMemKeepTexts(Integer memId){
+    public Page<TextsKeep> getMemKeepTexts(Integer memId,Integer pageNum){
         Member member = memberRepository.findById(memId).get();
-        return textsKeepRepository.findByMember(member);
+		PageRequest pageable = PageRequest.of(pageNum - 1, 6);
+        return textsKeepRepository.findByMember(member,pageable);
     }
 }
