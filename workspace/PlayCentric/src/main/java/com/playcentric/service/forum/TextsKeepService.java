@@ -1,5 +1,6 @@
 package com.playcentric.service.forum;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +50,15 @@ public class TextsKeepService {
     public boolean checkTextKept(TextsKeepId id){
         Optional<TextsKeep> optional = textsKeepRepository.findById(id);
         return optional.isPresent();
+    }
+
+    public Integer getKeepNum(Integer textsId){
+        Texts texts = textsRepository.findById(textsId).get();
+        return textsKeepRepository.findByTexts(texts).size();
+    }
+
+    public List<TextsKeep> getMemKeepTexts(Integer memId){
+        Member member = memberRepository.findById(memId).get();
+        return textsKeepRepository.findByMember(member);
     }
 }

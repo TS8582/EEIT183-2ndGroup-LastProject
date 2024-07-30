@@ -135,8 +135,13 @@
             <div class="container d2">
                 <div class="p1">
                     <div>
-                        <h1 class="page-title h1 d-flex"><span class="" th:text="${texts.title}">文章名稱</span>
-                            <i id="keep-btn" th:class="'fa-solid fa-tag text-'+${textKept? 'primary':'secondary'}+' ms-auto'"></i></h1>
+                        <h1 class="page-title h1 d-flex align-items-center">
+                            <span class="" th:text="${texts.title}">文章名稱</span>
+                            <i id="keep-btn"
+                                th:class="'fa-solid fa-tag fs-4 d-flex align-items-center btn btn-'+${textKept? 'primary':'secondary'}+' ms-auto'">
+                                <span id="keepNum" class="fs-5 ms-3" th:text="${keepNum}"></span>
+                            </i>
+                        </h1>
                         <div class="post-meta">
                             <div
                                 th:text="${texts != null ? #dates.format(texts.doneTime, 'yyyy年MM月dd日 HH:mm:ss EEEE') : ''}">
@@ -219,6 +224,7 @@
         const textsId = '[[${texts.textsId}]]'
         const memId = '[[${session.loginMember.memId}]]'
         const keepTextUrl = '[[@{/personal/api/texts/keepText}]]';
+        const keepNumUrl = '[[@{/texts/keepNum/}+${texts.textsId}]]';
 
         function showEditForm(messageId) {
             $('#editForm-' + messageId).show();
@@ -252,10 +258,18 @@
                     console.log(res);
                     doAlert(res.data);
                     if (res.data == '收藏成功!') {
-                        $(this).removeClass('text-secondary').addClass('text-primary')
-                    }else if(res.data == '取消收藏!'){
-                        $(this).addClass('text-secondary').removeClass('text-primary')
+                        $(this).removeClass('btn-secondary').addClass('btn-primary')
+                    } else if (res.data == '取消收藏!') {
+                        $(this).addClass('btn-secondary').removeClass('btn-primary')
                     }
+                    axios.get(keepNumUrl)
+                        .then(res => {
+                            console.log(res);
+                            $('#keepNum').text(res.data)
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
                 })
                 .catch(err => {
                     console.log(err);

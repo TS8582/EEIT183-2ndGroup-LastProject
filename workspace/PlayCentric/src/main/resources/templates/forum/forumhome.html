@@ -80,18 +80,7 @@
 
     }
 
-    body {
-      overflow: hidden;
-      background-image: url("[[@{/images/loginBG.jpg}]]");
-      background-size: cover;
-      /* 確保圖片覆蓋整個容器 */
-      background-position: center;
-      /* 確保圖片居中 */
-      background-repeat: no-repeat;
-      /* 防止圖片重複 */
-      margin: 0;
-      padding: 0;
-    }
+    
 
     h2 {
       display: flex;
@@ -177,6 +166,15 @@
       margin-bottom: 2rem;
       animation: gradient-scroll 5s linear infinite;
     }
+
+    .noscrollbar {
+      scrollbar-width: 0;
+      -ms-overflow-style: none;
+    }
+
+    .noscrollbar::-webkit-scrollbar {
+      display: none;
+    }
   </style>
 </head>
 
@@ -185,7 +183,7 @@
 
 
   <div class="d2">
-    <section id="Wishlist" class="py-3 mx-5 d1 overflow-auto animated-section">
+    <section id="Wishlist" class="py-3 mx-5 d1 overflow-auto animated-section noscrollbar">
       <header>
         <h1 class="d-flex justify-content-center">歡迎來到<br>PlayCentric討論區</h1>
       </header>

@@ -321,5 +321,15 @@ public class TextsController {
 		return textsKeepService.keepText(new TextsKeepId(textsId,memId));
 	}
 	
+	@GetMapping("/texts/keepNum/{textsId}")
+	@ResponseBody
+	public String getMethodName(@PathVariable Integer textsId) {
+		return textsKeepService.getKeepNum(textsId).toString();
+	}
 
+	@GetMapping("/personal/texts/keepList")
+	public String getMethodName() {
+		return "member/memberKeepTextsPage";
+	}
+	
 }

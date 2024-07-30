@@ -74,6 +74,8 @@ public class TalkController {
 		boolean textKept = loginMember!=null && 
 			textsKeepService.checkTextKept(new TextsKeepId(textsId, loginMember.getMemId()));
 		model.addAttribute("textKept", textKept);
+		Integer keepNum = textsKeepService.getKeepNum(textsId);
+		model.addAttribute("keepNum", keepNum);
 		
 		return "forum/texts/textsContent";
 	}

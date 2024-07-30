@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayCentric-收藏文章</title>
+</head>
+
+<body>
+    <div th:replace="~{member/memInfoAside}"></div>
+
+    <div>
+        <div class="h4 ps-3">收藏文章</div>
+        <ul class="list-group container mb-4" id="output">
+            <li class="list-group-item d-flex">
+                <div class="col-3 fw-bold ms-auto">項目</div>
+                <div class="col-3 fw-bold">金額</div>
+                <div class="col-5 fw-bold">時間</div>
+            </li>
+        </ul>
+        <div id="pageBtn">
+            <div class="d-flex justify-content-center align-items-end">
+                <ul class="pagination">
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
