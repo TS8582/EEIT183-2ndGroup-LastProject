@@ -9,18 +9,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <style>
-        h1 {
-            color: rgb(52, 0, 148) !important;
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .b1 {
-            background-image: url("[[@{/images/loginBG.jpg}]]");
-            background-size: cover;
-            /* 確保圖片覆蓋整個容器 */
-            background-position: center;
-            /* 確保圖片居中 */
-            margin: 0;
-            padding: 0;
+        h1 {
+            color: rgb(52, 0, 148) !important;
         }
 
         label {
@@ -28,11 +30,12 @@
         }
 
         .d1 {
+            animation: fadeIn 1s ease-in-out forwards;
             width: 75% !important;
             height: auto !important;
             margin-top: 20px !important;
             padding: 30px !important;
-
+            background-color: #a256f88e;
         }
 
         #postForum div {
@@ -73,10 +76,10 @@
     </style>
 </head>
 
-<body class="b1">
+<body>
     <div th:replace="~{layout/nav}"></div>
 
-    <div class="container bg-light rounded-2 d1">
+    <div class="container rounded-2 d1 p-4">
         <div class="row">
             <h1 class="my-2 d-flex justify-content-center">編輯文章</h1>
             <br>
@@ -93,7 +96,7 @@
                         <td>
                             <div>
                                 <label for="title">文章標題：</label>
-                                <input type="text" id="title" name="title" required>
+                                <input type="text" id="title" name="title" th:value="${texts.title}" required>
                             </div>
                         </td>
                         <br>

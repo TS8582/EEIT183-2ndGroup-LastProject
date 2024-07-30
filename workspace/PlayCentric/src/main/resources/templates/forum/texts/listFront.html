@@ -38,7 +38,7 @@
 			/* 設置最小高度，確保有足夠空間放置"閱讀更多"連結 */
 		}
 
-		
+
 
 		.text-area {
 			overflow: hidden;
@@ -100,7 +100,8 @@
 		}
 
 		.bgc1 {
-			background-color: #ffffff;
+			background-color: rgba(121, 85, 252, 0.363);
+
 		}
 
 		.a1 {
@@ -115,7 +116,7 @@
 
 		.r1 {
 			padding: 30px !important;
-			background-color: #ffffff7e;
+			border-bottom: 2px dotted rgb(121, 85, 252);
 		}
 
 		.read-more-container {
@@ -135,6 +136,12 @@
 		.read-more-container :hover {
 			color: aqua;
 			/* 當鼠標移上去時變成黑色 */
+		}
+
+		.dtm {
+			display: flex;
+			justify-content: center;
+			color: rgb(121, 85, 252);
 		}
 	</style>
 </head>
@@ -171,8 +178,7 @@
 				</div>
 				<!-- Pagination -->
 				<div class="container div-container">
-					<div class="my-2 d-flex justify-content-center text-light"
-						th:text="'總共有 ' + ${page.totalElements} + ' 筆'"></div>
+					<div class="my-2 dtm" th:text="'總共有 ' + ${page.totalElements} + ' 筆'"></div>
 					<ul class="pagination" th:if="${page.totalPages != 0}">
 						<!-- 上一頁 -->
 						<th:block th:switch="${page.number != 0}">

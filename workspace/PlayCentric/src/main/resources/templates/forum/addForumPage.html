@@ -7,23 +7,23 @@
   <title>新增訊息</title>
 
   <style>
+    /* 新增動畫效果 */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .forumPhoto {
       height: 50px;
     }
 
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      height: 100vh;
-      background-image: url("[[@{/images/loginBG.jpg}]]");
-      background-size: cover;
-      /* 確保圖片覆蓋整個容器 */
-      background-position: center;
-      /* 確保圖片居中 */
-      background-repeat: no-repeat;
-      /* 防止圖片重複 */
-    }
 
     .wrap {
       padding: 0;
@@ -32,11 +32,11 @@
     }
 
     form {
-
-      background-color: #fff;
+      animation: fadeIn 1s ease-in-out forwards;
+      background-color: #8f4ee494;
       padding: 20px;
       border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      box-shadow: 10px 7px 5px rgba(0, 0, 0, 0.2);
       width: 400px;
     }
 
@@ -47,6 +47,7 @@
 
     .form-group {
       margin-bottom: 15px;
+      padding: 10px;
     }
 
     .form-group label {
@@ -109,6 +110,10 @@
       transform: translateY(2px);
       background-color: rgb(172, 16, 16);
       border: 5px inset rgb(116, 8, 8);
+    }
+
+    .form-group .textsPhoto {
+      background-color: #fff;
     }
 
     table {

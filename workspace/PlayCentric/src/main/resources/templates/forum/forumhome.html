@@ -62,7 +62,8 @@
       grid-template-columns: 41% 50%;
       grid-template-rows: repeat(2, 50%);
       width: 68%;
-      border: 6px outset #000 !important;
+      margin-bottom: 5px;
+      border: 6px outset #052453 !important;
       background-image: url("[[@{/images/forumbackground1.jpg}]]");
       background-size: cover;
       /* 確保圖片覆蓋整個容器 */
@@ -80,7 +81,7 @@
 
     }
 
-    
+
 
     h2 {
       display: flex;
@@ -123,11 +124,9 @@
     }
 
     .d1 {
-      margin-top: 20px !important;
       max-height: 80vh;
       /* 這裡你可以根據需要調整高度 */
       /* overflow: auto; */
-      background-color: rgb(255, 255, 255, 0.9);
       border-style: none;
     }
 
@@ -154,6 +153,7 @@
     }
 
     header {
+      position: sticky;
       background: linear-gradient(45deg,
           rgb(240, 240, 240),
           rgb(240, 240, 240),
@@ -183,7 +183,7 @@
 
 
   <div class="d2">
-    <section id="Wishlist" class="py-3 mx-5 d1 overflow-auto animated-section noscrollbar">
+    <section id="Wishlist" class="d1 overflow-auto animated-section noscrollbar">
       <header>
         <h1 class="d-flex justify-content-center">歡迎來到<br>PlayCentric討論區</h1>
       </header>
