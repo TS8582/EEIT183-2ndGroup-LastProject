@@ -51,11 +51,10 @@
             </div>
         </div>
     </div>
-    <!-- <div>
-        <h2 class="inline-block text-3xl">熱銷TOP5</h2>
-    </div>
+
     <div id="carouselExampleIndicators" class="carousel slide  bg-gray-500 rounded-md" data-bs-ride="carousel">
         <div class="carousel-indicators">
+            <!-- 動態生成指示器 -->
             <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
                 <button type="button"
                     th:attr="data-bs-target='#carouselExampleIndicators', data-bs-slide-to=${st.index}"
@@ -64,6 +63,7 @@
             </th:block>
         </div>
         <div class="carousel-inner">
+            <!-- 動態生成輪播項目 -->
             <th:block th:if="${game.imageLibs}" th:each="photo,st:${game.imageLibs}">
                 <div th:class="${st.index == 0} ? 'carousel-item active' : 'carousel-item'">
                     <img class="d-block w-full max-w-full h-96 max-h-96 object-contain gamephoto"
@@ -83,7 +83,7 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
-    </div> -->
+    </div>
 
     <script th:src="@{/js/axios.min.js}"></script>
     <script th:src="@{/js/announcement/index-anno.js}"></script>
