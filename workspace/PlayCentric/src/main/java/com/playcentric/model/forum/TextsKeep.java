@@ -1,6 +1,7 @@
 package com.playcentric.model.forum;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.playcentric.model.member.Member;
 
 import jakarta.persistence.EmbeddedId;
@@ -24,8 +25,8 @@ public class TextsKeep {
 	@EmbeddedId
 	private TextsKeepId textsKeepId;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	// @JsonInclude
+	@ManyToOne(/*fetch = FetchType.LAZY */)
 	@MapsId("textsId")
 	@JoinColumn(name = "textsId")
 	private Texts texts;

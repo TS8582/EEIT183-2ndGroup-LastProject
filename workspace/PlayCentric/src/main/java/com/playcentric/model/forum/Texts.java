@@ -43,7 +43,7 @@ public class Texts {
 	@Column(insertable = false, updatable = false)
 	private Integer forumId;
 
-	@JsonIgnore
+	// @JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "forumId")
 	private Forum forum;
