@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -64,7 +63,7 @@ public class EventSignupController {
     /**
      * 顯示報名管理頁面
      */
-    @GetMapping("/manage")
+    @GetMapping("/eventSignup/manage")
     public String manageSignups(Model model) {
         List<EventSignup> signups = eventSignupService.getAllSignups();
         model.addAttribute("signups", signups);
@@ -74,7 +73,7 @@ public class EventSignupController {
     /**
      * 處理創建新報名的POST請求
      */
-    @PostMapping("/create")
+    @PostMapping("/eventSignup/create")
     public String createSignup(@ModelAttribute EventSignup eventSignup,
                                @RequestParam("photoFile") MultipartFile photoFile,
                                @RequestParam("eventId") Integer eventId,
@@ -125,7 +124,7 @@ public class EventSignupController {
     /**
      * 獲取報名詳情（REST API）
      */
-    @GetMapping("/api/{signupId}")
+    @GetMapping("/eventSignup/api/{signupId}")
     @ResponseBody
     public ResponseEntity<?> getSignup(@PathVariable Integer signupId) {
         logger.info("獲取報名詳情，報名ID: {}", signupId);
@@ -147,7 +146,7 @@ public class EventSignupController {
     /**
      * 更新報名信息（REST API）
      */
-    @PutMapping("/api/{signupId}")
+    @PutMapping("/eventSignup/api/{signupId}")
     @ResponseBody
     public ResponseEntity<?> updateSignup(@PathVariable Integer signupId, @RequestBody EventSignup eventSignup) {
         logger.info("開始更新報名信息，報名ID: {}", signupId);
@@ -168,7 +167,7 @@ public class EventSignupController {
     /**
      * 刪除報名（REST API）
      */
-    @DeleteMapping("/api/{signupId}")
+    @DeleteMapping("/eventSignup/api/{signupId}")
     @ResponseBody
     public ResponseEntity<?> deleteSignup(@PathVariable Integer signupId) {
         logger.info("開始刪除報名，報名ID: {}", signupId);
@@ -188,7 +187,7 @@ public class EventSignupController {
     /**
      * 獲取特定活動的所有報名（REST API）
      */
-    @GetMapping("/api/event/{eventId}")
+    @GetMapping("/eventSignup/api/event/{eventId}")
     @ResponseBody
     public ResponseEntity<List<EventSignupDTO>> getEventSignups(@PathVariable Integer eventId) {
         try {
@@ -212,7 +211,7 @@ public class EventSignupController {
     /**
      * 檢查用戶是否已經報名
      */
-    @GetMapping("/api/checkSignup/{eventId}/{userId}")
+    @GetMapping("/eventSignup/api/checkSignup/{eventId}/{userId}")
     @ResponseBody
     public boolean hasUserSignedUp(@PathVariable Integer eventId, @PathVariable Integer userId) {
         return eventSignupService.hasUserSignedUp(userId, eventId);
@@ -232,7 +231,7 @@ public class EventSignupController {
     /**
      * 獲取報名圖片（REST API）
      */
-    @GetMapping("/image/{signupId}")
+    @GetMapping("/eventSignup/image/{signupId}")
     public ResponseEntity<byte[]> getSignupImage(@PathVariable Integer signupId) {
         try {
             byte[] imageBytes = eventSignupService.getSignupImage(signupId);
@@ -246,7 +245,7 @@ public class EventSignupController {
     /**
      * 更新報名審核狀態（REST API）
      */
-    @PostMapping("/api/updateReviewStatus")
+    @PostMapping("/eventSignup/api/updateReviewStatus")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateReviewStatus(@RequestBody Map<String, Object> payload) {
         Integer signupId = Integer.valueOf(payload.get("signupId").toString());

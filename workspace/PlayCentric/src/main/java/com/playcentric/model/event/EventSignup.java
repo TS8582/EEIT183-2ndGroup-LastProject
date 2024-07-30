@@ -40,7 +40,8 @@ public class EventSignup {
     @JoinColumn(name = "eventId")
     private Event event;
     
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy年MM月dd日 HH:mm")
+    // @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 //    @Temporal(TemporalType.TIMESTAMP) 
     private LocalDateTime signupTime;

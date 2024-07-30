@@ -2,14 +2,12 @@ package com.playcentric.model.forum;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.playcentric.model.ImageLib;
 import com.playcentric.model.member.Member;
 
 import jakarta.persistence.CascadeType;
@@ -68,7 +66,8 @@ public class Texts {
 
 	private String textsContent;
 
-	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(timezone = "GMT+8", pattern = "yyyy年MM月dd日 HH:mm")
+	// @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 若要在 thymeleaf 強制使用本格式，需雙層大括號
 	@Temporal(TemporalType.TIMESTAMP)
 //    @CreationTimestamp

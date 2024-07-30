@@ -83,14 +83,14 @@
                               `)
 
         data.content.forEach((element) => {
-          let eventUrl = eventUrlPath + element.eventSignup.event.eventId;
+          let eventUrl = eventUrlPath + element.event.eventId;
           const dataHtml = `<li class="list-group-item d-flex align-items-center">
                                 <a href="${eventUrl}"
                                  class="col-3 d-flex justify-content-center p-2">
-                                <img src="${signUpImgUrl + element.eventSignup.signupId}" class="mh-100px"></a>
-                                <a href="${eventUrl}" class="text-dark col-3 ms-auto">${element.eventSignup.workTitle}</a>
-                                <a href="${eventUrl}" class="text-dark col-2 text-center">${element.eventSignup.event.eventName}</a>
-                                <div class="col-4 text-center">${element.eventSignup.signupTime}</div>
+                                <img src="${signUpImgUrl + element.signupId}" class="mh-100px"></a>
+                                <a href="${eventUrl}" class="text-dark col-3 ms-auto">${element.workTitle}</a>
+                                <a href="${eventUrl}" class="text-dark col-2 text-center">${element.event.eventName}</a>
+                                <div class="col-4 text-center">${element.signupTime}</div>
                               </li>`
           $('#output').append(dataHtml);
           $('[role=1]').addClass('bg-manager-blue');

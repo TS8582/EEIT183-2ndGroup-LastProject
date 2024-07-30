@@ -10,6 +10,8 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <!-- 引入 Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- 引入提示用工具 -->
+    <script th:src="@{/js/utils/doAlertJQ.js}"></script>
     <style>
         /* 設置整體背景顏色 */
         body {
@@ -153,7 +155,7 @@
             border-top: none;
             padding: 0 20px 20px;
         }
-        
+
         /* 修改審核狀態下拉選單樣式 */
         .review-status {
             width: 100%;
@@ -161,20 +163,24 @@
             font-size: 0.875rem;
             line-height: 1.5;
             border-radius: 0.2rem;
-            appearance: auto; /* 顯示下拉箭頭 */
+            appearance: auto;
+            /* 顯示下拉箭頭 */
         }
 
         /* 不同審核狀態的字體顏色 */
         .review-status option.status-pending {
-            color: #ffc107; /* 黃色 */
+            color: #ffc107;
+            /* 黃色 */
         }
 
         .review-status option.status-approved {
-            color: #28a745; /* 綠色 */
+            color: #28a745;
+            /* 綠色 */
         }
 
         .review-status option.status-rejected {
-            color: #dc3545; /* 紅色 */
+            color: #dc3545;
+            /* 紅色 */
         }
 
         /* 新增活動按鈕樣式 */
@@ -212,7 +218,7 @@
             <!-- 活動管理內容 -->
             <div id="eventManagementContent">
                 <h1 class="mb-4">活動管理</h1>
-                
+
                 <!-- 新增活動按鈕 -->
                 <button class="btn btn-primary btn-add-event" onclick="openEventModal()">新增活動</button>
 
@@ -258,23 +264,30 @@
                                         th:src="@{/imagesLib/image{id}(id=${event.eventImage.imageId})}" alt="活動圖片"
                                         style="max-width: 100px; max-height: 100px;"
                                         onerror="this.onerror=null; this.src='[[@{/imagesLib/default-event-image}]]';">
-                                    <span th:if="${event.eventImage == null or event.eventImage.imageId == null}">無圖片</span>
+                                    <span
+                                        th:if="${event.eventImage == null or event.eventImage.imageId == null}">無圖片</span>
                                 </td>
                                 <td th:text="${event.eventName}"></td>
                                 <td th:text="${event.eventDescription}"></td>
                                 <td th:text="${#temporals.format(event.eventStartTime, 'yyyy年MM月dd日 HH:mm:ss')}"></td>
-                                <td th:text="${#temporals.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm:ss')}"></td>
+                                <td th:text="${#temporals.format(event.eventSignupDeadLine, 'yyyy年MM月dd日 HH:mm:ss')}">
+                                </td>
                                 <td th:text="${#temporals.format(event.eventEndTime, 'yyyy年MM月dd日 HH:mm:ss')}"></td>
                                 <td>
-                                    <span th:class="${event.eventStatus == 0 ? 'badge badge-warning' : (event.eventStatus == 1 ? 'badge badge-success' : 'badge badge-secondary')}"
-                                          th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}">
+                                    <span
+                                        th:class="${event.eventStatus == 0 ? 'badge badge-warning' : (event.eventStatus == 1 ? 'badge badge-success' : 'badge badge-secondary')}"
+                                        th:text="${event.eventStatus == 0 ? '未開始' : (event.eventStatus == 1 ? '進行中' : '已結束')}">
                                     </span>
                                 </td>
                                 <td>
-                                    <select class="form-control form-control-sm review-status" th:data-event-id="${event.eventId}">
-                                        <option class="status-pending" value="0" th:selected="${event.reviewStatus == 0}">待審核</option>
-                                        <option class="status-approved" value="1" th:selected="${event.reviewStatus == 1}">審核通過</option>
-                                        <option class="status-rejected" value="2" th:selected="${event.reviewStatus == 2}">審核拒絕</option>
+                                    <select class="form-control form-control-sm review-status"
+                                        th:data-event-id="${event.eventId}">
+                                        <option class="status-pending" value="0"
+                                            th:selected="${event.reviewStatus == 0}">待審核</option>
+                                        <option class="status-approved" value="1"
+                                            th:selected="${event.reviewStatus == 1}">審核通過</option>
+                                        <option class="status-rejected" value="2"
+                                            th:selected="${event.reviewStatus == 2}">審核拒絕</option>
                                     </select>
                                 </td>
                                 <td>
@@ -297,12 +310,12 @@
             </div>
         </div>
 
-<!-- 在表格下方添加分頁導航 -->
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-        <!-- 分頁鏈接將在這裡動態生成 -->
-    </ul>
-</nav>
+        <!-- 在表格下方添加分頁導航 -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <!-- 分頁鏈接將在這裡動態生成 -->
+            </ul>
+        </nav>
 
         <!-- 活動表單模態框 -->
         <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel"
@@ -323,19 +336,23 @@
                             </div>
                             <div class="form-group">
                                 <label for="eventDescription">活動描述</label>
-                                <textarea class="form-control" id="eventDescription" name="eventDescription" rows="3"></textarea>
+                                <textarea class="form-control" id="eventDescription" name="eventDescription"
+                                    rows="3"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="eventStartTime">開始時間</label>
-                                <input type="datetime-local" class="form-control datetime" id="eventStartTime" name="eventStartTime" required>
+                                <input type="datetime-local" class="form-control datetime" id="eventStartTime"
+                                    name="eventStartTime" required>
                             </div>
                             <div class="form-group">
                                 <label for="eventSignupDeadLine">報名截止時間</label>
-                                <input type="datetime-local" class="form-control datetime" id="eventSignupDeadLine" name="eventSignupDeadLine" required>
+                                <input type="datetime-local" class="form-control datetime" id="eventSignupDeadLine"
+                                    name="eventSignupDeadLine" required>
                             </div>
                             <div class="form-group">
                                 <label for="eventEndTime">結束時間</label>
-                                <input type="datetime-local" class="form-control datetime" id="eventEndTime" name="eventEndTime" required>
+                                <input type="datetime-local" class="form-control datetime" id="eventEndTime"
+                                    name="eventEndTime" required>
                             </div>
                             <div class="form-group">
                                 <label for="eventStatus">活動狀態</label>
@@ -346,15 +363,18 @@
                                 </select>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="useAutoStatus" name="useAutoStatus" checked>
+                                <input class="form-check-input" type="checkbox" id="useAutoStatus" name="useAutoStatus"
+                                    checked>
                                 <label class="form-check-label" for="useAutoStatus">
                                     使用自動計算的狀態
                                 </label>
                             </div>
                             <div class="form-group">
                                 <label for="photoFile">活動圖片</label>
-                                <input type="file" class="form-control-file" id="photoFile" name="photoFile" accept="image/*">
-                                <img id="imagePreview" src="#" alt="圖片預覽" style="max-width: 200px; max-height: 200px; display: none; margin-top: 10px;">
+                                <input type="file" class="form-control-file" id="photoFile" name="photoFile"
+                                    accept="image/*">
+                                <img id="imagePreview" src="#" alt="圖片預覽"
+                                    style="max-width: 200px; max-height: 200px; display: none; margin-top: 10px;">
                             </div>
                             <input type="hidden" id="eventId" name="eventId">
                         </div>
@@ -364,7 +384,7 @@
                             <button type="submit" class="btn btn-primary" id="saveEventBtn">保存</button>
                         </div>
                     </form>
-					</div>
+                </div>
             </div>
         </div>
     </div>
@@ -375,361 +395,365 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script th:src="@{/js/axios.min.js}"></script>
 
-<script th:inline="javascript">
-    // 後端 API URL
-    const findEventUrl = "/PlayCentric/events/get/";
-    const createEventUrl = "/PlayCentric/events/createPost";
-    const updateEventUrl = "/PlayCentric/events/updatePost";
+    <script th:inline="javascript">
+        // 後端 API URL
+        const findEventUrl = "/PlayCentric/events/get/";
+        const createEventUrl = "/PlayCentric/events/createPost";
+        const updateEventUrl = "/PlayCentric/events/updatePost";
 
-    // 顯示錯誤訊息（如果有的話）
-    const errMsg = /*[[${errMsg}]]*/ null;
-    if (errMsg) {
-        alert(errMsg);
-    }
-
-    // 編輯按鈕點擊事件處理
-    $('#eventList').on('click', '.edit-btn', function () {
-        showEventInfo($(this).data('event-id'));
-    });
-
-    // 顯示活動詳情
-    function showEventInfo(eventId) {
-        axios.get(findEventUrl + eventId)
-            .then(res => {
-                console.log(res.data);
-                showUpdateModal(res.data);
-            })
-            .catch(err => {
-                console.error("獲取活動詳情失敗:", err);
-                alert("獲取活動詳情失敗，請稍後再試");
-            });
-    }
-
-    // 顯示編輯活動的互動視窗
-    function showUpdateModal(data) {
-        $('#eventForm').attr('action', updateEventUrl);
-        $('#eventModal .modal-title').text('編輯活動資訊');
-        $('#eventModal #eventId').val(data.eventId);
-        $('#eventModal #eventName').val(data.eventName || '');
-        $('#eventModal #eventDescription').val(data.eventDescription || '');
-        $('#eventModal #eventStartTime').val(formatDateTimeForInput(data.eventStartTime));
-        $('#eventModal #eventSignupDeadLine').val(formatDateTimeForInput(data.eventSignupDeadLine));
-        $('#eventModal #eventEndTime').val(formatDateTimeForInput(data.eventEndTime));
-        $('#eventModal #eventStatus').val(data.eventStatus);
-        $('#useAutoStatus').prop('checked', data.useAutoStatus);
-
-        // 清除之前的圖片預覽
-        $('#imagePreview').attr('src', '').hide();
-
-        // 如果有圖片，顯示預覽
-        if (data.eventImage && data.eventImage.imageId) {
-            $('#imagePreview').attr('src', `/PlayCentric/imagesLib/image${data.eventImage.imageId}`).show();
+        // 顯示錯誤訊息（如果有的話）
+        const errMsg = /*[[${errMsg}]]*/ null;
+        if (errMsg) {
+            doAlert(errMsg);
         }
 
-        $('#eventModal').modal('show');
-    }
-
-    // 表單提交處理
-    $('#eventForm').submit(function (event) {
-        event.preventDefault();
-
-        // 驗證時間邏輯
-        const startTime = new Date($('#eventStartTime').val());
-        const endTime = new Date($('#eventEndTime').val());
-        const signupDeadline = new Date($('#eventSignupDeadLine').val());
-
-        if (endTime <= startTime) {
-            alert("結束時間必須在開始時間之後");
-            return false;
-        }
-
-        if (signupDeadline >= endTime) {
-            alert("報名截止時間必須在結束時間之前");
-            return false;
-        }
-
-        if (signupDeadline <= startTime) {
-            alert("報名截止時間必須在開始時間之後");
-            return false;
-        }
-
-        // 提交表單
-        const formData = new FormData(this);
-        const url = $(this).attr('action');
-
-        axios.post(url, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }).then(response => {
-            if (response.data && response.data.includes('成功')) {
-                alert('活動保存成功');
-                $('#eventModal').modal('hide');
-                location.reload();
-            } else {
-                alert('活動已保存，請重新整理頁面查看更新');
-                $('#eventModal').modal('hide');
-                location.reload();
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-            alert('發生錯誤，請稍後再試');
+        // 編輯按鈕點擊事件處理
+        $('#eventList').on('click', '.edit-btn', function () {
+            showEventInfo($(this).data('event-id'));
         });
-    });
 
-    // 打開創建活動表單
-    function openCreateEventForm() {
-        $('#eventForm').attr('action', createEventUrl);
-        $('#eventForm .datetime').attr('type', 'datetime-local');
-        $('#eventModal').modal('show');
-        $('#eventForm').trigger('reset');
-        $('#eventId').val('');
-        $('#imagePreview').attr('src', '#').hide();
-        $('#eventModal .modal-title').text('新增活動');
-    }
+        // 顯示活動詳情
+        function showEventInfo(eventId) {
+            axios.get(findEventUrl + eventId)
+                .then(res => {
+                    console.log(res.data);
+                    showUpdateModal(res.data);
+                })
+                .catch(err => {
+                    console.error("獲取活動詳情失敗:", err);
+                    doAlert("獲取活動詳情失敗，請稍後再試");
+                });
+        }
 
-    // 搜尋活動
-    function searchEvents() {
-        let searchQuery = $('#searchInput').val().toLowerCase();
-        let searchField = $('#searchField').val();
-        $('#eventList tr').each(function () {
-            let row = $(this);
-            let show = false;
-            if (searchField === 'all') {
-                show = row.text().toLowerCase().includes(searchQuery);
-            } else {
-                let index = {
-                    'eventName': 1,
-                    'eventDescription': 2,
-                    'eventStatus': 6
-                }[searchField];
-                let cellText = row.find('td').eq(index).text().toLowerCase();
-                show = cellText.includes(searchQuery);
+        // 顯示編輯活動的互動視窗
+        function showUpdateModal(data) {
+            $('#eventForm').attr('action', updateEventUrl);
+            $('#eventModal .modal-title').text('編輯活動資訊');
+            $('#eventModal #eventId').val(data.eventId);
+            $('#eventModal #eventName').val(data.eventName || '');
+            $('#eventModal #eventDescription').val(data.eventDescription || '');
+            $('#eventModal #eventStartTime').val(formatDateTimeForInput(data.eventStartTime));
+            $('#eventModal #eventSignupDeadLine').val(formatDateTimeForInput(data.eventSignupDeadLine));
+            $('#eventModal #eventEndTime').val(formatDateTimeForInput(data.eventEndTime));
+            $('#eventModal #eventStatus').val(data.eventStatus);
+            $('#useAutoStatus').prop('checked', data.useAutoStatus);
+
+            // 清除之前的圖片預覽
+            $('#imagePreview').attr('src', '').hide();
+
+            // 如果有圖片，顯示預覽
+            if (data.eventImage && data.eventImage.imageId) {
+                $('#imagePreview').attr('src', `/PlayCentric/imagesLib/image${data.eventImage.imageId}`).show();
             }
-            row.toggle(show);
-        });
-    }
 
-    // 處理 ENTER 鍵搜尋
-    $('#searchInput').keypress(function (event) {
-        if (event.which === 13) {
+            $('#eventModal').modal('show');
+        }
+
+        // 表單提交處理
+        $('#eventForm').submit(function (event) {
             event.preventDefault();
-            searchEvents();
-        }
-    });
 
-    // 處理自動狀態選項
-    $('#useAutoStatus').change(function () {
-        if (this.checked) {
-            $('#eventStatus').prop('disabled', true);
-        } else {
-            $('#eventStatus').prop('disabled', false);
-        }
-    });
+            // 驗證時間邏輯
+            const startTime = new Date($('#eventStartTime').val());
+            const endTime = new Date($('#eventEndTime').val());
+            const signupDeadline = new Date($('#eventSignupDeadLine').val());
 
-    // 在打開模態框時設置正確的狀態
-    $('#eventModal').on('show.bs.modal', function () {
-        if ($('#useAutoStatus').is(':checked')) {
-            $('#eventStatus').prop('disabled', true);
-        } else {
-            $('#eventStatus').prop('disabled', false);
-        }
-    });
-
-    // 確保互動視窗可以正確關閉
-    $('#eventModal .close, #eventModal .btn-secondary').click(function () {
-        $('#eventModal').modal('hide');
-    });
-
-    // 處理圖片預覽
-    $('#photoFile').change(function () {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                $('#imagePreview').attr('src', e.target.result).show();
+            if (endTime <= startTime) {
+                doAlert("結束時間必須在開始時間之後");
+                return false;
             }
-            reader.readAsDataURL(file);
-        } else {
-            $('#imagePreview').attr('src', '').hide();
-        }
-    });
 
-    // 在打開模態框時設置正確的圖片預覽
-    $('#eventModal').on('show.bs.modal', function (e) {
-        const button = $(e.relatedTarget);
-        const eventId = button.data('event-id');
-        if (eventId) {
-            // 如果是編輯模式，加載現有圖片
-            const imageUrl = `/PlayCentric/imagesLib/image${eventId}`;
-            $('#imagePreview').attr('src', imageUrl).show();
-        } else {
-            // 如果是新增模式，清除圖片預覽
-            $('#imagePreview').attr('src', '').hide();
-        }
-    });
+            if (signupDeadline >= endTime) {
+                doAlert("報名截止時間必須在結束時間之前");
+                return false;
+            }
 
-    // 一鍵輸入功能
-    function quickFill() {
-        $('#eventName').val('測試活動');
-        $('#eventDescription').val('這是一個測試活動。');
+            if (signupDeadline <= startTime) {
+                doAlert("報名截止時間必須在開始時間之後");
+                return false;
+            }
 
-        // 設置時間：當前時間加上一小時作為開始時間，兩小時後結束，開始時間加30分鐘作為報名截止時間
-        let now = new Date();
-        let start = new Date(now.getTime() - 30 * 60 * 1000); // 當前時間減30分鐘
-        let end = new Date(now.getTime() + 60 * 60 * 1000); // 當前時間加60分鐘作為結束時間
-        let deadline = new Date(now.getTime() + 30 * 60 * 1000); // 當前時間後30分鐘作為報名截止時間
+            // 提交表單
+            const formData = new FormData(this);
+            const url = $(this).attr('action');
 
-        $('#eventStartTime').val(formatDateTimeForInput(start));
-        $('#eventSignupDeadLine').val(formatDateTimeForInput(deadline));
-        $('#eventEndTime').val(formatDateTimeForInput(end));
+            axios.post(url, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(response => {
+                if (response.data && response.data.includes('成功')) {
+                    doAlert('活動保存成功');
+                    $('#eventModal').modal('hide');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    doAlert('活動已保存，請重新整理頁面查看更新');
+                    $('#eventModal').modal('hide');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                doAlert('發生錯誤，請稍後再試');
+            });
+        });
 
-        // 設置活動狀態
-        $('#eventStatus').val('0');
-        $('#useAutoStatus').prop('checked', true).change();
-    }
-
-    // 格式化日期時間為輸入框所需的格式，指定台北時間
-    function formatDateTimeForInput(dateString) {
-        if (!dateString) return '';
-
-        // 將字串轉換為日期對象
-        const date = new Date(dateString);
-
-        // 檢查日期是否有效
-        if (isNaN(date.getTime())) {
-            console.error('無效的日期:', dateString);
-            return '';
+        // 打開創建活動表單
+        function openCreateEventForm() {
+            $('#eventForm').attr('action', createEventUrl);
+            $('#eventForm .datetime').attr('type', 'datetime-local');
+            $('#eventModal').modal('show');
+            $('#eventForm').trigger('reset');
+            $('#eventId').val('');
+            $('#imagePreview').attr('src', '#').hide();
+            $('#eventModal .modal-title').text('新增活動');
         }
 
-        // 調整為台北時間
-        const taipeiDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+        // 搜尋活動
+        function searchEvents() {
+            let searchQuery = $('#searchInput').val().toLowerCase();
+            let searchField = $('#searchField').val();
+            $('#eventList tr').each(function () {
+                let row = $(this);
+                let show = false;
+                if (searchField === 'all') {
+                    show = row.text().toLowerCase().includes(searchQuery);
+                } else {
+                    let index = {
+                        'eventName': 1,
+                        'eventDescription': 2,
+                        'eventStatus': 6
+                    }[searchField];
+                    let cellText = row.find('td').eq(index).text().toLowerCase();
+                    show = cellText.includes(searchQuery);
+                }
+                row.toggle(show);
+            });
+        }
 
-        // 格式化日期時間
-        const year = taipeiDate.getFullYear();
-        const month = String(taipeiDate.getMonth() + 1).padStart(2, '0');
-        const day = String(taipeiDate.getDate()).padStart(2, '0');
-        const hour = String(taipeiDate.getHours()).padStart(2, '0');
-        const minute = String(taipeiDate.getMinutes()).padStart(2, '0');
-
-        // 返回 YYYY-MM-DDTHH:MM 格式
-        return `${year}-${month}-${day}T${hour}:${minute}`;
-    }
-
-    // 更新審核狀態UI的函數 (移到全局作用域)
-    function updateReviewStatusUI(selectElement) {
-        selectElement.find('option').each(function() {
-            $(this).removeClass('status-pending status-approved status-rejected');
-            if ($(this).val() == 0) {
-                $(this).addClass('status-pending');
-            } else if ($(this).val() == 1) {
-                $(this).addClass('status-approved');
-            } else if ($(this).val() == 2) {
-                $(this).addClass('status-rejected');
+        // 處理 ENTER 鍵搜尋
+        $('#searchInput').keypress(function (event) {
+            if (event.which === 13) {
+                event.preventDefault();
+                searchEvents();
             }
         });
 
-        // 設置選中選項的顏色
-        const selectedValue = selectElement.val();
-        let color = '';
-        if (selectedValue == 0) {
-            color = '#ffc107';
-        } else if (selectedValue == 1) {
-            color = '#28a745';
-        } else if (selectedValue == 2) {
-            color = '#dc3545';
-        }
-        selectElement.css('color', color);
-    }
-
-    // 更新審核狀態的函數
-    function updateReviewStatus(eventId, newStatus, selectElement) {
-        axios.post('/PlayCentric/events/updateReviewStatus', {
-            eventId: eventId,
-            reviewStatus: newStatus
-        })
-        .then(function (response) {
-            if (response.data.success) {
-                // 更新成功，顯示提示訊息
-                alert('審核狀態更新成功');
-                // 更新選擇框的顏色
-                updateReviewStatusUI(selectElement);
+        // 處理自動狀態選項
+        $('#useAutoStatus').change(function () {
+            if (this.checked) {
+                $('#eventStatus').prop('disabled', true);
             } else {
-                alert('審核狀態更新失敗：' + response.data.message);
+                $('#eventStatus').prop('disabled', false);
             }
-        })
-        .catch(function (error) {
-            console.error('更新審核狀態時發生錯誤:', error);
-            // 移除錯誤提示，因為狀態實際上已經更新
         });
-    }
 
-    // 添加簡單的前端分頁功能
-    let currentPage = 1;
-    const itemsPerPage = 10; // 每頁顯示的項目數
+        // 在打開模態框時設置正確的狀態
+        $('#eventModal').on('show.bs.modal', function () {
+            if ($('#useAutoStatus').is(':checked')) {
+                $('#eventStatus').prop('disabled', true);
+            } else {
+                $('#eventStatus').prop('disabled', false);
+            }
+        });
 
-    // 顯示特定頁面的函數
-    function showPage(page) {
-        const rows = $('#eventList tr');
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
+        // 確保互動視窗可以正確關閉
+        $('#eventModal .close, #eventModal .btn-secondary').click(function () {
+            $('#eventModal').modal('hide');
+        });
 
-        rows.hide();
-        rows.slice(start, end).show();
+        // 處理圖片預覽
+        $('#photoFile').change(function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imagePreview').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(file);
+            } else {
+                $('#imagePreview').attr('src', '').hide();
+            }
+        });
 
-        updatePagination();
-    }
+        // 在打開模態框時設置正確的圖片預覽
+        $('#eventModal').on('show.bs.modal', function (e) {
+            const button = $(e.relatedTarget);
+            const eventId = button.data('event-id');
+            if (eventId) {
+                // 如果是編輯模式，加載現有圖片
+                const imageUrl = `/PlayCentric/imagesLib/image${eventId}`;
+                $('#imagePreview').attr('src', imageUrl).show();
+            } else {
+                // 如果是新增模式，清除圖片預覽
+                $('#imagePreview').attr('src', '').hide();
+            }
+        });
 
-    // 更新分頁導航的函數
-    function updatePagination() {
-        const rows = $('#eventList tr');
-        const pageCount = Math.ceil(rows.length / itemsPerPage);
+        // 一鍵輸入功能
+        function quickFill() {
+            $('#eventName').val('測試活動');
+            $('#eventDescription').val('這是一個測試活動。');
 
-        $('.pagination').empty();
-        for (let i = 1; i <= pageCount; i++) {
-            $('.pagination').append(`<li class="page-item"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`);
+            // 設置時間：當前時間加上一小時作為開始時間，兩小時後結束，開始時間加30分鐘作為報名截止時間
+            let now = new Date();
+            let start = new Date(now.getTime() - 30 * 60 * 1000); // 當前時間減30分鐘
+            let end = new Date(now.getTime() + 60 * 60 * 1000); // 當前時間加60分鐘作為結束時間
+            let deadline = new Date(now.getTime() + 30 * 60 * 1000); // 當前時間後30分鐘作為報名截止時間
+
+            $('#eventStartTime').val(formatDateTimeForInput(start));
+            $('#eventSignupDeadLine').val(formatDateTimeForInput(deadline));
+            $('#eventEndTime').val(formatDateTimeForInput(end));
+
+            // 設置活動狀態
+            $('#eventStatus').val('0');
+            $('#useAutoStatus').prop('checked', true).change();
         }
 
-        $('.pagination .page-link').click(function(e) {
-            e.preventDefault();
-            currentPage = parseInt($(this).data('page'));
+        // 格式化日期時間為輸入框所需的格式，指定台北時間
+        function formatDateTimeForInput(dateString) {
+            if (!dateString) return '';
+
+            // 將字串轉換為日期對象
+            const date = new Date(dateString);
+
+            // 檢查日期是否有效
+            if (isNaN(date.getTime())) {
+                console.error('無效的日期:', dateString);
+                return '';
+            }
+
+            // 調整為台北時間
+            const taipeiDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+
+            // 格式化日期時間
+            const year = taipeiDate.getFullYear();
+            const month = String(taipeiDate.getMonth() + 1).padStart(2, '0');
+            const day = String(taipeiDate.getDate()).padStart(2, '0');
+            const hour = String(taipeiDate.getHours()).padStart(2, '0');
+            const minute = String(taipeiDate.getMinutes()).padStart(2, '0');
+
+            // 返回 YYYY-MM-DDTHH:MM 格式
+            return `${year}-${month}-${day}T${hour}:${minute}`;
+        }
+
+        // 更新審核狀態UI的函數 (移到全局作用域)
+        function updateReviewStatusUI(selectElement) {
+            selectElement.find('option').each(function () {
+                $(this).removeClass('status-pending status-approved status-rejected');
+                if ($(this).val() == 0) {
+                    $(this).addClass('status-pending');
+                } else if ($(this).val() == 1) {
+                    $(this).addClass('status-approved');
+                } else if ($(this).val() == 2) {
+                    $(this).addClass('status-rejected');
+                }
+            });
+
+            // 設置選中選項的顏色
+            const selectedValue = selectElement.val();
+            let color = '';
+            if (selectedValue == 0) {
+                color = '#ffc107';
+            } else if (selectedValue == 1) {
+                color = '#28a745';
+            } else if (selectedValue == 2) {
+                color = '#dc3545';
+            }
+            selectElement.css('color', color);
+        }
+
+        // 更新審核狀態的函數
+        function updateReviewStatus(eventId, newStatus, selectElement) {
+            axios.post('/PlayCentric/events/updateReviewStatus', {
+                eventId: eventId,
+                reviewStatus: newStatus
+            })
+                .then(function (response) {
+                    if (response.data.success) {
+                        // 更新成功，顯示提示訊息
+                        doAlert('審核狀態更新成功');
+                        // 更新選擇框的顏色
+                        updateReviewStatusUI(selectElement);
+                    } else {
+                        doAlert('審核狀態更新失敗：' + response.data.message);
+                    }
+                })
+                .catch(function (error) {
+                    console.error('更新審核狀態時發生錯誤:', error);
+                    // 移除錯誤提示，因為狀態實際上已經更新
+                });
+        }
+
+        // 添加簡單的前端分頁功能
+        let currentPage = 1;
+        const itemsPerPage = 10; // 每頁顯示的項目數
+
+        // 顯示特定頁面的函數
+        function showPage(page) {
+            const rows = $('#eventList tr');
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+
+            rows.hide();
+            rows.slice(start, end).show();
+
+            updatePagination();
+        }
+
+        // 更新分頁導航的函數
+        function updatePagination() {
+            const rows = $('#eventList tr');
+            const pageCount = Math.ceil(rows.length / itemsPerPage);
+
+            $('.pagination').empty();
+            for (let i = 1; i <= pageCount; i++) {
+                $('.pagination').append(`<li class="page-item"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`);
+            }
+
+            $('.pagination .page-link').click(function (e) {
+                e.preventDefault();
+                currentPage = parseInt($(this).data('page'));
+                showPage(currentPage);
+            });
+        }
+
+        // 頁面加載完成後執行的函數
+        $(document).ready(function () {
+            // 初始化日期時間選擇器
+            $('.datetime').attr('type', 'datetime-local');
+
+            // 綁定新增活動按鈕事件
+            $('.btn-primary[onclick="openCreateEventForm()"]').click(openCreateEventForm);
+
+            // 綁定搜索表單提交事件
+            $('.search-form').submit(function (e) {
+                e.preventDefault();
+                searchEvents();
+            });
+
+            // 綁定一鍵輸入按鈕事件
+            $('#quickFillBtn').click(quickFill);
+
+            // 初始化分頁
             showPage(currentPage);
+
+            // 初始化每個下拉選單的字體顏色
+            $('.review-status').each(function () {
+                updateReviewStatusUI($(this));
+            });
+
+            // 處理審核狀態更新
+            $('.review-status').change(function () {
+                const eventId = $(this).data('event-id');
+                const newStatus = $(this).val();
+                updateReviewStatus(eventId, newStatus, $(this));
+            });
         });
-    }
-
-    // 頁面加載完成後執行的函數
-    $(document).ready(function () {
-        // 初始化日期時間選擇器
-        $('.datetime').attr('type', 'datetime-local');
-
-        // 綁定新增活動按鈕事件
-        $('.btn-primary[onclick="openCreateEventForm()"]').click(openCreateEventForm);
-
-        // 綁定搜索表單提交事件
-        $('.search-form').submit(function (e) {
-            e.preventDefault();
-            searchEvents();
-        });
-
-        // 綁定一鍵輸入按鈕事件
-        $('#quickFillBtn').click(quickFill);
-
-        // 初始化分頁
-        showPage(currentPage);
-
-        // 初始化每個下拉選單的字體顏色
-        $('.review-status').each(function() {
-            updateReviewStatusUI($(this));
-        });
-
-        // 處理審核狀態更新
-        $('.review-status').change(function() {
-            const eventId = $(this).data('event-id');
-            const newStatus = $(this).val();
-            updateReviewStatus(eventId, newStatus, $(this));
-        });
-    });
-</script>
+    </script>
 </body>
 
 </html>

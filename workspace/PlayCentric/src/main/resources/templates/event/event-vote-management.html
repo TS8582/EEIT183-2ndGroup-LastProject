@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <!-- 引入 Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入提示用工具 -->
+    <script th:src="@{/js/utils/doAlertJQ.js}"></script>
     <style>
         /* 基本頁面樣式 */
         body {
@@ -281,7 +283,7 @@
             })
             .catch(error => {
                 console.error('載入投票數據失敗:', error);
-                alert('載入投票數據失敗，請稍後再試。');
+                doAlert('載入投票數據失敗，請稍後再試。');
             });
     }
 
@@ -361,7 +363,7 @@
     function showVoteDetail(voteId) {
         const vote = allVotes.find(v => v.voteId === voteId);
         if (!vote) {
-            alert('找不到指定的投票記錄');
+            doAlert('找不到指定的投票記錄');
             return;
         }
 
@@ -384,14 +386,14 @@
         if (confirm('確定要刪除這條投票記錄嗎？此操作不可撤銷。')) {
             axios.delete(`/PlayCentric/eventVotes/api/${voteId}`)
                 .then(() => {
-                    alert('投票記錄已成功刪除');
+                    doAlert('投票記錄已成功刪除');
                     $('#voteDetailModal').modal('hide');
                     loadVotes(); // 重新加載投票列表
                     loadStatistics(); // 更新統計信息
                 })
                 .catch(error => {
                     console.error('刪除投票失敗:', error);
-                    alert('刪除投票失敗，請稍後再試。');
+                    doAlert('刪除投票失敗，請稍後再試。');
                 });
         }
     }
@@ -447,12 +449,12 @@
                     updateCharts(stats);
                 } else {
                     console.error('統計數據不完整');
-                    alert('統計數據不完整，無法更新圖表。');
+                    doAlert('統計數據不完整，無法更新圖表。');
                 }
             })
             .catch(error => {
                 console.error('加載統計信息失敗:', error);
-                alert('加載統計信息失敗，請稍後再試。');
+                doAlert('加載統計信息失敗，請稍後再試。');
             });
     }
 

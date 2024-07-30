@@ -10,6 +10,8 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <!-- 引入 Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- 引入提示用工具 -->
+    <script th:src="@{/js/utils/doAlertJQ.js}"></script>
 <style>
     /* 設置頁面背景顏色 */
     body {
@@ -298,7 +300,7 @@
             })
             .catch(error => {
                 console.error('獲取報名詳情失敗:', error);
-                alert('獲取報名詳情失敗，請稍後再試');
+                doAlert('獲取報名詳情失敗，請稍後再試');
             });
     }
 
@@ -316,7 +318,7 @@
             })
             .catch(error => {
                 console.error('獲取報名信息失敗:', error);
-                alert('獲取報名信息失敗，請稍後再試');
+                doAlert('獲取報名信息失敗，請稍後再試');
             });
     }
 
@@ -331,13 +333,15 @@
 
         axios.put(`${updateSignupUrl}${formData.signupId}`, formData)
             .then(response => {
-                alert('報名信息已更新');
+                doAlert('報名信息已更新');
                 $('#editSignupModal').modal('hide');
-                location.reload();
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
             })
             .catch(error => {
                 console.error('更新報名信息失敗:', error);
-                alert(error.response.data || '更新失敗，請稍後再試');
+                doAlert(error.response.data || '更新失敗，請稍後再試');
             });
     }
 
@@ -346,12 +350,14 @@
         if (confirm('確定要刪除這條報名記錄嗎？')) {
             axios.delete(`${deleteSignupUrl}${signupId}`)
                 .then(response => {
-                    alert('報名記錄已刪除');
-                    location.reload();
+                    doAlert('報名記錄已刪除');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
                 })
                 .catch(error => {
                     console.error("刪除報名記錄失敗:", error);
-                    alert(error.response.data || '刪除失敗，請稍後再試');
+                    doAlert(error.response.data || '刪除失敗，請稍後再試');
                 });
         }
     }
@@ -413,16 +419,16 @@
         .then(function (response) {
             if (response.data.success) {
                 // 更新成功，顯示提示訊息
-                alert('審核狀態更新成功');
+                doAlert('審核狀態更新成功');
                 // 更新選擇框的顏色
                 updateReviewStatusUI(selectElement);
             } else {
-                alert('審核狀態更新失敗：' + response.data.message);
+                doAlert('審核狀態更新失敗：' + response.data.message);
             }
         })
         .catch(function (error) {
             console.error('更新審核狀態時發生錯誤:', error);
-            alert('更新審核狀態時發生錯誤，請稍後再試');
+            doAlert('更新審核狀態時發生錯誤，請稍後再試');
         });
     }
 

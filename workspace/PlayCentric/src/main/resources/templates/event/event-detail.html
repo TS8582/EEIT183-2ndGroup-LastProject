@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <!-- 引入 AOS 動畫庫 -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- 引入提示用工具 -->
+    <script th:src="@{/js/utils/doAlertJQ.js}"></script>
     <style>
         /* 基本樣式：設置整體頁面的背景色、字體和文字顏色 */
         body {
@@ -769,18 +771,18 @@
          */
         function vote(signupId) {
             if (!userId) {
-                alert("請先登入後再投票");
+                doAlert("請先登入後再投票");
                 return;
             }
 
             const now = new Date();
             if (now <= eventSignupDeadline) {
-                alert("投票尚未開始");
+                doAlert("投票尚未開始");
                 return;
             }
 
             if (now >= eventEndTime) {
-                alert("投票已結束");
+                doAlert("投票已結束");
                 return;
             }
 
@@ -790,7 +792,7 @@
                 data: { memberId: userId, signupId: signupId },
                 success: function (response) {
                     if (response.success) {
-                        alert("投票成功！");
+                        doAlert("投票成功！");
                         $(`.vote-count[data-signup-id="${signupId}"]`).text(response.updatedVoteCount);
                         // 更新 allEntries 中的投票數
                         const entry = allEntries.find(e => e.signupId === signupId);
@@ -799,7 +801,7 @@
                         }
                         sortAndDisplayEntries(); // 重新排序和顯示作品
                     } else {
-                        alert(response.message || "投票失敗，請稍後再試。");
+                        doAlert(response.message || "投票失敗，請稍後再試。");
                     }
                 },
                 error: function (xhr, status, error) {
@@ -808,7 +810,7 @@
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         errorMessage = xhr.responseJSON.message;
                     }
-                    alert(errorMessage);
+                    doAlert(errorMessage);
                 }
             });
         }
@@ -865,15 +867,15 @@
             // 綁定報名按鈕點擊事件
             $('#signupButton').click(function () {
                 if (eventStatus == 2 || isSignupClosed()) {
-                    alert("報名已截止，無法報名");
+                    doAlert("報名已截止，無法報名");
                     return;
                 }
                 if (!userId) {
-                    alert("請先登入後再報名");
+                    doAlert("請先登入後再報名");
                     return;
                 }
                 if (userHasSignedUp) {
-                    alert("您已經報名過此活動");
+                    doAlert("您已經報名過此活動");
                     return;
                 }
                 $('#signupModal').modal('show');
@@ -883,12 +885,12 @@
             $('#signupForm').submit(function (e) {
                 e.preventDefault();
                 if (eventStatus == 2 || isSignupClosed()) {
-                    alert("報名已截止，無法報名");
+                    doAlert("報名已截止，無法報名");
                     return;
                 }
 
                 if (userHasSignedUp) {
-                    alert("您已經報名過此活動");
+                    doAlert("您已經報名過此活動");
                     $('#signupModal').modal('hide');
                     return;
                 }
@@ -900,7 +902,7 @@
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                        alert('報名成功！');
+                        doAlert('報名成功！');
                         $('#signupModal').modal('hide');
                         userHasSignedUp = true;
                         updateSignupButton();
@@ -908,9 +910,9 @@
                     },
                     error: function (xhr, status, error) {
                         if (xhr.responseJSON && xhr.responseJSON.message) {
-                            alert(xhr.responseJSON.message);
+                            doAlert(xhr.responseJSON.message);
                         } else {
-                            alert('報名失敗，請稍後再試。');
+                            doAlert('報名失敗，請稍後再試。');
                         }
                     }
                 });
