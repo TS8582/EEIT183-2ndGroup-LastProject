@@ -388,21 +388,20 @@
 
         const formdataObject = new FormData(this);
         formdataObject.set('role', 0)
-        console.log(formdataObject.get('photoFile'));
         
 
-        // axios.post(registUrl, formdataObject)
-        //   .then(res => {
-        //     console.log(res);
-        //     doAlert(res.data);
-        //     if (res.data == '註冊成功!') {
-        //       loginTab.show();
-        //       this.reset();
-        //     }
-        //   })
-        //   .catch(err => {
-        //     console.log(err);
-        //   })
+        axios.post(registUrl, formdataObject)
+          .then(res => {
+            console.log(res);
+            doAlert(res.data);
+            if (res.data == '註冊成功!') {
+              loginTab.show();
+              this.reset();
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
       })
 
       $('#cancelRegist').click(function () {
