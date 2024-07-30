@@ -1,5 +1,6 @@
 package com.playcentric.controller.playfellow;
 
+import java.security.PublicKey;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.playcentric.model.playfellow.PfOrder3;
 import com.playcentric.model.playfellow.PfOrder3DTO;
 import com.playcentric.model.playfellow.PfOrderDTO;
 import com.playcentric.model.playfellow.PlayFellowMember;
+import com.playcentric.service.game.GameService;
 import com.playcentric.service.member.MemberService;
 import com.playcentric.service.playfellow.PfGameService;
 import com.playcentric.service.playfellow.PfOrder3Service;
@@ -59,6 +61,10 @@ public class PageController {
 	@Autowired
 	ImageLibRepository imageLibRepository;
 	
+	@Autowired
+	GameService gameService;
+	
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -203,5 +209,9 @@ public class PageController {
             return ResponseEntity.notFound().build();
         }
     }
-
+	@ResponseBody
+    @GetMapping("/api/allGame")
+		public List<Game> allGame(){
+		return gameService.findAll();
+	}
 }
