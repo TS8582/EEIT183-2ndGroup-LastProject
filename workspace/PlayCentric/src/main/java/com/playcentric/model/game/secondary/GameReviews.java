@@ -47,7 +47,6 @@ public class GameReviews {
 	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime lastEditAt;
 	private boolean isShow = true;
-	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "memId",insertable = false,updatable = false)
 	private Member member;

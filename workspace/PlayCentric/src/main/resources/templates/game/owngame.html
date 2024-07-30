@@ -44,12 +44,13 @@
                         class="mybtn mybtn-sky download">下載</span>
                     <span th:if="${owngame.game.gameFile == null || owngame.game.gameFile.length == 0}"
                         class="mybtn-disabled">尚未開放下載</span>
+                    <div class="hidden gameId" th:text="${owngame.game.gameId}"></div>
                 </div>
             </div>
             <div th:if="${status.index != ownGames.size() - 1}" class="h-1 w-full bg-black"></div>
         </th:block>
     </div>
-
+    <script th:src="@{/js/game/game-download.js}"></script>
 </body>
 
 </html>

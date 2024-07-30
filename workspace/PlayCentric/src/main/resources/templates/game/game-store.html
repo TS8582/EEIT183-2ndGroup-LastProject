@@ -136,6 +136,7 @@
                                     class="mybtn mybtn-sky download">下載</span>
                                 <span th:if="${game.gameFile == null || game.gameFile.length == 0}"
                                     class="mybtn-disabled">尚未開放下載</span>
+                                <div class="hidden gameId" th:text="${game.gameId}"></div>
                             </th:block>
                             <div class="hidden gameId" th:text="${game.gameId}"></div>
                         </div>
@@ -155,6 +156,7 @@
     <script th:src="@{/js/utils/doAlertJs.js}"></script>
     <script th:src="@{/js/game/cart.js}"></script>
     <script th:src="@{/js/game/game-store.js}"></script>
+    <script th:src="@{/js/game/game-download.js}"></script>
 </body>
 
 </html>

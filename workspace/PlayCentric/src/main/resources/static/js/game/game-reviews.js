@@ -51,33 +51,41 @@ if (goReviews) {
                 .then(res => {
                     addReviews.remove();
                     const data = res.data;
+                    let title = document.createElement('h2');
+                    title.classList.add('text-2xl', 'text-center', 'font-seminold');
+                    title.innerHTML = '評論';
+                    let existReviews1 = document.createElement('div');
+                    existReviews1.classList.add('existReviews');
                     const html = `
-              <div 
-                    class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto">
                     <div class="flex items-center space-x-2 mb-2">
-                        <img class="h-16 w-16 rounded-full" th:src="${data.member.photoUrl}" alt="">
-                        <span th:text="${data.member.nickname}"></span>
-                        <div class="existStar select-none">
-                            <div class="star-container">
-                                <div class="filled" th:style="'width:' + ${data.reviewsScore * 20} + '%;'">★★★★★
-                                </div>
-                                <div class="unfilled">★★★★★</div>
-                            </div>
-                        </div>
+                    <img class="h-16 w-16 rounded-full" src="${data.member.photoUrl}" alt="">
+                    <span>${data.member.nickname}</span>
+                    <div class="existStar select-none">
+                    <div class="star-container">
+                    <div class="filled" style="width:${data.reviewsScore * 20}%;">★★★★★
+                    </div>
+                    <div class="unfilled">★★★★★</div>
+                    </div>
+                    </div>
                     </div>
                     <div>
-                        <span th:text="${data.reviewsContent}"></span>
+                    <span>${data.reviewsContent}</span>
                     </div>
-                </div>
-        `;
-                    reviewsContainer.prepend(html);
-                    console.log(res);
+                    `;
+                    existReviews1.innerHTML = html;
+                    document.querySelector('.noReview').remove();
+                    reviewsContainer.querySelector('h2').remove();
+                    reviewsContainer.prepend(existReviews1);
+                    reviewsContainer.prepend(title);
                 })
                 .catch(err => {
                     console.error(err);
                 })
         }
-    }, { once: true })
+        else {
+            doAlert('不能給0顆星！');
+        }
+    })
 }
 
 

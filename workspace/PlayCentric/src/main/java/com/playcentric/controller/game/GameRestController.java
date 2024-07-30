@@ -5,10 +5,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -177,5 +182,19 @@ public class GameRestController {
 		else game.setIsShow(true);
 		gService.save(game);
 	}
+	
+	@GetMapping("/personal/game/download")
+	public ResponseEntity<Resource> downloadGame(Integer gameId) {
+		Game game = gService.findById(gameId);
+		if (game != null) {
+			ByteArrayResource resource = new ByteArrayResource(game.getGameFile());
+			return ResponseEntity.ok()
+	                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"")
+	                .body(resource);
+		}
+		return ResponseEntity.notFound().build();
+	}
+	
 	
 }
