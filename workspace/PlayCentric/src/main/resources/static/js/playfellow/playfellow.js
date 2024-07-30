@@ -11,26 +11,7 @@ function alertAndRedirect() {
 	});
 }
 
-document.addEventListener('DOMContentLoaded', function() {
 
-	const swiper = new Swiper('.swiper-container', {
-		slidesPerView: 2,
-		spaceBetween: 120,
-		loop: true,
-		autoplay: {
-			delay: 3000,
-			disableOnInteraction: false,
-		},
-		pagination: {
-			el: '.swiper-pagination',
-			clickable: true,
-		},
-		navigation: {
-			nextEl: '.swiper-button-next',
-			prevEl: '.swiper-button-prev',
-		},
-	});
-});
 
 
 
@@ -266,22 +247,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 document.addEventListener('DOMContentLoaded', function() {
+	setTimeout(function() {
+		document.querySelector('.loading-spinner').style.display = 'none';
+		document.querySelector('.content2').style.display = 'block';
 
-	const swiper = new Swiper('.swiper-container', {
-		slidesPerView: 2,
-		spaceBetween: 120,
-		loop: true,
-		autoplay: {
-			delay: 3000,
-			disableOnInteraction: false,
-		},
-		pagination: {
-			el: '.swiper-pagination',
-			clickable: true,
-		},
-		navigation: {
-			nextEl: '.swiper-button-next',
-			prevEl: '.swiper-button-prev',
-		},
-	});
+		const swiper = new Swiper('.swiper-container', {
+			slidesPerView: 2,
+			spaceBetween: 120,
+			loop: true,
+			autoplay: {
+				delay: 2000,
+				disableOnInteraction: false,
+			},
+			pagination: {
+				el: '.swiper-pagination',
+				clickable: true,
+			},
+			navigation: {
+				nextEl: '.swiper-button-next',
+				prevEl: '.swiper-button-prev',
+			},
+		});
+	}, 1000); // 這裡設置為1秒，可以根據實際情況調整
+
 });
