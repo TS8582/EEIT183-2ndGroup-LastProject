@@ -139,7 +139,7 @@
                 <div class="noReview text-lg flex justify-center items-center">
                     <span>目前沒有任何評論！</span>
                 </div>
-                <div th:if="${session.loginMember != null && memberReviews.size() < 1 && game.isHaveGame}"
+                <div th:if="${memberReviews != null} ? ${session.loginMember != null && memberReviews.size() < 1 && game.isHaveGame}"
                     class="addReviews">
                     <div class="star select-none">
                         <span id="star-1" class="star-container">★</span>
@@ -158,7 +158,7 @@
                 </div>
 
 
-                <div th:each="review:${reviews}" th:if="${reviews.size() > 0}"
+                <div th:each="review:${reviews}" th:if="${reviews != null} ? ${reviews.size() > 0}"
                     class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md">
                     <div class="flex items-center space-x-2 mb-2">
                         <img class="h-16 w-16 rounded-full" th:src="${review.member.photoUrl}" alt="">
@@ -174,13 +174,13 @@
                     <div class="reviewsContent my-2">
                         <span th:text="${review.reviewsContent}"></span>
                     </div>
-                    <div class="my-2" th:if="${memberReviews.size() > 0}">
+                    <div class="my-2" th:if="${memberReviews != null} ? ${memberReviews.size() > 0}">
                         <span th:if="${memberReviews[0].gameReviewsId == review.gameReviewsId}"
                             class="mybtn mybtn-sky editReviews">修改</span>
                     </div>
                 </div>
 
-                <div th:if="${reviews.size() > 5}" class="flex justify-center items-center my-3">
+                <div th:if="${reviews != null} ? ${reviews.size() > 5}" class="flex justify-center items-center my-3">
                     <span class="mylink cursor-pointer select-none moreReviews">更多評論...</span>
                 </div>
 
