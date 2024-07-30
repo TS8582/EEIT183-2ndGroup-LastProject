@@ -173,6 +173,7 @@
                                 <thead>
                                     <tr>
                                         <th>會員Id</th>
+                                        <th>文章Id</th>
                                         <th>留言Id</th>
                                         <th>留言內容</th>
                                         <th>發佈日期</th>
@@ -181,6 +182,7 @@
                                 <tbody>
                                     <tr th:each="talk : ${arrayList}">
                                         <td th:text="${talk.memId}"></td>
+                                        <td th:text="${talk.textsId}"></td>
                                         <td th:text="${talk.talkId}"></td>
                                         <td th:text="${talk.talkContent}" class="text-area"></td>
                                         <td th:text="${talk.talkTime}"></td>
