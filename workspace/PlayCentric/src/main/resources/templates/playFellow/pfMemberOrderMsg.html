@@ -24,7 +24,7 @@ html, body {
 }
 
 .table thead th {
-	background-color: #CBD5E1 !important;
+/* 	background-color: #CBD5E1 !important; */
 	/* 	color: #ADD8E6 !important; */
 	color: rgba(29, 18, 18, 0.995) !important;
 }
@@ -170,8 +170,8 @@ html, body {
 								</thead>
 								<tbody id="orderBody">
 									<tr th:if="${#lists.isEmpty(pfOrder)}">
-																		                           <td colspan="8" class="text-center">尚無資料</td>
-																		                       </tr>
+									<td colspan="8" class="text-center">尚無資料</td>
+									</tr>
 									<!-- 訂單資料 -->
 									<tr th:each="order : ${pfOrder}" class="small">
 										<td th:text="${order.pfOrderId}"></td>
