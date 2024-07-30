@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.playcentric.model.announcement.Announcement;
 import com.playcentric.model.announcement.AnnouncementType;
+import com.playcentric.model.game.primary.Game;
 import com.playcentric.service.announcement.AnnouncementService;
+import com.playcentric.service.game.GameService;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +28,8 @@ public class AnnoController {
 	
 	@Autowired
 	private AnnouncementService aService;
+	@Autowired
+	private GameService gService;
 	
 	//獲取新增公告資料
 	@GetMapping("/anno/getInsertAnno")
@@ -56,8 +60,12 @@ public class AnnoController {
 	@GetMapping("/")
 	public String showAllAnno(Model model) {
 		List<AnnouncementType> allType = aService.findAllType();
-		model.addAttribute("allAnnoType",allType);
 		List<Announcement> allAnno = aService.findAll();
+		List<Game> soldGames = gService.findTop5();
+		List<Game> newGames = gService.findNew5();
+		model.addAttribute("newGames",newGames);
+		model.addAttribute("soldGames",soldGames);
+		model.addAttribute("allAnnoType",allType);
 		model.addAttribute("allAnno",allAnno);
 		return "index";
 	}

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface GameRepository extends JpaRepository<Game,Integer> {
 
@@ -23,4 +24,10 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
 	Page<Game> findByPriceBetween(Integer minPrice,Integer maxPrice,Pageable pgb);
 	
 	List<Game> findByPriceBetween(Integer minPrice,Integer maxPrice);
+	
+	@Query(value = "SELECT TOP 5 gameId from gameOrderDetails group by gameId order by count(gameId) desc",nativeQuery = true)
+	List<Integer> findTop5();
+	
+	@Query(value = "select top 5 * from game order by releaseAt desc",nativeQuery = true)
+	List<Game> findNew5();
 }
