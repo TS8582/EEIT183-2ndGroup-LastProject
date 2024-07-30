@@ -25,10 +25,13 @@ import com.playcentric.model.ImageLib;
 import com.playcentric.model.forum.Forum;
 import com.playcentric.model.forum.ForumPhoto;
 import com.playcentric.model.forum.Texts;
+import com.playcentric.model.forum.TextsKeep;
+import com.playcentric.model.forum.TextsKeepId;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
 import com.playcentric.service.forum.ForumService;
 import com.playcentric.service.forum.PhotoService;
+import com.playcentric.service.forum.TextsKeepService;
 import com.playcentric.service.forum.TextsService;
 import com.playcentric.service.member.MemberService;
 
@@ -48,6 +51,9 @@ public class TextsController {
 
 	@Autowired
 	private PhotoService photoService;
+
+	@Autowired
+	private TextsKeepService textsKeepService;
 
 	// 更新Status
 	@ResponseBody
@@ -308,5 +314,12 @@ public class TextsController {
 
 		return "redirect:/texts/page"; // 導入前台
 	}
+
+	@PostMapping("/personal/api/texts/keepText")
+	@ResponseBody
+	public String keepText(@RequestParam Integer textsId, @RequestParam Integer memId) {
+		return textsKeepService.keepText(new TextsKeepId(textsId,memId));
+	}
+	
 
 }

@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,23 +11,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.playcentric.model.forum.Forum;
 import com.playcentric.model.forum.Talk;
 import com.playcentric.model.forum.Texts;
+import com.playcentric.model.forum.TextsKeepId;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
 import com.playcentric.service.forum.TalkService;
+import com.playcentric.service.forum.TextsKeepService;
 import com.playcentric.service.forum.TextsService;
 import com.playcentric.service.member.MemberService;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@SessionAttributes("loginMember")
 public class TalkController {
 
 	@Autowired
@@ -40,6 +40,14 @@ public class TalkController {
 
 	@Autowired
 	private TextsService textsService;
+
+	@Autowired
+	private TextsKeepService textsKeepService;
+
+	@ModelAttribute("loginMember")
+	public LoginMemDto getLoginMember(){
+		return null;
+	}
 
 	// 導入後台
 	@GetMapping("/findAllTalk")
@@ -54,7 +62,7 @@ public class TalkController {
 
 	// 新增訊息再當在ID
 	@GetMapping("/texts/{textsId}/talk")
-	public String getTalkByTextsId(@PathVariable Integer textsId, Model model) {
+	public String getTalkByTextsId(@PathVariable Integer textsId, Model model,@ModelAttribute("loginMember") LoginMemDto loginMember) {
 
 		Texts texts = textsService.findById(textsId);
 		List<Talk> talk = talkService.getTalkByTextsId(textsId);
@@ -62,6 +70,11 @@ public class TalkController {
 		model.addAttribute("texts", texts);
 		model.addAttribute("talk", talk);
 		model.addAttribute("textsId", textsId);
+
+		boolean textKept = loginMember!=null && 
+			textsKeepService.checkTextKept(new TextsKeepId(textsId, loginMember.getMemId()));
+		model.addAttribute("textKept", textKept);
+		
 		return "forum/texts/textsContent";
 	}
 
