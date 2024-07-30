@@ -93,9 +93,9 @@
             <th:block th:each="game:${games.content}">
 
                 <div
-                    class="fade-in h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500 gameitem">
+                    class="hover:scale-110 fade-in h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500 gameitem">
                     <div class="py-2 h-64 flex justify-center rounded-md">
-                        <a th:if="${!game.imageLibs.empty}" th:href="@{/game/showGame(gameId=${game.gameId})}">
+                        <a class="" th:if="${!game.imageLibs.empty}" th:href="@{/game/showGame(gameId=${game.gameId})}">
                             <img class="w-auto h-full rounded-md"
                                 th:src="@{/imagesLib/image{id}(id=${game.ImageLibs[0].imageId})}" alt="">
                         </a>
@@ -131,8 +131,13 @@
                             <span th:if="${session.loginMember} ? ${game.isInCart}" class="mybtn-disabled">已加入購物車</span>
                             <span th:if="${session.loginMember} ? ${!game.isInCart && !game.isHaveGame}"
                                 class="mybtn mybtn-green cart">加入購物車</span>
-                            <span th:if="${session.loginMember} ? ${game.isHaveGame}"
-                                class="mybtn mybtn-sky download">下載</span>
+                            <th:block th:if="${session.loginMember} ? ${game.isHaveGame}">
+                                <span th:if="${game.gameFile != null} ? ${game.gameFile.length > 0}"
+                                    class="mybtn mybtn-sky download">下載</span>
+                                <span th:if="${game.gameFile == null || game.gameFile.length == 0}"
+                                    class="mybtn-disabled">尚未開放下載</span>
+                                <div class="hidden gameId" th:text="${game.gameId}"></div>
+                            </th:block>
                             <div class="hidden gameId" th:text="${game.gameId}"></div>
                         </div>
                     </div>
@@ -151,6 +156,7 @@
     <script th:src="@{/js/utils/doAlertJs.js}"></script>
     <script th:src="@{/js/game/cart.js}"></script>
     <script th:src="@{/js/game/game-store.js}"></script>
+    <script th:src="@{/js/game/game-download.js}"></script>
 </body>
 
 </html>

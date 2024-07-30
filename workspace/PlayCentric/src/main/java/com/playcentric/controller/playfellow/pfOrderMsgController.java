@@ -1,6 +1,7 @@
 package com.playcentric.controller.playfellow;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ import com.playcentric.service.playfellow.PlayFellowMemberService;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class pfOrderMsgController {
@@ -44,12 +47,24 @@ public class pfOrderMsgController {
 			PlayFellowMember havePlayFellowMember = playFellowMemberService.findByMember(member);
 			List<PfOrder> orders = pfOrderService.findpfMemberOfpfOrderByMember(memId);
 			model.addAttribute("orders", orders);
-            model.addAttribute("havePlayFellowMember", havePlayFellowMember);
-
+			model.addAttribute("havePlayFellowMember", havePlayFellowMember);
 
 			return "playFellow/pfMemberOrderMsg";
 		}
-        return null;
-
+		return null;
 	}
+
+	@ResponseBody
+	@PostMapping("/playFellow/currentPaymentStatus")
+	public String paymentStatusFinish(@RequestParam Integer pfOrderId, 
+			@RequestParam Integer paymentStatus) {
+
+		Optional<PfOrder> optPforder = pfOrderService.findbyId(pfOrderId);
+		PfOrder pfOrder = optPforder.get();
+		pfOrder.setPaymentStatus(paymentStatus);
+		pfOrderService.savePfOrder(pfOrder);
+		// 狀態轉3
+		return "";
+	}
+
 }

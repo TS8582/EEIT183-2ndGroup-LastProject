@@ -10,6 +10,7 @@ let scrolltrigger = true;
 let runcount = 0;
 const gameName = document.querySelector('#gameName');
 
+//跳頁清空
 window.addEventListener('beforeunload', e => {
     minPrice.value = '';
     maxPrice.value = '';
@@ -336,7 +337,7 @@ async function nofilterplus() {
 function htmlmaker(game) {
     // 創建外層 div
     let gameItem = document.createElement('div');
-    gameItem.classList.add('h-auto', 'shadow-md', 'border-2', 'rounded-lg', 'flex', 'flex-col', 'p-2', 'bg-white', 'border-sky-300', 'shadow-sky-500', 'fade-in-up', 'gameitem');
+    gameItem.classList.add('hover:scale-110', 'h-auto', 'shadow-md', 'border-2', 'rounded-lg', 'flex', 'flex-col', 'p-2', 'bg-white', 'border-sky-300', 'shadow-sky-500', 'fade-in-up', 'gameitem');
 
     // 圖片區域
     let imageContainer = document.createElement('div');

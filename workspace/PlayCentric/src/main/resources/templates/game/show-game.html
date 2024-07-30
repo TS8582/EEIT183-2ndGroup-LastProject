@@ -7,27 +7,7 @@
     <div th:replace="~{/layout/nav}"></div>
     <link rel="stylesheet" th:href="@{/css/output.css}">
     <link rel="stylesheet" th:href="@{/css/utils/doAlertJs.css}">
-    <style>
-        .star-container {
-            position: relative;
-            display: inline-block;
-            font-size: 2em;
-            color: #ccc;
-            /* 灰色星星 */
-        }
-
-        .star-container .filled {
-            position: absolute;
-            top: 0;
-            left: 0;
-            overflow: hidden;
-            color: gold;
-        }
-
-        .color-gold {
-            color: gold;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/game/star.css}">
     <title th:text="${game.gameName}"></title>
 </head>
 
@@ -104,15 +84,39 @@
                         <span th:if="${game.rate}" class="price-tag font-semibold"
                             th:text=" 'NT$' + ${game.discountedPrice}"></span>
                     </div>
-                    <div class="flex sm:justify-center lg:justify-start">
+                    <div class="flex items-center sm:justify-center lg:justify-start">
                         <a th:if="${session.loginMember == null}" th:href="@{/member/homeShowErr/notLogin}"
                             class="mybtn mybtn-green">加入購物車</a>
                         <span th:if="${session.loginMember} ? ${game.isInCart}" class="mybtn-disabled">已加入購物車</span>
                         <span th:if="${session.loginMember} ? ${!game.isInCart && !game.isHaveGame}"
                             class="mybtn mybtn-green cart">加入購物車</span>
-                        <span th:if="${session.loginMember} ? ${game.isHaveGame}"
-                            class="mybtn mybtn-sky download">下載</span>
-                        <div class="hidden gameId" th:text="${game.gameId}"></div>
+                        <th:block th:if="${session.loginMember} ? ${game.isHaveGame}">
+                            <span th:if="${game.gameFile != null} ? ${game.gameFile.length > 0}"
+                                class="mybtn mybtn-sky download">下載</span>
+                            <span th:if="${game.gameFile == null || game.gameFile.length == 0}"
+                                class="mybtn-disabled">尚未開放下載</span>
+                            <div class="hidden gameId" th:text="${game.gameId}"></div>
+                        </th:block>
+
+                        <div class="flex items-center" th:if="${game.totalReviews != 0}">
+                            <div class="star-container ms-2 select-none">
+                                <div class="filled" th:style="'width:' + ${score * 20} + '%;'">★★★★★
+                                </div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                            <div class="inline-block ms-2 font-extrabold text-2xl select-none"
+                                th:text="${#numbers.formatDecimal(score,1,1)}">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center" th:if="${game.totalReviews == 0}">
+                            <div class="star-container ms-2 select-none">
+                                <div class="filled" style="width:0%;">★★★★★
+                                </div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                            <div class="inline-block ms-2 font-extrabold select-none">尚未有評價</div>
+                        </div>
 
                     </div>
                     <div class="hidden gameId" th:text="${game.gameId}"></div>
@@ -122,17 +126,21 @@
         </div>
         <div class="hidden memId" th:text="${session.loginMember} ? ${session.loginMember.memId}"></div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4 w-full">
-            <div class="sm:col-span-1 lg:col-span-2 m-3 h-full">
-                <div class="sm:col-span-1 lg:col-span-2 border-2 border-black p-10 space-y-4 rounded-md">
+        <div class="p-4 w-full">
+            <div class="h-full">
+                <div class="border-2 p-5 border-black space-y-4 rounded-md">
                     <h1 class="text-3xl font-bold">遊戲介紹</h1>
                     <p class="text-justify font-semibold text-lg" th:text="${game.description}"></p>
                 </div>
             </div>
 
-            <div class="col-span-1 my-3 mx-1 border-2 border-black px-4 py-2 rounded-md reviewsContainer">
-                <h1 class="text-2xl text-center font-semibold">評論</h1>
-                <div th:if="${session.loginMember}" class="addReviews">
+            <div class="my-3 border-2 border-black px-4 py-2 rounded-md reviewsContainer">
+                <h2 class="text-2xl text-center font-semibold">評論</h2>
+                <div class="noReview text-lg flex justify-center items-center">
+                    <span>目前沒有任何評論！</span>
+                </div>
+                <div th:if="${session.loginMember != null && memberReviews.size() < 1 && game.isHaveGame}"
+                    class="addReviews">
                     <div class="star select-none">
                         <span id="star-1" class="star-container">★</span>
                         <span id="star-2" class="star-container">★</span>
@@ -141,14 +149,43 @@
                         <span id="star-5" class="star-container">★</span>
                     </div>
                     <div class="">
-                        <textarea id="reviews" class="w-full h-28 border-2" style="resize: none;"
-                            maxlength="30"></textarea>
+                        <textarea id="reviews" class="w-full h-28 border-2" style="resize: none;" maxlength="100"
+                            placeholder="請輸入評論內容...(限100字)"></textarea>
                         <div class="flex items-center justify-center">
-                            <span class="mybtn mybtn-sky inline-block">提交評論</span>
+                            <span class="mybtn mybtn-sky inline-block goReviews">提交評論</span>
                         </div>
                     </div>
                 </div>
+
+
+                <div th:each="review:${reviews}" th:if="${reviews.size() > 0}"
+                    class="existReviews mt-2 p-2 border-2 border-sky-200 bg-white rounded-md">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <img class="h-16 w-16 rounded-full" th:src="${review.member.photoUrl}" alt="">
+                        <span th:text="${review.member.nickname}"></span>
+                        <div class="existStar select-none">
+                            <div class="star-container">
+                                <div class="filled" th:style="'width:' + ${review.reviewsScore * 20} + '%;'">★★★★★
+                                </div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reviewsContent my-2">
+                        <span th:text="${review.reviewsContent}"></span>
+                    </div>
+                    <div class="my-2" th:if="${memberReviews.size() > 0}">
+                        <span th:if="${memberReviews[0].gameReviewsId == review.gameReviewsId}"
+                            class="mybtn mybtn-sky editReviews">修改</span>
+                    </div>
+                </div>
+
+                <div th:if="${reviews.size() > 5}" class="flex justify-center items-center my-3">
+                    <span class="mylink cursor-pointer select-none moreReviews">更多評論...</span>
+                </div>
+
             </div>
+
 
         </div>
 
@@ -158,46 +195,8 @@
     <script th:src="@{/js/axios.min.js}"></script>
     <script th:src="@{/js/utils/doAlertJs.js}"></script>
     <script th:src="@{/js/game/cart.js}"></script>
-    <script>
-        let starAmount = 0;
-        const reviews = document.querySelector('#reviews');
-        const reviewsContainer = document.querySelector('.reviewsContainer');
-        const starContainer = reviewsContainer.querySelectorAll('.star-container');
-        starContainer.forEach((elm, i) => {
-            elm.addEventListener('mouseenter', e => {
-                if (i < (starAmount - 1)) {
-                    for (let g = i + 1; g < starContainer.length; g++) {
-                        starContainer[g].classList.remove('color-gold');
-                    }
-                }
-                for (let j = 0; j <= i; j++) {
-                    starContainer[j].classList.add('color-gold');
-                }
-            })
-
-            elm.addEventListener('mouseleave', e => {
-                for (let j = 0; j <= i; j++) {
-                    starContainer[j].classList.remove('color-gold');
-                }
-                if (starAmount != 0) {
-                    for (let j = 0; j <= (starAmount - 1); j++) {
-                        starContainer[j].classList.add('color-gold');
-                    }
-                }
-            })
-
-            elm.addEventListener('click', e => {
-                starContainer.forEach(el => {
-                    el.classList.remove('color-gold');
-                });
-                for (let j = 0; j <= i; j++) {
-                    starContainer[j].classList.add('color-gold');
-                    starAmount = i + 1;
-                }
-            })
-
-        });
-    </script>
+    <script th:src="@{/js/game/game-reviews.js}"></script>
+    <script th:src="@{/js/game/game-download.js}"></script>
 </body>
 
 </html>

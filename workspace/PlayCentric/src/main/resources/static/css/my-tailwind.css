@@ -142,3 +142,7 @@
 .next:hover {
     @apply bg-opacity-30
 }
+
+.existReviews {
+    @apply mt-2 p-2 border-2 border-sky-200 bg-white rounded-md h-auto
+}

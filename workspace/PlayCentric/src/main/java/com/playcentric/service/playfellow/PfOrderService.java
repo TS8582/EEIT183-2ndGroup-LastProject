@@ -1,6 +1,7 @@
 package com.playcentric.service.playfellow;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import com.playcentric.model.playfellow.PfOrderRepository;
 @Service
 @SessionAttributes(names = { "loginMember" })
 public class PfOrderService {
-	
+
 	@Autowired
 	PfOrderRepository pfOrderRepository;
 
@@ -21,19 +22,21 @@ public class PfOrderService {
 		List<PfOrder> pfOrders = pfOrderRepository.findAll();
 		return pfOrders;
 	}
-	
+
 	public PfOrder savePfOrder(PfOrder pfOrder) {
 		return pfOrderRepository.save(pfOrder);
 	}
-	
-	public List<PfOrder> findByMember(Member member){
+
+	public Optional<PfOrder> findbyId(Integer pfOrderId) {
+		return pfOrderRepository.findById(pfOrderId);
+	}
+
+	public List<PfOrder> findByMember(Member member) {
 		return pfOrderRepository.findByMember(member);
 	}
-	
-	
+
 	public List<PfOrder> findpfMemberOfpfOrderByMember(Integer memId) {
 		return pfOrderRepository.findOrdersByMember(memId);
 	}
-	
-	
+
 }

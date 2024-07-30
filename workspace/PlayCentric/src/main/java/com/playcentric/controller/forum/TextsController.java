@@ -1,11 +1,9 @@
 package com.playcentric.controller.forum;
 
-import java.util.List;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,26 +13,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.playcentric.model.ImageLib;
 import com.playcentric.model.forum.Forum;
 import com.playcentric.model.forum.ForumPhoto;
 import com.playcentric.model.forum.Texts;
+import com.playcentric.model.forum.TextsKeep;
+import com.playcentric.model.forum.TextsKeepId;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
 import com.playcentric.service.forum.ForumService;
-import com.playcentric.service.forum.PhotoService;
+import com.playcentric.service.forum.TextsKeepService;
 import com.playcentric.service.forum.TextsService;
 import com.playcentric.service.member.MemberService;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@SessionAttributes("loginMember")
 public class TextsController {
 
 	@Autowired
@@ -47,7 +47,7 @@ public class TextsController {
 	private MemberService memberService;
 
 	@Autowired
-	private PhotoService photoService;
+	private TextsKeepService textsKeepService;
 
 	// 更新Status
 	@ResponseBody
@@ -309,4 +309,27 @@ public class TextsController {
 		return "redirect:/texts/page"; // 導入前台
 	}
 
+	@PostMapping("/personal/api/texts/keepText")
+	@ResponseBody
+	public String keepText(@RequestParam Integer textsId, @RequestParam Integer memId) {
+		return textsKeepService.keepText(new TextsKeepId(textsId,memId));
+	}
+	
+	@GetMapping("/texts/keepNum/{textsId}")
+	@ResponseBody
+	public String getMethodName(@PathVariable Integer textsId) {
+		return textsKeepService.getKeepNum(textsId).toString();
+	}
+
+	@GetMapping("/personal/texts/keepList")
+	public String getMethodName() {
+		return "member/memberKeepTextsPage";
+	}
+	
+	@GetMapping("/personal/api/texts/keepList")
+	@ResponseBody
+	public Page<TextsKeep> getMethodName(@RequestParam Integer pageNum,@ModelAttribute("loginMember") LoginMemDto loginMember) {
+		return textsKeepService.getMemKeepTexts(loginMember.getMemId(), pageNum);
+	}
+	
 }

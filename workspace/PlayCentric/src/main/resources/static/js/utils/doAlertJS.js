@@ -1,7 +1,7 @@
 function doAlert(message) {
   var div = document.createElement('div');
 
-  div.classList.add('rounded-2', 'position-fixed', 'top-50', 'start-50', 'translate-middle', 'bg-dark', 'text-light', 'p-2', 'fade-alert', 'z-3', 'user-select-none');
+  div.classList.add('rounded-2', 'position-fixed', 'top-50', 'start-50', 'translate-middle', 'bg-dark', 'text-light', 'p-2', 'fade-alert', 'z-3', 'user-select-none','fs-3');
   div.textContent = message;
 
   document.body.appendChild(div);

@@ -24,6 +24,7 @@ import com.playcentric.model.game.primary.Game;
 import com.playcentric.model.game.primary.GameDiscount;
 import com.playcentric.model.game.primary.GameDiscountSet;
 import com.playcentric.model.game.primary.GameTypeLib;
+import com.playcentric.model.game.secondary.GameReviews;
 import com.playcentric.model.game.secondary.OwnGameLib;
 import com.playcentric.model.game.transaction.GameOrder;
 import com.playcentric.model.game.transaction.GameOrderDetails;
@@ -32,6 +33,7 @@ import com.playcentric.service.ImageLibService;
 import com.playcentric.service.game.GameCartService;
 import com.playcentric.service.game.GameDiscountSetService;
 import com.playcentric.service.game.GameOrderService;
+import com.playcentric.service.game.GameReviewsService;
 import com.playcentric.service.game.GameService;
 import com.playcentric.service.game.GameTypeService;
 import com.playcentric.service.game.OwnGameLibService;
@@ -59,6 +61,8 @@ public class GameController {
 	private OwnGameLibService oglService;
 	@Autowired
 	private GameOrderService goService;
+	@Autowired
+	private GameReviewsService grService;
 
 	// 遊戲管理後台
 	@GetMapping("/back/game")
@@ -271,11 +275,19 @@ public class GameController {
 			Model model,@ModelAttribute("loginMember") LoginMemDto loginMember) {
 		Game game = gService.findById(gameId);
 		gService.setRateAndDiscountPrice(game);
+		double totalReviews = (double)game.getTotalReviews();
+		Integer totalScore = game.getTotalScore();
+		double score = totalScore / totalReviews;
 		if (loginMember != null) {
 			gcService.setInCart(loginMember, game);
 			oglService.setHaveGame(loginMember, game);
+			List<GameReviews> memberReviews = grService.findByGameIdAndMemId(gameId, loginMember.getMemId());
+			model.addAttribute("memberReviews",memberReviews);
 		}
+		List<GameReviews> reviews = grService.findByGameIdTop5(gameId);
+		model.addAttribute("score",score);
 		model.addAttribute("game",game);
+		model.addAttribute("reviews",reviews);
 		return "game/show-game";
 	}
 	

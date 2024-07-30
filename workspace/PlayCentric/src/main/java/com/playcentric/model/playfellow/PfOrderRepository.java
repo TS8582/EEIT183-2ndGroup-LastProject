@@ -20,4 +20,11 @@ public interface PfOrderRepository extends JpaRepository<PfOrder, Integer> {
 			nativeQuery = true)
 	List<PfOrder> findOrdersByMember(@Param("memId") Integer memId);
 
+	
+	
+	
+	
+
 }
+
+

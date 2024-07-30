@@ -93,14 +93,14 @@
                         <td>
                             <div>
                                 <label for="title">文章標題：</label>
-                                <input type="text" id="title" name="title" th:value="${texts.title}" required>
+                                <input type="text" id="title" name="title" required>
                             </div>
                         </td>
                         <br>
                         <td>
                             <div>
                                 <label for="forumId">主題類型：</label>
-                                <select id="forumId" name="forumId" required>
+                                <select id="forumId" name="forumId" th:value="${texts.forum.forumId}" required>
                                     <option value="" disabled selected>請選擇</option>
                                     <!-- Iterate over 'arrayList' to populate options -->
                                     <option th:each="forum : ${arrayList}" th:value="${forum.forumId}"
@@ -124,6 +124,9 @@
         </div>
         <script th:if="${errorScript}" th:utext="${errorScript}"></script>
         <script>
+            $('select').val('[[${texts.forum.forumId}]]')
+            console.log('主題:' + $('select').val());
+
             tinymce.init({
                 selector: '#textsContent',
                 height: 500,

@@ -20,6 +20,11 @@ public class TextsKeepId implements Serializable {
 
 	private int memId;
 
+	public TextsKeepId(Integer textsId, Integer memId){
+		this.textsId = textsId;
+		this.memId = memId;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(textsId, memId);

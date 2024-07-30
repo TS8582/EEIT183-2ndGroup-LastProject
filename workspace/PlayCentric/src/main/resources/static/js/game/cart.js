@@ -3,8 +3,8 @@ function addToCart() {
     cart.forEach(elm => {
         if (!elm.classList.contains('okk')) {
             elm.addEventListener('click', e => {
-                const gameId = elm.closest('.gameitem').querySelector('.gameId').innerHTML.trim();
-                const memId = document.querySelector('.memId').innerHTML.trim();
+                let gameId = elm.closest('.gameitem').querySelector('.gameId').innerHTML.trim();
+                let memId = document.querySelector('.memId').innerHTML.trim();
 
                 axios.get('/PlayCentric/personal/api/gamecart/insert', {
                     params: {

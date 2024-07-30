@@ -34,12 +34,10 @@ import lombok.Setter;
 public class GameReviews {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer gameReviewsId;
-	@Column(insertable = false,updatable = false)
 	private Integer gameId;
-	@Column(insertable = false,updatable = false)
 	private Integer memId;
 	private String reviewsContent;
-	private int reviewsScore;
+	private Integer reviewsScore;
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy年MM月dd日 HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -49,12 +47,11 @@ public class GameReviews {
 	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime lastEditAt;
 	private boolean isShow = true;
-	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "memId")
+	@JoinColumn(name = "memId",insertable = false,updatable = false)
 	private Member member;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gameId")
+	@JoinColumn(name = "gameId",insertable = false,updatable = false)
 	private Game game;
 }
