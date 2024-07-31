@@ -36,7 +36,7 @@ type.addEventListener('change', (e) => {
 function htmlMaker(data) {
     result.innerHTML += `
 				<div class="h-auto col-span-12 md:col-span-6 text-left text-2xl font-bold border-dotted md:border-b-2 border-sky-300">
-					<a href="/PlayCentric/anno/showOneAnno?annoId=${data.annoId}"
+					<a class="mylink" href="/PlayCentric/anno/showOneAnno?annoId=${data.annoId}"
 						>[${data.announcementType.annoTypeName}]${data.title}</a>
 						</div>
 						<div class="h-auto col-span-12 md:col-span-6 text-right text-2xl border-dotted border-b-2 border-sky-300">
