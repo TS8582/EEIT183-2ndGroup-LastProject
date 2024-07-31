@@ -1,5 +1,7 @@
 const result = document.querySelector('.anno');
 const type = document.querySelector('.type');
+
+
 type.addEventListener('change', (e) => {
     let url = `http://localhost:8080/PlayCentric/anno/getOneTypeAnno`;
     if (type.value != 0) {

@@ -30,7 +30,7 @@
 
                     <div class="flex overflow-hidden items-center">
                         <label for="typeId" class="text-lg me-2">分類：</label>
-                        <select class="w-96 border-2 focus:outline-2 focus:outline-cyan-200" name="typeId" id="">
+                        <select class="w-96 border-2 focus:outline-2 focus:outline-cyan-200" name="typeId" id="typeId">
                             <th:block th:each="annoType:${allAnnoType}">
                                 <option th:value="${annoType.annoTypeId}">[[${annoType.annoTypeName}]]</option>
                             </th:block>
@@ -39,13 +39,26 @@
 
                     <div class="flex overflow-hidden items-center justify-center">
                         <button class="ms-8 mybtn mybtn-sky rounded-md" type="submit">新增</button>
+                        <span class="ms-8 mybtn mybtn-green datago">填入資料</span>
                     </div>
 
                 </div>
             </form>
         </div>
     </div>
-
+    <script>
+        const datago = document.querySelector('.datago');
+        datago.addEventListener('click', e => {
+            const title = document.querySelector('#title');
+            const content = document.querySelector('#content');
+            const typeId = document.querySelector('#typeId');
+            typeId.value = 4;
+            title.value = '猜數字小遊戲上市囉！';
+            content.value = `猜數字小遊戲於今日正式上市！
+         這是一款簡單但充滿樂趣的猜數字小遊戲，這款遊戲不僅適合所有年齡層的玩家，也是一個很好的訓練思維和邏輯能力的工具。這款遊戲的核心功能包括設定數字範圍、猜對數字後顯示成功信息，以及猜錯數字後顯示目前已猜出的數字範圍。
+         `;
+        })
+    </script>
 
 </body>
 
