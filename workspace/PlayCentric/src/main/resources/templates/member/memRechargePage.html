@@ -2,9 +2,6 @@
 <html>
 
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script th:src="@{/js/utils/doAlertJQ.js}"></script>
   <title>PlayCentric-會員錢包</title>
   <style>
@@ -77,7 +74,7 @@
       <div class="d-flex">
         <div class="h1 p-0 text-center">會員錢包</div>
         <p class="ms-auto mb-3 mt-auto ps-2 border border-2 rounded-2 col-2 fs-4">
-          <i class="fa-solid fa-sack-dollar"></i>
+          ＄
           <span id="points" class="ms-2" th:text="${session.loginMember.points}"></span>
         </p>
       </div>
