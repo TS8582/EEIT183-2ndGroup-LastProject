@@ -97,8 +97,21 @@ public class EventVoteService {
         EventVote existingVote = eventVoteRepository.findById(voteId)
             .orElseThrow(() -> new RuntimeException("找不到指定的投票記錄"));
         
+        int oldStatus = existingVote.getEventVoteStatus();
         existingVote.setEventVoteStatus(eventVoteStatus);
         
+        EventSignup eventSignup = existingVote.getEventSignup();
+        
+        // 如果狀態從有效變為待審核或無效，減少投票數
+        if (oldStatus == 1 && (eventVoteStatus == 0 || eventVoteStatus == 2)) {
+            eventSignup.setVoteCount(eventSignup.getVoteCount() - 1);
+        }
+        // 如果狀態從待審核或無效變為有效，增加投票數
+        else if ((oldStatus == 0 || oldStatus == 2) && eventVoteStatus == 1) {
+            eventSignup.setVoteCount(eventSignup.getVoteCount() + 1);
+        }
+        
+        eventSignupRepository.save(eventSignup);
         return eventVoteRepository.save(existingVote);
     }
 

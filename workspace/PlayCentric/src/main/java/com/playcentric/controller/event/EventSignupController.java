@@ -191,7 +191,7 @@ public class EventSignupController {
     @ResponseBody
     public ResponseEntity<List<EventSignupDTO>> getEventSignups(@PathVariable Integer eventId) {
         try {
-            List<EventSignup> signups = eventSignupService.getApprovedSignupsByEventId(eventId);
+            List<EventSignupDTO> signups = eventSignupService.getApprovedSignupsByEventId(eventId);
             List<EventSignupDTO> dtos = signups.stream().map(signup -> {
                 EventSignupDTO dto = new EventSignupDTO();
                 dto.setSignupId(signup.getSignupId());

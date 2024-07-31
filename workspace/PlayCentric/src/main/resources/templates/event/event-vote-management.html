@@ -143,6 +143,10 @@
         .action-btn {
             margin-right: 5px;
         }
+        
+        .status-invalid {
+    color: #dc3545;
+}
     </style>
 </head>
 
@@ -345,11 +349,12 @@ function displayVotes(page) {
             <td>${vote.eventSignup.workTitle}</td>
             <td>${new Date(vote.voteTime).toLocaleString()}</td>
             <td>
-                <select class="form-control form-control-sm status-select ${vote.eventVoteStatus === 1 ? 'status-valid' : 'status-pending'}" 
-                        onchange="updateVoteStatus(${vote.voteId}, this.value)">
-                    <option value="1" ${vote.eventVoteStatus === 1 ? 'selected' : ''}>有效</option>
-                    <option value="0" ${vote.eventVoteStatus === 0 ? 'selected' : ''}>待審核</option>
-                </select>
+<select class="form-control form-control-sm status-select ${vote.eventVoteStatus === 1 ? 'status-valid' : (vote.eventVoteStatus === 0 ? 'status-pending' : 'status-invalid')}" 
+        onchange="updateVoteStatus(${vote.voteId}, this.value)">
+    <option value="1" ${vote.eventVoteStatus === 1 ? 'selected' : ''}>有效</option>
+    <option value="0" ${vote.eventVoteStatus === 0 ? 'selected' : ''}>待審核</option>
+    <option value="2" ${vote.eventVoteStatus === 2 ? 'selected' : ''}>無效</option>
+</select>
             </td>
             <td>
                 <button class="btn btn-danger btn-sm action-btn" onclick="confirmDeleteVote(${vote.voteId})">
@@ -458,7 +463,7 @@ function updateVoteStatus(voteId, newStatus) {
             loadVotes(); // 重新加載投票列表
             loadStatistics(); // 更新統計信息
             // 更新參賽作品的票數（前端處理）
-            updateEntryVoteCount(response.data.eventSignup.signupId, response.data.eventVoteStatus);
+            updateEntryVoteCount(response.data.eventSignup.signupId, response.data.eventVoteStatus, response.data.eventSignup.voteCount);
         })
         .catch(error => {
             console.error('更新投票狀態失敗:', error);
@@ -467,16 +472,10 @@ function updateVoteStatus(voteId, newStatus) {
 }
 
 // 更新參賽作品的票數（前端處理）
-function updateEntryVoteCount(signupId, voteStatus) {
+function updateEntryVoteCount(signupId, voteStatus, newVoteCount) {
     const voteCountElement = document.querySelector(`#entry-${signupId} .vote-count`);
     if (voteCountElement) {
-        let currentCount = parseInt(voteCountElement.textContent);
-        if (voteStatus === 1) { // 有效票
-            currentCount++;
-        } else { // 待審核票
-            currentCount = Math.max(0, currentCount - 1); // 確保票數不會變成負數
-        }
-        voteCountElement.textContent = currentCount;
+        voteCountElement.textContent = newVoteCount;
     }
 }
 
