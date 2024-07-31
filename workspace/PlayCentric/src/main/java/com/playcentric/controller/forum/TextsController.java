@@ -298,7 +298,7 @@ public class TextsController {
 		textsService.update(texts);
 
 		// 更新成功後重定向到前台列表頁面
-		return "redirect:/texts/findTextsById?textsId=" + textsId;
+		return "redirect:/texts/"+textsId+"/talk";
 	}
 
 	// 刪除文章
