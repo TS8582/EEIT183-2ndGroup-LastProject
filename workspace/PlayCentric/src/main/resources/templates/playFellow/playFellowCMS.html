@@ -2,117 +2,128 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="UTF-8">
-<div th:replace="~{layout/backen_nav}"></div>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PlayCentric伴遊資料管理</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" th:href="@{/css/output.css}">
+	<meta charset="UTF-8">
+	<div th:replace="~{layout/backen_nav}"></div>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>PlayCentric伴遊資料管理</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/output.css}">
+	<link rel="stylesheet" th:href="@{/css/playfellow/dataTables.bootstrap5.css}">
+	<link rel="stylesheet" th:href="@{/css/playfellow/jquery.dataTables.css}">
 
-<style>
-html, body {
-	height: 100% !important;
-	min-height: 100% !important;
-}
 
-.w250px {
-	width: 250px !important;
-}
+	<style>
+		html,
+		body {
+			height: 100% !important;
+			min-height: 100% !important;
+		}
 
-.table thead th {
-	background-color: #CBD5E1 !important;
-	color: #ADD8E6 !important;
-	color: rgba(29, 18, 18, 0.995) !important;
-}
+		.w250px {
+			width: 250px !important;
+		}
 
-.delete-icon {
-	color: rgba(255, 81, 0, 0.753) !important;
-}
+		.table thead th {
+			background-color: #CBD5E1 !important;
+			color: #ADD8E6 !important;
+			color: rgba(29, 18, 18, 0.995) !important;
+		}
 
-.delete-icon:hover {
-	color: red !important;
-}
+		.delete-icon {
+			color: rgba(255, 81, 0, 0.753) !important;
+		}
 
-.status-pending {
-	color: #FFC107 !important;
-}
+		.delete-icon:hover {
+			color: red !important;
+		}
 
-.status-failed {
-	color: #DC3545 !important;
-}
+		.status-pending {
+			color: #FFC107 !important;
+		}
 
-.status-open,
-.status-completed {
-	color: #28A745 !important;
-}
+		.status-failed {
+			color: #DC3545 !important;
+		}
 
-.status-closed {
-	color: #6C757D !important;
-}
+		.status-open,
+		.status-completed {
+			color: #28A745 !important;
+		}
 
-.hidden-button {
-	position: absolute;
-	right: 10px;
-	top: 5px;
-	opacity: 0;
-	transition: opacity 0.3s;
-	pointer-events: none;
-}
+		.status-closed {
+			color: #6C757D !important;
+		}
 
-.dataTables_filter {
-	position: relative;
-}
+		.hidden-button {
+			position: absolute;
+			right: 10px;
+			top: 5px;
+			opacity: 0;
+			transition: opacity 0.3s;
+			pointer-events: none;
+		}
 
-.dataTables_filter:hover .hidden-button {
-	opacity: 1;
-	pointer-events: auto;
-}
 
-#review {
-	background-color: transparent;
-	color: #666;
-	padding: 5px 10px;
-	transition: background-color 0.3s;
-	bottom: 10px;
-}
+		#review {
+			background-color: transparent;
+			color: #666;
+			padding: 5px 10px;
+			transition: background-color 0.3s;
+			bottom: 10px;
+		}
 
-#review:hover {
-	background-color: #013220;
-}
+		#review:hover {
+			background-color: #013220;
+		}
 
-.pagination {
-	justify-content: center;
-	margin-top: 20px;
-}
+		.pagination {
+			justify-content: center;
+			margin-top: 20px;
+		}
 
-.pagination li a {
-	font-size: 12px !important; /* Smaller font size */
-	padding: 5px 10px !important; /* Smaller padding */
-}
+		.pagination li a {
+			font-size: 12px !important;
+			/* Smaller font size */
+			padding: 5px 10px !important;
+			/* Smaller padding */
+		}
 
-.pagination li a i {
-	font-size: 12px !important; /* Smaller font size for icons */
-}
-.chart-container {
-           width: 50%; /* 顯示寬度 */
-           height: 50%; /* 顯示高度 */
-       }
-#orderChart2 {
-           width: 50%; /* 讓 canvas 填滿父容器 */
-           height: 50%; /* 讓 canvas 填滿父容器 */
-       }
-#orderChart3 {
-           width: 23%; /* 讓 canvas 填滿父容器 */
-           height: 23%; /* 讓 canvas 填滿父容器 */
-       }
-	   .chart-row {
-	       display: flex;
-	       flex-wrap: wrap;
-	       justify-content: space-around;
-	   }
+		.pagination li a i {
+			font-size: 12px !important;
+			/* Smaller font size for icons */
+		}
 
-</style>
+		.chart-container {
+			width: 40%;
+			/* 顯示寬度 */
+			height: 60%;
+			/* 顯示高度 */
+		}
+
+		#orderChart2 {
+			width: 40%;
+			/* 讓 canvas 填滿父容器 */
+			height: 60%;
+			/* 讓 canvas 填滿父容器 */
+		}
+
+		#orderChart3 {
+			width: 20%;
+			/* 讓 canvas 填滿父容器 */
+			height: 20%;
+			/* 讓 canvas 填滿父容器 */
+		}
+
+		.chart-row {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-around;
+		}
+		#orderTable_next {
+		           all: unset; /* 使用 CSS 重置所有樣式 */
+		       }
+	</style>
 </head>
 
 <body class="h-screen flex flex-col w-screen">
@@ -122,18 +133,23 @@ html, body {
 		<main class="w-100 p-3">
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
 				<li class="nav-item" role="presentation" style="margin-right: 6px;">
-					<button class="nav-link text-secondary" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">伴遊者列表</button>
+					<button class="nav-link text-secondary" id="home-tab" data-bs-toggle="tab"
+						data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+						aria-selected="true">伴遊者列表</button>
 				</li>
 				<li class="nav-item" role="presentation">
-					<button class="nav-link text-secondary" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">交易明細</button>
+					<button class="nav-link text-secondary" id="profile-tab" data-bs-toggle="tab"
+						data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
+						aria-selected="false">交易明細</button>
 				</li>
 			</ul>
 
 			<div class="tab-content" id="myTabContent">
-				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="home-tab-pane"
+					role="tabpanel" aria-labelledby="home-tab" tabindex="0">
 
 					<!-- 這裡放TABLE內容  PlayFellowMember-->
-					
+
 					<br>
 					<div class="container">
 						<div class="table-container">
@@ -154,122 +170,139 @@ html, body {
 									</tr>
 								</thead>
 								<tbody id="playFellowBody">
-									<tr th:each="pfmember : ${PlayFellowMember}" >
+									<tr th:each="pfmember : ${PlayFellowMember}">
 										<td th:text="${pfmember.playFellowId}"></td>
 										<td th:text="${pfmember.pfnickname}"></td>
-										<td><span th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...略' : pfmember.pfdescription}"></span></td>
+										<td><span
+												th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...略' : pfmember.pfdescription}"></span>
+										</td>
 										<td th:text="${pfmember.member.memId}"></td>
-										<td><span th:if="${pfmember.member.gender == 1}">男生</span><span th:if="${pfmember.member.gender == 2}">女生</span></td>
+										<td><span th:if="${pfmember.member.gender == 1}">男生</span><span
+												th:if="${pfmember.member.gender == 2}">女生</span></td>
 										<td th:text="${pfmember.member.birthday}"></td>
 										<td th:text="${pfmember.pfcreatedTime}"></td>
-										<td th:text="${pfmember.pfstatus == 1 ? '待審核' : (pfmember.pfstatus == 2 ? '審核不成功' : (pfmember.pfstatus == 3 ? '開啟' : '關閉或接單中'))}" th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : (pfmember.pfstatus == 2 ? 'status-failed' : (pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}"></td>
-										<td><a th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}"><i class="fas fa-file-invoice fa-2x" style="color: rgb(60, 150, 128);"></i></a></td>
-										<td><i class="fas fa-trash-alt delete-icon fa-2x" th:attr="data-playfellow-id=${pfmember.playFellowId}"></i></td>
+										<td th:text="${pfmember.pfstatus == 1 ? '待審核' : (pfmember.pfstatus == 2 ? '審核不成功' : (pfmember.pfstatus == 3 ? '開啟' : '關閉或接單中'))}"
+											th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : (pfmember.pfstatus == 2 ? 'status-failed' : (pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}">
+										</td>
+										<td><a
+												th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}"><i
+													class="fas fa-file-invoice fa-2x"
+													style="color: rgb(60, 150, 128);"></i></a></td>
+										<td><i class="fas fa-trash-alt delete-icon fa-2x"
+												th:attr="data-playfellow-id=${pfmember.playFellowId}"></i></td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
 						<ul class="pagination">
-							<li class="page-item"><a class="page-link" href="#" id="prevPage"><i class="fas fa-angle-left"></i></a></li>
-							<li class="page-item"><a class="page-link" href="#" id="nextPage"><i class="fas fa-angle-right"></i></a></li>
+							<li class="page-item"><a class="page-link" href="#" id="prevPage"><i
+										class="fas fa-angle-left"></i></a></li>
+							<li class="page-item"><a class="page-link" href="#" id="nextPage"><i
+										class="fas fa-angle-right"></i></a></li>
 						</ul>
 					</div>
 				</div>
-				
-				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+
+				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="profile-tab-pane"
+					role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
 					<br> <br>
 					<div class="container">
-						<div class="table-container">
-							
+						<div>
+
 							<div class="chart-row">
-							    <div id="orderChart2" class="chart-container">
-							        <canvas id="orderChart"></canvas>
-							    </div>
-							    <div id="orderChart3" class="chart-container">
-							        <canvas id="gamePieChart"></canvas>
-							    </div>
-							</div>
+								<div id="orderChart2" class="chart-container">
+									<canvas id="dailyOrderChart"></canvas>
+								</div>
+								<div id="orderChart2" class="chart-container">
+									<canvas id="monthlyOrderChart"></canvas>
+								</div>
+								<div id="orderChart3" class="chart-container">
+									<canvas id="gamePieChart"></canvas>
+								</div>
 
 							</div>
-							</div>
-							
-							<table id="orderTable" class="table table-striped table-bordered table-hover">
-								<thead class="thead-light small">
-									<tr>
-										<th>訂單編號</th>
-										<th>伴遊遊戲編號</th>
-										<th>伴遊遊戲</th>
-										<th>下訂會員</th>
-										<th>單數</th>
-										<th>總金額</th>
-										<th>付款時間</th>
-										<th>創建時間</th>
-										<th>狀態</th>
-									</tr>
-								</thead>
-								<tbody id="orderBody">
-									<!-- 訂單資料 -->
-									<tr th:each="order : ${PfOrder}" class="small">
-										<td th:text="${order.pfOrderId}"></td>
-										<td th:text="${order.pfGame.pfGameId}"></td>
-										<td th:text="${order.pfGame.game.gameName}"></td>
-										<td th:text="${order.member.memId}"></td>
-										<td th:text="${order.quantity}"></td>
-										<td th:text="${order.totalAmount}"></td>
-										<td th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-										<td th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
-										<td th:text="${order.paymentStatus == 1 ? '尚未付款' : (order.paymentStatus == 2 or order.paymentStatus == 3 ? '付款成功' : '交易失敗或取消')}"
-																					    th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 or order.paymentStatus == 3 ? 'status-completed' : 'status-failed')}">
-																					</td>									
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<ul class="pagination">
-							<li class="page-item"><a class="page-link" href="#" id="prevOrderPage"><i class="fas fa-angle-left"></i></a></li>
-							<li class="page-item"><a class="page-link" href="#" id="nextOrderPage"><i class="fas fa-angle-right"></i></a></li>
-						</ul>
-					</div>
-				</div>
-				
-				<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="third-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-					
-				</div>
-			</div>
-			
-			
-			
-			
-			
-			<!-- 刪除跳窗 -->
-			<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">確定要刪除這筆資料嗎？</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-							<button type="button" class="btn btn-danger" id="confirmDelete">刪除</button>
+
 						</div>
 					</div>
+<div style="margin-top: 10%;">
+					<table id="orderTable" class="table table-striped table-bordered table-hover" >
+					    <thead class="thead-light">
+					        <tr>
+					            <th>訂單編號</th>
+					            <th>伴遊遊戲編號</th>
+					            <th>伴遊遊戲</th>
+					            <th>下訂會員</th>
+					            <th>單數</th>
+					            <th>總金額</th>
+					            <th>付款時間</th>
+					            <th>創建時間</th>
+					            <th>狀態</th>
+					        </tr>
+					    </thead>
+					    <tbody id="orderBody">
+					        <!-- 訂單資料 -->
+					        <tr th:each="order : ${PfOrder}">
+					            <td th:text="${order.pfOrderId}"></td>
+					            <td th:text="${order.pfGame.pfGameId}"></td>
+					            <td th:text="${order.pfGame.game.gameName}"></td>
+					            <td th:text="${order.member.memId}"></td>
+					            <td th:text="${order.quantity}"></td>
+					            <td th:text="${order.totalAmount}"></td>
+					            <td th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+					            <td th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
+					            <td th:text="${order.paymentStatus == 1 ? '尚未付款' : (order.paymentStatus == 2 or order.paymentStatus == 3 ? '付款成功' : '交易失敗或取消')}"
+					                th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 or order.paymentStatus == 3 ? 'status-completed' : 'status-failed')}">
+					            </td>
+					        </tr>
+					    </tbody>
+					</table>
+					</div>
+
+				</div>
+
+			</div>
+	</div>
+
+	<div class="tab-pane fade border border-top-0 rounded-2 rounded-top-0" id="third-tab-pane" role="tabpanel"
+		aria-labelledby="profile-tab" tabindex="0">
+
+	</div>
+	</div>
+
+
+
+
+
+	<!-- 刪除跳窗 -->
+	<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">確定要刪除這筆資料嗎？</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-danger" id="confirmDelete">刪除</button>
 				</div>
 			</div>
-		</main>
+		</div>
+	</div>
+	</main>
 	</div>
 
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 	<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
-	<script th:src="@{/js/layout/nav.js}"></script>  
-	  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	
+	<script th:src="@{/js/layout/nav.js}"></script>
+	<script th:src="@{/js/playfellow/jquery.dataTables.js}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 	<script>
-		
+
 
 		$(document).ready(function () {
 			$("#home-tab").click();
@@ -318,9 +351,9 @@ html, body {
 			});
 		}
 
-		
-		
-		
+
+
+
 		function setupPagination(tableId, tbodyId, itemsPerPage) {
 			let table = document.getElementById(tableId);
 			let tbody = document.getElementById(tbodyId);
@@ -354,164 +387,237 @@ html, body {
 
 			showPage(0);
 		}
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
+
+
+		document.addEventListener('DOMContentLoaded', () => {
+			const orders = [];
+
+			// 提取表格中的訂單資料
+			const rows = document.querySelectorAll('#orderBody tr');
+			rows.forEach(row => {
+				const paymentTime = row.children[6].innerText;
+				const gameName = row.children[2].innerText;
+				const quantity = parseInt(row.children[4].innerText);
+				const totalAmount = parseFloat(row.children[5].innerText);
+				orders.push({paymentTime, gameName, quantity, totalAmount});
+			});
+
+			const ctxDailyBar = document.getElementById('dailyOrderChart').getContext('2d');
+			const ctxMonthlyBar = document.getElementById('monthlyOrderChart').getContext('2d');
+			const ctxPie = document.getElementById('gamePieChart').getContext('2d');
+			let dailyOrderChart, monthlyOrderChart, gamePieChart;
+
+			function parseDate(dateString) {
+				const parts = dateString.split(/[- :]/);
+				return new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
+			}
+
+			function updateDailyRevenueChart() {
+				const dailyData = {};
+
+				orders.forEach(order => {
+					const date = parseDate(order.paymentTime);
+					if (isNaN(date.getTime())) {
+						return; // 跳過無效的日期
+					}
+
+					const dayKey = date.toISOString().split('T')[0];
+
+					if (!dailyData[dayKey]) {
+						dailyData[dayKey] = 0;
+					}
+					dailyData[dayKey] += order.totalAmount;
+				});
+
+				const dailyLabels = Object.keys(dailyData);
+				const dailyValues = Object.values(dailyData);
+
+				if (dailyOrderChart) {
+					dailyOrderChart.destroy();
+				}
+
+				dailyOrderChart = new Chart(ctxDailyBar, {
+					type: 'bar',
+					data: {
+						labels: dailyLabels,
+						datasets: [
+							{
+								label: '每日伴遊收入',
+								data: dailyValues,
+								backgroundColor: 'rgba(75, 192, 192, 0.2)',
+								borderColor: 'rgba(75, 192, 192, 1)',
+								borderWidth: 1
+							}
+						]
+					},
+					options: {
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						}
+					}
+				});
+			}
+
+			function updateMonthlyRevenueChart() {
+				const monthlyData = {};
+
+				orders.forEach(order => {
+					const date = parseDate(order.paymentTime);
+					if (isNaN(date.getTime())) {
+						return; // 跳過無效的日期
+					}
+
+					const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+
+					if (!monthlyData[monthKey]) {
+						monthlyData[monthKey] = 0;
+					}
+					monthlyData[monthKey] += order.totalAmount;
+				});
+
+				const monthlyLabels = Object.keys(monthlyData);
+				const monthlyValues = Object.values(monthlyData);
+
+				if (monthlyOrderChart) {
+					monthlyOrderChart.destroy();
+				}
+
+				monthlyOrderChart = new Chart(ctxMonthlyBar, {
+					type: 'bar',
+					data: {
+						labels: monthlyLabels,
+						datasets: [
+							{
+								label: '每月伴遊收入',
+								data: monthlyValues,
+								backgroundColor: 'rgba(153, 102, 255, 0.2)',
+								borderColor: 'rgba(153, 102, 255, 1)',
+								borderWidth: 1
+							}
+						]
+					},
+					options: {
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						}
+					}
+				});
+			}
+
+			function updatePieChart() {
+				const orderData = {};
+				const today = new Date();
+				const past30Days = new Date(today.setDate(today.getDate() - 30));
+
+				orders.forEach(order => {
+					const date = parseDate(order.paymentTime);
+					if (isNaN(date.getTime()) || date < past30Days) {
+						return; // 跳過無效的日期或超過30天的日期
+					}
+
+					if (!orderData[order.gameName]) {
+						orderData[order.gameName] = 0;
+					}
+					orderData[order.gameName] += order.quantity;
+				});
+
+				const labels = Object.keys(orderData);
+				const data = Object.values(orderData);
+
+				if (gamePieChart) {
+					gamePieChart.destroy();
+				}
+
+				gamePieChart = new Chart(ctxPie, {
+					type: 'pie',
+					data: {
+						labels: labels,
+						datasets: [{
+							label: '最近30天的遊戲數量',
+							data: data,
+							backgroundColor: [
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(54, 162, 235, 0.2)',
+								'rgba(255, 206, 86, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(153, 102, 255, 0.2)',
+								'rgba(255, 159, 64, 0.2)'
+							],
+							borderColor: [
+								'rgba(255, 99, 132, 1)',
+								'rgba(54, 162, 235, 1)',
+								'rgba(255, 206, 86, 1)',
+								'rgba(75, 192, 192, 1)',
+								'rgba(153, 102, 255, 1)',
+								'rgba(255, 159, 64, 1)'
+							],
+							borderWidth: 1
+						}]
+					},
+					options: {
+						responsive: true,
+						plugins: {
+							title: {
+								display: true,
+								text: '近30日遊戲下訂量分佈'
+							}
+						}
+					}
+				});
+			}
+
+			// 初始化顯示每日和每月營收圖表
+			updateDailyRevenueChart();
+			updateMonthlyRevenueChart();
+			// 初始化顯示圓餅圖
+			updatePieChart();
+		});
 		
 		
 		
 		
 		document.addEventListener('DOMContentLoaded', () => {
-		           const orders = [];
+		    $('#orderTable').DataTable({
+		        "paging": true,
+		        "searching": true,
+		        "ordering": true,
+		        "info": true,
+		        "autoWidth": false,
+		        "lengthChange": true,
+		        "pageLength": 10, // 每頁顯示的記錄數
+		        "language": {
+		            "lengthMenu": "每頁顯示 _MENU_ 條記錄",
+		            "zeroRecords": "沒有找到記錄",
+		            "info": "顯示第 _PAGE_ 頁，共 _PAGES_ 頁",
+		            "infoEmpty": "無記錄",
+		            "infoFiltered": "(從 _MAX_ 條記錄中篩選)",
+		            "search": "搜尋:",
+		            "paginate": {
+		                "first": "首頁",
+		                "last": "尾頁",
+		                "next": "下一頁",
+		                "previous": "上一頁"
+		            }
+		        }
+		    });
 
-		           // 提取表格中的訂單資料
-		           const rows = document.querySelectorAll('#orderBody tr');
-		           rows.forEach(row => {
-		               const paymentTime = row.children[6].innerText;
-		               const gameName = row.children[2].innerText;
-		               const quantity = parseInt(row.children[4].innerText);
-		               const totalAmount = parseFloat(row.children[5].innerText);
-		               orders.push({ paymentTime, gameName, quantity, totalAmount });
-		           });
+		});
 
-		           const ctxBar = document.getElementById('orderChart').getContext('2d');
-		           const ctxPie = document.getElementById('gamePieChart').getContext('2d');
-		           let orderChart, gamePieChart;
 
-		           function parseDate(dateString) {
-		               const parts = dateString.split(/[- :]/);
-		               return new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
-		           }
 
-		           function updateRevenueChart() {
-		               const dailyData = {};
-		               const monthlyData = {};
-
-		               orders.forEach(order => {
-		                   const date = parseDate(order.paymentTime);
-		                   if (isNaN(date.getTime())) {
-		                       return; // 跳過無效的日期
-		                   }
-
-		                   const dayKey = date.toISOString().split('T')[0];
-		                   const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-
-		                   if (!dailyData[dayKey]) {
-		                       dailyData[dayKey] = 0;
-		                   }
-		                   dailyData[dayKey] += order.totalAmount;
-
-		                   if (!monthlyData[monthKey]) {
-		                       monthlyData[monthKey] = 0;
-		                   }
-		                   monthlyData[monthKey] += order.totalAmount;
-		               });
-
-		               const dailyLabels = Object.keys(dailyData);
-		               const dailyValues = Object.values(dailyData);
-		               const monthlyLabels = Object.keys(monthlyData);
-		               const monthlyValues = Object.values(monthlyData);
-
-		               if (orderChart) {
-		                   orderChart.destroy();
-		               }
-
-		               orderChart = new Chart(ctxBar, {
-		                   type: 'bar',
-		                   data: {
-		                       labels: dailyLabels.length > monthlyLabels.length ? dailyLabels : monthlyLabels,
-		                       datasets: [
-		                           {
-		                               label: '每日伴遊收入',
-		                               data: dailyValues,
-		                               backgroundColor: 'rgba(75, 192, 192, 0.2)',
-		                               borderColor: 'rgba(75, 192, 192, 1)',
-		                               borderWidth: 1
-		                           },
-		                           {
-		                               label: '每月伴遊收入',
-		                               data: monthlyValues,
-		                               backgroundColor: 'rgba(153, 102, 255, 0.2)',
-		                               borderColor: 'rgba(153, 102, 255, 1)',
-		                               borderWidth: 1
-		                           }
-		                       ]
-		                   },
-		                   options: {
-		                       scales: {
-		                           y: {
-		                               beginAtZero: true
-		                           }
-		                       }
-		                   }
-		               });
-		           }
-
-		           function updatePieChart() {
-		               const orderData = {};
-		               const today = new Date();
-		               const past30Days = new Date(today.setDate(today.getDate() - 30));
-
-		               orders.forEach(order => {
-		                   const date = parseDate(order.paymentTime);
-		                   if (isNaN(date.getTime()) || date < past30Days) {
-		                       return; // 跳過無效的日期或超過30天的日期
-		                   }
-
-		                   if (!orderData[order.gameName]) {
-		                       orderData[order.gameName] = 0;
-		                   }
-		                   orderData[order.gameName] += order.quantity;
-		               });
-
-		               const labels = Object.keys(orderData);
-		               const data = Object.values(orderData);
-
-		               if (gamePieChart) {
-		                   gamePieChart.destroy();
-		               }
-
-		               gamePieChart = new Chart(ctxPie, {
-		                   type: 'pie',
-		                   data: {
-		                       labels: labels,
-		                       datasets: [{
-		                           label: '最近30天的遊戲數量',
-		                           data: data,
-		                           backgroundColor: [
-		                               'rgba(255, 99, 132, 0.2)',
-		                               'rgba(54, 162, 235, 0.2)',
-		                               'rgba(255, 206, 86, 0.2)',
-		                               'rgba(75, 192, 192, 0.2)',
-		                               'rgba(153, 102, 255, 0.2)',
-		                               'rgba(255, 159, 64, 0.2)'
-		                           ],
-		                           borderColor: [
-		                               'rgba(255, 99, 132, 1)',
-		                               'rgba(54, 162, 235, 1)',
-		                               'rgba(255, 206, 86, 1)',
-		                               'rgba(75, 192, 192, 1)',
-		                               'rgba(153, 102, 255, 1)',
-		                               'rgba(255, 159, 64, 1)'
-		                           ],
-		                           borderWidth: 1
-		                       }]
-		                   },
-		                   options: {
-		                       responsive: true
-		                   }
-		               });
-		           }
-
-		           // 初始化顯示每日和每月營收圖表
-		           updateRevenueChart();
-		           // 初始化顯示圓餅圖
-		           updatePieChart();
-		       });
-		
 
 	</script>
 </body>
+
 </html>

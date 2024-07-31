@@ -311,7 +311,7 @@ public class GameController {
 			@ModelAttribute("loginMember") LoginMemDto loginMember,
 			Model model
 			) {
-		List<OwnGameLib> ownGames = oglService.findByMemId(loginMember.getMemId());
+		List<OwnGameLib> ownGames = oglService.findByMemIdOrderByBuyAtDesc(loginMember.getMemId());
 		model.addAttribute("ownGames",ownGames);
 		return "game/owngame";
 	}

@@ -114,13 +114,13 @@
         </div>
         <div class="w-full flex justify-center">
             <div class="sm:w-11/12 lg:w-1/2">
-                <div id="carouselExampleIndicators" class="carousel slide  bg-gray-400 shadow-xl border-2 rounded-md"
+                <div id="carouselExampleIndicators2" class="carousel slide  bg-gray-400 shadow-xl border-2 rounded-md"
                     data-bs-ride="carousel">
                     <div class="carousel-indicators">
                         <!-- 動態生成指示器 -->
                         <th:block th:if="${soldGames != null} ? ${soldGames.size() > 0}" th:each="game,st:${soldGames}">
                             <button type="button"
-                                th:attr="data-bs-target='#carouselExampleIndicators', data-bs-slide-to=${st.index}"
+                                th:attr="data-bs-target='#carouselExampleIndicators2', data-bs-slide-to=${st.index}"
                                 th:class="${st.index == 0} ? 'active' : ''" aria-current="true"
                                 aria-label="Slide ${st.index + 1}"></button>
                         </th:block>
@@ -147,12 +147,12 @@
                             </div>
                         </th:block>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators2"
                         data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Previous</span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators2"
                         data-bs-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Next</span>

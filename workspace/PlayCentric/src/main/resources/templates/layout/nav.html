@@ -4,13 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
 
     <style>
       .collapse {
@@ -67,15 +60,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav ms-auto" th:switch="${session.loginMember}">
-            <!-- "管理介面"之後要移掉，已經放到會員下拉式選單 -->
-            <li class="nav-item">
-              <a
-                class="nav-link fs-4"
-                thif="${session.loginMember!=null && session.loginMember.role == 1}"
-                th:href="@{/back/anno}"
-                >管理介面</a
-              >
-            </li>
+            <!-- "管理介面"移掉了，已經放到會員下拉式選單 -->
             <li class="nav-item">
               <a class="nav-link fs-4" th:href="@{/game/gameStore}">
                 遊戲商店
@@ -232,7 +217,7 @@
                     th:href="@{/member/personal/recharge}"
                   >
                     <p class="m-0 ps-2 w-100 border border-2 rounded-2 fs-5">
-                      <i class="fa-solid fa-sack-dollar"></i>
+                      ＄
                       <span
                         id="points"
                         class="ms-2"

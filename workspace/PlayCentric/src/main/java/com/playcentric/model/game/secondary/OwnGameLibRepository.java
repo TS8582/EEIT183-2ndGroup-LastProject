@@ -8,4 +8,6 @@ public interface OwnGameLibRepository extends JpaRepository<OwnGameLib,GameAndMe
 	
 	List<OwnGameLib> findByMemId(Integer memId);
 	
+	List<OwnGameLib> findByMemIdOrderByBuyAtDesc(Integer memId);
+	
 }

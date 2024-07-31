@@ -16,7 +16,11 @@
 <body>
     <div th:replace="~{member/memInfoAside}"></div>
     <div class="h600px overflow-scroll noscrollbar">
-        <table class="h-auto w-full text-center text-xl border rounded-xl">
+        <div th:if="${games} ? ${games.size() == 0}" class="flex flex-wrap justify-center items-center mt-2">
+            <span>目前尚未有購買紀錄！歡迎選購～</span>
+            <span class="mybtn mybtn-green go">前往商店</span>
+        </div>
+        <table th:if="${games} ? ${games.size() > 0}" class="h-auto w-full text-center text-xl border rounded-xl">
             <thead>
                 <tr>
                     <th class="border h-auto">遊戲名稱</th>
@@ -33,7 +37,7 @@
             </tbody>
         </table>
     </div>
-
+    <script th:src="@{/js/game/to-store.js}"></script>
 </body>
 
 </html>
