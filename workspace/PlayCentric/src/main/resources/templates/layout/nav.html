@@ -60,15 +60,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav ms-auto" th:switch="${session.loginMember}">
-            <!-- "管理介面"之後要移掉，已經放到會員下拉式選單 -->
-            <li class="nav-item">
-              <a
-                class="nav-link fs-4"
-                thif="${session.loginMember!=null && session.loginMember.role == 1}"
-                th:href="@{/back/anno}"
-                >管理介面</a
-              >
-            </li>
+            <!-- "管理介面"移掉了，已經放到會員下拉式選單 -->
             <li class="nav-item">
               <a class="nav-link fs-4" th:href="@{/game/gameStore}">
                 遊戲商店
