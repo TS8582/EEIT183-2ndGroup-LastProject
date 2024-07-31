@@ -11,6 +11,7 @@ let totalPrice = 0;
 let totalGame = parseInt(gamecount.innerHTML.trim());
 const nogame = document.querySelector('.nogame');
 
+
 if (totalGame === 0) {
     nogame.classList.remove('hidden');
 }
@@ -28,6 +29,7 @@ cancel.addEventListener('click', e => {
 
 // 按下結帳按鈕顯示選擇付款方式
 function gopayfunc() {
+    choosepay.value = 1;
     pay.classList.remove('hidden');
     gopay.classList.remove('mybtn', 'mybtn-green');
     gopay.classList.add('mybtn-disabled');
