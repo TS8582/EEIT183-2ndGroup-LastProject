@@ -108,10 +108,10 @@ public class MemberService {
 		String googleId = "";
 		Optional<GoogleLogin> optional = null;
 		if (!originMem.getEmailVerified()
-			&& (googleId = originMem.getGoogeId())!=null
-			&& (optional = googleRepository.findById(googleId)).isPresent()
-			&& originMem.getEmail().equals(optional.get().getEmail())
-			&& optional.get().getVerifiedEmail()) {
+				&& (googleId = originMem.getGoogeId()) != null
+				&& (optional = googleRepository.findById(googleId)).isPresent()
+				&& originMem.getEmail().equals(optional.get().getEmail())
+				&& optional.get().getVerifiedEmail()) {
 			originMem.setEmailVerified(true);
 		}
 		originMem.setRole(member.getRole());
@@ -129,6 +129,16 @@ public class MemberService {
 			}
 		}
 		return false;
+	}
+
+	public String verifyEmail(Integer memId, String email) {
+		Optional<Member> optional = memberRepository.findById(memId);
+		if (optional.isPresent() && !email.equals(optional.get().getEmail())) {
+			return "anotherLogin";
+		}
+
+		Member member = verifyEmail(memId);
+		return member == null ? null : member.getEmail();
 	}
 
 	public Member verifyEmail(Integer memId) {
@@ -154,7 +164,8 @@ public class MemberService {
 
 	public Page<Member> findByKeyword(String keyword, Integer pageNum) {
 		PageRequest pageable = PageRequest.of(pageNum - 1, 6, Sort.Direction.ASC, "memId");
-		return memberRepository.findByKeyword("%" + keyword.toLowerCase() + "%","%" + keyword.toLowerCase() + "%@%", pageable);
+		return memberRepository.findByKeyword("%" + keyword.toLowerCase() + "%", "%" + keyword.toLowerCase() + "%@%",
+				pageable);
 	}
 
 	public Page<Member> findByPage(Integer pageNum) {
@@ -170,7 +181,8 @@ public class MemberService {
 		boolean memExistEmail = memberRepository.findByEmail(email) != null;
 		boolean googleExistEmail = googleRepository.findByEmail(email) != null;
 		Optional<Member> memOptional = null;
-		if ((memExistEmail || googleExistEmail) && memId != null && (memOptional = memberRepository.findById(memId)).isPresent()) {
+		if ((memExistEmail || googleExistEmail) && memId != null
+				&& (memOptional = memberRepository.findById(memId)).isPresent()) {
 			Member member = memOptional.get();
 			memExistEmail = memExistEmail && !email.equals(member.getEmail());
 			String googeId = member.getGoogeId();

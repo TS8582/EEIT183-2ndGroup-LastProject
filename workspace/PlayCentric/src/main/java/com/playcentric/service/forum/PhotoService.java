@@ -53,4 +53,7 @@ public class PhotoService {
 		return photoRepository.findAll();
 	}
 
+	public void deleteByTexts(Texts texts){
+		photoRepository.deleteByTexts(texts);
+	}
 }
