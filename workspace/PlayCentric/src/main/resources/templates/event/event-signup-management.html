@@ -254,10 +254,11 @@
                             <option value="2">審核拒絕</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>作品圖片</label>
-                        <img id="editWorkImage" src="" alt="作品圖片" class="img-fluid">
-                    </div>
+            <div class="form-group">
+                <label>作品圖片</label>
+                <!-- 修改這裡，添加 data-src 屬性和 lazy-load 類 -->
+                <img id="editWorkImage" data-src="" alt="作品圖片" class="img-fluid lazy-load">
+            </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -304,23 +305,31 @@
             });
     }
 
-    // 編輯報名
-    function editSignup(signupId) {
-        axios.get(`${findSignupUrl}${signupId}`)
-            .then(response => {
-                const signup = response.data;
-                $('#editSignupId').val(signup.signupId);
-                $('#editWorkTitle').val(signup.workTitle);
-                $('#editWorkDescription').val(signup.workDescription);
-                $('#editEventSignupStatus').val(signup.eventSignupStatus);
-                $('#editWorkImage').attr('src', `/PlayCentric/eventSignup/image/${signup.signupId}`);
-                $('#editSignupModal').modal('show');
-            })
-            .catch(error => {
-                console.error('獲取報名信息失敗:', error);
-                doAlert('獲取報名信息失敗，請稍後再試');
-            });
-    }
+// 編輯報名
+function editSignup(signupId) {
+    axios.get(`${findSignupUrl}${signupId}`)
+        .then(response => {
+            const signup = response.data;
+            $('#editSignupId').val(signup.signupId);
+            $('#editWorkTitle').val(signup.workTitle);
+            $('#editWorkDescription').val(signup.workDescription);
+            $('#editEventSignupStatus').val(signup.eventSignupStatus);
+            // 修改這裡，設置 data-src 而不是 src
+            $('#editWorkImage').attr('data-src', `/PlayCentric/eventSignup/image/${signup.signupId}`);
+            $('#editSignupModal').modal('show');
+            
+            // 在模態框顯示後延遲加載圖片
+            setTimeout(() => {
+                const img = document.getElementById('editWorkImage');
+                img.src = img.dataset.src;
+                img.classList.remove('lazy-load');
+            }, 250);
+        })
+        .catch(error => {
+            console.error('獲取報名信息失敗:', error);
+            doAlert('獲取報名信息失敗，請稍後再試');
+        });
+}
 
     // 提交編輯表單
     function submitEditForm() {
@@ -473,6 +482,11 @@
             const newStatus = $(this).val();
             updateReviewStatus(signupId, newStatus, $(this));
         });
+        
+            // 每次模態框隱藏時重置圖片
+    $('#editSignupModal').on('hidden.bs.modal', function () {
+        $('#editWorkImage').attr('src', '').addClass('lazy-load');
+    });
     });
 </script>
 </body>
