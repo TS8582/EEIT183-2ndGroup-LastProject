@@ -33,6 +33,8 @@ public interface EventVoteRepository extends JpaRepository<EventVote, Integer> {
      * @return 投票數量
      */
     long countByEventSignup_SignupId(Integer signupId);
+
+    long countByEventSignup_SignupIdAndEventVoteStatus(Integer eventSignup_SignupId, Integer eventVoteStatus);
     
     /**
      * 檢查是否存在與指定報名ID相關的投票

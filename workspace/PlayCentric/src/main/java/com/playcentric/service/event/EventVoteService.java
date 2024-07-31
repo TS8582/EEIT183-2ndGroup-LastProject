@@ -190,6 +190,7 @@ public class EventVoteService {
      * @return 投票數量
      */
     public long getVoteCountForSignup(Integer signupId) {
-        return eventVoteRepository.countByEventSignup_SignupId(signupId);
+        // return eventVoteRepository.countByEventSignup_SignupId(signupId);
+        return eventVoteRepository.countByEventSignup_SignupIdAndEventVoteStatus(signupId,1);
     }
 }

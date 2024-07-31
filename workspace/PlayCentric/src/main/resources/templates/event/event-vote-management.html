@@ -125,9 +125,9 @@
             color: #28a745;
         }
 
-        /* 待審核投票狀態樣式 */
+        /* 無效投票狀態樣式 */
         .status-pending {
-            color: #ffc107;
+            color: #dc3545;
         }
 
         /* 搜索表單樣式 */
@@ -188,7 +188,7 @@
             </div>
             <div class="col-md-3">
                 <div class="stat-card">
-                    <h3>待審核投票</h3>
+                    <h3>無效投票</h3>
                     <div class="stat-value" id="pendingVotes">Loading...</div>
                 </div>
             </div>
@@ -348,7 +348,7 @@ function displayVotes(page) {
                 <select class="form-control form-control-sm status-select ${vote.eventVoteStatus === 1 ? 'status-valid' : 'status-pending'}" 
                         onchange="updateVoteStatus(${vote.voteId}, this.value)">
                     <option value="1" ${vote.eventVoteStatus === 1 ? 'selected' : ''}>有效</option>
-                    <option value="0" ${vote.eventVoteStatus === 0 ? 'selected' : ''}>待審核</option>
+                    <option value="0" ${vote.eventVoteStatus === 0 ? 'selected' : ''}>無效</option>
                 </select>
             </td>
             <td>
@@ -473,7 +473,7 @@ function updateEntryVoteCount(signupId, voteStatus) {
         let currentCount = parseInt(voteCountElement.textContent);
         if (voteStatus === 1) { // 有效票
             currentCount++;
-        } else { // 待審核票
+        } else { // 無效票
             currentCount = Math.max(0, currentCount - 1); // 確保票數不會變成負數
         }
         voteCountElement.textContent = currentCount;
@@ -523,10 +523,10 @@ function initCharts() {
     window.voteDistributionChart = new Chart(voteDistributionCtx, {
         type: 'doughnut',
         data: {
-            labels: ['有效投票', '待審核投票'],
+            labels: ['有效投票', '無效投票'],
             datasets: [{
                 data: [0, 0],
-                backgroundColor: ['#28a745', '#ffc107'],
+                backgroundColor: ['#28a745', '#dc3545'],
                 borderColor: ['#ffffff', '#ffffff'],
                 borderWidth: 2
             }]
