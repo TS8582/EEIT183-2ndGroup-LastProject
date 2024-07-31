@@ -21,5 +21,4 @@ public class EventSignupDTO {
     public void setVoteCount(long voteCount) {
         this.voteCount = voteCount;
     }
-    
 }

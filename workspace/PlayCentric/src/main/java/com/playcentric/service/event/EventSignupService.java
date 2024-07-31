@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.playcentric.model.event.Event;
 import com.playcentric.model.event.EventRepository;
 import com.playcentric.model.event.EventSignup;
-import com.playcentric.model.event.EventSignupDTO;
 import com.playcentric.model.event.EventSignupRepository;
 import com.playcentric.model.event.EventVoteRepository;
 import com.playcentric.model.member.Member;
@@ -192,19 +191,10 @@ public class EventSignupService {
      * @param eventId 活動ID
      * @return 指定活動的所有已審核報名
      */
-    public List<EventSignupDTO> getApprovedSignupsByEventId(Integer eventId) {
+    public List<EventSignup> getApprovedSignupsByEventId(Integer eventId) {
         logger.info("獲取活動的所有已審核報名，活動ID: {}", eventId);
         return eventSignupRepository.findByEvent_EventId(eventId).stream()
                 .filter(signup -> signup.getEventSignupStatus() == 1) // 假設1表示已審核
-                .map(signup -> {
-                    EventSignupDTO dto = new EventSignupDTO();
-                    dto.setSignupId(signup.getSignupId());
-                    dto.setWorkTitle(signup.getWorkTitle());
-                    dto.setWorkDescription(signup.getWorkDescription());
-                    dto.setVoteCount(signup.getVoteCount()); // 使用 EventSignup 中的 voteCount
-                    dto.setMember(signup.getMember());
-                    return dto;
-                })
                 .collect(Collectors.toList());
     }
 

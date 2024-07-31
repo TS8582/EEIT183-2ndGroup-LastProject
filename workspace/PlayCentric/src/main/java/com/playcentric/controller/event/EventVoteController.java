@@ -226,12 +226,7 @@ public class EventVoteController {
                 return ResponseEntity.badRequest().body("eventVoteStatus 是必需的");
             }
             EventVote updatedVote = eventVoteService.updateVote(voteId, eventVoteStatus);
-            // 返回更新後的投票信息和相關的報名信息
-            Map<String, Object> response = new HashMap<>();
-            response.put("vote", updatedVote);
-            response.put("signupId", updatedVote.getEventSignup().getSignupId());
-            response.put("updatedVoteCount", updatedVote.getEventSignup().getVoteCount());
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(updatedVote);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
