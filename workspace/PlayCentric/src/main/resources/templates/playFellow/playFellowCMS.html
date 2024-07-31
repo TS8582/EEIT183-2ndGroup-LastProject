@@ -97,19 +97,19 @@
 		.chart-container {
 			width: 33%;
 			/* 顯示寬度 */
-			height: 60%;
+			height: 100%;
 			/* 顯示高度 */
 		}
 
 		#orderChart2 {
 			width: 33%;
 			/* 讓 canvas 填滿父容器 */
-			height: 60%;
+			height: 100%;
 			/* 讓 canvas 填滿父容器 */
 		}
 
 		#orderChart3 {
-			width: 33%;
+			width: 25%;
 			/* 讓 canvas 填滿父容器 */
 			height: 20%;
 			/* 讓 canvas 填滿父容器 */
@@ -174,7 +174,7 @@
 										<td th:text="${pfmember.playFellowId}"></td>
 										<td th:text="${pfmember.pfnickname}"></td>
 										<td><span
-												th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...略' : pfmember.pfdescription}"></span>
+												th:text="${pfmember.pfdescription.length() >15 ? pfmember.pfdescription.substring(0, 15) + '...' : pfmember.pfdescription}"></span>
 										</td>
 										<td th:text="${pfmember.member.memId}"></td>
 										<td><span th:if="${pfmember.member.gender == 1}">男生</span><span
@@ -182,7 +182,7 @@
 										<td th:text="${pfmember.member.birthday}"></td>
 										<td th:text="${pfmember.pfcreatedTime}"></td>
 										<td th:text="${pfmember.pfstatus == 1 ? '待審核' : (pfmember.pfstatus == 2 ? '審核不成功' : (pfmember.pfstatus == 3 ? '開啟' : '關閉或接單中'))}"
-											th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : (pfmember.pfstatus == 2 ? 'status-failed' : (pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}">
+											th:classappend="${pfmember.pfstatus == 1 ? 'status-pending' : (pfmember.pfstatus == 2 ? 'status-failed' : (pfmember.pfstatus == 3 ? 'status-open' : 'status-closed'))}" class="fw-bold">
 										</td>
 										<td><a
 												th:href="@{/playFellow/updateMember/{playFellowId}(playFellowId=${pfmember.playFellowId})}"><i
@@ -251,7 +251,7 @@
 					            <td th:text="${#dates.format(order.paymentTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
 					            <td th:text="${#dates.format(order.added, 'yyyy-MM-dd HH:mm:ss')}"></td>
 					            <td th:text="${order.paymentStatus == 1 ? '尚未付款' : (order.paymentStatus == 2 or order.paymentStatus == 3 ? '付款成功' : '交易失敗或取消')}"
-					                th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 or order.paymentStatus == 3 ? 'status-completed' : 'status-failed')}">
+					                th:classappend="${order.paymentStatus == 1 ? 'status-pending' : (order.paymentStatus == 2 or order.paymentStatus == 3 ? 'status-completed' : 'status-failed')}"class="fw-bold">
 					            </td>
 					        </tr>
 					    </tbody>

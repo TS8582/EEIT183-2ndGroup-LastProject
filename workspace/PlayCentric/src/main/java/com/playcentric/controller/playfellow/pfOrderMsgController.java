@@ -50,9 +50,33 @@ public class pfOrderMsgController {
 			model.addAttribute("havePlayFellowMember", havePlayFellowMember);
 
 			return "playFellow/pfMemberOrderMsg";
+			 
 		}
 		return null;
 	}
+	
+	
+//	@GetMapping("/playFellow/findMemberOfpfMember")
+//	public String findMemberOfpfMember(HttpSession session, Model model) {
+//	    LoginMemDto loginMember = (LoginMemDto) session.getAttribute("loginMember");
+//	    Integer memId = loginMember.getMemId();
+//	    Member member = memberService.findById(memId);
+//	    if (member != null) {
+//	        PlayFellowMember havePlayFellowMember = playFellowMemberService.findByMember(member);
+//	        if (havePlayFellowMember != null) {
+//	            model.addAttribute("havePlayFellowMember", havePlayFellowMember);
+//	        } else {
+//	            model.addAttribute("havePlayFellowMember", null);
+//	        }
+//
+//	        return "playFellow/playFellow";
+//	    }
+//	    return null;
+//	}
+
+	
+	
+	
 
 	@ResponseBody
 	@PostMapping("/playFellow/currentPaymentStatus")

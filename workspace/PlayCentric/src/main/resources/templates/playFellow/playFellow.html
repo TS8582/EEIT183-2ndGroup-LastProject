@@ -329,16 +329,16 @@
 
 
 						<div class="swiper-wrapper">
-							<div th:each="game : ${findGameIdAndName.size() > 8} ? ${findGameIdAndName.subList(0, 10)} : ${findGameIdAndName}"
+							<div th:each="game : ${findGameIdAndName.size() > 9} ? ${findGameIdAndName.subList(0, 11)} : ${findGameIdAndName}"
 								class="swiper-slide">
 								<div class="card position-relative" style="background-color: #FFFFFF;">
-									<!-- 只顯示第一張照片 -->
+									<!-- 只顯示1張照片 -->
 									<div class="carousel slide" data-bs-ride="carousel">
 										<div class="carousel-inner">
 											<div th:each="association, stat : ${game.imageLibs}"
 												th:if="${stat.index == 0}" class="carousel-item active">
 												<a th:href="@{/playFellow/{gameId}(gameId=${game.gameId})}">
-													<img class="rounded-1 img-fluid playFellowImg-size"
+													<img class="rounded-1 img-fluid gameImg-size"
 														th:data-image-id="${association.imageId}" loading="lazy" />
 												</a>
 
@@ -346,9 +346,9 @@
 										</div>
 									</div>
 									<!-- End of Carousel -->
-									<div class="card-body p-0">
-										<a href="#"><span class="card-title pt-2 m-0 fw-bold"
-												th:text="${game.gameName}"></span></a>
+									<div class="card-body p-0 text-center">
+										<a href="#"><span class="card-title pt-2 m-0 fw-bold "
+												th:text="${game.gameName.length()>7 ? game.gameName.substring(0,6) + '...':game.gameName}"></span></a>
 									</div>
 								</div>
 

@@ -112,7 +112,7 @@
                   <a
                     class="dropdown-item fs-5"
                     id="addPfMember"
-                    th:if="${session.loginMember != null}"
+        th:if="${session.loginMember != null}"
                     th:href="@{/playFellow/memId/{memId}(memId=${session.loginMember.memId})}"
                   >
                     加入伴遊
