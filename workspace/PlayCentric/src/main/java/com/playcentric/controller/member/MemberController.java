@@ -307,7 +307,7 @@ public class MemberController {
 	public String sendPTEmail(Model model, @RequestParam Integer memId) {
 		LoginMemDto loginMember = (LoginMemDto) model.getAttribute("loginMember");
 		if (loginMember != null && loginMember.getMemId() != memId) {
-			return "redirect:/member/homeShowErr/anotherLogin";
+			return "anotherLogin";
 		}
 		return sendPTEmail(memId);
 	}

@@ -173,36 +173,7 @@
         window.location.href = "/PlayCentric/member/personal/recharge";
       })
 
-      $('#ecPay-btn').click(function () {
-
-        const rechargeAmount = $('#recharge-amount').val();
-        if (rechargeAmount <= 0) {
-          doAlert('請選擇金額')
-        }
-        axios({
-          method: 'post',
-          url: ecPayUrl,
-          params: { rechargeAmount }
-        })
-          .then(res => {
-            console.log(res.data);
-            if (res.data === '請重新登入') {
-              doAlert(res.data)
-              setTimeout(() => {
-                window.location.href = "/PlayCentric/member/login";
-              }, 1000);
-            } else {
-              $('body').append(res.data)
-            }
-          })
-          .catch(err => {
-            console.log(err);
-            if (err.response && err.response.status === 401) {
-              window.location.href = '/PlayCentric/member/homeShowErr/' + err.response.data;
-            }
-          })
-      })
-
+      //驗證信箱
       $('#verify-email-btn').click(function () {
         if (memInfo.emailVerified) {
           doAlert('信箱已驗證')
@@ -225,11 +196,12 @@
           })
       })
 
+      //更改密碼
       $('#change-pwd-btn').click(function () {
-        if (!memInfo.emailVerified) {
-          doAlert('請先驗證信箱');
-          return;
-        }
+        // if (!memInfo.emailVerified) {
+        //   doAlert('請先驗證信箱');
+        //   return;
+        // }
         axios({
           method: 'post',
           url: changePwdUrl,
@@ -237,7 +209,12 @@
         })
           .then(res => {
             console.log(res);
-            doAlert(res.data);
+            if (res.data == 'anotherLogin') {
+              console.log('another one');
+              window.location.href = '/PlayCentric/member/homeShowErr/anotherLogin';
+            } else {
+              doAlert(res.data);
+            }
           })
           .catch(err => {
             console.log(err);
@@ -247,10 +224,11 @@
           })
       })
 
+      //更改個人資訊
       $('#memInfo').submit(function (e) {
         e.preventDefault();
-
-        if (!editOrNot()) {
+        
+        if (!editOrNot) {
           return;
         }
 
@@ -263,10 +241,13 @@
             console.log(res);
             if (res.data == '更新成功!') {
               getMemInfo();
+              doAlert(res.data);
             } else if (res.data == 'anotherLogin') {
-              window.location.href = '/PlayCentric/member/homeShowErr/' + res.data;
+              console.log('another one');
+              window.location.href = '/PlayCentric/member/homeShowErr/anotherLogin';
+            } else {
+              doAlert(res.data);
             }
-            doAlert(res.data);
           })
           .catch(err => {
             console.log(err);
@@ -276,10 +257,12 @@
           })
       })
 
+      //點擊圖片選擇圖片
       $('.photo-div').on('click', 'img', function () {
         $('#photoFile').click();
       })
 
+      //更改圖片後顯示圖片
       $('#photoFile').change(function () {
         const file = this.files[0]
         if (file) {
