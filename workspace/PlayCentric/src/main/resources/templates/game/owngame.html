@@ -12,25 +12,29 @@
     <div th:replace="~{member/memInfoAside}"></div>
 
     <div class="container border">
-        <th:block th:if="${ownGames}" th:each="owngame,status:${ownGames}">
+        <div th:if="${ownGames} ? ${ownGames.size() == 0}" class="flex flex-wrap justify-center items-center mt-2">
+            <span>目前尚未擁有遊戲！歡迎選購～</span>
+            <span class="mybtn mybtn-green go">前往商店</span>
+        </div>
+        <th:block th:if="${ownGames} ? ${ownGames.size() > 0}" th:each="owngame,status:${ownGames}">
             <div class="flex items-center px-6 py-5 game">
                 <div class="hidden gameId" th:text="${owngame.game.gameId}"></div>
                 <div class="flex w-4/5 noscrollbar overflow-scroll">
                     <!-- 遊戲 -->
                     <div class="w-3/5 flex justify-center items-center">
                         <a class="text-black text-decoration-none" th:if="${!owngame.game.imageLibs.empty}"
-                            th:href="@{/personal/game/showGame(gameId=${owngame.game.gameId})}">
+                            th:href="@{/game/showGame(gameId=${owngame.game.gameId})}">
                             <img class="h-32 lg:h-64 w-auto"
                                 th:src="@{/imagesLib/image{id}(id=${owngame.game.imageLibs[0].imageId})}" alt="產品圖片">
                         </a>
                         <a class="text-black text-decoration-none"
-                            th:href="@{/personal/game/showGame(gameId=${owngame.game.gameId})}"
+                            th:href="@{/game/showGame(gameId=${owngame.game.gameId})}"
                             th:if="${owngame.game.imageLibs.empty}">
                             <img class="h-32 lg:h-64 w-auto" alt="產品圖片">
                         </a>
                     </div>
                     <div class="flex flex-col justify-between ml-4 flex-grow w-2/5">
-                        <a th:href="@{/personal/game/showGame(gameId=${owngame.game.gameId})}"
+                        <a th:href="@{/game/showGame(gameId=${owngame.game.gameId})}"
                             class="font-bold text-4xl text-black text-decoration-none"
                             th:text="${owngame.game.gameName}"></a>
                         <div class="text-gray-600 font-semibold text-xl">
@@ -51,6 +55,7 @@
         </th:block>
     </div>
     <script th:src="@{/js/game/game-download.js}"></script>
+    <script th:src="@{/js/game/to-store.js}"></script>
 </body>
 
 </html>

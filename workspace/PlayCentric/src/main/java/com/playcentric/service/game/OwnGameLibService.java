@@ -20,10 +20,17 @@ public class OwnGameLibService {
 		return oglRepo.save(ownGameLib);
 	}
 	
+	//用會員找擁有遊戲
 	public List<OwnGameLib> findByMemId(Integer memId) {
 		return oglRepo.findByMemId(memId);
 	}
 	
+	//找會員擁有遊戲(按照購買時間降冪排序)
+	public List<OwnGameLib> findByMemIdOrderByBuyAtDesc(Integer memId) {
+		return oglRepo.findByMemIdOrderByBuyAtDesc(memId);
+	}
+	
+	//設定擁有遊戲參數
 	public void setHaveGame(LoginMemDto loginMember,Game game) {
 		List<OwnGameLib> ownGameLibs = oglRepo.findByMemId(loginMember.getMemId());
 		for (OwnGameLib ownGameLib : ownGameLibs) {
