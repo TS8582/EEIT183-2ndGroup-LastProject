@@ -19,6 +19,7 @@ import com.playcentric.model.playfellow.ImageLibPfmemberAssociation;
 import com.playcentric.model.playfellow.PfGame;
 import com.playcentric.model.playfellow.PfGameDTO;
 import com.playcentric.model.playfellow.PfGameRepository;
+import com.playcentric.model.playfellow.PfOrderRepository;
 import com.playcentric.model.playfellow.PlayFellowMember;
 
 import jakarta.transaction.Transactional;
@@ -31,6 +32,9 @@ public class PfGameService {
 
 	@Autowired
 	private GameRepository gameRepository;
+	
+	@Autowired
+	private PfOrderRepository pfOrderRepository;
 
 	public PfGameDTO addPfGame(PfGame pfGame) {
 		PfGame savedPfGame = pfGameRepository.save(pfGame);
@@ -115,6 +119,8 @@ public class PfGameService {
 
 	@Transactional
 	public void deletePfGame(Integer pfGameId) {
+        pfOrderRepository.deleteByPfGameId(pfGameId);
+
 		pfGameRepository.deleteById(pfGameId);
 	}
 

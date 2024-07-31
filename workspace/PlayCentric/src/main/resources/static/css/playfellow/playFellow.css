@@ -742,6 +742,12 @@ Single Product section style start
     object-fit: cover; 
     object-position: center; 
 }
+.gameImg-size {
+     width: 600px;
+    height: 150px;
+    object-fit: cover; 
+    object-position: center; 
+}
 .pfOrderImg-size {
     width: 87px;
     height: 49px;

@@ -5,6 +5,8 @@ const goReviews = document.querySelector('.goReviews');
 let gameId = document.querySelector('.gameId').innerHTML.trim();
 const addReviews = document.querySelector('.addReviews');
 const editReviews = document.querySelector('.editReviews');
+const filled = document.querySelector('#staryo');
+
 
 
 function edit(elm) {
@@ -67,13 +69,25 @@ if (goReviews) {
                     }
                     reviewsContainer.prepend(existReviews1);
                     reviewsContainer.prepend(title);
+                    if (filled) {
+                        console.log('有過來');
+                        let starnum = document.querySelector('#starnum');
+                        let totalreviews = document.querySelector('#totalReviews').innerHTML;
+                        let totalScore = document.querySelector('#totalScore').innerHTML;
+                        let allcount = parseFloat(parseInt(totalreviews) + 1);
+                        let allscore = parseFloat(parseInt(totalScore) + starAmount);
+                        let avgScore = (allscore / allcount).toFixed(1);
+                        let result = avgScore * 20;
+                        starnum.innerHTML = avgScore;
+                        filled.setAttribute('style', `width:${result}%;`);
+                    }
                 })
                 .catch(err => {
                     console.error(err);
                 })
         }
         else {
-            doAlert('不能給0顆星！');
+            doAlert('請給評分及評論！');
         }
     })
 }

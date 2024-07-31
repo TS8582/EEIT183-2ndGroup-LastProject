@@ -87,7 +87,7 @@
 								<li class="list-group-item" style="border: none; padding: 10px 15px;"
 									onmouseover="this.style.backgroundColor='#F4CBAA'; this.style.cursor='pointer';"
 									onmouseout="this.style.backgroundColor='';">
-									<form th:action="@{/playFellow/{gameId}(gameId=${games.gameId})}" method="post">
+									<form th:action="@{/playFellow/{gameId}(gameId=${games.gameId})}" method="get">
 										<button type="submit" class="btn btn-link"
 											style="color: #6C758F; text-decoration: none;width:300px;height:30px; padding: 0; font-size: 1rem; font-weight: bold;"
 											th:text="${games.gameName}"
@@ -152,7 +152,7 @@
 						</div>
 						<!-- End of Carousel -->
 
-						<div class="card-body pl-5">
+						<div class="card-body pl-5 "style="width: 400px">
 							<div class="d-flex align-items-center" style="white-space: nowrap;">
 								<span class="card-title pt-2 m-0 fw-bold" th:text="${pfgame.playFellowMember.pfnickname}"
 									style="display: inline;"></span>
@@ -210,7 +210,7 @@
 						</div>
 						<!-- End of Carousel -->
 
-						<div class="card-body pl-1">
+						<div class="card-body pl-1"style="width: 400px">
 							<span class="card-title pt-2 m-0 fw-bold" th:text="${pfgame.playFellowMember.pfnickname}"></span>
 							<span class="card-title pt-2 m-0"> 
 							<span th:if="${pfgame.playFellowMember.member.gender == 1}"
@@ -232,9 +232,11 @@
 								<div class="d-flex flex-wrap mt-3">
 									<form action="/PlayCentric/playFellow/playFellowCart" method="GET">
 										<input type="hidden" name="pfGameId" th:value="${pfgame.pfGameId}" />
-										<button type="submit" class="btn btn-outline-shop me-1 px-1 pt-1 pb-1">
-											<h6 class="text-uppercase m-0">購買</h6>
-										</button>
+										<button type="button" class="btn btn-outline-shop me-1 px-1 pt-1 pb-1" id=""
+											th:if="${session.loginMember == null}"
+											onclick="alertAndRedirect()">購買</button>
+										<button type="submit" class="btn btn-outline-shop me-1 px-1 pt-1 pb-1"
+											id="orderButton" th:if="${session.loginMember != null}">購買</button>
 									</form>
 								</div>
 							</div>

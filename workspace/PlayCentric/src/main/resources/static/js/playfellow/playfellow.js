@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
 	const swiper = new Swiper('.gameSwiper', {
-		slidesPerView: 9,
+		slidesPerView: 8,
 		spaceBetween: 10,
 		loop: true,
 		autoplay: {
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			spaceBetween: 120,
 			loop: true,
 			autoplay: {
-				delay: 2000,
+				delay: 5000,
 				disableOnInteraction: false,
 			},
 			pagination: {

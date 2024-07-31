@@ -99,10 +99,10 @@ public class PageController {
 				.getTopFiveReviewSuccessPlayFellowMembers();
 		model.addAttribute("TopFiveReviewSuccessMembers", lastest5playFellowMembers);
 
-		Integer gameId1 = 1;
-		Integer gameId2 = 2;
-		List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(gameId1);
-		List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(gameId2);
+//		Integer gameId1 = 1;
+//		Integer gameId2 = 76;
+		List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(97);
+		List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(76);
 		List<Game> findGameName = pfGameService.findAllGame();
 
 		model.addAttribute("findGameIdAndName", findGameName);

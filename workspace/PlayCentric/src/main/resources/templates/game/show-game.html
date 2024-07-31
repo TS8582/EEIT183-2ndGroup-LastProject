@@ -12,6 +12,10 @@
 </head>
 
 <body class="bg-gray-100">
+    <div>
+        <span id="totalReviews" th:text="${game.totalReviews}"></span>
+        <span id="totalScore" th:text="${game.totalScore}"></span>
+    </div>
     <div class="px-0 py-2 lg:px-15 text-end w-full fixed">
         <!-- 購物車按鈕 -->
         <a th:if="${session.loginMember}" th:href="@{/personal/gamecart/get}"
@@ -58,8 +62,29 @@
             </div>
 
             <div class="col-span-1 my-3 mx-1 border-2 border-gray-500 px-4 py-2 rounded-md gameitem">
-                <div class="space-y-2 sm:text-center lg:text-start">
+                <div class="sm:text-center lg:text-start">
                     <h1 class="text-5xl font-bold gameName" th:text="${game.gameName}"></h1>
+                    <div>
+                        <div class="flex items-center" th:if="${game.totalReviews != 0}">
+                            <div class="star-container ms-2 select-none">
+                                <div id="staryo" class="filled" th:style="'width:' + ${score * 20} + '%;'">★★★★★
+                                </div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                            <div id="starnum" class="inline-block ms-2 font-extrabold text-2xl select-none"
+                                th:text="${#numbers.formatDecimal(score,1,1)}">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center" th:if="${game.totalReviews == 0}">
+                            <div class="star-container ms-2 select-none">
+                                <div class="filled" style="width:0%;">★★★★★
+                                </div>
+                                <div class="unfilled">★★★★★</div>
+                            </div>
+                            <div class="inline-block ms-2 font-extrabold select-none">尚未有評價</div>
+                        </div>
+                    </div>
                     <div class="font-semibold text-xl developer" th:text="'開發者：' + ${game.developer}"></div>
                     <div class="font-semibold text-xl publisher" th:text="'發行商：' + ${game.publisher}"></div>
                     <div class="font-semibold text-xl releaseAt"
@@ -98,25 +123,6 @@
                             <div class="hidden gameId" th:text="${game.gameId}"></div>
                         </th:block>
 
-                        <div class="flex items-center" th:if="${game.totalReviews != 0}">
-                            <div class="star-container ms-2 select-none">
-                                <div class="filled" th:style="'width:' + ${score * 20} + '%;'">★★★★★
-                                </div>
-                                <div class="unfilled">★★★★★</div>
-                            </div>
-                            <div class="inline-block ms-2 font-extrabold text-2xl select-none"
-                                th:text="${#numbers.formatDecimal(score,1,1)}">
-                            </div>
-                        </div>
-
-                        <div class="flex items-center" th:if="${game.totalReviews == 0}">
-                            <div class="star-container ms-2 select-none">
-                                <div class="filled" style="width:0%;">★★★★★
-                                </div>
-                                <div class="unfilled">★★★★★</div>
-                            </div>
-                            <div class="inline-block ms-2 font-extrabold select-none">尚未有評價</div>
-                        </div>
 
                     </div>
                     <div class="hidden gameId" th:text="${game.gameId}"></div>

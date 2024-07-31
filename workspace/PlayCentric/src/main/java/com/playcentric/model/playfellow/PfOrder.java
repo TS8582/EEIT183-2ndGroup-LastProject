@@ -30,6 +30,7 @@ public class PfOrder {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer pfOrderId;//訂單編號,主鍵,自增
+	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pfGameId")
 	private PfGame pfGame;//伴遊遊戲編號

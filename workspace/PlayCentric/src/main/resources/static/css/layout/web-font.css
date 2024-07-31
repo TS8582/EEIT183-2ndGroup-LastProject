@@ -2,7 +2,9 @@
     font-family: 'MyCustomFont';
     src: url('../../fonts/cjkFonts_allseto_v1.11.ttf');
 }
-html,body {
+
+html,
+body {
     font-family: 'MyCustomFont', sans-serif !important;
-    font-size: larger !important;
+    font-size: large !important;
 }

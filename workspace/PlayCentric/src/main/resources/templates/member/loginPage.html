@@ -109,6 +109,10 @@
               <div class="btn btn-primary p-2 mx-2 fast-login">
                 Alice99</div>
             </div>
+            <div class="d-flex mb-3 justify-content-center align-items-center">
+              <div class="btn btn-primary p-2 mx-2 fast-login-mng">
+                ts16(管理員)</div>
+            </div>
           </div>
           <!-- 註冊框內容 -->
           <div class="tab-pane fade border border-top-0 border-bottom-0 p-2 rounded-bottom-2" id="nav-profile"
@@ -245,7 +249,6 @@
       })
 
       $('#emailSent i').click(function () {
-        console.log(123);
         $('#emailSent').hide();
         $('#modalForm').show();
       })
@@ -330,15 +333,49 @@
         $('#emailSending').show();
       })
 
-      $('.fast-login').click(function(){
+      //快速登入
+      $('.fast-login').click(function () {
+        const memPwd = {
+          'Lily88': 'Lily88',
+          'Alice99': 'Alice99'
+        }
         const account = $(this).text().trim()
         axios({
-          method:'post',
-          url:loginUrl, 
-          params:{
-            account:account,
-            password:account
-          }})
+          method: 'post',
+          url: loginUrl,
+          params: {
+            account: account,
+            password: memPwd[account]
+          }
+        })
+          .then(res => {
+            console.log(res);
+            doAlert(res.data);
+            if (res.data == '登入成功!') {
+              setTimeout(() => {
+                window.location.href = "/PlayCentric/member/loginSuccess";
+              }, 1000);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      })
+
+      //快速登入(管理員)
+      $('.fast-login-mng').click(function () {
+        const mngPwd = {
+          'ts16': 'ts8582'
+        }
+        const account = $(this).text().trim().replace('(管理員)', '')
+        axios({
+          method: 'post',
+          url: loginUrl,
+          params: {
+            account: account,
+            password: mngPwd[account]
+          }
+        })
           .then(res => {
             console.log(res);
             doAlert(res.data);
@@ -388,7 +425,7 @@
 
         const formdataObject = new FormData(this);
         formdataObject.set('role', 0)
-        
+
 
         axios.post(registUrl, formdataObject)
           .then(res => {
