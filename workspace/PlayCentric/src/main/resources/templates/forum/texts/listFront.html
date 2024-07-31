@@ -6,7 +6,6 @@
 	<title>文章首頁</title>
 
 	<style>
-		/* 新增動畫效果 */
 		@keyframes fadeIn {
 			0% {
 				opacity: 0;
@@ -35,10 +34,35 @@
 		.position-relative {
 			position: relative;
 			min-height: 200px;
-			/* 設置最小高度，確保有足夠空間放置"閱讀更多"連結 */
+			display: flex;
+			align-items: flex-start;
 		}
 
+		.image-container {
+			flex: 0 0 220px;
+			margin-right: 20px;
+		}
 
+		.image-placeholder {
+			width: 100%;
+			height: 200px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.image-placeholder img {
+			max-width: 100%;
+			max-height: 100%;
+			object-fit: cover;
+		}
+
+		.content-container {
+			flex: 1;
+			overflow: hidden;
+			font-family: oxxo, serif;
+			padding-right: 100px;
+		}
 
 		.text-area {
 			overflow: hidden;
@@ -56,14 +80,6 @@
 			margin-bottom: 20px;
 			padding: 0;
 			max-width: 100%;
-		}
-
-		.content-container {
-			overflow: hidden;
-			font-family: oxxo, serif;
-			flex: 1;
-			padding-right: 100px;
-			/* 為"閱讀更多"連結留出空間 */
 		}
 
 		.box {
@@ -92,30 +108,13 @@
 		}
 
 		.img1 {
-			width: 200px;
+			width: 100%;
 			height: auto;
 			object-fit: cover;
-			margin: 20px;
-		}
-
-		.image-container {
-			flex: 0 0 auto;
-			margin-right: 20px;
 		}
 
 		.bgc1 {
 			background-color: rgba(121, 85, 252, 0.363);
-
-		}
-
-		.a1 {
-			position: absolute;
-			margin-left: 69%;
-			padding-top: 4%;
-		}
-
-		h3 {
-			margin-top: 20px !important;
 		}
 
 		.r1 {
@@ -139,7 +138,6 @@
 
 		.read-more-container :hover {
 			color: aqua;
-			/* 當鼠標移上去時變成黑色 */
 		}
 
 		.dtm {
@@ -163,8 +161,10 @@
 				<div th:each="oneMsg : ${page.content}" class="mb-4 animated-table">
 					<div class="position-relative rounded-2 m-1 p-2 pt-1 d-flex bgc1">
 						<div class="image-container mr-3">
-							<img th:src="@{/photo/showPhoto2(textsId=${oneMsg.textsId})}" alt="cloth"
-								class="img-fluid img1">
+							<div class="image-placeholder">
+								<img th:src="${oneMsg.photoPath}"
+									class="img-fluid img1">
+							</div>
 						</div>
 						<div class="content-container">
 							<h3 class="secondary-font title1" th:text="${oneMsg.title}"></h3>

@@ -87,7 +87,7 @@
             const dataHtml = `<li class="list-group-item d-flex align-items-center">
                                 <a href="${textsUrl.replace('id',element.texts.textsId)}"
                                  class="col-3 d-flex justify-content-center p-2">
-                                <img src="${textsPhotoUrl+element.texts.textsId}" class="mh-100px"></a>
+                                <img src="${element.texts.photoPath}" class="mh-100px"></a>
                                 <a href="${textsUrl.replace('id',element.texts.textsId)}" class="text-dark col-3 ms-auto">${element.texts.title}</a>
                                 <a href="${forumUrl+element.texts.forum.forumId}" class="text-dark col-2 text-center">${element.texts.forum.forumName}</a>
                                 <div class="col-4 text-center">${element.texts.doneTime}</div>

@@ -1,5 +1,6 @@
 package com.playcentric.service.forum;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class TextsKeepService {
 
     @Autowired
     private MemberRepository memberRepository;
-    
-    public String keepText(TextsKeepId id){
+
+    public String keepText(TextsKeepId id) {
         Optional<TextsKeep> optional = textsKeepRepository.findById(id);
         if (optional.isPresent()) {
             textsKeepRepository.delete(optional.get());
@@ -49,19 +50,26 @@ public class TextsKeepService {
         }
     }
 
-    public boolean checkTextKept(TextsKeepId id){
+    public boolean checkTextKept(TextsKeepId id) {
         Optional<TextsKeep> optional = textsKeepRepository.findById(id);
         return optional.isPresent();
     }
 
-    public Integer getKeepNum(Integer textsId){
+    public Integer getKeepNum(Integer textsId) {
         Texts texts = textsRepository.findById(textsId).get();
         return textsKeepRepository.findByTexts(texts).size();
     }
 
-    public Page<TextsKeep> getMemKeepTexts(Integer memId,Integer pageNum){
+    public Page<TextsKeep> getMemKeepTexts(Integer memId, Integer pageNum) {
         Member member = memberRepository.findById(memId).get();
-		PageRequest pageable = PageRequest.of(pageNum - 1, 6);
-        return textsKeepRepository.findByMember(member,pageable);
+        PageRequest pageable = PageRequest.of(pageNum - 1, 6);
+        return textsKeepRepository.findByMember(member, pageable);
+    }
+
+    public void deleteByTextsId(Integer textsId) {
+        List<Texts> texts = textsRepository.findByTextsId(textsId);
+        if (texts.size() > 0) {
+            textsKeepRepository.deleteByTexts(texts.get(0));
+        }
     }
 }

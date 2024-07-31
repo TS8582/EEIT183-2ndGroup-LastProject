@@ -262,9 +262,6 @@ public class MemberController {
 				member.setPhoto(imageId);
 			}
 			memberService.updateMember(member, originMem);
-			if (member.getMemId() == loginMember.getMemId()) {
-				model.addAttribute("loginMember", memberService.setLoginDto(member));
-			}
 			return "更新成功!";
 		} catch (Exception e) {
 			e.printStackTrace();
