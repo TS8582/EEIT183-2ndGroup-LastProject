@@ -5,6 +5,8 @@ const goReviews = document.querySelector('.goReviews');
 let gameId = document.querySelector('.gameId').innerHTML.trim();
 const addReviews = document.querySelector('.addReviews');
 const editReviews = document.querySelector('.editReviews');
+const filled = document.querySelector('.star-container .filled');
+
 
 
 function edit(elm) {
@@ -67,6 +69,14 @@ if (goReviews) {
                     }
                     reviewsContainer.prepend(existReviews1);
                     reviewsContainer.prepend(title);
+                    if (filled) {
+                        let totalreviews = '[[${game.totalReviews}]]';
+                        let totalScore = '[[${game.totalScore}]]';
+                        let allcount = parseFloat(parseInt(totalreviews) - 1);
+                        let allscore = parseFloat(parseInt(totalScore + starAmount));
+                        let avgScore = (allscore / allcount).toFixed(1);
+                        filled.style.width = avgScore + '%';
+                    }
                 })
                 .catch(err => {
                     console.error(err);
