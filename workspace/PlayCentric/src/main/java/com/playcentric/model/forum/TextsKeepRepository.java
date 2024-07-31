@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.playcentric.model.member.Member;
 
+import jakarta.transaction.Transactional;
+
 
 
 
@@ -16,4 +18,7 @@ public interface TextsKeepRepository extends JpaRepository<TextsKeep, TextsKeepI
     List<TextsKeep> findByTexts(Texts texts);
 
     Page<TextsKeep> findByMember(Member member, Pageable pageable);
+
+    @Transactional
+	void deleteByTexts(Texts texts);
 }

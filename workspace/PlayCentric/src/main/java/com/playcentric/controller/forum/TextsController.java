@@ -310,6 +310,7 @@ public class TextsController {
 	// 刪除文章
 	@GetMapping("/personal/texts/delete")
 	public String deleteTexts(@RequestParam("textsId") Integer textsId) {
+		textsKeepService.deleteByTextsId(textsId);
 		textsService.deleteTextsById(textsId);
 
 		return "redirect:/texts/page"; // 導入前台
