@@ -87,7 +87,7 @@
 								<li class="list-group-item" style="border: none; padding: 10px 15px;"
 									onmouseover="this.style.backgroundColor='#F4CBAA'; this.style.cursor='pointer';"
 									onmouseout="this.style.backgroundColor='';">
-									<form th:action="@{/playFellow/{gameId}(gameId=${games.gameId})}" method="post">
+									<form th:action="@{/playFellow/{gameId}(gameId=${games.gameId})}" method="get">
 										<button type="submit" class="btn btn-link"
 											style="color: #6C758F; text-decoration: none;width:300px;height:30px; padding: 0; font-size: 1rem; font-weight: bold;"
 											th:text="${games.gameName}"
