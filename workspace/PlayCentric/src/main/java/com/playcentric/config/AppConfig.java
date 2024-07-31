@@ -32,7 +32,7 @@ public class AppConfig {
     FilterRegistrationBean<AuthenticationRoleFilter> authenticationRoleFilter(MemberService memberService) {
         FilterRegistrationBean<AuthenticationRoleFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new AuthenticationRoleFilter(memberService));
-        registrationBean.addUrlPatterns("/member/back/*", "/member/personal/*", "/personal/*"/*, "/back/*"*/); // 設定 Filter 的 URL pattern
+        registrationBean.addUrlPatterns("/member/back/*", "/member/personal/*", "/personal/*", "/back/*"); // 設定 Filter 的 URL pattern
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1); // 設定 Filter 的執行順序
         return registrationBean;
     }
