@@ -16,7 +16,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
     <script th:src="@{/js/axios.min.js}"></script>
@@ -147,6 +146,14 @@
         .btn1 button {
             margin-right: 10px;
         }
+
+        .w-23px{
+            width: 23px;
+        }
+
+        .h-23px{
+            height: 23px;
+        }
     </style>
 </head>
 
@@ -160,10 +167,16 @@
                     <div>
                         <h1 class="page-title h1 d-flex align-items-center">
                             <span class="" th:text="${texts.title}">文章名稱</span>
-                            <i id="keep-btn"
-                                th:class="'fa-solid fa-tag fs-4 d-flex align-items-center btn btn-'+${textKept? 'primary':'secondary'}+' ms-auto'">
-                                <span id="keepNum" class="fs-5 ms-3" th:text="${keepNum}"></span>
-                            </i>
+                            <div id="keep-btn"
+                                th:class="'d-flex align-items-center btn btn-'+${textKept? 'primary':'secondary'}+' ms-auto mb-1 py-0'">
+                                <div class="w-23px h-23px my-2 d-flex align-items-cente">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                        <path fill="#fff"
+                                            d="M0 80L0 229.5c0 17 6.7 33.3 18.7 45.3l176 176c25 25 65.5 25 90.5 0L418.7 317.3c25-25 25-65.5 0-90.5l-176-176c-12-12-28.3-18.7-45.3-18.7L48 32C21.5 32 0 53.5 0 80zm112 32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z" />
+                                    </svg>
+                                </div>
+                                <span id="keepNum" class="fs-5 ms-2" th:text="${keepNum}"></span>
+                            </div>
                         </h1>
                         <div class="post-meta">
                             <div
@@ -171,7 +184,8 @@
                             </div>
                         </div>
                         <br>
-                        <th:block th:if="${session.loginMember!=null && session.loginMember.role == 1}">
+                        <th:block
+                            th:if="${session.loginMember!=null &&( session.loginMember.role == 1 || session.loginMember.memId == texts.member.memId)}">
                             <a th:href="@{/personal/texts/edit/{textsId}(textsId=${texts.textsId})}"
                                 class="btn btn-primary">編輯文章</a>
                             <a th:href="@{/personal/texts/delete(textsId=${texts.textsId})}"
@@ -246,7 +260,7 @@
 
     <script>
         const textsId = '[[${texts.textsId}]]'
-        const memId = '[[${session.loginMember.memId}]]'
+        const memId = '[[${session.loginMember}? ${session.loginMember.memId}]]'
         const keepTextUrl = '[[@{/personal/api/texts/keepText}]]';
         const keepNumUrl = '[[@{/texts/keepNum/}+${texts.textsId}]]';
 
@@ -270,6 +284,10 @@
         });
 
         $('#keep-btn').click(function () {
+            if (memId === '') {
+                doAlert('收藏請先登入!')
+            }
+
             axios({
                 method: 'post',
                 url: keepTextUrl,

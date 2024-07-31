@@ -22,8 +22,10 @@
         /* 基本頁面樣式 */
         body {
             background-color: #f8f9fa;
-            padding-top: 56px; /* 為固定導航欄留出空間，根據實際導航欄高度調整 */
+            padding-top: 56px;
+            /* 為固定導航欄留出空間，根據實際導航欄高度調整 */
         }
+
         /* 固定導航欄樣式 */
         .navbar {
             position: fixed;
@@ -31,68 +33,81 @@
             width: 100%;
             z-index: 1000;
         }
+
         /* 側邊欄樣式 */
         .sidebar {
             position: fixed;
-            top: 56px; /* 從導航欄下方開始，根據實際導航欄高度調整 */
+            top: 100px;
+            /* 從導航欄下方開始，根據實際導航欄高度調整 */
             left: 0;
             bottom: 0;
             width: 200px;
             padding-top: 20px;
             background-color: #343a40;
             z-index: 100;
-            overflow-y: auto;
+            /* overflow-y: auto; */
         }
+
         .sidebar .nav-link {
             color: #ced4da;
             padding: 10px 15px;
         }
+
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
             color: #fff;
             background-color: rgba(255, 255, 255, .1);
         }
+
         /* 主內容區域樣式 */
         .content-wrapper {
             margin-left: 200px;
             padding: 20px;
-            padding-top: 20px; /* 調整頂部間距 */
+            padding-top: 20px;
+            /* 調整頂部間距 */
         }
+
         /* 表格樣式 */
         .table {
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .table th {
             background-color: #f1f3f5;
         }
+
         /* 統計卡片樣式 */
         .stat-card {
             background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-bottom: 20px;
             text-align: center;
         }
+
         .stat-card h3 {
             margin-bottom: 10px;
             color: #343a40;
         }
+
         .stat-card .stat-value {
             font-size: 2em;
             font-weight: bold;
             color: #007bff;
         }
+
         /* 圖表容器樣式 */
         .chart-container {
             background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-bottom: 20px;
             height: 300px;
         }
+
         /* 狀態下拉選單樣式 */
         .status-select {
             appearance: none;
@@ -104,28 +119,30 @@
             background-size: 8px 10px;
             padding-right: 1.5rem;
         }
+
         /* 有效投票狀態樣式 */
-        .status-valid { 
-            color: #28a745; 
+        .status-valid {
+            color: #28a745;
         }
+
         /* 待審核投票狀態樣式 */
-        .status-pending { 
-            color: #ffc107; 
+        .status-pending {
+            color: #ffc107;
         }
+
         /* 搜索表單樣式 */
         .search-form {
             background-color: #fff;
             padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+
         /* 操作按鈕樣式 */
         .action-btn {
             margin-right: 5px;
         }
-        
-
     </style>
 </head>
 
@@ -185,7 +202,7 @@
 
         <!-- 圖表區域 -->
         <div class="row mb-4">
-			<!-- 圓餅圖 -->
+            <!-- 圓餅圖 -->
             <div class="col-md-6">
                 <div class="chart-container">
                     <canvas id="voteDistributionChart"></canvas>
@@ -253,381 +270,535 @@
     <script th:src="@{/js/axios.min.js}"></script>
 
     <script th:inline="javascript">
-    // ===== 全局變量 =====
-    let currentPage = 1;
-    const itemsPerPage = 10;
-    let allVotes = [];
-    let originalVotes = [];
+// ===== 全域變數 =====
+let currentPage = 1;
+const itemsPerPage = 10;
+let allVotes = [];
+let originalVotes = [];
 
-    // ===== 頁面初始化 =====
-    $(document).ready(function() {
-        loadVotes();
-        loadStatistics();
-        initCharts();
+// ===== 頁面初始化 =====
+$(document).ready(function () {
+    initCharts(); // 確保圖表在 DOM 加載完成後初始化
+    loadVotes();
+    loadStatistics();
 
-        // 綁定搜索框回車事件
-        $('#searchInput').keypress(function(event) {
-            if (event.which === 13) {
-                event.preventDefault();
-                searchVotes();
-            }
-        });
-    });
-
-    // ===== 數據加載函數 =====
-
-    // 加載所有投票數據
-    function loadVotes() {
-        axios.get('/PlayCentric/eventVotes/api/all')
-            .then(response => {
-                allVotes = response.data;
-                originalVotes = [...allVotes];
-                displayVotes(currentPage);
-                setupPagination();
-            })
-            .catch(error => {
-                console.error('載入投票數據失敗:', error);
-                doAlert('載入投票數據失敗，請稍後再試。');
-            });
-    }
-
-    // 加載統計數據
-    function loadStatistics() {
-        axios.get('/PlayCentric/eventVotes/api/statistics')
-            .then(response => {
-                const stats = response.data;
-                updateStatCards(stats);
-                updateVoteDistributionChart(stats);
-                updateVoteTrendChart(stats.voteTrend);
-            })
-            .catch(error => {
-                console.error('加載統計信息失敗:', error);
-                doAlert('加載統計信息失敗，請稍後再試。');
-            });
-    }
-
-    // ===== 顯示函數 =====
-
-    // 顯示投票列表
-    function displayVotes(page) {
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const pageVotes = allVotes.slice(start, end);
-
-        const voteList = $('#voteList');
-        voteList.empty();
-
-        pageVotes.forEach(vote => {
-            voteList.append(`
-                <tr>
-                    <td>${vote.voteId}</td>
-                    <td>${vote.member.memName}</td>
-                    <td>${vote.event.eventName}</td>
-                    <td>${vote.eventSignup.workTitle}</td>
-                    <td>${new Date(vote.voteTime).toLocaleString()}</td>
-                    <td>
-                        <select class="form-control form-control-sm status-select ${vote.eventVoteStatus === 1 ? 'status-valid' : 'status-pending'}" 
-                                onchange="updateVoteStatus(${vote.voteId}, this.value)">
-                            <option value="1" ${vote.eventVoteStatus === 1 ? 'selected' : ''}>有效</option>
-                            <option value="0" ${vote.eventVoteStatus === 0 ? 'selected' : ''}>待審核</option>
-                        </select>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger btn-sm action-btn" onclick="confirmDeleteVote(${vote.voteId})">
-                            <i class="fas fa-trash"></i> 刪除
-                        </button>
-                    </td>
-                </tr>
-            `);
-        });
-    }
-
-    // ===== 分頁相關函數 =====
-
-    // 設置分頁控件
-    function setupPagination() {
-        const totalPages = Math.ceil(allVotes.length / itemsPerPage);
-        const pagination = $('#pagination');
-        pagination.empty();
-
-        // 添加上一頁按鈕
-        pagination.append(`
-            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">上一頁</a>
-            </li>
-        `);
-
-        // 添加頁碼按鈕
-        for (let i = 1; i <= totalPages; i++) {
-            if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-                pagination.append(`
-                    <li class="page-item ${currentPage === i ? 'active' : ''}">
-                        <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
-                    </li>
-                `);
-            } else if (i === currentPage - 3 || i === currentPage + 3) {
-                pagination.append(`<li class="page-item disabled"><span class="page-link">...</span></li>`);
-            }
+    // 綁定搜索框回車事件
+    $('#searchInput').keypress(function (event) {
+        if (event.which === 13) {
+            event.preventDefault();
+            searchVotes();
         }
+    });
+});
 
-        // 添加下一頁按鈕
-        pagination.append(`
-            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">下一頁</a>
+// ===== 數據加載函數 =====
+
+// 加載所有投票數據
+function loadVotes() {
+    axios.get('/PlayCentric/eventVotes/api/all')
+        .then(response => {
+            console.log('投票數據:', response.data); // 調試輸出
+            allVotes = response.data;
+            originalVotes = [...allVotes];
+            displayVotes(currentPage);
+            setupPagination();
+        })
+        .catch(error => {
+            console.error('載入投票數據失敗:', error);
+            doAlert('載入投票數據失敗，請稍後再試。');
+        });
+}
+
+// 加載統計數據
+function loadStatistics() {
+    axios.get('/PlayCentric/eventVotes/api/statistics')
+        .then(response => {
+            console.log('統計數據:', response.data); // 調試輸出
+            const stats = response.data;
+            updateStatCards(stats);
+            updateVoteDistributionChart(stats);
+            updateVoteTrendChart(stats.voteTrend);
+        })
+        .catch(error => {
+            console.error('加載統計信息失敗:', error);
+            doAlert('加載統計信息失敗，請稍後再試。');
+        });
+}
+
+// ===== 顯示函數 =====
+
+// 顯示投票列表
+function displayVotes(page) {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageVotes = allVotes.slice(start, end);
+
+    const voteList = $('#voteList');
+    voteList.empty();
+
+    pageVotes.forEach(vote => {
+        voteList.append(`
+        <tr>
+            <td>${vote.voteId}</td>
+            <td>${vote.member.memName}</td>
+            <td>${vote.event.eventName}</td>
+            <td>${vote.eventSignup.workTitle}</td>
+            <td>${new Date(vote.voteTime).toLocaleString()}</td>
+            <td>
+                <select class="form-control form-control-sm status-select ${vote.eventVoteStatus === 1 ? 'status-valid' : 'status-pending'}" 
+                        onchange="updateVoteStatus(${vote.voteId}, this.value)">
+                    <option value="1" ${vote.eventVoteStatus === 1 ? 'selected' : ''}>有效</option>
+                    <option value="0" ${vote.eventVoteStatus === 0 ? 'selected' : ''}>待審核</option>
+                </select>
+            </td>
+            <td>
+                <button class="btn btn-danger btn-sm action-btn" onclick="confirmDeleteVote(${vote.voteId})">
+                    <i class="fas fa-trash"></i> 刪除
+                </button>
+            </td>
+        </tr>
+    `);
+    });
+}
+
+// ===== 分頁相關函數 =====
+
+// 設置分頁控件
+function setupPagination() {
+    const totalPages = Math.ceil(allVotes.length / itemsPerPage);
+    const pagination = $('#pagination');
+    pagination.empty();
+
+    // 添加上一頁按鈕
+    pagination.append(`
+    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+        <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">上一頁</a>
+    </li>
+`);
+
+    // 添加頁碼按鈕
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+            pagination.append(`
+            <li class="page-item ${currentPage === i ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
             </li>
         `);
+        } else if (i === currentPage - 3 || i === currentPage + 3) {
+            pagination.append(`<li class="page-item disabled"><span class="page-link">...</span></li>`);
+        }
     }
 
-    // 切換頁面
-    function changePage(page) {
-        const totalPages = Math.ceil(allVotes.length / itemsPerPage);
-        if (page < 1 || page > totalPages) return;
-        currentPage = page;
-        displayVotes(currentPage);
-        setupPagination();
-    }
+    // 添加下一頁按鈕
+    pagination.append(`
+    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+        <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">下一頁</a>
+    </li>
+`);
+}
 
-    // ===== 搜索相關函數 =====
+// 切換頁面
+function changePage(page) {
+    const totalPages = Math.ceil(allVotes.length / itemsPerPage);
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    displayVotes(currentPage);
+    setupPagination();
+}
 
-    // 搜索投票
-    function searchVotes() {
-        const searchField = $('#searchField').val();
-        const searchInput = $('#searchInput').val().toLowerCase();
+// ===== 搜索相關函數 =====
 
-        if (searchInput.trim() === '') {
-            allVotes = [...originalVotes]; // 如果搜索框為空，恢復所有投票數據
-        } else {
-            allVotes = originalVotes.filter(vote => {
-                if (searchField === 'all') {
-                    // 在所有欄位中搜索
-                    return Object.values(vote).some(value => 
-                        String(value).toLowerCase().includes(searchInput)
-                    ) ||
+// 搜索投票
+function searchVotes() {
+    const searchField = $('#searchField').val();
+    const searchInput = $('#searchInput').val().toLowerCase();
+
+    if (searchInput.trim() === '') {
+        allVotes = [...originalVotes]; // 如果搜索框為空，恢復所有投票數據
+    } else {
+        allVotes = originalVotes.filter(vote => {
+            if (searchField === 'all') {
+                // 在所有欄位中搜索
+                return Object.values(vote).some(value =>
+                    String(value).toLowerCase().includes(searchInput)
+                ) ||
                     vote.member.memName.toLowerCase().includes(searchInput) ||
                     vote.event.eventName.toLowerCase().includes(searchInput) ||
                     vote.eventSignup.workTitle.toLowerCase().includes(searchInput);
-                } else {
-                    // 根據選擇的欄位進行搜索
-                    switch (searchField) {
-                        case 'voteId':
-                            return vote.voteId.toString().includes(searchInput);
-                        case 'memberName':
-                            return vote.member.memName.toLowerCase().includes(searchInput);
-                        case 'eventName':
-                            return vote.event.eventName.toLowerCase().includes(searchInput);
-                        case 'workTitle':
-                            return vote.eventSignup.workTitle.toLowerCase().includes(searchInput);
-                        default:
-                            return false;
-                    }
+            } else {
+                // 根據選擇的欄位進行搜索
+                switch (searchField) {
+                    case 'voteId':
+                        return vote.voteId.toString().includes(searchInput);
+                    case 'memberName':
+                        return vote.member.memName.toLowerCase().includes(searchInput);
+                    case 'eventName':
+                        return vote.event.eventName.toLowerCase().includes(searchInput);
+                    case 'workTitle':
+                        return vote.eventSignup.workTitle.toLowerCase().includes(searchInput);
+                    default:
+                        return false;
                 }
-            });
-        }
-
-        currentPage = 1; // 重置到第一頁
-        displayVotes(currentPage);
-        setupPagination();
-    }
-
-    // ===== 投票狀態更新函數 =====
-
-    // 更新投票狀態
-    function updateVoteStatus(voteId, newStatus) {
-        axios.put(`/PlayCentric/eventVotes/api/${voteId}`, { eventVoteStatus: newStatus })
-            .then(response => {
-                doAlert('投票狀態更新成功');
-                loadVotes(); // 重新加載投票列表
-                loadStatistics(); // 更新統計信息
-                // 更新參賽作品的票數（前端處理）
-                updateEntryVoteCount(response.data.eventSignup.signupId, response.data.eventVoteStatus);
-            })
-            .catch(error => {
-                console.error('更新投票狀態失敗:', error);
-                doAlert('更新投票狀態失敗，請稍後再試');
-            });
-    }
-
-    // 更新參賽作品的票數（前端處理）
-    function updateEntryVoteCount(signupId, voteStatus) {
-        const voteCountElement = document.querySelector(`#entry-${signupId} .vote-count`);
-        if (voteCountElement) {
-            let currentCount = parseInt(voteCountElement.textContent);
-            if (voteStatus === 1) { // 有效票
-                currentCount++;
-            } else { // 待審核票
-                currentCount = Math.max(0, currentCount - 1); // 確保票數不會變成負數
             }
-            voteCountElement.textContent = currentCount;
+        });
+    }
+
+    currentPage = 1; // 重置到第一頁
+    displayVotes(currentPage);
+    setupPagination();
+}
+
+// ===== 投票狀態更新函數 =====
+
+// 更新投票狀態
+function updateVoteStatus(voteId, newStatus) {
+    axios.put(`/PlayCentric/eventVotes/api/${voteId}`, { eventVoteStatus: newStatus })
+        .then(response => {
+            doAlert('投票狀態更新成功');
+            loadVotes(); // 重新加載投票列表
+            loadStatistics(); // 更新統計信息
+            // 更新參賽作品的票數（前端處理）
+            updateEntryVoteCount(response.data.eventSignup.signupId, response.data.eventVoteStatus);
+        })
+        .catch(error => {
+            console.error('更新投票狀態失敗:', error);
+            doAlert('更新投票狀態失敗，請稍後再試');
+        });
+}
+
+// 更新參賽作品的票數（前端處理）
+function updateEntryVoteCount(signupId, voteStatus) {
+    const voteCountElement = document.querySelector(`#entry-${signupId} .vote-count`);
+    if (voteCountElement) {
+        let currentCount = parseInt(voteCountElement.textContent);
+        if (voteStatus === 1) { // 有效票
+            currentCount++;
+        } else { // 待審核票
+            currentCount = Math.max(0, currentCount - 1); // 確保票數不會變成負數
         }
+        voteCountElement.textContent = currentCount;
     }
+}
 
-    // ===== 投票刪除相關函數 =====
+// ===== 投票刪除相關函數 =====
 
-    // 確認刪除投票
-    function confirmDeleteVote(voteId) {
-        if (confirm('確定要刪除這條投票記錄嗎？此操作不可撤銷。')) {
-            deleteVote(voteId);
-        }
+// 確認刪除投票
+function confirmDeleteVote(voteId) {
+    if (confirm('確定要刪除這條投票記錄嗎？此操作不可撤銷。')) {
+        deleteVote(voteId);
     }
+}
 
-    // 刪除投票
-    function deleteVote(voteId) {
-        axios.delete(`/PlayCentric/eventVotes/api/${voteId}`)
-            .then(() => {
-                doAlert('投票記錄已成功刪除');
-                loadVotes(); // 重新加載投票列表
-                loadStatistics(); // 更新統計信息
-            })
-            .catch(error => {
-                console.error('刪除投票失敗:', error);
-                doAlert('刪除投票失敗，請稍後再試。');
-            });
-    }
+// 刪除投票
+function deleteVote(voteId) {
+    axios.delete(`/PlayCentric/eventVotes/api/${voteId}`)
+        .then(() => {
+            doAlert('投票記錄已成功刪除');
+            loadVotes(); // 重新加載投票列表
+            loadStatistics(); // 更新統計信息
+        })
+        .catch(error => {
+            console.error('刪除投票失敗:', error);
+            doAlert('刪除投票失敗，請稍後再試。');
+        });
+}
 
-    // ===== 統計資訊更新函數 =====
+// ===== 統計資訊更新函數 =====
 
-    // 更新統計卡片
-    function updateStatCards(stats) {
-        $('#totalVotes').text(stats.totalVotes || 0);
-        $('#validVotes').text(stats.validVotes || 0);
-        $('#pendingVotes').text(stats.pendingVotes || 0);
-        $('#uniqueVoters').text(stats.activeUsers || 0);
-    }
+// 更新統計卡片
+function updateStatCards(stats) {
+    console.log('更新統計卡片:', stats); // 調試輸出
+    $('#totalVotes').text(stats.totalVotes || 0);
+    $('#validVotes').text(stats.validVotes || 0);
+    $('#pendingVotes').text(stats.pendingVotes || 0);
+    $('#uniqueVoters').text(stats.activeUsers || 0);
+}
 
-    // ===== 圖表相關函數 =====
+// ===== 圖表相關函數 =====
 
-    // 初始化圖表
-    function initCharts() {
-        // 初始化投票分佈圖表
-        const voteDistributionCtx = document.getElementById('voteDistributionChart').getContext('2d');
-        window.voteDistributionChart = new Chart(voteDistributionCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['有效投票', '待審核投票'],
-                datasets: [{
-                    data: [0, 0],
-                    backgroundColor: ['#28a745', '#ffc107'],
-                    borderColor: ['#ffffff', '#ffffff'],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
+// 初始化圖表
+function initCharts() {
+    // 初始化投票分佈圖表
+    const voteDistributionCtx = document.getElementById('voteDistributionChart').getContext('2d');
+    window.voteDistributionChart = new Chart(voteDistributionCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['有效投票', '待審核投票'],
+            datasets: [{
+                data: [0, 0],
+                backgroundColor: ['#28a745', '#ffc107'],
+                borderColor: ['#ffffff', '#ffffff'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
                 title: {
                     display: true,
                     text: '投票狀態分佈',
-                    fontSize: 18
+                    font: {
+                        size: 18
+                    }
                 },
                 legend: {
                     position: 'bottom',
                     labels: {
-                        fontSize: 14
+                        font: {
+                            size: 14
+                        }
                     }
-                },
-                animation: {
-                    animateScale: true,
-                    animateRotate: true
                 }
-            }
-        });
-
-        // 初始化投票趨勢圖表
-        const voteTrendCtx = document.getElementById('voteTrendChart').getContext('2d');
-        window.voteTrendChart = new Chart(voteTrendCtx, {
-            type: 'line',
-            data: {
-                datasets: [{
-                    label: '每日投票數',
-                    data: [],
-                    borderColor: '#007bff',
-                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                    borderWidth: 2,
-                    fill: true
-                }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        type: 'time',
-                        time: {
-                            unit: 'day',
-                            displayFormats: {
-                                day: 'YYYY-MM-DD'
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: '日期',
-                            fontSize: 14
-                        },
-                        ticks: {
-                            fontSize: 12
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+
+    // 初始化投票趨勢圖表（折線圖）
+    const voteTrendCtx = document.getElementById('voteTrendChart').getContext('2d');
+    window.voteTrendChart = new Chart(voteTrendCtx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: '每日投票數',
+                data: [],
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                borderWidth: 2,
+                pointBackgroundColor: '#007bff',
+                pointBorderColor: '#ffffff',
+                pointHoverBackgroundColor: '#ffffff',
+                pointHoverBorderColor: '#007bff',
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                fill: true,
+                tension: 0.1 // 添加一些曲線平滑度，但不要太多
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        displayFormats: {
+                            day: 'MM-DD'
                         }
                     },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: '投票數',
-                            fontSize: 14
-                        },
-                        ticks: {
-                            fontSize: 12,
-                            stepSize: 1,
-                            callback: function(value) {
-                                if (value % 1 === 0) {
-                                    return value;
-                                }
-                            }
-                        }
-                    }
-                },
-                plugins: {
                     title: {
                         display: true,
-                        text: '近7天投票趨勢',
-                        fontSize: 18
+                        text: '日期',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
                     },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
                     },
-                    legend: {
-                        labels: {
-                            fontSize: 14
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '投票數',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    },
+                    ticks: {
+                        font: {
+                            size: 12
+                        },
+                        stepSize: 1,
+                        callback: function (value) {
+                            if (value % 1 === 0) {
+                                return value;
+                            }
                         }
                     }
                 }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: '近7天投票趨勢',
+                    font: {
+                        size: 18,
+                        weight: 'bold'
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            return moment(tooltipItems[0].parsed.x).format('YYYY-MM-DD');
+                        }
+                    }
+                },
+                legend: {
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
             }
-        });
-    }
-
-    // 更新投票分佈圖表
-    function updateVoteDistributionChart(stats) {
-        if (window.voteDistributionChart && stats) {
-            window.voteDistributionChart.data.datasets[0].data = [
-                stats.validVotes,
-                stats.pendingVotes
-            ];
-            window.voteDistributionChart.update();
         }
-    }
+    });
+}
 
-    // 更新投票趨勢圖表
-    function updateVoteTrendChart(voteTrend) {
-        if (window.voteTrendChart && voteTrend && voteTrend.length > 0) {
-            const data = voteTrend.map(item => ({
-                x: moment(item.date).format('YYYY-MM-DD'),
-                y: item.count
-            }));
-            window.voteTrendChart.data.datasets[0].data = data;
-            window.voteTrendChart.update();
-        }
+// 更新投票分佈圖表
+function updateVoteDistributionChart(stats) {
+    console.log('更新投票分佈圖表:', stats); // 調試輸出
+    if (window.voteDistributionChart && stats) {
+        window.voteDistributionChart.data.datasets[0].data = [
+            stats.validVotes,
+            stats.pendingVotes
+        ];
+        window.voteDistributionChart.update();
     }
+}
 
+function updateVoteTrendChart(voteTrend) {
+    console.log('更新投票趨勢圖表:', voteTrend); // 調試輸出
+    if (window.voteTrendChart && voteTrend && voteTrend.length > 0) {
+        const data = voteTrend.map(item => ({
+            x: moment(item.date).format('YYYY-MM-DD'),
+            y: item.count
+        }));
+        window.voteTrendChart.data.datasets[0].data = data;
+        window.voteTrendChart.update();
+    }
+}
+
+// ===== 錯誤處理函數 =====
+
+// 顯示錯誤信息
+function showError(message) {
+    console.error(message);
+    doAlert(message);
+    // 可以在這裡添加更多的錯誤處理邏輯，例如更新UI顯示錯誤狀態
+}
+
+// ===== 輔助函數 =====
+
+// 格式化日期
+function formatDate(date) {
+    return moment(date).format('YYYY-MM-DD HH:mm:ss');
+}
+
+// 驗證投票數據
+function validateVoteData(vote) {
+    // 這裡可以添加更多的驗證邏輯
+    return vote && vote.voteId && vote.member && vote.event && vote.eventSignup;
+}
+
+// ===== 初始化函數 =====
+
+// 頁面完全加載後執行的初始化函數
+function initPage() {
+    console.log('頁面初始化開始');
+    initCharts();
+    loadVotes();
+    loadStatistics();
+    console.log('頁面初始化完成');
+}
+
+// 當DOM完全加載後執行初始化
+$(document).ready(function() {
+    initPage();
+});
+
+// ===== 事件監聽器 =====
+
+// 添加事件監聽器（如果有其他需要綁定的事件）
+function addEventListeners() {
+    // 示例：監聽搜索按鈕點擊事件
+    $('#searchButton').on('click', function(e) {
+        e.preventDefault();
+        searchVotes();
+    });
+
+    // 可以在這裡添加更多的事件監聽器
+}
+
+// 在頁面加載完成後添加事件監聽器
+$(document).ready(function() {
+    addEventListeners();
+});
+
+// ===== 其他可能需要的函數 =====
+
+// 重置所有過濾器和搜索條件
+function resetFilters() {
+    $('#searchField').val('all');
+    $('#searchInput').val('');
+    allVotes = [...originalVotes];
+    currentPage = 1;
+    displayVotes(currentPage);
+    setupPagination();
+}
+
+// 導出投票數據（如果需要的話）
+function exportVoteData() {
+    // 這裡可以實現導出功能，例如生成CSV文件
+    console.log('導出投票數據');
+    // 實現導出邏輯
+}
+
+// 刷新所有數據和圖表
+function refreshAllData() {
+    loadVotes();
+    loadStatistics();
+    // 可能需要重置其他狀態
+}
+
+// ===== 性能優化相關函數 =====
+
+// 防抖函數，用於優化頻繁觸發的事件
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// 使用防抖優化搜索功能
+const debouncedSearch = debounce(function() {
+    searchVotes();
+}, 300);
+
+// 在搜索輸入框輸入時調用防抖搜索
+$('#searchInput').on('input', debouncedSearch);
+
+// ===== 結束 =====
+
+console.log('投票管理腳本加載完成');
     </script>
 </body>
+
 </html>

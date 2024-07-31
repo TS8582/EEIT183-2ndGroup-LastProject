@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +22,8 @@
         /* 頁面標題樣式：居中對齊、設置顏色和字體粗細、添加裝飾效果 */
         .page-title {
             text-align: center;
-            margin: 30px 0 20px; /* 減少下方邊距 */
+            margin: 30px 0 20px;
+            /* 減少下方邊距 */
             color: #2c3e50;
             font-weight: 700;
             text-transform: uppercase;
@@ -45,10 +47,12 @@
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
-            margin-bottom: 20px; /* 減少卡片之間的垂直間距 */
+            margin-bottom: 20px;
+            /* 減少卡片之間的垂直間距 */
             overflow: hidden;
             cursor: pointer;
-            height: 450px; /* 固定卡片高度 */
+            height: 450px;
+            /* 固定卡片高度 */
             display: flex;
             flex-direction: column;
         }
@@ -68,7 +72,8 @@
 
         /* 卡片內容區域樣式：設置內邊距和彈性布局 */
         .event-card .card-body {
-            padding: 15px; /* 減少卡片內部的內邊距 */
+            padding: 15px;
+            /* 減少卡片內部的內邊距 */
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -82,20 +87,23 @@
             color: #34495e;
         }
 
-/* 卡片文字內容樣式：設置顏色、字體大小和行高，限制顯示行數 */
-.event-card .card-text {
-    color: #7f8c8d;
-    font-size: 1rem;
-    line-height: 1.6;
-    flex-grow: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* 顯示三行內容 */
-    -webkit-box-orient: vertical;
-    min-height: 4.8rem; /* 設置最小高度確保統一高度 */
-    max-height: 4.8rem; /* 設置最大高度確保統一高度 */
-}
+        /* 卡片文字內容樣式：設置顏色、字體大小和行高，限制顯示行數 */
+        .event-card .card-text {
+            color: #7f8c8d;
+            font-size: 1rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            /* 顯示三行內容 */
+            -webkit-box-orient: vertical;
+            min-height: 4.8rem;
+            /* 設置最小高度確保統一高度 */
+            max-height: 4.8rem;
+            /* 設置最大高度確保統一高度 */
+        }
 
         /* 活動時間樣式：設置字體大小和顏色 */
         .event-time {
@@ -117,8 +125,20 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* 進行中狀態標籤顏色 */
-        .status-ongoing {
+        /* 即將開始狀態標籤顏色 */
+        .status-upcoming {
+            background-color: #f39c12;
+            color: #fff;
+        }
+
+        /* 報名中狀態標籤顏色 */
+        .status-registration {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        /* 投票中狀態標籤顏色 */
+        .status-voting {
             background-color: #2ecc71;
             color: #fff;
         }
@@ -173,7 +193,8 @@
         .section-divider {
             height: 3px;
             background: linear-gradient(to right, #3498db, #2ecc71);
-            margin: 30px 0; /* 減少上下邊距 */
+            margin: 30px 0;
+            /* 減少上下邊距 */
             border-radius: 3px;
         }
 
@@ -208,6 +229,7 @@
             .event-card {
                 height: auto;
             }
+
             .page-title {
                 font-size: 1.8rem;
                 margin: 30px 0;
@@ -216,10 +238,12 @@
 
         /* 調整卡片容器的上邊距 */
         .row {
-            margin-top: 20px; /* 添加一些上邊距，以平衡整體布局 */
+            margin-top: 20px;
+            /* 添加一些上邊距，以平衡整體布局 */
         }
     </style>
 </head>
+
 <body>
     <!-- 導航欄 -->
     <div th:replace="~{/layout/nav}"></div>
@@ -231,29 +255,42 @@
             <!-- 遍歷進行中的活動 -->
             <div class="col-md-4 mb-4" th:each="event, iterStat : ${ongoingEvents}" th:if="${iterStat.index < 6}">
                 <!-- 整個卡片可點擊 -->
-                <div class="card event-card" th:onclick="'window.location.href=\'' + @{'/events/public/detail/' + ${event.eventId}} + '\''">
+                <div class="card event-card"
+                    th:onclick="'window.location.href=\'' + @{'/events/public/detail/' + ${event.eventId}} + '\''">
                     <!-- 活動圖片 -->
                     <img th:if="${event.eventImage != null and event.eventImage.imageId != null}"
-                         th:src="@{/imagesLib/image{id}(id=${event.eventImage.imageId})}"
-                         class="event-image"
-                         alt="活動圖片"
-                         onerror="this.onerror=null; this.src='/path/to/default-image.jpg';">
+                        th:src="@{/imagesLib/image{id}(id=${event.eventImage.imageId})}" class="event-image" alt="活動圖片"
+                        onerror="this.onerror=null; this.src='/path/to/default-image.jpg';">
                     <img th:if="${event.eventImage == null or event.eventImage.imageId == null}"
-                         src="/path/to/default-image.jpg"
-                         class="event-image"
-                         alt="預設活動圖片">
+                        src="/path/to/default-image.jpg" class="event-image" alt="預設活動圖片">
                     <!-- 活動狀態標籤 -->
-                    <span class="event-status status-ongoing">進行中</span>
+                    <span class="event-status" th:classappend="${
+                        #temporals.createNow().isBefore(event.eventStartTime) ? 'status-upcoming' :
+                        (#temporals.createNow().isAfter(event.eventStartTime) and #temporals.createNow().isBefore(event.eventSignupDeadLine)) ? 'status-registration' :
+                        (#temporals.createNow().isAfter(event.eventSignupDeadLine) and #temporals.createNow().isBefore(event.eventEndTime)) ? 'status-voting' :
+                        'status-completed'
+                        }" th:text="${
+                         #temporals.createNow().isBefore(event.eventStartTime) ? '即將開始' :
+                         (#temporals.createNow().isAfter(event.eventStartTime) and #temporals.createNow().isBefore(event.eventSignupDeadLine)) ? '報名中' :
+                         (#temporals.createNow().isAfter(event.eventSignupDeadLine) and #temporals.createNow().isBefore(event.eventEndTime)) ? '投票中' :
+                        '已結束'
+                    }"></span>
                     <div class="card-body">
                         <h5 class="card-title" th:text="${event.eventName}">活動名稱</h5>
                         <p class="card-text" th:text="${#strings.abbreviate(event.eventDescription, 100)}">活動描述...</p>
-                        <!-- 活動開始時間 -->
+                        <!-- 活動時間 -->
                         <p class="event-time">
                             <i class="far fa-calendar-alt mr-2"></i>
-                            <span th:text="'開始時間: ' + ${#temporals.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')}">開始時間</span>
+                            <span th:text="${
+                             #temporals.createNow().isBefore(event.eventStartTime) ? '開始時間: ' + #temporals.format(event.eventStartTime, 'yyyy-MM-dd HH:mm') :
+                             (#temporals.createNow().isAfter(event.eventStartTime) and #temporals.createNow().isBefore(event.eventSignupDeadLine)) ? '報名截止: ' + #temporals.format(event.eventSignupDeadLine, 'yyyy-MM-dd HH:mm') :
+                             (#temporals.createNow().isAfter(event.eventSignupDeadLine) and #temporals.createNow().isBefore(event.eventEndTime)) ? '結束時間: ' + #temporals.format(event.eventEndTime, 'yyyy-MM-dd HH:mm') :
+                             '結束時間: ' + #temporals.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')
+                         }"></span>
                         </p>
                         <!-- 查看詳情按鈕 -->
-                        <a th:href="@{'/events/public/detail/' + ${event.eventId}}" class="btn btn-custom btn-custom-primary">
+                        <a th:href="@{'/events/public/detail/' + ${event.eventId}}"
+                            class="btn btn-custom btn-custom-primary">
                             <i class="fas fa-info-circle mr-2"></i>查看詳情
                         </a>
                     </div>
@@ -271,28 +308,25 @@
                 <li class="page-item"><a class="page-link" href="#">下一頁</a></li>
             </ul>
         </nav>
-        
-        <!-- 分隔線 -->
+
+        <!-- 分隔線：用於視覺上分隔進行中和已結束的活動 -->
         <div class="section-divider"></div>
-        
+
         <!-- 已結束活動區塊 -->
         <h1 class="page-title">已結束的活動</h1>
         <div class="row">
             <!-- 遍歷已結束的活動 -->
             <div class="col-md-4 mb-4" th:each="event, iterStat : ${completedEvents}" th:if="${iterStat.index < 6}">
                 <!-- 整個卡片可點擊 -->
-                <div class="card event-card" th:onclick="'window.location.href=\'' + @{'/events/public/detail/' + ${event.eventId}} + '\''">
+                <div class="card event-card"
+                    th:onclick="'window.location.href=\'' + @{'/events/public/detail/' + ${event.eventId}} + '\''">
                     <!-- 活動圖片 -->
                     <img th:if="${event.eventImage != null and event.eventImage.imageId != null}"
-                         th:src="@{/imagesLib/image{id}(id=${event.eventImage.imageId})}"
-                         class="event-image"
-                         alt="活動圖片"
-                         onerror="this.onerror=null; this.src='/path/to/default-image.jpg';">
+                        th:src="@{/imagesLib/image{id}(id=${event.eventImage.imageId})}" class="event-image" alt="活動圖片"
+                        onerror="this.onerror=null; this.src='/path/to/default-image.jpg';">
                     <img th:if="${event.eventImage == null or event.eventImage.imageId == null}"
-                         src="/path/to/default-image.jpg"
-                         class="event-image"
-                         alt="預設活動圖片">
-                    <!-- 活動狀態標籤 -->
+                        src="/path/to/default-image.jpg" class="event-image" alt="預設活動圖片">
+                    <!-- 活動狀態標籤：已結束 -->
                     <span class="event-status status-completed">已結束</span>
                     <div class="card-body">
                         <h5 class="card-title" th:text="${event.eventName}">活動名稱</h5>
@@ -300,11 +334,14 @@
                         <!-- 活動結束時間 -->
                         <p class="event-time">
                             <i class="far fa-calendar-check mr-2"></i>
-                            <span th:text="'結束時間: ' + ${#temporals.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}">結束時間</span>
+                            <span
+                                th:text="'結束時間: ' + ${#temporals.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}">結束時間</span>
                         </p>
                         <!-- 查看結果按鈕 -->
-                        <a th:href="@{'/events/public/detail/' + ${event.eventId}}" class="btn btn-custom btn-custom-secondary">
-                            <i class="fas fa-poll mr-2"></i>查看結果</a>
+                        <a th:href="@{'/events/public/detail/' + ${event.eventId}}"
+                            class="btn btn-custom btn-custom-secondary">
+                            <i class="fas fa-poll mr-2"></i>查看結果
+                        </a>
                     </div>
                 </div>
             </div>
@@ -326,6 +363,26 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- 自定義 JavaScript -->
+    <script>
+        // 這裡可以添加任何需要的自定義 JavaScript 代碼
+        // 例如：處理分頁、動態加載更多活動等功能
+
+        // 示例：當頁面加載完成後執行
+        $(document).ready(function () {
+            console.log("頁面加載完成");
+            // 在這裡可以添加頁面初始化的邏輯
+        });
+
+        // 示例：處理分頁點擊事件
+        $('.pagination .page-link').on('click', function (e) {
+            e.preventDefault();
+            console.log("點擊了分頁按鈕");
+            // 這裡可以添加分頁邏輯
+            // 例如：發送 AJAX 請求來獲取下一頁的活動數據
+        });
     </script>
 </body>
+
 </html>

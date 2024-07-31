@@ -27,6 +27,7 @@ import com.playcentric.model.forum.TextsKeepId;
 import com.playcentric.model.member.LoginMemDto;
 import com.playcentric.model.member.Member;
 import com.playcentric.service.forum.ForumService;
+import com.playcentric.service.forum.PhotoService;
 import com.playcentric.service.forum.TextsKeepService;
 import com.playcentric.service.forum.TextsService;
 import com.playcentric.service.member.MemberService;
@@ -48,6 +49,9 @@ public class TextsController {
 
 	@Autowired
 	private TextsKeepService textsKeepService;
+
+	@Autowired
+	private PhotoService photoService;
 
 	// 更新Status
 	@ResponseBody
@@ -289,8 +293,10 @@ public class TextsController {
 			}
 
 			if (!forumPhotosList.isEmpty()) {
+				System.err.println("更新照片");
 				// 如果有新照片，更新文本的照片列表
 				texts.setForumPhoto(forumPhotosList);
+				photoService.deleteByTexts(texts);
 			}
 		}
 
@@ -298,7 +304,7 @@ public class TextsController {
 		textsService.update(texts);
 
 		// 更新成功後重定向到前台列表頁面
-		return "redirect:/texts/findTextsById?textsId=" + textsId;
+		return "redirect:/texts/"+textsId+"/talk";
 	}
 
 	// 刪除文章
