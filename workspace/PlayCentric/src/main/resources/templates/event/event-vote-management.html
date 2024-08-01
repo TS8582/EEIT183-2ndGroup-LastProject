@@ -294,7 +294,8 @@
             <div class="input-group">
                 <select class="form-control" id="searchField">
                     <option value="all">全部欄位</option>
-                    <option value="voteId">投票ID</option>
+                    <!-- 註釋掉投票ID選項 -->
+                    <!-- <option value="voteId">投票ID</option> -->
                     <option value="memberName">會員名稱</option>
                     <option value="eventName">活動名稱</option>
                     <option value="workTitle">作品名稱</option>
@@ -313,7 +314,8 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>投票ID</th>
+                        <!-- 註釋掉投票ID列 -->
+                        <!-- <th>投票ID</th> -->
                         <th>會員名稱</th>
                         <th>活動名稱</th>
                         <th>作品名稱</th>
@@ -433,7 +435,8 @@
             pageVotes.forEach(vote => {
                 voteList.append(`
             <tr>
-                <td>${vote.voteId}</td>
+                !-- 註釋掉投票ID列 -->
+                <!-- <td>${vote.voteId}</td> -->
                 <td>${vote.member.memName}</td>
                 <td>${vote.event.eventName}</td>
                 <td>${vote.eventSignup.workTitle}</td>
