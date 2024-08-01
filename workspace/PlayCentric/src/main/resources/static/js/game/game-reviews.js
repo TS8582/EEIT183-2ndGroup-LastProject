@@ -70,7 +70,6 @@ if (goReviews) {
                     reviewsContainer.prepend(existReviews1);
                     reviewsContainer.prepend(title);
                     if (filled) {
-                        console.log('有過來');
                         let starnum = document.querySelector('#starnum');
                         let totalreviews = document.querySelector('#totalReviews').innerHTML;
                         let totalScore = document.querySelector('#totalScore').innerHTML;
