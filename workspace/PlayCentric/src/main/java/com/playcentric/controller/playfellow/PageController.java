@@ -89,8 +89,7 @@ public class PageController {
 
 	@GetMapping("/playFellow")
 	public String getPlayFellowById(Model model) {
-		// List<PlayFellowMember> playFellowMembers =
-		// playFellowMemberService.getAllPlayFellowMembers();
+		 List<PlayFellowMember> playFellowMembers =playFellowMemberService.getAllPlayFellowMembers();
 
 		List<PlayFellowMember> lastest5playFellowMembers = playFellowMemberService
 				.getTopFiveReviewSuccessPlayFellowMembers();
