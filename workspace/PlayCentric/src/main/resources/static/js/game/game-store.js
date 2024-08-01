@@ -105,14 +105,14 @@ async function handleScroll() {
 
     // 檢查是否滾動到底部
     if (windowHeight + scrollTop >= documentHeight && scrolltrigger && pgnum < totalPages - 1) {
+        spin.classList.remove('hidden');
         if (typeId.length === 0) {
-            spin.classList.remove('hidden');
             scrolltrigger = false;
             await nofilterplus();
             scrolltrigger = true; // 等待完成後重設 scrolltrigger
 
         } else if (typeId.length !== 0) {
-            spin.classList.remove('hidden');
+            // spin.classList.remove('hidden');
             scrolltrigger = false;
             await typefilterplus();
             scrolltrigger = true; // 等待完成後重設 scrolltrigger
