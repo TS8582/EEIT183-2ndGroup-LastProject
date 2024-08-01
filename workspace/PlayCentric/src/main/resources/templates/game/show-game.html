@@ -12,7 +12,7 @@
 </head>
 
 <body class="bg-gray-100">
-    <div>
+    <div class="hidden">
         <span id="totalReviews" th:text="${game.totalReviews}"></span>
         <span id="totalScore" th:text="${game.totalScore}"></span>
     </div>
@@ -128,7 +128,6 @@
                     <div class="hidden gameId" th:text="${game.gameId}"></div>
                 </div>
             </div>
-        </div>
         </div>
         <div class="hidden memId" th:text="${session.loginMember} ? ${session.loginMember.memId}"></div>
 
