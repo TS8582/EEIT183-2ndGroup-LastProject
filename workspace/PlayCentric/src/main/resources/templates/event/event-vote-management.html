@@ -21,7 +21,7 @@
 <style>
 /* 基本頁面樣式 */
 body {
-    background-color: #f8f9fa; /* 設定背景顏色 */
+    background-color: #f8f9fa; /* 設定背景顏色為淺灰色 */
     padding-top: 56px; /* 為固定導航欄留出空間 */
 }
 
@@ -41,19 +41,19 @@ body {
     bottom: 0; /* 延伸至底部 */
     width: 200px; /* 寬度200px */
     padding-top: 20px; /* 頂部內邊距 */
-    background-color: #343a40; /* 背景顏色 */
+    background-color: #343a40; /* 背景顏色為深灰色 */
     z-index: 100; /* 確保在內容之上 */
 }
 
 .sidebar .nav-link {
-    color: #ced4da; /* 連結顏色 */
+    color: #ced4da; /* 連結顏色為淺灰色 */
     padding: 10px 15px; /* 內邊距 */
 }
 
 .sidebar .nav-link:hover,
 .sidebar .nav-link.active {
-    color: #fff; /* 懸停和激活時的顏色 */
-    background-color: rgba(255, 255, 255, .1); /* 懸停和激活時的背景 */
+    color: #fff; /* 懸停和激活時的顏色為白色 */
+    background-color: rgba(255, 255, 255, .1); /* 懸停和激活時的背景為半透明白色 */
 }
 
 /* 主內容區域樣式 */
@@ -65,12 +65,12 @@ body {
 
 /* 表格樣式 */
 .table {
-    background-color: #fff; /* 背景顏色 */
+    background-color: #fff; /* 背景顏色為白色 */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 陰影效果 */
 }
 
 .table th {
-    background-color: #f1f3f5; /* 表頭背景顏色 */
+    background-color: #f1f3f5; /* 表頭背景顏色為淺灰色 */
 }
 
 /* 統計卡片容器樣式 */
@@ -85,7 +85,7 @@ body {
 /* 大統計卡片樣式 */
 .stat-card-large {
     flex-basis: 100%; /* 佔據整行 */
-    background-color: #fff; /* 背景顏色 */
+    background-color: #fff; /* 背景顏色為白色 */
     border-radius: 8px; /* 圓角 */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 陰影效果 */
     padding: 20px; /* 內邊距 */
@@ -95,7 +95,7 @@ body {
 /* 小統計卡片樣式 */
 .stat-card-small {
     flex-basis: calc(25% - 15px); /* 每行四個卡片，考慮間距 */
-    background-color: #fff; /* 背景顏色 */
+    background-color: #fff; /* 背景顏色為白色 */
     border-radius: 8px; /* 圓角 */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 陰影效果 */
     padding: 15px; /* 內邊距 */
@@ -105,25 +105,25 @@ body {
 .stat-card-large h3,
 .stat-card-small h3 {
     margin-bottom: 10px; /* 底部外邊距 */
-    color: #343a40; /* 文字顏色 */
+    color: #343a40; /* 文字顏色為深灰色 */
     font-size: 1.2rem; /* 字體大小 */
 }
 
 .stat-card-large .stat-value {
     font-size: 2.5rem; /* 字體大小 */
     font-weight: bold; /* 粗體 */
-    color: #007bff; /* 文字顏色 */
+    color: #007bff; /* 文字顏色為藍色 */
 }
 
 .stat-card-small .stat-value {
     font-size: 1.8rem; /* 字體大小 */
     font-weight: bold; /* 粗體 */
-    color: #007bff; /* 文字顏色 */
+    color: #007bff; /* 文字顏色為藍色 */
 }
 
 /* 圖表容器樣式 */
 .chart-container {
-    background-color: #fff; /* 背景顏色 */
+    background-color: #fff; /* 背景顏色為白色 */
     border-radius: 8px; /* 圓角 */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 陰影效果 */
     padding: 20px; /* 內邊距 */
@@ -145,17 +145,17 @@ body {
 
 /* 有效投票狀態樣式 */
 .status-valid {
-    color: #28a745; /* 文字顏色 */
+    color: #28a745; /* 文字顏色為綠色 */
 }
 
 /* 無效投票狀態樣式 */
 .status-pending {
-    color: #dc3545; /* 文字顏色 */
+    color: #dc3545; /* 文字顏色為紅色 */
 }
 
 /* 搜索表單樣式 */
 .search-form {
-    background-color: #fff; /* 背景顏色 */
+    background-color: #fff; /* 背景顏色為白色 */
     padding: 15px; /* 內邊距 */
     border-radius: 8px; /* 圓角 */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 陰影效果 */
@@ -202,29 +202,29 @@ body {
     <div class="content-wrapper">
         <h1 class="mb-4">投票管理</h1>
 
-<!-- 統計信息區 -->
-<div class="stat-cards-container mb-4">
-    <div class="stat-card-large">
-        <h3>總投票數</h3>
-        <div class="stat-value" id="totalVotes">載入中...</div>
-    </div>
-    <div class="stat-card-small">
-        <h3>有效投票</h3>
-        <div class="stat-value" id="validVotes">載入中...</div>
-    </div>
-    <div class="stat-card-small">
-        <h3>無效投票</h3>
-        <div class="stat-value" id="pendingVotes">載入中...</div>
-    </div>
-    <div class="stat-card-small">
-        <h3>參與人數</h3>
-        <div class="stat-value" id="uniqueVoters">載入中...</div>
-    </div>
-    <div class="stat-card-small">
-        <h3>平均票數</h3>
-        <div class="stat-value" id="averageVotes">載入中...</div>
-    </div>
-</div>
+        <!-- 統計信息區 -->
+        <div class="stat-cards-container mb-4">
+            <div class="stat-card-large">
+                <h3>總投票數</h3>
+                <div class="stat-value" id="totalVotes">載入中...</div>
+            </div>
+            <div class="stat-card-small">
+                <h3>有效投票</h3>
+                <div class="stat-value" id="validVotes">載入中...</div>
+            </div>
+            <div class="stat-card-small">
+                <h3>無效投票</h3>
+                <div class="stat-value" id="pendingVotes">載入中...</div>
+            </div>
+            <div class="stat-card-small">
+                <h3>參與人數</h3>
+                <div class="stat-value" id="uniqueVoters">載入中...</div>
+            </div>
+            <div class="stat-card-small">
+                <h3>平均票數</h3>
+                <div class="stat-value" id="averageVotes">載入中...</div>
+            </div>
+        </div>
 
         <!-- 活動選擇下拉菜單 -->
         <div class="row mb-4">
@@ -315,8 +315,7 @@ body {
 
         // 綁定搜索框回車事件
         $('#searchInput').keypress(function (event) {
-            if (event.which === 13) {
-                event.preventDefault();
+            if (event.which === 13) {event.preventDefault();
                 searchVotes();
             }
         });
@@ -377,16 +376,16 @@ body {
     // ===== 顯示函數 =====
     
     // 顯示投票列表
-function displayVotes(page) {
-    const start = (page - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const pageVotes = allVotes.slice(start, end);
+    function displayVotes(page) {
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageVotes = allVotes.slice(start, end);
 
-    const voteList = $('#voteList');
-    voteList.empty();
+        const voteList = $('#voteList');
+        voteList.empty();
 
-    pageVotes.forEach(vote => {
-        voteList.append(`
+        pageVotes.forEach(vote => {
+            voteList.append(`
             <tr>
                 <td>${vote.voteId}</td>
                 <td>${vote.member.memName}</td>
@@ -402,98 +401,102 @@ function displayVotes(page) {
                 </td>
             </tr>
         `);
-    });
-}
+        });
+    }
 
     // ===== 分頁相關函數 =====
     
-function setupPagination() {
-    const totalPages = Math.ceil(allVotes.length / itemsPerPage);
-    const pagination = $('#pagination');
-    pagination.empty();
+    // 設置分頁控件
+    function setupPagination() {
+        const totalPages = Math.ceil(allVotes.length / itemsPerPage);
+        const pagination = $('#pagination');
+        pagination.empty();
 
-    pagination.append(`
+        // 添加上一頁按鈕
+        pagination.append(`
         <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
             <a class="page-link" href="#" onclick="changePage(${currentPage - 1}, event)">上一頁</a>
         </li>
     `);
 
-    for (let i = 1; i <= totalPages; i++) {
-        if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-            pagination.append(`
+        // 添加頁碼按鈕
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                pagination.append(`
                 <li class="page-item ${currentPage === i ? 'active' : ''}">
                     <a class="page-link" href="#" onclick="changePage(${i}, event)">${i}</a>
                 </li>
             `);
-        } else if (i === currentPage - 3 || i === currentPage + 3) {
-            pagination.append(`<li class="page-item disabled"><span class="page-link">...</span></li>`);
+            } else if (i === currentPage - 3 || i === currentPage + 3) {
+                pagination.append(`<li class="page-item disabled"><span class="page-link">...</span></li>`);
+            }
         }
-    }
 
-    pagination.append(`
+        // 添加下一頁按鈕
+        pagination.append(`
         <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
             <a class="page-link" href="#" onclick="changePage(${currentPage + 1}, event)">下一頁</a>
         </li>
     `);
-}
+    }
 
     // 切換頁面
-function changePage(page, event) {
-    if (event) {
-        event.preventDefault();
-    }
-    const totalPages = Math.ceil(allVotes.length / itemsPerPage);
-    if (page < 1 || page > totalPages) return;
-    currentPage = page;
-    displayVotes(currentPage);
-    setupPagination();
+    function changePage(page, event) {
+        if (event) {
+            event.preventDefault();
+        }
+        const totalPages = Math.ceil(allVotes.length / itemsPerPage);
+        if (page < 1 || page > totalPages) return;
+        currentPage = page;
+        displayVotes(currentPage);
+        setupPagination();
 
-    // 滾動到投票列表的頂部
-    const voteListElement = document.getElementById('voteList');
-    if (voteListElement) {
-        voteListElement.scrollIntoView({ behavior: 'smooth' });
+        // 滾動到投票列表的頂部
+        const voteListElement = document.getElementById('voteList');
+        if (voteListElement) {
+            voteListElement.scrollIntoView({ behavior: 'smooth' });
+        }
     }
-}
 
     // ===== 搜索相關函數 =====
     
     // 搜索投票
-function searchVotes() {
-    const searchField = $('#searchField').val();
-    const searchInput = $('#searchInput').val().toLowerCase();
+    function searchVotes() {
+        const searchField = $('#searchField').val();
+        const searchInput = $('#searchInput').val().toLowerCase();
 
-    if (searchInput.trim() === '') {
-        allVotes = [...originalVotes];
-    } else {
-        allVotes = originalVotes.filter(vote => {
-            if (searchField === 'all') {
-                return Object.values(vote).some(value =>
-                    String(value).toLowerCase().includes(searchInput)
-                ) ||
-                    vote.member.memName.toLowerCase().includes(searchInput) ||
-                    vote.event.eventName.toLowerCase().includes(searchInput) ||
-                    vote.eventSignup.workTitle.toLowerCase().includes(searchInput);
-            } else {
-                switch (searchField) {
-                    case 'voteId':
-                        return vote.voteId.toString().includes(searchInput);
-                    case 'memberName':
-                        return vote.member.memName.toLowerCase().includes(searchInput);
-                    case 'eventName':
-                        return vote.event.eventName.toLowerCase().includes(searchInput);
-                    case 'workTitle':
-                        return vote.eventSignup.workTitle.toLowerCase().includes(searchInput);
-                    default:
-                        return false;
+        if (searchInput.trim() === '') {
+            allVotes = [...originalVotes];
+        } else {
+            allVotes = originalVotes.filter(vote => {
+                if (searchField === 'all') {
+                    return Object.values(vote).some(value =>
+                        String(value).toLowerCase().includes(searchInput)
+                    ) ||
+                        vote.member.memName.toLowerCase().includes(searchInput) ||
+                        vote.event.eventName.toLowerCase().includes(searchInput) ||
+                        vote.eventSignup.workTitle.toLowerCase().includes(searchInput);
+                } else {
+                    switch (searchField) {
+                        case 'voteId':
+                            return vote.voteId.toString().includes(searchInput);
+                        case 'memberName':
+                            return vote.member.memName.toLowerCase().includes(searchInput);
+                        case 'eventName':
+                            return vote.event.eventName.toLowerCase().includes(searchInput);
+                        case 'workTitle':
+                            return vote.eventSignup.workTitle.toLowerCase().includes(searchInput);
+                        default:
+                            return false;
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
 
-    currentPage = 1;
-    displayVotes(currentPage);
-    setupPagination();
-}
+        currentPage = 1;
+        displayVotes(currentPage);
+        setupPagination();
+    }
 
     // ===== 投票狀態更新函數 =====
     
@@ -547,77 +550,77 @@ function searchVotes() {
     // ===== 圖表相關函數 =====
     
     // 初始化圖表
-function initCharts() {
-    const voteTrendCtx = document.getElementById('voteTrendChart').getContext('2d');
-    if (voteTrendChart) {
-        voteTrendChart.destroy();
-    }
-    voteTrendChart = new Chart(voteTrendCtx, {
-        type: 'line', // 圖表類型：線圖
-        data: {
-            labels: [], // X軸標籤，將由數據填充
-            datasets: [] // 數據集，將由數據填充
-        },
-        options: {
-            responsive: true, // 響應式圖表
-            maintainAspectRatio: false, // 不保持縱橫比，允許完全自定義大小
-            scales: {
-                x: {
-                    type: 'time', // X軸類型：時間
-                    time: {
-                        unit: 'day', // 時間單位：天
-                        displayFormats: {
-                            day: 'YYYY-MM-DD' // 日期顯示格式
-                        }
-                    },
-                    title: {
-                        display: true, // 顯示X軸標題
-                        text: '日期', // X軸標題文字
-                        font: {
-                            size: 14 // X軸標題字體大小
-                        }
-                    },
-                    ticks: {
-                        font: {
-                            size: 12 // X軸刻度字體大小
-                        }
-                    }
-                },
-                y: {
-                    beginAtZero: true, // Y軸從0開始
-                    title: {
-                        display: true, // 顯示Y軸標題
-                        text: '投票數', // Y軸標題文字
-                        font: {
-                            size: 14 // Y軸標題字體大小
-                        }
-                    },
-                    ticks: {
-                        font: {
-                            size: 12 // Y軸刻度字體大小
-                        }
-                    }
-                }
+    function initCharts() {
+        const voteTrendCtx = document.getElementById('voteTrendChart').getContext('2d');
+        if (voteTrendChart) {
+            voteTrendChart.destroy();
+        }
+        voteTrendChart = new Chart(voteTrendCtx, {
+            type: 'line', // 圖表類型：線圖
+            data: {
+                labels: [], // X軸標籤，將由數據填充
+                datasets: [] // 數據集，將由數據填充
             },
-            plugins: {
-                title: {
-                    display: true, // 顯示圖表標題
-                    text: '投票趨勢圖', // 圖表標題文字
-                    font: {
-                        size: 18 // 圖表標題字體大小
+            options: {
+                responsive: true, // 響應式圖表
+                maintainAspectRatio: false, // 不保持縱橫比，允許完全自定義大小
+                scales: {
+                    x: {
+                        type: 'time', // X軸類型：時間
+                        time: {
+                            unit: 'day', // 時間單位：天
+                            displayFormats: {
+                                day: 'YYYY-MM-DD' // 日期顯示格式
+                            }
+                        },
+                        title: {
+                            display: true, // 顯示X軸標題
+                            text: '日期', // X軸標題文字
+                            font: {
+                                size: 14 // X軸標題字體大小
+                            }
+                        },
+                        ticks: {
+                            font: {
+                                size: 12 // X軸刻度字體大小
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true, // Y軸從0開始
+                        title: {
+                            display: true, // 顯示Y軸標題
+                            text: '投票數', // Y軸標題文字
+                            font: {
+                                size: 14 // Y軸標題字體大小
+                            }
+                        },
+                        ticks: {
+                            font: {
+                                size: 12 // Y軸刻度字體大小
+                            }
+                        }
                     }
                 },
-                legend: {
-                    labels: {
+                plugins: {
+                    title: {
+                        display: true, // 顯示圖表標題
+                        text: '投票趨勢圖', // 圖表標題文字
                         font: {
-                            size: 12 // 圖例字體大小
+                            size: 18 // 圖表標題字體大小
+                        }
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 12 // 圖例字體大小
+                            }
                         }
                     }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
     // 根據活動更新投票趨勢圖表
     function updateVoteTrendChartByEvent() {
