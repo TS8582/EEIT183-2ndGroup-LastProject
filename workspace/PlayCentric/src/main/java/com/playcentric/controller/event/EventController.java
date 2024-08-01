@@ -12,20 +12,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.event.Event;
+import com.playcentric.model.event.EventSignup;
 import com.playcentric.service.ImageLibService;
 import com.playcentric.service.event.EventService;
 import com.playcentric.service.event.EventSignupService;
 
-/**
- * 活動控制器
- * 處理與活動相關的請求
- */
 @Controller
 @RequestMapping("/events")
 public class EventController {
@@ -45,8 +49,6 @@ public class EventController {
 
     /**
      * 顯示所有活動的列表頁面
-     * @param model Spring MVC Model
-     * @return 活動列表頁面視圖名稱
      */
     @GetMapping("/listEvents")
     public String events(Model model) {
@@ -59,8 +61,6 @@ public class EventController {
 
     /**
      * 顯示所有公開活動的列表
-     * @param model Spring MVC Model
-     * @return 公開活動列表頁面視圖名稱
      */
     @GetMapping("/public/list")
     public String publicEventList(Model model) {
@@ -80,9 +80,6 @@ public class EventController {
 
     /**
      * 顯示指定ID的公開活動詳細資訊
-     * @param eventId 活動ID
-     * @param model Spring MVC Model
-     * @return 活動詳情頁面視圖名稱
      */
     @GetMapping("/public/detail/{eventId}")
     public String publicEventDetail(@PathVariable Integer eventId, Model model) {
@@ -109,11 +106,6 @@ public class EventController {
 
     /**
      * 創建活動 (表單提交)
-     * @param event 活動對象
-     * @param photoFile 活動圖片文件
-     * @param useAutoStatus 是否使用自動狀態
-     * @param redirectAttributes 重定向屬性
-     * @return 重定向到活動列表頁面
      */
     @PostMapping("/createPost")
     public String createEventPost(@ModelAttribute Event event,
@@ -147,11 +139,6 @@ public class EventController {
 
     /**
      * 更新活動 (表單提交)
-     * @param event 活動對象
-     * @param photoFile 活動圖片文件
-     * @param useAutoStatus 是否使用自動狀態
-     * @param redirectAttributes 重定向屬性
-     * @return 重定向到活動列表頁面
      */
     @PostMapping("/updatePost")
     public String updateEventPost(@ModelAttribute Event event,
@@ -192,31 +179,30 @@ public class EventController {
     }
 
     /**
-     * 刪除活動
-     * @param eventId 活動ID
-     * @param redirectAttributes 重定向屬性
-     * @return 重定向到活動列表頁面
+     * 處理刪除活動的請求
+     * @param eventId 要刪除的活動ID
+     * @return 刪除操作的結果
      */
     @PostMapping("/delete")
-    public String deleteEvent(@RequestParam Integer eventId, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<?> deleteEvent(@RequestParam Integer eventId) {
         logger.info("接收到刪除活動的請求，活動ID: {}", eventId);
         try {
             eventService.deleteEvent(eventId);
             logger.info("活動刪除成功，活動ID: {}", eventId);
-            redirectAttributes.addFlashAttribute("successMessage", "活動刪除成功");
+            return ResponseEntity.ok(Map.of("success", true, "message", "活動刪除成功"));
+        } catch (IllegalStateException e) {
+            logger.error("活動刪除失敗: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
         } catch (Exception e) {
             logger.error("活動刪除失敗", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "已有報名，無法刪除!");
+            return ResponseEntity.internalServerError().body(Map.of("success", false, "message", "刪除失敗，請稍後再試!"));
         }
-        return "redirect:/events/listEvents";
     }
 
     // ======== API 相關方法 ========
 
     /**
      * 創建活動 (REST API)
-     * @param event 活動對象
-     * @return ResponseEntity 包含創建的活動或錯誤信息
      */
     @PostMapping("/create")
     @ResponseBody
@@ -234,8 +220,6 @@ public class EventController {
 
     /**
      * 根據ID查找活動 (REST API)
-     * @param eventId 活動ID
-     * @return ResponseEntity 包含活動對象或404錯誤
      */
     @GetMapping("/get/{eventId}")
     @ResponseBody
@@ -254,7 +238,6 @@ public class EventController {
 
     /**
      * 查找所有活動 (REST API)
-     * @return 所有活動的列表
      */
     @GetMapping("/find")
     @ResponseBody
@@ -265,13 +248,6 @@ public class EventController {
         return events;
     }
 
-    /**
-     * 更新活動 (AJAX)
-     * @param event 活動對象
-     * @param photoFile 活動圖片文件
-     * @param useAutoStatus 是否使用自動狀態
-     * @return ResponseEntity 包含更新結果
-     */
     @PostMapping("/updatePostAjax")
     @ResponseBody
     public ResponseEntity<?> updateEventPostAjax(@ModelAttribute Event event,
@@ -310,7 +286,6 @@ public class EventController {
     
     /**
      * 獲取下一個即將結束的活動 (REST API)
-     * @return ResponseEntity 包含下一個即將結束的活動或404錯誤
      */
     @GetMapping("/api/next-ending")
     @ResponseBody

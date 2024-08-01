@@ -8,19 +8,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.playcentric.model.member.Member;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * 活動報名實體類
+ * 代表用戶對某個活動的報名
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,9 +38,7 @@ public class EventSignup {
     private Event event;
     
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy年MM月dd日 HH:mm")
-    // @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-//    @Temporal(TemporalType.TIMESTAMP) 
     private LocalDateTime signupTime;
     
     private Integer workType;
@@ -52,7 +47,6 @@ public class EventSignup {
     
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-//    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime workUploadTime;
 
     @JsonIgnore

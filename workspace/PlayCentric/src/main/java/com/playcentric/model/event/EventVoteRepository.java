@@ -3,6 +3,10 @@ package com.playcentric.model.event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
+/**
+ * 活動投票儲存庫介面
+ * 提供對活動投票實體的數據庫操作
+ */
 public interface EventVoteRepository extends JpaRepository<EventVote, Integer> {
     /**
      * 根據活動ID查找所有投票
@@ -34,6 +38,12 @@ public interface EventVoteRepository extends JpaRepository<EventVote, Integer> {
      */
     long countByEventSignup_SignupId(Integer signupId);
 
+    /**
+     * 計算特定報名的特定狀態的投票數量
+     * @param eventSignup_SignupId 報名ID
+     * @param eventVoteStatus 投票狀態
+     * @return 符合條件的投票數量
+     */
     long countByEventSignup_SignupIdAndEventVoteStatus(Integer eventSignup_SignupId, Integer eventVoteStatus);
     
     /**

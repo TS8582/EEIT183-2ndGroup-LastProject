@@ -951,33 +951,54 @@
 
         console.log('活動管理腳本加載完成');
 
-        // 刪除確認
-        let formToSubmit = null;
+// 刪除確認
+let eventIdToDelete = null;
 
-        $('#eventList').on('click', '.delete-btn', function (e) {
-            e.preventDefault();
-            formToSubmit = $(this).closest('form');
-            $('#deleteConfirmModal').modal('show');
-        });
+// 綁定刪除按鈕點擊事件
+$('#eventList').on('click', '.delete-btn', function (e) {
+    e.preventDefault();
+    eventIdToDelete = $(this).data('event-id');
+    $('#deleteConfirmModal').modal('show');
+});
 
-        $('#confirmDeleteBtn').click(function () {
-            if (formToSubmit) {
-                formToSubmit.submit();
-            }
-        });
-
-        // 確保刪除確認 modal 可以正確關閉
-        $('#deleteConfirmModal .close, #deleteConfirmModal .btn-secondary').click(function () {
-            $('#deleteConfirmModal').modal('hide');
-        });
-
-        // 修改刪除確認按鈕的處理
-        $('#confirmDeleteBtn').click(function () {
-            if (formToSubmit) {
-                formToSubmit.submit();
+$('#confirmDeleteBtn').click(function() {
+    if (eventIdToDelete) {
+        // 禁用按鈕以防止重複點擊
+        $('#confirmDeleteBtn').prop('disabled', true);
+        // 顯示加載指示器
+        $('#confirmDeleteBtn').text('刪除中...');
+        
+        // 使用 axios 發送刪除請求
+        axios.post(`/PlayCentric/events/delete?eventId=${eventIdToDelete}`)
+            .then(response => {
+                if (response.data.success) {
+                    doAlert('活動記錄已刪除');
+                    $('#deleteConfirmModal').modal('hide');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    throw new Error(response.data.message);
+                }
+            })
+            .catch(error => {
+                console.error("刪除活動記錄失敗:", error);
+                // 顯示後端返回的錯誤訊息
+                doAlert(error.response?.data?.message || error.message || '刪除失敗，請稍後再試');
                 $('#deleteConfirmModal').modal('hide');
-            }
-        });
+            })
+            .finally(() => {
+                // 恢復按鈕狀態
+                $('#confirmDeleteBtn').prop('disabled', false);
+                $('#confirmDeleteBtn').text('確定刪除');
+            });
+    }
+});
+
+// 確保刪除確認 modal 可以正確關閉
+$('#deleteConfirmModal .close, #deleteConfirmModal .btn-secondary').click(function() {
+    $('#deleteConfirmModal').modal('hide');
+});
     </script>
 </body>
 

@@ -4,6 +4,10 @@ import com.playcentric.model.member.Member;
 
 import lombok.Data;
 
+/**
+ * 活動報名數據傳輸對象
+ * 用於在不同層之間傳遞活動報名相關的數據
+ */
 @Data
 public class EventSignupDTO {
     private Integer signupId;

@@ -22,6 +22,10 @@ import com.playcentric.model.event.EventVoteRepository;
 import com.playcentric.model.member.Member;
 import com.playcentric.model.member.MemberRepository;
 
+/**
+ * 活動報名服務類
+ * 處理與活動報名相關的業務邏輯
+ */
 @Service
 @Transactional
 public class EventSignupService {
@@ -44,7 +48,6 @@ public class EventSignupService {
 
     /**
      * 創建新的報名
-     * 
      * @param eventSignup 新的報名數據
      * @return 創建成功的報名數據
      * @throws RuntimeException 如果活動不存在或報名已截止
@@ -73,7 +76,6 @@ public class EventSignupService {
 
     /**
      * 更新報名信息
-     * 
      * @param eventSignup 更新的報名數據
      * @return 更新後的報名數據
      * @throws RuntimeException 如果報名記錄不存在
@@ -106,9 +108,8 @@ public class EventSignupService {
 
     /**
      * 刪除報名
-     * 
      * @param signupId 報名ID
-     * @throws RuntimeException      如果報名記錄不存在
+     * @throws RuntimeException 如果報名記錄不存在
      * @throws IllegalStateException 如果報名已有投票
      */
     @Transactional
@@ -131,7 +132,6 @@ public class EventSignupService {
 
     /**
      * 根據ID獲取報名信息
-     * 
      * @param signupId 報名ID
      * @return 包含報名信息的Optional
      */
@@ -142,7 +142,6 @@ public class EventSignupService {
 
     /**
      * 獲取所有報名
-     * 
      * @return 所有報名的列表
      */
     public List<EventSignup> getAllSignups() {
@@ -152,7 +151,6 @@ public class EventSignupService {
 
     /**
      * 根據活動ID獲取報名
-     * 
      * @param eventId 活動ID
      * @return 指定活動的所有報名
      */
@@ -163,7 +161,6 @@ public class EventSignupService {
 
     /**
      * 根據會員ID獲取報名
-     * 
      * @param memberId 會員ID
      * @return 指定會員的所有報名
      */
@@ -174,7 +171,6 @@ public class EventSignupService {
 
     /**
      * 根據報名ID獲取報名圖片
-     * 
      * @param signupId 報名ID
      * @return 報名圖片的字節數組
      * @throws RuntimeException 如果找不到指定的報名記錄
@@ -187,7 +183,6 @@ public class EventSignupService {
 
     /**
      * 根據活動ID獲取已審核的報名
-     * 
      * @param eventId 活動ID
      * @return 指定活動的所有已審核報名
      */
@@ -200,8 +195,7 @@ public class EventSignupService {
 
     /**
      * 檢查用戶是否已經報名過特定活動
-     * 
-     * @param memId   會員ID
+     * @param memId 會員ID
      * @param eventId 活動ID
      * @return 如果已經報名則返回true，否則返回false
      */
@@ -211,8 +205,7 @@ public class EventSignupService {
 
     /**
      * 更新報名審核狀態
-     * 
-     * @param signupId     報名ID
+     * @param signupId 報名ID
      * @param reviewStatus 新的審核狀態
      * @return 更新後的報名對象
      * @throws RuntimeException 如果報名記錄不存在
@@ -229,9 +222,17 @@ public class EventSignupService {
         return updatedSignup;
     }
 
+    /**
+     * 獲取會員的報名記錄（分頁）
+     * @param memId 會員ID
+     * @param pageNum 頁碼
+     * @return 分頁的報名記錄
+     */
     public Page<EventSignup> getRecord(Integer memId, Integer pageNum) {
         Member member = memberRepository.findById(memId).get();
         PageRequest pageable = PageRequest.of(pageNum - 1, 6, Sort.Direction.DESC, "workUploadTime");
         return eventSignupRepository.findByMember(member, pageable);
     }
+    
+
 }
