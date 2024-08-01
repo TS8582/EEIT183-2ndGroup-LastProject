@@ -101,13 +101,13 @@ public class PageController {
 
 //		Integer gameId1 = 1;
 //		Integer gameId2 = 76;
-		List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(97);
-		List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(76);
+//		List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(97);
+//		List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(76);
 		List<Game> findGameName = pfGameService.findAllGame();
 
 		model.addAttribute("findGameIdAndName", findGameName);
-		model.addAttribute("PfGame", pfGames);
-		model.addAttribute("PfGame2", pfGames2);
+//		model.addAttribute("PfGame", pfGames);
+//		model.addAttribute("PfGame2", pfGames2);
 		model.addAttribute("PlayFellowMember", playFellowMembers);
 
 		return "playFellow/playFellow";
