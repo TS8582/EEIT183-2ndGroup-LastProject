@@ -60,15 +60,13 @@ public class PageController {
 
 	@Autowired
 	ImageLibRepository imageLibRepository;
-	
+
 	@Autowired
 	GameService gameService;
-	
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	
 	// 進入cart
 	@GetMapping("/playFellow/playFellowCart")
 	public String viewPlayFellowCart(@RequestParam("pfGameId") Integer pfGameId, Model model) {
@@ -91,23 +89,22 @@ public class PageController {
 
 	@GetMapping("/playFellow")
 	public String getPlayFellowById(Model model) {
-		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
-
-
+		// List<PlayFellowMember> playFellowMembers =
+		// playFellowMemberService.getAllPlayFellowMembers();
 
 		List<PlayFellowMember> lastest5playFellowMembers = playFellowMemberService
 				.getTopFiveReviewSuccessPlayFellowMembers();
 		model.addAttribute("TopFiveReviewSuccessMembers", lastest5playFellowMembers);
 
-//		Integer gameId1 = 1;
-//		Integer gameId2 = 76;
-//		List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(97);
-//		List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(76);
+		// Integer gameId1 = 1;
+		// Integer gameId2 = 76;
+		// List<PfGame> pfGames = pfGameService.getAllPlayFellowMembersByGameId(97);
+		// List<PfGame> pfGames2 = pfGameService.getAllPlayFellowMembersByGameId(76);
 		List<Game> findGameName = pfGameService.findAllGame();
 
 		model.addAttribute("findGameIdAndName", findGameName);
-//		model.addAttribute("PfGame", pfGames);
-//		model.addAttribute("PfGame2", pfGames2);
+		// model.addAttribute("PfGame", pfGames);
+		// model.addAttribute("PfGame2", pfGames2);
 		model.addAttribute("PlayFellowMember", playFellowMembers);
 
 		return "playFellow/playFellow";
@@ -123,8 +120,6 @@ public class PageController {
 		return new ResponseEntity<>(pfGameDTOs, HttpStatus.OK);
 	}
 
-	
-	
 	@GetMapping("/playFellow/{gameId}")
 	public String showGameMember(@PathVariable("gameId") Integer gameId, Model model) {
 		List<PlayFellowMember> playFellowMembers = playFellowMemberService.getAllPlayFellowMembers();
@@ -157,8 +152,6 @@ public class PageController {
 		return "playFellow/showGameMember";
 	}
 
-	
-	
 	@ResponseBody
 	@PostMapping("playFellow/addPfOrder")
 	public String addOrder(@RequestBody PfOrderDTO pfOrderDTO) {
@@ -196,22 +189,21 @@ public class PageController {
 		return "付款成功";
 	}
 
-	
-	
 	@ResponseBody
-    @GetMapping("/api/images/{imageId}")
-    public ResponseEntity<byte[]> getImageById(@PathVariable Integer imageId) {
-        Optional<ImageLib> imageOpt = imageLibRepository.findById(imageId);
-        if (imageOpt.isPresent()) {
-            byte[] imageData = imageOpt.get().getImageFile();
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	@GetMapping("/api/images/{imageId}")
+	public ResponseEntity<byte[]> getImageById(@PathVariable Integer imageId) {
+		Optional<ImageLib> imageOpt = imageLibRepository.findById(imageId);
+		if (imageOpt.isPresent()) {
+			byte[] imageData = imageOpt.get().getImageFile();
+			return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
 	@ResponseBody
-    @GetMapping("/api/allGame")
-		public List<Game> allGame(){
+	@GetMapping("/api/allGame")
+	public List<Game> allGame() {
 		return gameService.findAll();
 	}
 }
