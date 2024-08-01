@@ -12,19 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.playcentric.model.event.EventVote;
 import com.playcentric.service.event.EventVoteService;
 
+/**
+ * 活動投票控制器
+ * 處理與活動投票相關的請求
+ */
 @Controller
 @RequestMapping("/eventVotes")
 public class EventVoteController {
@@ -39,7 +35,7 @@ public class EventVoteController {
     /**
      * 顯示投票列表頁面
      * @param model Spring MVC Model
-     * @return 投票列表頁面
+     * @return 投票列表頁面視圖名稱
      */
     @GetMapping("/list")
     public String listVotes(Model model) {
@@ -51,7 +47,7 @@ public class EventVoteController {
     /**
      * 顯示創建投票的表單
      * @param model Spring MVC Model
-     * @return 投票表單頁面
+     * @return 投票表單頁面視圖名稱
      */
     @GetMapping("/create")
     public String showCreateForm(Model model) {
@@ -81,7 +77,7 @@ public class EventVoteController {
      * 顯示特定投票的詳情
      * @param voteId 投票ID
      * @param model Spring MVC Model
-     * @return 投票詳情頁面或錯誤頁面
+     * @return 投票詳情頁面視圖名稱或錯誤頁面
      */
     @GetMapping("/{voteId}")
     public String getVote(@PathVariable Integer voteId, Model model) {
@@ -99,7 +95,7 @@ public class EventVoteController {
      * 顯示編輯投票的表單
      * @param voteId 投票ID
      * @param model Spring MVC Model
-     * @return 投票表單頁面
+     * @return 投票表單頁面視圖名稱
      */
     @GetMapping("/edit/{voteId}")
     public String showEditForm(@PathVariable Integer voteId, Model model) {
@@ -147,7 +143,7 @@ public class EventVoteController {
      * 顯示特定報名的所有投票
      * @param signupId 報名ID
      * @param model Spring MVC Model
-     * @return 投票列表頁面
+     * @return 投票列表頁面視圖名稱
      */
     @GetMapping("/signup/{signupId}")
     public String getVotesBySignup(@PathVariable Integer signupId, Model model) {
@@ -159,7 +155,7 @@ public class EventVoteController {
     /**
      * 顯示投票管理頁面
      * @param model Spring MVC Model
-     * @return 投票管理頁面視圖
+     * @return 投票管理頁面視圖名稱
      */
     @GetMapping("/manage")
     public String manageVotes(Model model) {

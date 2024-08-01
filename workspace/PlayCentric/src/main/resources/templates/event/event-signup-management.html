@@ -314,6 +314,28 @@
             </div>
         </div>
 
+        <!-- 確認刪除 Modal -->
+        <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog"
+            aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteConfirmModalLabel">確認刪除</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        您確定要刪除這條報名記錄嗎？此操作無法撤銷。
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">確定刪除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- jQuery 和 Bootstrap JavaScript -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
@@ -400,11 +422,24 @@
             }
 
             // 刪除報名
+            let signupIdToDelete = null;
+
             function deleteSignup(signupId) {
-                if (confirm('確定要刪除這條報名記錄嗎？')) {
-                    axios.delete(`${deleteSignupUrl}${signupId}`)
+                signupIdToDelete = signupId;
+                $('#deleteConfirmModal').modal('show');
+            }
+
+            $('#confirmDeleteBtn').click(function () {
+                if (signupIdToDelete) {
+                    // 禁用按鈕以防止重複點擊
+                    $('#confirmDeleteBtn').prop('disabled', true);
+                    // 顯示加載指示器
+                    $('#confirmDeleteBtn').text('刪除中...');
+
+                    axios.delete(`${deleteSignupUrl}${signupIdToDelete}`)
                         .then(response => {
                             doAlert('報名記錄已刪除');
+                            $('#deleteConfirmModal').modal('hide'); // 隱藏模態框
                             setTimeout(() => {
                                 location.reload();
                             }, 1000);
@@ -412,9 +447,20 @@
                         .catch(error => {
                             console.error("刪除報名記錄失敗:", error);
                             doAlert(error.response.data || '刪除失敗，請稍後再試');
+                            $('#deleteConfirmModal').modal('hide'); // 隱藏模態框
+                        })
+                        .finally(() => {
+                            // 恢復按鈕狀態
+                            $('#confirmDeleteBtn').prop('disabled', false);
+                            $('#confirmDeleteBtn').text('確定刪除');
                         });
                 }
-            }
+            });
+
+            // 確保刪除確認 modal 可以正確關閉
+            $('#deleteConfirmModal .close, #deleteConfirmModal .btn-secondary').click(function () {
+                $('#deleteConfirmModal').modal('hide');
+            });
 
             // 搜尋報名
             function searchSignups() {

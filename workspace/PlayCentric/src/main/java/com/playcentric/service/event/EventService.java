@@ -13,12 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.playcentric.model.event.Event;
 import com.playcentric.model.event.EventRepository;
+import com.playcentric.model.event.EventSignupRepository;
 
 @Service
 public class EventService {
 
     @Autowired
     private EventRepository eventRepository;
+    
+    @Autowired
+    private EventSignupRepository eventSignupRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(EventService.class);
 
@@ -107,6 +111,13 @@ public class EventService {
      */
     @Transactional
     public void deleteEvent(Integer eventId) {
+        // 檢查是否有相關的報名
+        boolean hasSignups = eventSignupRepository.existsByEvent_EventId(eventId);
+        if (hasSignups) {
+            logger.warn("嘗試刪除已有報名的活動，活動ID: {}", eventId);
+            throw new IllegalStateException("該活動已有報名，無法刪除");
+        }
+        
         eventRepository.deleteById(eventId);
         logger.info("活動刪除成功，活動ID: {}", eventId);
     }
@@ -214,5 +225,15 @@ public class EventService {
             .orElseThrow(() -> new RuntimeException("找不到指定的活動"));
         event.setReviewStatus(reviewStatus);
         return eventRepository.save(event);
+    }
+    
+    /**
+     * 檢查活動是否有參賽作品
+     * @param eventId 活動ID
+     * @return 如果活動有參賽作品則返回true，否則返回false
+     */
+    public boolean hasSignups(Integer eventId) {
+        // 使用 EventSignupRepository 檢查是否存在與該活動相關的報名記錄
+        return eventSignupRepository.existsByEvent_EventId(eventId);
     }
 }

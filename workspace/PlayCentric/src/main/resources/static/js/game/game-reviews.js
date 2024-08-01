@@ -5,7 +5,7 @@ const goReviews = document.querySelector('.goReviews');
 let gameId = document.querySelector('.gameId').innerHTML.trim();
 const addReviews = document.querySelector('.addReviews');
 const editReviews = document.querySelector('.editReviews');
-const filled = document.querySelector('.star-container .filled');
+const filled = document.querySelector('#staryo');
 
 
 
@@ -70,12 +70,16 @@ if (goReviews) {
                     reviewsContainer.prepend(existReviews1);
                     reviewsContainer.prepend(title);
                     if (filled) {
-                        let totalreviews = '[[${game.totalReviews}]]';
-                        let totalScore = '[[${game.totalScore}]]';
-                        let allcount = parseFloat(parseInt(totalreviews) - 1);
-                        let allscore = parseFloat(parseInt(totalScore + starAmount));
+                        console.log('有過來');
+                        let starnum = document.querySelector('#starnum');
+                        let totalreviews = document.querySelector('#totalReviews').innerHTML;
+                        let totalScore = document.querySelector('#totalScore').innerHTML;
+                        let allcount = parseFloat(parseInt(totalreviews) + 1);
+                        let allscore = parseFloat(parseInt(totalScore) + starAmount);
                         let avgScore = (allscore / allcount).toFixed(1);
-                        filled.style.width = avgScore + '%';
+                        let result = avgScore * 20;
+                        starnum.innerHTML = avgScore;
+                        filled.setAttribute('style', `width:${result}%;`);
                     }
                 })
                 .catch(err => {
@@ -83,7 +87,7 @@ if (goReviews) {
                 })
         }
         else {
-            doAlert('不能給0顆星！');
+            doAlert('請給評分及評論！');
         }
     })
 }

@@ -16,6 +16,10 @@ import com.playcentric.model.event.EventVote;
 import com.playcentric.model.event.EventVoteRepository;
 import com.playcentric.model.member.MemberRepository;
 
+/**
+ * 活動投票服務類
+ * 處理與活動投票相關的業務邏輯
+ */
 @Service
 public class EventVoteService {
 
@@ -30,13 +34,6 @@ public class EventVoteService {
 
     // ======== 投票管理相關方法 ========
 
-    /**
-     * 創建新的投票，包含投票限制和時間限制檢查
-     * @param memberId 會員ID
-     * @param signupId 報名ID
-     * @return 創建的投票記錄
-     * @throws RuntimeException 如果不滿足投票條件
-     */
     /**
      * 創建新的投票，包含投票限制和時間限制檢查
      * @param memberId 會員ID
@@ -190,7 +187,6 @@ public class EventVoteService {
      * @return 投票數量
      */
     public long getVoteCountForSignup(Integer signupId) {
-        // return eventVoteRepository.countByEventSignup_SignupId(signupId);
         return eventVoteRepository.countByEventSignup_SignupIdAndEventVoteStatus(signupId,1);
     }
 }
