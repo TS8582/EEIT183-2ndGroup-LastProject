@@ -47,7 +47,7 @@
 </head>
 
 <body class="">
-    <div class="spin hidden">
+    <div class="spin hidden relative z-50">
         <div class="flex justify-center items-center h-4/5 w-full fixed">
             <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 shadow-md border-lime-500"></div>
         </div>
@@ -93,7 +93,7 @@
             <th:block th:each="game:${games.content}">
 
                 <div
-                    class="hover:scale-110 fade-in h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500 gameitem">
+                    class="hover:scale-110 fade-in h-auto shadow-md border-2 rounded-lg flex flex-col p-2 bg-white border-sky-300 shadow-sky-500 gameitem relative z-30">
                     <div class="py-2 h-64 flex justify-center rounded-md">
                         <a class="" th:if="${!game.imageLibs.empty}" th:href="@{/game/showGame(gameId=${game.gameId})}">
                             <img class="w-auto h-full rounded-md"
