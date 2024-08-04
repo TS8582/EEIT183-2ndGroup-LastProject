@@ -17,6 +17,10 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
 	
 	Page<Game> findByIsShowOrderByReleaseAtDesc(Boolean isShow,Pageable pgb);
 	
+	Page<Game> findByIsShowAndGameNameContainingOrderByReleaseAtDesc(Boolean isShow, String gameName, Pageable pgb);
+	
+	List<Game> findByIsShowAndGameNameContainingOrderByReleaseAtDesc(Boolean isShow, String gameName);
+	
 	List<Game> findByIsShowOrderByReleaseAtDesc(Boolean isShow);
 	
 	List<Game> findByIsShow(Boolean isShow);
