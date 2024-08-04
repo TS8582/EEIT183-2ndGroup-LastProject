@@ -33,126 +33,6 @@ public class EventVoteController {
     // ======== 網頁視圖相關方法 ========
 
     /**
-     * 顯示投票列表頁面
-     * @param model Spring MVC Model
-     * @return 投票列表頁面視圖名稱
-     */
-    @GetMapping("/list")
-    public String listVotes(Model model) {
-        List<EventVote> votes = eventVoteService.getAllVotes();
-        model.addAttribute("votes", votes);
-        return "event/vote-list";
-    }
-
-    /**
-     * 顯示創建投票的表單
-     * @param model Spring MVC Model
-     * @return 投票表單頁面視圖名稱
-     */
-    @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("eventVote", new EventVote());
-        return "event/vote-form";
-    }
-
-    /**
-     * 處理創建投票的表單提交
-     * @param memberId 會員ID
-     * @param signupId 報名ID
-     * @param model Spring MVC Model
-     * @return 重定向到投票列表或返回表單（如果出錯）
-     */
-    @PostMapping("/create")
-    public String createVoteForm(@RequestParam Integer memberId, @RequestParam Integer signupId, Model model) {
-        try {
-            eventVoteService.createVote(memberId, signupId);
-            return "redirect:/eventVotes/list";
-        } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            return "event/vote-form";
-        }
-    }
-
-    /**
-     * 顯示特定投票的詳情
-     * @param voteId 投票ID
-     * @param model Spring MVC Model
-     * @return 投票詳情頁面視圖名稱或錯誤頁面
-     */
-    @GetMapping("/{voteId}")
-    public String getVote(@PathVariable Integer voteId, Model model) {
-        try {
-            EventVote vote = eventVoteService.getVote(voteId);
-            model.addAttribute("vote", vote);
-            return "event/vote-detail";
-        } catch (RuntimeException e) {
-            model.addAttribute("error", "找不到指定的投票記錄");
-            return "error";
-        }
-    }
-    
-    /**
-     * 顯示編輯投票的表單
-     * @param voteId 投票ID
-     * @param model Spring MVC Model
-     * @return 投票表單頁面視圖名稱
-     */
-    @GetMapping("/edit/{voteId}")
-    public String showEditForm(@PathVariable Integer voteId, Model model) {
-        EventVote vote = eventVoteService.getVote(voteId);
-        model.addAttribute("vote", vote);
-        return "event/vote-form";
-    }
-
-    /**
-     * 處理更新投票的表單提交
-     * @param voteId 投票ID
-     * @param eventVoteStatus 新的投票狀態
-     * @param model Spring MVC Model
-     * @return 重定向到投票詳情或返回表單（如果出錯）
-     */
-    @PostMapping("/update")
-    public String updateVote(@RequestParam Integer voteId, @RequestParam Integer eventVoteStatus, Model model) {
-        try {
-            EventVote updatedVote = eventVoteService.updateVote(voteId, eventVoteStatus);
-            return "redirect:/eventVotes/" + updatedVote.getVoteId();
-        } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            return "event/vote-form";
-        }
-    }
-
-    /**
-     * 處理刪除投票的請求
-     * @param voteId 投票ID
-     * @param model Spring MVC Model
-     * @return 重定向到投票列表或投票詳情（如果出錯）
-     */
-    @PostMapping("/delete/{voteId}")
-    public String deleteVote(@PathVariable Integer voteId, Model model) {
-        try {
-            eventVoteService.deleteVote(voteId);
-            return "redirect:/eventVotes/list";
-        } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            return "redirect:/eventVotes/" + voteId;
-        }
-    }
-
-    /**
-     * 顯示特定報名的所有投票
-     * @param signupId 報名ID
-     * @param model Spring MVC Model
-     * @return 投票列表頁面視圖名稱
-     */
-    @GetMapping("/signup/{signupId}")
-    public String getVotesBySignup(@PathVariable Integer signupId, Model model) {
-        List<EventVote> votes = eventVoteService.getVotesBySignupId(signupId);
-        model.addAttribute("votes", votes);
-        return "event/vote-list";
-    }
-
-    /**
      * 顯示投票管理頁面
      * @param model Spring MVC Model
      * @return 投票管理頁面視圖名稱
@@ -345,6 +225,13 @@ public class EventVoteController {
         statistics.put("avgVotesPerUser", avgVotesPerUser);
         statistics.put("voteTrend", voteTrend);
 
+        return ResponseEntity.ok(statistics);
+    }
+    
+    @GetMapping("/api/statistics/{eventId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getEventStatistics(@PathVariable Integer eventId) {
+        Map<String, Object> statistics = eventVoteService.getEventStatistics(eventId);
         return ResponseEntity.ok(statistics);
     }
 }
