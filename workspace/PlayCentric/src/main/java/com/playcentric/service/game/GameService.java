@@ -24,10 +24,21 @@ public class GameService {
 	@Autowired
 	private GameDiscountRepository gdRepo;
 	
+	//商店展示的遊戲(按發布時間降冪排序) 加入名稱模糊查詢
+	public Page<Game> findByIsShowAndGameNameContainingOrderByReleaseAtDesc(String gameName, Pageable pgb) {
+		return gRepo.findByIsShowAndGameNameContainingOrderByReleaseAtDesc(Boolean.TRUE, gameName,pgb);
+	}
+	
+	//商店展示的遊戲(按發布時間降冪排序) 加入名稱模糊查詢
+		public List<Game> findByIsShowAndGameNameContainingOrderByReleaseAtDesc(String gameName) {
+			return gRepo.findByIsShowAndGameNameContainingOrderByReleaseAtDesc(Boolean.TRUE, gameName);
+		}
+	
+	//商店展示的遊戲(按發布時間降冪排序)
 	public Page<Game> findByIsShowOrderByReleaseAtDesc(Pageable pgb) {
 		return gRepo.findByIsShowOrderByReleaseAtDesc(Boolean.TRUE, pgb);
 	}
-	
+	//商店展示的遊戲(按發布時間降冪排序)
 	public List<Game> findByIsShowOrderByReleaseAtDesc() {
 		return gRepo.findByIsShowOrderByReleaseAtDesc(Boolean.TRUE);
 	}

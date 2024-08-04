@@ -149,7 +149,7 @@
 
 		</div>
 	</div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 		document.getElementById('gameSelect').addEventListener('change', function () {
 			document.getElementById('gameId').value = this.value;
@@ -272,11 +272,20 @@
 			const playFellowId = document.getElementById('playFellowId').value;
 			showAllPfGame(playFellowId);
 		});
+		
 
 		function backToCms() {
-			alert('您的申請須經後台管理人員審核，請耐心等候!');
-			window.location.href = '/PlayCentric/playFellow';
-		}
+            Swal.fire({
+                title: '伴遊申請通知',
+                text: '您的申請須經後台管理人員審核，請耐心等候!',
+                icon: 'info',
+                confirmButtonText: '確定'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/PlayCentric/playFellow';
+                }
+            });
+        }
 	</script>
 </body>
 
