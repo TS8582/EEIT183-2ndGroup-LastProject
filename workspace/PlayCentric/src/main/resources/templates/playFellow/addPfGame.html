@@ -209,43 +209,54 @@
 
 
 		    axios.get(`/PlayCentric/playFellow/pfGame/list/${playFellowId}`)
-		        .then(response => {
-					pfGameItems.innerHTML = '';
+		    .then(response => {
+		        pfGameItems.innerHTML = '';
 
-		            console.log('成功獲取 PfGame 列表');
+		        console.log('成功獲取 PfGame 列表');
 
-		            const pfGames = response.data;
+		        const pfGames = response.data;
 
-		            pfGames.forEach(pfGame => {
-		                const card = document.createElement('div');
-		                card.className = 'card mb-3';
-		                card.innerHTML = `
-		                    <div class="card-body text-center">
-		                        <div class="d-flex justify-content-between align-items-start mb-2">
-		                            <h5 class="card-title text-gray mb-0">${pfGame.gameName}</h5>
-		                            <button class="btn btn-outline-danger btn-sm" onclick="deletePfGame(${pfGame.pfGameId})">移除</button>
-		                        </div>
-		                        <p class="card-text mb-0">
-		                            <strong>計價方式:</strong> ${pfGame.pricingCategory}<br>
-		                            <strong>遊戲單價:</strong> $ ${pfGame.amount}元
-		                        </p>
+		        pfGames.forEach(pfGame => {
+		            const card = document.createElement('div');
+		            card.className = 'card mb-3';
+		            card.innerHTML = `
+		                <div class="card-body text-center">
+		                    <div class="d-flex justify-content-between align-items-start mb-2">
+		                        <h5 class="card-title text-gray mb-0">${pfGame.gameName}</h5>
+		                        <button class="btn btn-outline-danger btn-sm" onclick="deletePfGame(${pfGame.pfGameId})">移除</button>
 		                    </div>
-		                `;
-		                pfGameItems.appendChild(card);
-		            });
-		        })
-		        .catch(error => {
-		            console.error('錯誤', error);
-		        })
-		        .finally(() => {
-		            // 隱藏 loading 圖示和文字
-		            console.log("隱藏 loading 圖示和文字");
-		            if (loading) {
-		                loading.classList.remove('loading-visible');
-		                loading.classList.add('loading-hidden');
-		            }
-		           
+		                    <p class="card-text mb-0">
+		                        <strong>計價方式:</strong> ${pfGame.pricingCategory}<br>
+		                        <strong>遊戲單價:</strong> $ ${pfGame.amount}元
+		                    </p>
+		                </div>
+		            `;
+		            pfGameItems.appendChild(card);
 		        });
+
+		        // 成功獲取數據後顯示 SweetAlert 的 Toast 消息
+		        Swal.fire({
+		            toast: true,
+		            position: 'top-end',
+		            icon: 'success',
+		            title: '更新成功',
+		            showConfirmButton: false,
+		            timer: 5000, // 3秒後自動關閉
+		            timerProgressBar: true
+		        });
+		    })
+		    .catch(error => {
+		        console.error('錯誤', error);
+		    })
+		    .finally(() => {
+		        // 隱藏 loading 圖示和文字
+		        console.log("隱藏 loading 圖示和文字");
+		        if (loading) {
+		            loading.classList.remove('loading-visible');
+		            loading.classList.add('loading-hidden');
+		        }
+		    });
+
 		}
 
 
