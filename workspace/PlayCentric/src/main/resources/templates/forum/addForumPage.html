@@ -140,7 +140,7 @@
           <label>主題照片:</label> <input class="textsPhoto" type="file" name="textsPhoto">
         </div>
         <div class="form-group">
-          <label>主題:</label> <input type="text" name="forumName" required>
+          <label>主題:</label> <input id="title" type="text" name="forumName" required>
         </div>
         <div class="form-group st1">
           <label for="comment1" class="t1">主題內容:</label>
@@ -148,12 +148,24 @@
         </div>
         <div class="form-group d-flex justify-content-center">
           <input class="btn1" type="submit" value="確定">
+          <input id="fillButton" class="btn1" type="submit" value="一鍵輸入">
         </div>
       </form>
     </div>
 
   </div>
+  <script>
+    // 設定預設的標題、文章和圖片URL
+    const defaultTitle = "神秘森林";
+    const defaultContent = "在危機四伏的秘林裡生存下去吧!";
 
+    // 當按下按鈕時，將預設的標題、文章和圖片輸入到對應的欄位中
+    document.getElementById("fillButton").addEventListener("click", function () {
+      document.getElementById("title").value = defaultTitle;
+      // 使用HTML標籤將圖片嵌入文章內容
+      document.getElementById("comment1").value = defaultContent;
+    });
+  </script>
 
 
 
