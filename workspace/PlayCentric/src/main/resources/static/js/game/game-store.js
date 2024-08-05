@@ -187,7 +187,6 @@ async function typeAndPriceFilterPlus() {
         });
         totalPages = res.data.totalPages;
         spin.classList.add('hidden');
-        console.log(res.data.content);
         for (const elm of res.data.content) {
             htmlmaker(elm);
             await wait(300);
