@@ -18,6 +18,7 @@ function edit(elm) {
     }
 }
 
+const myGameReviews = document.querySelector('.myGameReviews');
 
 //提交評論
 if (goReviews) {
@@ -34,7 +35,13 @@ if (goReviews) {
                     const data = res.data;
                     let title = document.createElement('h2');
                     title.classList.add('text-2xl', 'text-center', 'font-semibold');
-                    title.innerHTML = '評論';
+                    if (location.pathname.includes('gameReviews/show') && myGameReviews) {
+                        title.innerHTML = myGameReviews.innerHTML;
+                        myGameReviews.remove();
+                    }
+                    else {
+                        title.innerHTML = '評論';
+                    }
                     let existReviews1 = document.createElement('div');
                     existReviews1.classList.add('existReviews');
 
