@@ -519,6 +519,7 @@
                             <label for="photoFile">上傳作品圖片</label>
                             <input type="file" class="form-control-file" id="photoFile" name="photoFile" required>
                         </div>
+                        <button type="button" id="autoFillButton" class="btn btn-primary mr-2">一鍵輸入</button>
                         <button type="submit" class="btn btn-primary">提交報名</button>
                     </form>
                 </div>
@@ -937,6 +938,21 @@
             updateEventStatus();
             updateSignupButton();
         });
+        
+         /**
+         * 一鍵填充報名表單
+         */
+$('#autoFillButton').click(function() {
+    // 主題
+    const title = "幻境面試";
+    $('#workTitle').val(title);
+
+    // 描述
+    const description = "在這個充滿奇幻色彩的面試場景中，角色坐在一個布滿魔法鏡子的房間裡，回答面試官的問題。每個鏡子中顯示不同的奇幻場景，有奇異的生物、魔法現象和不可思議的世界。面試官通過這些魔法鏡子來評估角色的智慧、應變能力和創意。角色必須利用他們的特異能力和豐富經驗，應對面試中各種奇幻問題和挑戰，展現出他們在奇幻職場中的獨特魅力和智慧。";
+    $('#workDescription').val(description);
+});
+        
+        
         /*]]>*/
     </script>
 </body>
