@@ -138,7 +138,7 @@ public class GoogleOAuth2Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("redirectMsg", "綁定失敗!");
-			return "redirect:/member/memInfo";
+			return "redirect:/member/personal/Info";
 		}
 	}
 
@@ -237,7 +237,7 @@ public class GoogleOAuth2Controller {
 			}
 			System.err.println(redirectMsg);
 			redirectAttributes.addFlashAttribute("redirectMsg", redirectMsg);
-			return "redirect:/member/memInfo";
+			return "redirect:/member/personal/Info";
 		}
 		if (hasGoogle) { // 利用google帳號登入
 			System.err.println("利用google登入");

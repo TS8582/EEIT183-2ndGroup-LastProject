@@ -9,7 +9,7 @@ const typeselector = document.querySelectorAll('input[name="typeId"]');
 let scrolltrigger = true;
 let runcount = 0;
 const gameName = document.querySelector('#gameName');
-let gameNameReturn = '*';
+let gameNameReturn = '';
 const startSearch = document.querySelector('#startSearch');
 let isOkay = false;
 let minPriceValue = 0;
@@ -24,62 +24,6 @@ window.addEventListener('beforeunload', e => {
 })
 
 
-//名稱篩選
-// gameName.addEventListener('input', e => {
-//     const reg = new RegExp(gameName.value, 'i');
-//     const name = document.querySelectorAll('.name');
-//     name.forEach(myname => {
-//         if (gameName.value != '') {
-
-
-//             if (minPrice.value !== '' && maxPrice.value !== '') {
-//                 if (Number.isInteger(Number(minPrice.value)) && Number.isInteger(Number(maxPrice.value)) && Number(minPrice.value) > 0 && Number(maxPrice.value) > 0) {
-//                     if (Number(minPrice.value) < Number(maxPrice.value)) {
-//                         const price = myname.closest('.gameitem').querySelector('#price');
-//                         if (Number(price.innerHTML) <= Number(maxPrice.value) && Number(price.innerHTML) >= Number(minPrice.value) && reg.test(myname.innerHTML)) {
-//                             price.closest('.gameitem').classList.remove('hidden');
-//                         }
-
-//                         else {
-//                             price.closest('.gameitem').classList.add('hidden');
-//                         }
-//                     }
-//                 }
-//             }
-//             else {
-//                 if (reg.test(myname.innerHTML)) {
-//                     myname.closest('.gameitem').classList.remove('hidden');
-//                 }
-//                 else {
-//                     myname.closest('.gameitem').classList.add('hidden');
-//                 }
-//             }
-
-//         }
-
-//         else {
-//             if (minPrice.value !== '' && maxPrice.value !== '') {
-//                 if (Number.isInteger(Number(minPrice.value)) && Number.isInteger(Number(maxPrice.value)) && Number(minPrice.value) > 0 && Number(maxPrice.value) > 0) {
-//                     if (Number(minPrice.value) < Number(maxPrice.value)) {
-//                         const prices = document.querySelectorAll('#price');
-//                         prices.forEach(elm => {
-//                             if (Number(elm.innerHTML) <= Number(maxPrice.value) && Number(elm.innerHTML) >= Number(minPrice.value)) {
-//                                 elm.closest('.gameitem').classList.remove('hidden');
-//                             }
-
-//                             else {
-//                                 elm.closest('.gameitem').classList.add('hidden');
-//                             }
-//                         });
-//                     }
-//                 }
-//             }
-//             else {
-//                 myname.closest('.gameitem').classList.remove('hidden');
-//             }
-//         }
-//     });
-// })
 
 
 // 滑到底部載入事件
