@@ -209,43 +209,54 @@
 
 
 		    axios.get(`/PlayCentric/playFellow/pfGame/list/${playFellowId}`)
-		        .then(response => {
-					pfGameItems.innerHTML = '';
+		    .then(response => {
+		        pfGameItems.innerHTML = '';
 
-		            console.log('成功獲取 PfGame 列表');
+		        console.log('成功獲取 PfGame 列表');
 
-		            const pfGames = response.data;
+		        const pfGames = response.data;
 
-		            pfGames.forEach(pfGame => {
-		                const card = document.createElement('div');
-		                card.className = 'card mb-3';
-		                card.innerHTML = `
-		                    <div class="card-body text-center">
-		                        <div class="d-flex justify-content-between align-items-start mb-2">
-		                            <h5 class="card-title text-gray mb-0">${pfGame.gameName}</h5>
-		                            <button class="btn btn-outline-danger btn-sm" onclick="deletePfGame(${pfGame.pfGameId})">移除</button>
-		                        </div>
-		                        <p class="card-text mb-0">
-		                            <strong>計價方式:</strong> ${pfGame.pricingCategory}<br>
-		                            <strong>遊戲單價:</strong> $ ${pfGame.amount}元
-		                        </p>
+		        pfGames.forEach(pfGame => {
+		            const card = document.createElement('div');
+		            card.className = 'card mb-3';
+		            card.innerHTML = `
+		                <div class="card-body text-center">
+		                    <div class="d-flex justify-content-between align-items-start mb-2">
+		                        <h5 class="card-title text-gray mb-0">${pfGame.gameName}</h5>
+		                        <button class="btn btn-outline-danger btn-sm" onclick="deletePfGame(${pfGame.pfGameId})">移除</button>
 		                    </div>
-		                `;
-		                pfGameItems.appendChild(card);
-		            });
-		        })
-		        .catch(error => {
-		            console.error('錯誤', error);
-		        })
-		        .finally(() => {
-		            // 隱藏 loading 圖示和文字
-		            console.log("隱藏 loading 圖示和文字");
-		            if (loading) {
-		                loading.classList.remove('loading-visible');
-		                loading.classList.add('loading-hidden');
-		            }
-		           
+		                    <p class="card-text mb-0">
+		                        <strong>計價方式:</strong> ${pfGame.pricingCategory}<br>
+		                        <strong>遊戲單價:</strong> $ ${pfGame.amount}元
+		                    </p>
+		                </div>
+		            `;
+		            pfGameItems.appendChild(card);
 		        });
+
+		        // 成功獲取數據後顯示 SweetAlert 的 Toast 消息
+		        Swal.fire({
+		            toast: true,
+		            position: 'top-end',
+		            icon: 'success',
+		            title: '更新成功',
+		            showConfirmButton: false,
+		            timer: 5000, // 3秒後自動關閉
+		            timerProgressBar: true
+		        });
+		    })
+		    .catch(error => {
+		        console.error('錯誤', error);
+		    })
+		    .finally(() => {
+		        // 隱藏 loading 圖示和文字
+		        console.log("隱藏 loading 圖示和文字");
+		        if (loading) {
+		            loading.classList.remove('loading-visible');
+		            loading.classList.add('loading-hidden');
+		        }
+		    });
+
 		}
 
 
@@ -276,16 +287,31 @@
 
 		function backToCms() {
             Swal.fire({
-                title: '伴遊申請通知',
-                text: '您的申請須經後台管理人員審核，請耐心等候!',
-                icon: 'info',
-                confirmButtonText: '確定'
+                title: '確定提交嗎?',
+                text: "您的申請將提交後台管理員進行審核",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '確定',
+                cancelButtonText: '取消'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/PlayCentric/playFellow';
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: '遞交成功',
+                        text: '您的伴遊申請已交由管理人員審核，請耐心等候! 正在返回遊戲伴遊。',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        didClose: () => {
+                            window.location.href = '/PlayCentric/playFellow';
+                        }
+                    });
                 }
             });
         }
+
 	</script>
 </body>
 

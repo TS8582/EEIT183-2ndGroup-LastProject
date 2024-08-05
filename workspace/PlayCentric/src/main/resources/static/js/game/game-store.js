@@ -147,7 +147,7 @@ startSearch.addEventListener('click', async e => {
         gameNameReturn = gameName.value;
     }
     else {
-        gameNameReturn = '*';
+        gameNameReturn = '';
     }
 
     main.innerHTML = '';

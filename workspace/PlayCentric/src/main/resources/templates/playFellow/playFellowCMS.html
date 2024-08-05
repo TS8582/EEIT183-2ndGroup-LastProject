@@ -98,14 +98,14 @@ html, body {
 }
 
 .chart-container {
-	width: 33%;
+	width: 35%;
 	/* 顯示寬度 */
 	height: 100%;
 	/* 顯示高度 */
 }
 
 #orderChart2 {
-	width: 33%;
+	width: 35%;
 	/* 讓 canvas 填滿父容器 */
 	height: 100%;
 	/* 讓 canvas 填滿父容器 */
@@ -124,7 +124,7 @@ html, body {
 	justify-content: space-around;
 }
 
-#orderTable_next {
+#orderTable_next,#playFellowTable_next {
 	all: unset; /* 使用 CSS 重置所有樣式 */
 }
 </style>
@@ -143,8 +143,9 @@ html, body {
 				</li>
 				<li class="nav-item" role="presentation" style="margin-right: 6px;">
 					<button class="nav-link text-secondary" id="home-tab"
-						data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button"
-						role="tab" aria-controls="chart-tab-pane" aria-selected="true">營收統計</button>
+						data-bs-toggle="tab" data-bs-target="#chart-tab-pane"
+						type="button" role="tab" aria-controls="chart-tab-pane"
+						aria-selected="true">營收統計</button>
 				</li>
 				<li class="nav-item" role="presentation">
 					<button class="nav-link text-secondary" id="profile-tab"
@@ -207,11 +208,11 @@ html, body {
 									</tr>
 								</tbody>
 							</table>
-							
-							
+
+
 						</div>
 						<ul class="pagination">
-							
+
 						</ul>
 					</div>
 				</div>
@@ -240,15 +241,15 @@ html, body {
 						</div>
 					</div>
 				</div>
-				
-				
-				
+
+
+
 				<div
 					class="tab-pane fade border border-top-0 rounded-2 rounded-top-0"
 					id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
 					tabindex="0">
-					
-					<div >
+
+					<div>
 						<table id="orderTable"
 							class="table table-striped table-bordered table-hover">
 							<thead class="thead-light">
@@ -329,6 +330,8 @@ html, body {
 	<script th:src="@{/js/layout/nav.js}"></script>
 	<script th:src="@{/js/playfellow/jquery.dataTables.js}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	
 
 
 	<script>
@@ -656,7 +659,7 @@ html, body {
 		});
 		document.addEventListener('DOMContentLoaded', () => {
 		    $('#playFellowTable').DataTable({
-		        "paging": false,
+		        "paging": true,
 		        "searching": true,
 		        "ordering": true,
 		        "info": true,

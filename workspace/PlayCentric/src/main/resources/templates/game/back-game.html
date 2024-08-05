@@ -32,7 +32,6 @@
                                 <th class="text-center w-3/12 border">發布時間</th>
                                 <th class="text-center w-1/12 border">開發者</th>
                                 <th class="text-center w-1/12 border">發行商</th>
-                                <th class="text-center w-1/12 border">評價</th>
                                 <th class="text-center w-3/12 border">操作</th>
                             </tr>
                         </thead>
@@ -48,10 +47,6 @@
                                         class="text-center border p-3 releaseAt"></td>
                                     <td th:text="${game.developer}" class="text-center border p-3 developer"></td>
                                     <td th:text="${game.publisher}" class="text-center border p-3 publisher"></td>
-                                    <td th:if="${game.totalReviews != 0}"
-                                        th:text="${game.totalScore / game.totalReviews}"
-                                        class="text-center border p-3 score"></td>
-                                    <td th:if="${game.totalReviews == 0}" class="text-center border p-3 score">0</td>
                                     <td class="text-center border p-3">
                                         <span class="hidden gameId" th:text="${game.gameId}"></span>
                                         <a th:href="@{/game/getUpdateGame(gameId=${game.gameId})}"
