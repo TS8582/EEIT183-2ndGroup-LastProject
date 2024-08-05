@@ -53,12 +53,12 @@ public class GameRestController {
 			@RequestParam(defaultValue = "99999") Integer maxPrice,
 			@RequestParam(defaultValue = "") List<Integer> typeId,
 			@ModelAttribute("loginMember") LoginMemDto loginMember,
-			@RequestParam(defaultValue = "*") String gameName
+			@RequestParam(defaultValue = "") String gameName
 			) {
 	    Pageable pgb = PageRequest.of(pg, 9);
 	    List<Game> gamePage = null;
 	    // 根據條件查詢遊戲
-	    if (gameName.equals("*")) {
+	    if (gameName.equals("")) {
 	    	gamePage = gService.findByIsShowOrderByReleaseAtDesc().stream()
 		            .filter(game -> game.getGameTypeLibs().stream()
 		                    .map(GameTypeLib::getGameTypeId)
