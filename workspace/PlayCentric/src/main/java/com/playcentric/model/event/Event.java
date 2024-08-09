@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * 活動實體類
+ * 代表系統中的一個活動
+ */
 @Setter
 @Getter
 @NoArgsConstructor
@@ -62,9 +66,11 @@ public class Event {
         }
     }
 
-    // 添加一個新的方法來安全地獲取狀態
+    /**
+     * 安全地獲取狀態
+     * @return 活動狀態，如果為null則返回0
+     */
     public Integer getEventStatusSafe() {
         return eventStatus != null ? eventStatus : 0;
     }
-    
 }

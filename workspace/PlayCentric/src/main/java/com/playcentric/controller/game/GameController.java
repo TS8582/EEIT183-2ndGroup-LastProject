@@ -129,7 +129,6 @@ public class GameController {
 		List<ImageLib> imgs = new ArrayList<>();
 		if (!photos[0].isEmpty()) {
 			for (MultipartFile file : photos) {
-				System.out.println("到底會有幾個檔案");
 				ImageLib imageLib = new ImageLib();
 				imageLib.setImageFile(file.getBytes());
 				ImageLib saveImage = iService.saveImage(imageLib);

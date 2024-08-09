@@ -200,7 +200,7 @@ public class MemberService {
 	}
 
 	public boolean checkGoogleExist(String googleId) {
-		return googleRepository.findById(googleId).isPresent();
+		return memberRepository.findByGoogeId(googleId) != null;
 	}
 
 	public Member checkLogin(String account, String password) {

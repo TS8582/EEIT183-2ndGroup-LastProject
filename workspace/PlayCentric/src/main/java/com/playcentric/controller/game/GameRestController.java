@@ -1,5 +1,6 @@
 package com.playcentric.controller.game;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,119 +44,58 @@ public class GameRestController {
 	@Autowired
 	private GameCartService gcService;
 	
-	//所有遊戲
-	@GetMapping("/game/getGamePage")
-	public Page<Game> getGamePage(@RequestParam Integer pg,@ModelAttribute("loginMember") LoginMemDto loginMember) {
-		Pageable pgb = PageRequest.of(pg, 9);
-		Page<Game> findGames = gService.findByIsShowOrderByReleaseAtDesc(pgb);
-		for (Game game : findGames) {
-			gService.setRateAndDiscountPrice(game);
-			if (loginMember != null) {
-				gcService.setInCart(loginMember, game);
-			}
-		}
-		
-		return findGames;
-	}
-	
-	//用分類找遊戲
-	@GetMapping("/game/getGamePageByType")
-	public Page<Game> getGamePageByType(@RequestParam Integer pg,
-	                                    @RequestParam List<Integer> typeId,
-	                                    @ModelAttribute("loginMember") LoginMemDto loginMember) {
-	    Pageable pgb = PageRequest.of(pg, 9);
-	    List<Game> gamePage = gService.findByIsShowOrderByReleaseAtDesc().stream()
-	            .filter(game -> game.getGameTypeLibs().stream()
-	                    .map(GameTypeLib::getGameTypeId)
-	                    .collect(Collectors.toSet())
-	                    .containsAll(typeId))
-	            .collect(Collectors.toList());
-	    
-	    if (gamePage.isEmpty()) {
-	        return new PageImpl<>(Collections.emptyList(), pgb, 0);
-	    }
-	    else {
-			for (Game game2 : gamePage) {
-				gService.setRateAndDiscountPrice(game2);
-				if (loginMember != null) {
-					gcService.setInCart(loginMember, game2);
-				}
-			}
-		}
-	    
-	    // 計算分頁索引
-	    int start = (int) pgb.getOffset();
-	    int end = Math.min(start + pgb.getPageSize(), gamePage.size());
-	    
-	    // 檢查分頁索引是否超出遊戲列表範圍
-	    if (start <= end) {
-	        List<Game> subList = gamePage.subList(start, end);
-	        return new PageImpl<>(subList, pgb, gamePage.size());
-	    } else {
-	        return new PageImpl<>(Collections.emptyList(), pgb, gamePage.size());
-	    }
-	}
-	
-	//價格找遊戲
-	@GetMapping("/game/getGamePageByPrice")
-	public Page<Game> getGamePageByPrice(
-			@RequestParam Integer pg,
-			@RequestParam Integer minPrice,
-			@RequestParam Integer maxPrice,
-			@ModelAttribute("loginMember") LoginMemDto loginMember
-			) {
-		Pageable pgb = PageRequest.of(pg, 9);
-		List<Game> gamelist = gService.findByIsShowOrderByReleaseAtDesc().stream()
-				.filter(game -> {
-					Integer discountedPrice = game.getPrice();
-					Integer myDiscountPrice = gService.setRateAndDiscountPrice(game);
-					if (loginMember != null) {
-						gcService.setInCart(loginMember, game);
-					}
-					if (myDiscountPrice != null) {
-						discountedPrice = myDiscountPrice;
-					}
-	                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
-	            })
-	            .collect(Collectors.toList());
-		// 計算分頁索引
-	    int start = (int) pgb.getOffset();
-	    int end = Math.min(start + pgb.getPageSize(), gamelist.size());
-
-	    if (start <= end) {
-	        List<Game> subList = gamelist.subList(start, end);
-	        return new PageImpl<>(subList, pgb, gamelist.size());
-	    } else {
-	        return new PageImpl<>(Collections.emptyList(), pgb, gamelist.size());
-	    }
-	}
 	
 	//價格+分類篩選遊戲
 	@GetMapping("/game/getGamePageByPriceAndType")
 	public Page<Game> getGamePageByPriceAndType(
 			@RequestParam Integer pg,
-			@RequestParam Integer minPrice,
-			@RequestParam Integer maxPrice,
-			@RequestParam List<Integer> typeId,
-			@ModelAttribute("loginMember") LoginMemDto loginMember) {
+			@RequestParam(defaultValue = "0") Integer minPrice,
+			@RequestParam(defaultValue = "99999") Integer maxPrice,
+			@RequestParam(defaultValue = "") List<Integer> typeId,
+			@ModelAttribute("loginMember") LoginMemDto loginMember,
+			@RequestParam(defaultValue = "") String gameName
+			) {
 	    Pageable pgb = PageRequest.of(pg, 9);
+	    List<Game> gamePage = null;
 	    // 根據條件查詢遊戲
-	    List<Game> gamePage = gService.findByIsShowOrderByReleaseAtDesc().stream()
-	            .filter(game -> game.getGameTypeLibs().stream()
-	                    .map(GameTypeLib::getGameTypeId)
-	                    .collect(Collectors.toSet())
-	                    .containsAll(typeId))
-	            .filter(game -> {
-	            	if (loginMember != null) {
-	        			gcService.setInCart(loginMember, game);
-	        		}
-	            	Integer discountedPrice;
-	            	discountedPrice = game.getPrice();
-					gService.setRateAndDiscountPrice(game);
-	                // 过滤折扣后价格在指定范围内的游戏
-	                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
-	            })
-	            .collect(Collectors.toList());
+	    if (gameName.equals("")) {
+	    	gamePage = gService.findByIsShowOrderByReleaseAtDesc().stream()
+		            .filter(game -> game.getGameTypeLibs().stream()
+		                    .map(GameTypeLib::getGameTypeId)
+		                    .collect(Collectors.toSet())
+		                    .containsAll(typeId))
+		            .filter(game -> {
+		            	Integer discountedPrice = game.getPrice();
+						Integer myDiscountPrice = gService.setRateAndDiscountPrice(game);
+						if (loginMember != null) {
+							gcService.setInCart(loginMember, game);
+						}
+						if (myDiscountPrice != null) {
+							discountedPrice = myDiscountPrice;
+						}
+		                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
+		            })
+		            .collect(Collectors.toList());
+		}
+	    else {
+	    	gamePage = gService.findByIsShowAndGameNameContainingOrderByReleaseAtDesc(gameName).stream()
+		            .filter(game -> game.getGameTypeLibs().stream()
+		                    .map(GameTypeLib::getGameTypeId)
+		                    .collect(Collectors.toSet())
+		                    .containsAll(typeId))
+		            .filter(game -> {
+		            	Integer discountedPrice = game.getPrice();
+						Integer myDiscountPrice = gService.setRateAndDiscountPrice(game);
+						if (loginMember != null) {
+							gcService.setInCart(loginMember, game);
+						}
+						if (myDiscountPrice != null) {
+							discountedPrice = myDiscountPrice;
+						}
+		                return discountedPrice >= minPrice && discountedPrice <= maxPrice;
+		            })
+		            .collect(Collectors.toList());
+		}
 	    // 如果查詢結果為空，返回空的分頁結果
 	    if (gamePage.isEmpty()) {
 	        return new PageImpl<>(Collections.emptyList(), pgb, 0);

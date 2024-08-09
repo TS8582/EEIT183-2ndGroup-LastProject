@@ -2,172 +2,186 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>加入伴遊</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" th:href="@{/css/output.css}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>加入伴遊</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/css/output.css}">
 
-    <style>
-        body {
-            background-color: #f9f9f9 !important;
-        }
+<style>
+body {
+	background-color: #f9f9f9 !important;
+}
 
-        .content {
-            display: none !important;
-        }
+.content {
+	display: none !important;
+}
 
-        .content.active {
-            display: block !important;
-        }
+.content.active {
+	display: block !important;
+}
 
-        .theme.active {
-            font-weight: bold !important;
-        }
+.theme.active {
+	font-weight: bold !important;
+}
 
-        /*         .list-group-item:hover { */
-        /*             background-color: #f0f0f0!important; */
-        /*         } */
-        .backBtn {
-            position: absolute !important;
-            top: 5px !important;
-            right: 5px !important;
-            font-size: 0.8em !important;
-            background-color: lightgray !important;
-            border: none !important;
-        }
+/*         .list-group-item:hover { */
+/*             background-color: #f0f0f0!important; */
+/*         } */
+.backBtn {
+	position: absolute !important;
+	top: 5px !important;
+	right: 5px !important;
+	font-size: 0.8em !important;
+	background-color: lightgray !important;
+	border: none !important;
+}
 
-        .backBtn:hover {
-            font-weight: bold !important;
-        }
+.backBtn:hover {
+	font-weight: bold !important;
+}
 
-        .list-group-item {
-            border: none !important;
-            cursor: pointer !important;
+.list-group-item {
+	border: none !important;
+	cursor: pointer !important;
 
-            /*             background-color: transparent!important; */
-        }
+	/*             background-color: transparent!important; */
+}
 
-        .theme.active {
-            color: #000000 !important;
-            font-weight: bold !important;
-            background-color: transparent !important;
-        }
+.theme.active {
+	color: #000000 !important;
+	font-weight: bold !important;
+	background-color: transparent !important;
+}
 
-        .code-container {
-            background-color: #f8f9fa !important;
-            border: 1px solid #dee2e6 !important;
-            padding: 1em !important;
-            margin: 1em 0 !important;
-            overflow-x: auto !important;
-        }
+.code-container {
+	background-color: #f8f9fa !important;
+	border: 1px solid #dee2e6 !important;
+	padding: 1em !important;
+	margin: 1em 0 !important;
+	overflow-x: auto !important;
+}
 
-        .code-container pre {
-            margin: 0 !important;
-        }
+.code-container pre {
+	margin: 0 !important;
+}
 
-        .green-text {
-            color: green !important;
-        }
+.green-text {
+	color: green !important;
+}
 
-        .no-link-style {
-            color: inherit;
-            text-decoration: none;
-        }
-    </style>
+.no-link-style {
+	color: inherit;
+	text-decoration: none;
+}
+</style>
 </head>
 
 <body>
-    <div th:replace="~{layout/nav.html}"></div>
-    <div class="container mt-3">
-        <div class="d-flex justify-content-between align-items-center">
-            <p class="h3">加入我們</p>
-            <span style="font-size: 0.8em;">會員編號: <span class="badge badge-secondary" style="font-size: 0.8em;"
-                    th:text="${members.memId}"></span></span>
-        </div>
+	<div th:replace="~{layout/nav.html}"></div>
+	<div class="container mt-3">
+		<div class="d-flex justify-content-between align-items-center">
+			<p class="h3">加入我們</p>
+			<span style="font-size: 0.8em;">會員編號: <span
+				class="badge badge-secondary" style="font-size: 0.8em;"
+				th:text="${members.memId}"></span></span>
+		</div>
 
-        <div class="row mt-3">
-            <div class="col-md-3">
-                <ul class="list-group">
-                    <li class="list-group-item theme active" data-content="content1">基本資料</li>
-                    <li class="list-group-item theme" data-content="content2" style="background-color: #f9f9f9;">伴遊者照片
-                    </li>
+		<div class="row mt-3">
+			<div class="col-md-3">
+				<ul class="list-group">
+					<li class="list-group-item theme active" data-content="content1">基本資料</li>
+					<li class="list-group-item theme" data-content="content2"
+						style="background-color: #f9f9f9;">伴遊者照片</li>
 
-                    <li class="list-group-item theme" data-content="content3" style="background-color: #f9f9f9;">
-                        <a href="http://localhost:8080/PlayCentric/playFellow" id="backBtn"
-                            class="no-link-style">回前頁</a>
-                    </li>
+					<li class="list-group-item theme" data-content="content3"
+						style="background-color: #f9f9f9;"><a
+						href="http://localhost:8080/PlayCentric/playFellow" id="backBtn"
+						class="no-link-style">回前頁</a></li>
 
-                </ul>
-            </div>
-            <div class="col-md-9 p-2"
-                style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <div id="content1" class="content active">
-                    <form id="firstStepForm" th:action="@{/playFellow/add}" method="post">
-                        <div>
-                            <input type="hidden" th:value="${members.memId}" id="memId" name="memId" />
-                        </div>
-                        <div class="form-group">
-                            <label for="nickname">伴遊暱稱</label> <input type="text" class="form-control" id="pfnickname"
-                                name="pfnickname" required>
-                            <small class="text-danger" id="nicknameError"></small>
-                        </div>
-                        <div class="form-group">
-                            <label for="gender">性別</label> <select class="form-control" id="gender" name="gender"
-                                required>
-                                <option value="1" th:text="'男生'" th:selected="${members.gender == 1}"></option>
-                                <option value="2" th:text="'女生'" th:selected="${members.gender == 2}"></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="birthday">生日</label> <input type="date" class="form-control" id="birthday"
-                                name="birthday" th:value="${members.birthday}" required> <small id="ageDisplay"
-                                class="form-text text-muted"></small>
-                        </div>
-                        <div class="form-group">
-                            <label for="pfdescription">自我介紹</label>
-                            <textarea class="form-control" id="pfdescription" name="pfdescription" rows="5"
-                                required></textarea>
-                        </div>
-                        <div class="form-group" style="display: none;">
-                            <label for="pfStatus">狀態</label> <input type="number" class="form-control" id="pfstatus"
-                                name="pfstatus" value="1" readonly>
-                        </div>
-                        <div class="form-group" style="display: none;">
-                            <label for="pfCreatedTime">創建時間</label> <input type="date" class="form-control"
-                                id="pfCreatedTime" name="pfcreatedTime" required>
-                        </div>
+				</ul>
+			</div>
+			<div class="col-md-9 p-2"
+				style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+				<div id="content1" class="content active">
+					<form id="firstStepForm" th:action="@{/playFellow/add}"
+						method="post">
+						<div>
+							<input type="hidden" th:value="${members.memId}" id="memId"
+								name="memId" />
+						</div>
+						<div class="form-group">
+							<label for="nickname">伴遊暱稱</label> <input type="text"
+								class="form-control" id="pfnickname" name="pfnickname" required>
+							<small class="text-danger" id="nicknameError"></small>
+						</div>
+						<div class="form-group">
+							<label for="gender">性別</label> <select class="form-control"
+								id="gender" name="gender" required>
+								<option value="1" th:text="'男生'"
+									th:selected="${members.gender == 1}"></option>
+								<option value="2" th:text="'女生'"
+									th:selected="${members.gender == 2}"></option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="birthday">生日</label> <input type="date"
+								class="form-control" id="birthday" name="birthday"
+								th:value="${members.birthday}" required> <small
+								id="ageDisplay" class="form-text text-muted"></small>
+						</div>
+						<div class="form-group">
+							<label for="pfdescription">自我介紹</label>
+							<textarea class="form-control" id="pfdescription"
+								name="pfdescription" rows="5" required></textarea>
+						</div>
+						<div class="form-group" style="display: none;">
+							<label for="pfstatus">狀態</label> <input type="number"
+								class="form-control" id="pfstatus" name="pfstatus" value="1"
+								readonly>
+						</div>
+						<div class="form-group" style="display: none;">
+							<label for="pfCreatedTime">創建時間</label> <input type="date"
+								class="form-control" id="pfCreatedTime" name="pfcreatedTime"
+								required>
+						</div>
 
-                        <button type="submit" class="btn btn-primary" onclick="submitFirstStep(event)">確定送出</button>
-                    </form>
-                </div>
+						<button type="submit" class="btn btn-primary"
+							onclick="submitFirstStep(event)">確定送出</button>
+						<button type="button" class="btn btn-success" id="fillButton">一鍵輸入</button>
+					</form>
+				</div>
 
-                <div id="content2" class="content">
-                    <h5 class="font-weight-bold">請新增您的生活照，照片請勿裸露以免審核不成功</h5>
+				<div id="content2" class="content">
+					<h5 class="font-weight-bold">請新增您的生活照，照片請勿裸露以免審核不成功</h5>
 
-                    <div id="photo_output" class="mt-3"></div>
-                    <form id="secondStepForm" enctype="multipart/form-data">
-                        <input type="hidden" name="playFellowId" id="uploadPlayFellowIdInput"
-                            th:value="${playFellowId}">
-                        <div class="form-group" id="addBtn2" style="display: none;">
-                            <input type="file" class="form-control-file" id="file" name="file" multiple required>
-                        </div>
-                        <div id="message" class="mt-3"></div>
+					<div id="photo_output" class="mt-3"></div>
+					<form id="secondStepForm" enctype="multipart/form-data">
+						<input type="hidden" name="playFellowId"
+							id="uploadPlayFellowIdInput" th:value="${playFellowId}">
+						<div class="form-group" id="addBtn2" style="display: none;">
+							<input type="file" class="form-control-file" id="file"
+								name="file" multiple required>
+						</div>
+						<div id="message" class="mt-3"></div>
 
-                        <button type="button" class="btn btn-success" id="editBtn">新增照片</button>
-                        <button type="submit" class="btn btn-success" id="addBtn" style="display: none;">上傳</button>
-                        <button type="button" class="btn btn-info float-right" id="backtoCms">下一步</button>
-                    </form>
+						<button type="button" class="btn btn-success" id="editBtn">新增照片</button>
+						<button type="submit" class="btn btn-success" id="addBtn"
+							style="display: none;">上傳</button>
+						<button type="button" class="btn btn-info float-right"
+							id="backtoCms">下一步</button>
+					</form>
 
-                </div>
-            </div>
-        </div>
-    </div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script th:src="@{/js/layout/nav.js}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script th:src="@{/js/layout/nav.js}"></script>
 
-    <script>
+	<script>
         document.addEventListener('DOMContentLoaded', function () {
             //         const themes = document.querySelectorAll('.theme');
             //         const contents = document.querySelectorAll('.content');
@@ -388,10 +402,20 @@
                 .catch(error => {
                     console.error('出錯', error);
                 });
+    }
+        
+        
+        document.getElementById('fillButton').addEventListener('click', function() {
+            // 定義要快速填入的資料
+            const quickData = {
+                pfnickname: 'Lily',
+                pfdescription: '大家好，我是Lily，是個遊戲伴遊新手小白，歡迎大家找我一起玩遊戲唷❤️'
+            };
 
-
-
-        }
+            // 使用快速資料填充表單
+            document.getElementById('pfnickname').value = quickData.pfnickname;
+            document.getElementById('pfdescription').value = quickData.pfdescription; // 確保鍵名正確
+        });
     </script>
 
 </body>

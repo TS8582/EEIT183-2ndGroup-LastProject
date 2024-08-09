@@ -72,11 +72,11 @@
             <form method="POST" id="login-form" th:action="@{/member/login}">
               <div class="mb-3">
                 <label for="account" class="form-label">帳號</label>
-                <input type="text" class="form-control" name="account" required>
+                <input type="text" class="form-control" id="loginId" name="account" required>
               </div>
               <div class="mb-3">
                 <label for="password" class="form-label">密碼</label>
-                <input type="password" class="form-control" name="password" required>
+                <input type="password" class="form-control" id="loginPwd" name="password" required>
               </div>
               <div>
                 <input type="checkbox" class="form-check-input" name="addCookie" id="addCookie">
@@ -112,6 +112,8 @@
             <div class="d-flex mb-3 justify-content-center align-items-center">
               <div class="btn btn-primary p-2 mx-2 fast-login-mng">
                 ts16(管理員)</div>
+              <div class="btn btn-primary p-2 mx-2 fast-login-mng">
+                Owen Chen(管理員)</div>
             </div>
           </div>
           <!-- 註冊框內容 -->
@@ -258,8 +260,10 @@
         if (event.key === 'F2') {
           $('#registForm #nickname').val('新註冊帳號');
           $('#registForm #account').val('jane_smith');
+          $('#login-form #loginId').val('jane_smith');
           $('#registForm #password').val('Js#2024!');
           $('#registForm #password-confirm').val('Js#2024!');
+          $('#login-form #loginPwd').val('Js#2024!');
           $('#registForm #email').val('jane.smith@example.com');
           $('#registForm #memName').val('林美芳');
           $('#registForm #gender').val(2);
@@ -365,7 +369,8 @@
       //快速登入(管理員)
       $('.fast-login-mng').click(function () {
         const mngPwd = {
-          'ts16': 'ts8582'
+          'ts16': 'ts8582',
+          'Owen Chen':'o1234'
         }
         const account = $(this).text().trim().replace('(管理員)', '')
         axios({

@@ -25,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.playcentric.model.ImageLib;
 import com.playcentric.model.event.Event;
+import com.playcentric.model.event.EventSignup;
 import com.playcentric.service.ImageLibService;
 import com.playcentric.service.event.EventService;
 import com.playcentric.service.event.EventSignupService;
@@ -178,20 +179,24 @@ public class EventController {
     }
 
     /**
-     * 刪除活動
+     * 處理刪除活動的請求
+     * @param eventId 要刪除的活動ID
+     * @return 刪除操作的結果
      */
     @PostMapping("/delete")
-    public String deleteEvent(@RequestParam Integer eventId, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<?> deleteEvent(@RequestParam Integer eventId) {
         logger.info("接收到刪除活動的請求，活動ID: {}", eventId);
         try {
             eventService.deleteEvent(eventId);
             logger.info("活動刪除成功，活動ID: {}", eventId);
-            redirectAttributes.addFlashAttribute("successMessage", "活動刪除成功");
+            return ResponseEntity.ok(Map.of("success", true, "message", "活動刪除成功"));
+        } catch (IllegalStateException e) {
+            logger.error("活動刪除失敗: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
         } catch (Exception e) {
             logger.error("活動刪除失敗", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "已有報名，無法刪除!");
+            return ResponseEntity.internalServerError().body(Map.of("success", false, "message", "刪除失敗，請稍後再試!"));
         }
-        return "redirect:/events/listEvents";
     }
 
     // ======== API 相關方法 ========

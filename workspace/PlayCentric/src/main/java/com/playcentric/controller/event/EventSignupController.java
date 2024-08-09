@@ -14,16 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -39,9 +30,12 @@ import com.playcentric.service.member.MemberService;
 
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * 活動報名控制器
+ * 處理與活動報名相關的請求
+ */
 @Controller
 @SessionAttributes("loginMember")
-// @RequestMapping("/eventSignup")
 public class EventSignupController {
 
     private static final Logger logger = LoggerFactory.getLogger(EventSignupController.class);
@@ -62,6 +56,8 @@ public class EventSignupController {
 
     /**
      * 顯示報名管理頁面
+     * @param model Spring MVC Model
+     * @return 報名管理頁面視圖名稱
      */
     @GetMapping("/eventSignup/manage")
     public String manageSignups(Model model) {
@@ -72,6 +68,12 @@ public class EventSignupController {
 
     /**
      * 處理創建新報名的POST請求
+     * @param eventSignup 報名對象
+     * @param photoFile 作品圖片文件
+     * @param eventId 活動ID
+     * @param session HttpSession
+     * @param redirectAttributes 重定向屬性
+     * @return 重定向到活動詳情頁面
      */
     @PostMapping("/eventSignup/create")
     public String createSignup(@ModelAttribute EventSignup eventSignup,
@@ -123,6 +125,8 @@ public class EventSignupController {
 
     /**
      * 獲取報名詳情（REST API）
+     * @param signupId 報名ID
+     * @return ResponseEntity 包含報名詳情或404錯誤
      */
     @GetMapping("/eventSignup/api/{signupId}")
     @ResponseBody
@@ -145,6 +149,9 @@ public class EventSignupController {
 
     /**
      * 更新報名信息（REST API）
+     * @param signupId 報名ID
+     * @param eventSignup 更新的報名信息
+     * @return ResponseEntity 包含更新後的報名信息或錯誤信息
      */
     @PutMapping("/eventSignup/api/{signupId}")
     @ResponseBody
@@ -166,6 +173,8 @@ public class EventSignupController {
 
     /**
      * 刪除報名（REST API）
+     * @param signupId 報名ID
+     * @return ResponseEntity 表示操作結果
      */
     @DeleteMapping("/eventSignup/api/{signupId}")
     @ResponseBody
@@ -186,6 +195,8 @@ public class EventSignupController {
 
     /**
      * 獲取特定活動的所有報名（REST API）
+     * @param eventId 活動ID
+     * @return ResponseEntity 包含報名列表或錯誤信息
      */
     @GetMapping("/eventSignup/api/event/{eventId}")
     @ResponseBody
@@ -210,6 +221,9 @@ public class EventSignupController {
 
     /**
      * 檢查用戶是否已經報名
+     * @param eventId 活動ID
+     * @param userId 用戶ID
+     * @return 是否已報名
      */
     @GetMapping("/eventSignup/api/checkSignup/{eventId}/{userId}")
     @ResponseBody
@@ -217,19 +231,31 @@ public class EventSignupController {
         return eventSignupService.hasUserSignedUp(userId, eventId);
     }
     
-	@GetMapping("/personal/eventSignup/record")
-	public String signUpList() {
-		return "member/memberSignUpPage";
-	}
-	
-	@GetMapping("/personal/api/eventSignup/record")
-	@ResponseBody
-	public Page<EventSignup> signUpList(@RequestParam Integer pageNum,@ModelAttribute("loginMember") LoginMemDto loginMember) {
-		return eventSignupService.getRecord(loginMember.getMemId(), pageNum);
-	}
+    /**
+     * 顯示個人報名記錄頁面
+     * @return 個人報名記錄頁面視圖名稱
+     */
+    @GetMapping("/personal/eventSignup/record")
+    public String signUpList() {
+        return "member/memberSignUpPage";
+    }
+    
+    /**
+     * 獲取個人報名記錄（API）
+     * @param pageNum 頁碼
+     * @param loginMember 登錄會員信息
+     * @return 分頁的報名記錄
+     */
+    @GetMapping("/personal/api/eventSignup/record")
+    @ResponseBody
+    public Page<EventSignup> signUpList(@RequestParam Integer pageNum, @ModelAttribute("loginMember") LoginMemDto loginMember) {
+        return eventSignupService.getRecord(loginMember.getMemId(), pageNum);
+    }
 
     /**
      * 獲取報名圖片（REST API）
+     * @param signupId 報名ID
+     * @return ResponseEntity 包含圖片數據或404錯誤
      */
     @GetMapping("/eventSignup/image/{signupId}")
     public ResponseEntity<byte[]> getSignupImage(@PathVariable Integer signupId) {
@@ -244,6 +270,8 @@ public class EventSignupController {
 
     /**
      * 更新報名審核狀態（REST API）
+     * @param payload 包含報名ID和新審核狀態的Map
+     * @return ResponseEntity 包含更新結果
      */
     @PostMapping("/eventSignup/api/updateReviewStatus")
     @ResponseBody

@@ -1,6 +1,9 @@
 package com.playcentric.service.event;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,12 +13,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.playcentric.model.event.Event;
+import com.playcentric.model.event.EventRepository;
 import com.playcentric.model.event.EventSignup;
 import com.playcentric.model.event.EventSignupRepository;
 import com.playcentric.model.event.EventVote;
 import com.playcentric.model.event.EventVoteRepository;
 import com.playcentric.model.member.MemberRepository;
 
+/**
+ * 活動投票服務類
+ * 處理與活動投票相關的業務邏輯
+ */
 @Service
 public class EventVoteService {
 
@@ -27,16 +35,13 @@ public class EventVoteService {
 
     @Autowired
     private MemberRepository memberRepository;
+    
+    @Autowired
+    private EventRepository eventRepository;
+    
 
     // ======== 投票管理相關方法 ========
 
-    /**
-     * 創建新的投票，包含投票限制和時間限制檢查
-     * @param memberId 會員ID
-     * @param signupId 報名ID
-     * @return 創建的投票記錄
-     * @throws RuntimeException 如果不滿足投票條件
-     */
     /**
      * 創建新的投票，包含投票限制和時間限制檢查
      * @param memberId 會員ID
@@ -190,7 +195,66 @@ public class EventVoteService {
      * @return 投票數量
      */
     public long getVoteCountForSignup(Integer signupId) {
-        // return eventVoteRepository.countByEventSignup_SignupId(signupId);
-        return eventVoteRepository.countByEventSignup_SignupIdAndEventVoteStatus(signupId,1);
+        return eventVoteRepository.countByEventSignup_SignupIdAndEventVoteStatus(signupId, 1);
+    }
+    
+    public List<Map<String, Object>> getVoteTrend(Integer eventId) {
+        List<EventVote> votes = eventId == null ? getAllVotes() : getVotesByEventId(eventId);
+        
+        // 獲取活動的投票開始時間（報名截止時間）
+        final LocalDateTime votingStartTime = getVotingStartTime(eventId, votes);
+        
+        if (votingStartTime == null) {
+            throw new RuntimeException("無法確定投票開始時間");
+        }
+        
+        // 將投票數據按天分組，並計算相對天數
+        Map<Long, Long> trendMap = votes.stream()
+            .collect(Collectors.groupingBy(
+                vote -> ChronoUnit.DAYS.between(votingStartTime, vote.getVoteTime()),
+                Collectors.counting()
+            ));
+        
+        return trendMap.entrySet().stream()
+            .map(entry -> {
+                Map<String, Object> point = new HashMap<>();
+                point.put("day", entry.getKey());
+                point.put("count", entry.getValue());
+                return point;
+            })
+            .sorted(Comparator.comparing(m -> (Long) m.get("day")))
+            .collect(Collectors.toList());
+    }
+
+    private LocalDateTime getVotingStartTime(Integer eventId, List<EventVote> votes) {
+        if (eventId != null) {
+            return eventRepository.findById(eventId)
+                .map(Event::getEventSignupDeadLine)
+                .orElseThrow(() -> new RuntimeException("找不到指定的活動"));
+        } else if (!votes.isEmpty()) {
+            return votes.stream()
+                .min(Comparator.comparing(EventVote::getVoteTime))
+                .map(EventVote::getVoteTime)
+                .orElse(null);
+        }
+        return null;
+    }
+    
+    public Map<String, Object> getEventStatistics(Integer eventId) {
+        List<EventVote> votes = getVotesByEventId(eventId);
+        long totalVotes = votes.size();
+        long validVotes = votes.stream().filter(v -> v.getEventVoteStatus() == 1).count();
+        long pendingVotes = totalVotes - validVotes;
+        long uniqueVoters = votes.stream().map(v -> v.getMember().getMemId()).distinct().count();
+        double avgVotesPerUser = uniqueVoters > 0 ? (double) totalVotes / uniqueVoters : 0;
+
+        Map<String, Object> statistics = new HashMap<>();
+        statistics.put("totalVotes", totalVotes);
+        statistics.put("validVotes", validVotes);
+        statistics.put("pendingVotes", pendingVotes);
+        statistics.put("uniqueVoters", uniqueVoters);
+        statistics.put("avgVotesPerUser", avgVotesPerUser);
+
+        return statistics;
     }
 }
